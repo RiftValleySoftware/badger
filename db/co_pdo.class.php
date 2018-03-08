@@ -33,46 +33,14 @@ class CO_PDO {
 								) {
 		$this->pdo = null;
 		
-		try {
-			$dsn = $driver . ':host=' . $host . ';dbname=' . $database;
-			$this->pdo = new PDO($dsn, $user, $password, array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'utf8'"));
-			$this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-			$this->pdo->setAttribute(PDO::ATTR_CASE, PDO::CASE_LOWER);
-			$this->pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
-			if (strlen($charset) > 0) {
-				self::preparedExec('SET NAMES :charset', array(':charset' => $charset));
-			}
-		} catch (PDOException $exception) {
-			throw new Exception(__METHOD__ . '() ' . $exception->getMessage());
-		}
-	}
-
-	/**
-		\brief Returns whether internal PDO object is instantiated and thus connected
-		
-		\returns true if connected.
-	*/
-	public function isConnected() {
-		if ($this->pdo instanceof PDO) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	/**
-		\brief Provides access to internal PDO object in case this classes functionality is not enough
-		
-		\returns the PDO object
-		
-		\throws Exception	 thrown if internal PDO object not instantiated
-	*/
-	public function pdoInstance() {
-		if ($this->pdo instanceof PDO) {
-			return $this->pdo;
-		} else {
-			throw new Exception(__METHOD__ . '() internal PDO object not instantiated');
-		}
+        $dsn = $driver . ':host=' . $host . ';dbname=' . $database;
+        $this->pdo = new PDO($dsn, $user, $password, array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'utf8'"));
+        $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $this->pdo->setAttribute(PDO::ATTR_CASE, PDO::CASE_LOWER);
+        $this->pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
+        if (strlen($charset) > 0) {
+            self::preparedExec('SET NAMES :charset', array(':charset' => $charset));
+        }
 	}
 
 	/**
@@ -97,18 +65,14 @@ class CO_PDO {
 										$params = array(),		///< same as kind provided to PDO::prepare()
 										$fetchKeyPair = false	///< See description in method documentation
 										) {
-		try {
-			$stmt = $this->pdo->prepare($sql);
-			$stmt->setFetchMode($this->fetchMode);
-			$stmt->execute($params);
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->setFetchMode($this->fetchMode);
+        $stmt->execute($params);
 
-			if ($fetchKeyPair) {
-				return $stmt->fetchAll(PDO::FETCH_KEY_PAIR);
-			} else {
-				return $stmt->fetchAll();
-			}
-		} catch (PDOException $exception) {
-			throw new Exception(__METHOD__ . '() ' . $exception->getMessage());
+        if ($fetchKeyPair) {
+            return $stmt->fetchAll(PDO::FETCH_KEY_PAIR);
+        } else {
+            return $stmt->fetchAll();
 		}
 	}
 
@@ -127,13 +91,8 @@ class CO_PDO {
 										$sql,				///< same as kind provided to PDO::prepare()
 										$params = array()	///< same as kind provided to PDO::prepare()
 										) {
-		try {
-			$stmt = $this->pdo->prepare($sql);
-
-			return $stmt->execute($params);
-		} catch (PDOException $exception) {
-			throw new Exception(__METHOD__ . '() ' . $exception->getMessage());
-		}
+		$stmt = $this->pdo->prepare($sql);
+		return $stmt->execute($params);
 	}
 
 	/**
@@ -143,10 +102,6 @@ class CO_PDO {
 		\throws Exception	 thrown if internal PDO object not instantiated
 	*/
 	public function lastInsertId() {
-		if (!$this->pdo instanceof PDO) {
-			throw new Exception(__METHOD__ . '() internal PDO object not instantiated');
-		}
-
 		return $this->pdo->lastInsertId();
 	}
 };

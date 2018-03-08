@@ -1,0 +1,1 @@
+<?php /* Ahhh... Silence... */ ?>

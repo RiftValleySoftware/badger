@@ -14,19 +14,22 @@ class LGV_Error {
     var $error_name;
     var $error_description;
     var $error_file;
-    var $error_method;
+    var $error_line;
+    var $error_detailed_description;
 
 	public function __construct(
-                                $error_code,
-                                $error_name,
-                                $error_description,
-                                $error_file,
-                                $error_method
+                                $error_code = 0,
+                                $error_name = null,
+                                $error_description = null,
+                                $error_file = null,
+                                $error_line = null,
+                                $error_detailed_description = null
 	                            ) {
 	    $this->error_code = $error_code;
 	    $this->error_name = $error_name;
 	    $this->error_description = $error_description;
 	    $this->error_file = $error_file;
-	    $this->error_method = $error_method;
+	    $this->error_line = $error_line;
+	    $this->error_detailed_description = $error_detailed_description;
 	}
 };
