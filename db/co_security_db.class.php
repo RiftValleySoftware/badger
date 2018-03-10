@@ -16,6 +16,8 @@ class CO_Security_DB extends A_CO_DB {
                                 ) {
         parent::__construct($in_pdo_object);
         
+        $this->table_name = 'co_security_nodes';
+        
         $this->class_description = 'The security database class.';
     }
 };

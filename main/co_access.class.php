@@ -59,7 +59,7 @@ class CO_Access {
         
         try {
             $pdo_security_db = new CO_PDO(CO_Config::$sec_db_type, CO_Config::$sec_db_host, CO_Config::$sec_db_name, CO_Config::$sec_db_login, CO_Config::$sec_db_password);
-            $this->security_db_object = new CO_Main_Data_DB($pdo_security_db);
+            $this->security_db_object = new CO_Security_DB($pdo_security_db);
         } catch (Exception $exception) {
             $this->error = new LGV_Error(   self::$pdo_error_code_failed_to_open_security_db,
                                             self::$pdo_error_name_failed_to_open_security_db,

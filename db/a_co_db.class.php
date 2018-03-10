@@ -21,6 +21,7 @@ abstract class A_CO_DB {
     var $pdo_object;
     var $class_description;
     var $error;
+    var $table_name;
     
     private function instantiate_record(  $in_db_result
                                             ) {
@@ -47,6 +48,7 @@ abstract class A_CO_DB {
         $this->class_description = 'Abstract Base Class for Database -Should never be instantiated.';
         
         $this->error = null;
+        $this->table_name = null;
         $this->pdo_object = $in_pdo_object;
     }
     
@@ -65,7 +67,7 @@ abstract class A_CO_DB {
                                             ) {
         $ret = null;
         
-        $sql = 'SELECT * FROM `'.a_co_main_db_record::$s_table_name.'` WHERE `id`=?';
+        $sql = 'SELECT * FROM `'.$this->table_name.'` WHERE `id`=?';
         $params = Array(intval($in_id));
         
         $temp = $this->execute_query($sql, $params);

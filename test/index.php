@@ -49,6 +49,27 @@
             }
         ?>
         <h2>Access Databases</h2>
+        <h3>Security Database</h3>
+        <?php
+            if ($access_instance->valid) {
+                $security_db = $access_instance->security_db_object;
+                
+                if (isset($security_db)) {
+                    $test_item = $security_db->get_single_record_by_id(CO_Config::$god_mode_id);
+                    
+                    echo("<h4>Get God Mode Security Database Item</h4>");
+                    if ( isset($test_item) ) {
+                        echo("<p>$test_item->class_description</p>");
+                        echo("<p>$test_item->instance_description</p>");
+                    } else {
+                        echo("<h4>NO ITEMS!</h4>");
+                    }
+                } else {
+                    echo("<h4>ERROR!</h4>");
+                }
+            }
+        ?>
+        <h3>Main Database</h3>
         <?php
             if ($access_instance->valid) {
                 $main_db = $access_instance->data_db_object;
@@ -56,15 +77,15 @@
                 if (isset($main_db)) {
                     $test_item = $main_db->get_single_record_by_id(1);
                     
-                    echo("<h3>Get First Main Database Item</h3>");
+                    echo("<h4>Get First Main Database Item</h4>");
                     if ( isset($test_item) ) {
                         echo("<p>$test_item->class_description</p>");
                         echo("<p>$test_item->instance_description</p>");
                     } else {
-                        echo("<h3>NO ITEMS!</h3>");
+                        echo("<h4>NO ITEMS!</h4>");
                     }
                 } else {
-                    echo("<h3>ERROR!</h3>");
+                    echo("<h4>ERROR!</h4>");
                 }
             }
         ?>

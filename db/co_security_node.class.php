@@ -12,8 +12,6 @@ require_once(CO_Config::db_class_dir().'/a_co_db_table_base.class.php');
 /**
  */
 class CO_Security_Node extends A_CO_DB_Table_Base {
-    static  $s_table_name = 'co_security_nodes';
-    
     var $ids;
     
 	public function __construct(    $in_db_object,
@@ -33,7 +31,7 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
                 if (isset ($temp) && $temp) {
                     $tempAr = explode(',', $temp);
                     if (is_array($tempAr) && count($tempAr)) {
-                        private function mapper($in) { return intval($in); }
+                        function mapper($in) { return intval($in); }
                         $tempAr = array_map($tempAr, mapper);
                         $this->ids = array_merge($this->ids, $tempAr);
                     }
