@@ -17,6 +17,8 @@ class CO_LL_Location extends A_CO_Main_DB_Record {
                                 ) {
         parent::__construct($in_db_object, $in_db_result, $in_security_id_array);
         
+        $this->class_description = 'A basic class for long/lat locations.';
+        
         if ($this->db_object) {
             if (isset($in_db_result['longitude'])) {
                 $this->longitude = doubleval($in_db_result['longitude']);
@@ -26,5 +28,7 @@ class CO_LL_Location extends A_CO_Main_DB_Record {
                 $this->latitude = doubleval($in_db_result['latitude']);
             }
         }
+        
+        $this->instance_description = isset($this->name) && $this->name ? "$this->name ($this->longitude, $this->latitude)" : "($this->longitude, $this->latitude)";
     }
 };

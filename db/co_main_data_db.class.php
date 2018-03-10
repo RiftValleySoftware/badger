@@ -15,5 +15,7 @@ class CO_Main_Data_DB extends A_CO_DB {
 	public function __construct(    $in_pdo_object
                                 ) {
         parent::__construct($in_pdo_object);
+        
+        $this->class_description = 'The main database class.';
     }
 };

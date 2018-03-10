@@ -33,7 +33,13 @@ class CO_Access {
     var $valid;
     var $error;
     
-	public function __construct() {
+    var $class_description;
+    
+	public function __construct(    $in_login_id = null,
+	                                $in_password = null
+	                            ) {
+        $this->class_description = 'The main data access class.';
+        
 	    $this->data_db_object = null;
 	    $this->security_db_object = null;
 	    $this->error = null;
@@ -52,23 +58,9 @@ class CO_Access {
         require_once(CO_Config::db_class_dir().'/co_pdo.class.php');
         
         try {
-            $pdo_data_db = new CO_PDO(CO_Config::$data_db_type, CO_Config::$data_db_host, CO_Config::$data_db_name, CO_Config::$data_db_login, CO_Config::$data_db_password);
-            $this->data_db_object = new CO_Main_Data_DB($pdo_data_db);
-        } catch (Exception $exception) {
-            $this->error = new LGV_Error(   self::$pdo_error_code_failed_to_open_data_db,
-                                            self::$pdo_error_name_failed_to_open_data_db,
-                                            self::$pdo_error_desc_failed_to_open_data_db,
-                                            $exception->getFile(),
-                                            $exception->getLine(),
-                                            $exception->getMessage());
-            return;
-        }
-        
-        try {
             $pdo_security_db = new CO_PDO(CO_Config::$sec_db_type, CO_Config::$sec_db_host, CO_Config::$sec_db_name, CO_Config::$sec_db_login, CO_Config::$sec_db_password);
             $this->security_db_object = new CO_Main_Data_DB($pdo_security_db);
         } catch (Exception $exception) {
-	        $this->data_db_object = null;
             $this->error = new LGV_Error(   self::$pdo_error_code_failed_to_open_security_db,
                                             self::$pdo_error_name_failed_to_open_security_db,
                                             self::$pdo_error_desc_failed_to_open_security_db,
@@ -78,6 +70,31 @@ class CO_Access {
             return;
         }
         
+        try {
+            $pdo_data_db = new CO_PDO(CO_Config::$data_db_type, CO_Config::$data_db_host, CO_Config::$data_db_name, CO_Config::$data_db_login, CO_Config::$data_db_password);
+            $this->data_db_object = new CO_Main_Data_DB($pdo_data_db);
+        } catch (Exception $exception) {
+	        $this->security_db_object = null;
+            $this->error = new LGV_Error(   self::$pdo_error_code_failed_to_open_data_db,
+                                            self::$pdo_error_name_failed_to_open_data_db,
+                                            self::$pdo_error_desc_failed_to_open_data_db,
+                                            $exception->getFile(),
+                                            $exception->getLine(),
+                                            $exception->getMessage());
+            return;
+        }
+        
         $this->valid = true;
     }
+    
+    public function login(  $in_login_id = null,
+	                                $in_password = null
+	                        ) {
+	    $ret = FALSE;
+	    
+	    if ( $this->security_db_object ) {
+	    }
+	    
+	    return $ret;
+	}
 };

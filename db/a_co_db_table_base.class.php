@@ -5,12 +5,15 @@ defined( 'LGV_ADBTB_CATCHER' ) or die ( 'Cannot Execute Directly' );	// Makes su
 
 /**
  */
-class A_CO_DB_Table_Base {
+abstract class A_CO_DB_Table_Base {
     var $db_object;
+    var $class_description;
+    var $instance_description;
     
     var $id;
     var $last_access;
     var $ttl;
+    var $name;
     var $read_security_id;
     var $write_security_id;
     var $context;
@@ -19,12 +22,15 @@ class A_CO_DB_Table_Base {
 	                                $in_db_result,
 	                                $in_security_id_array = null
                                 ) {
+        $this->class_description = 'Abstract Base Class for Records -Should never be instantiated.';
         $this->id = null;
         $this->last_access = null;
         $this->read_security_id = null;
         $this->write_security_id = null;
         $this->ttl = null;
+        $this->name = null;
         $this->context = null;
+        $this->instance_description = null;
         
         // We're not even allowed to open the door if there's read security, and we're not authorized.
         if (    !isset($in_db_result['read_security_id'])   // Null read security means everyone can read.
@@ -56,7 +62,11 @@ class A_CO_DB_Table_Base {
                 if (isset($in_db_result['ttl'])) {
                     $this->ttl = $in_db_result['ttl'];
                 }
-            
+                
+                if (isset($in_db_result['name'])) {
+                    $this->name = $in_db_result['name'];
+                }
+                
                 if (isset($in_db_result['access_class_context'])) {
                     $temp_context = unserialize($in_context);
         

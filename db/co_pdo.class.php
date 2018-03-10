@@ -12,6 +12,8 @@ defined( 'LGV_DB_CATCHER' ) or die ( 'Cannot Execute Directly' );	// Makes sure 
 class CO_PDO {
 	/// \brief Internal PDO object
 	private $pdo = null;
+	
+	var $class_description;
 
 	/// \brief Default fetch mode for internal PDOStatements
 	private $fetchMode = PDO::FETCH_ASSOC;
@@ -31,6 +33,9 @@ class CO_PDO {
 								$password = null,	///< password, optional
 								$charset = null		///< connection charset, optional
 								) {
+        
+        $this->class_description = 'A class for managing PDO access to the databases.';
+
 		$this->pdo = null;
 		
         $dsn = $driver . ':host=' . $host . ';dbname=' . $database;

@@ -11,9 +11,10 @@ require_once(CO_Config::db_class_dir().'/a_co_db_table_base.class.php');
 
 /**
  */
-class A_CO_Main_DB_Record extends A_CO_DB_Table_Base {
+abstract class A_CO_Main_DB_Record extends A_CO_DB_Table_Base {
+    static  $s_table_name = 'co_data_nodes';
+
     var $owner_id;
-    var $name;
     var $tags;
     
     private $raw_payload;
@@ -24,18 +25,15 @@ class A_CO_Main_DB_Record extends A_CO_DB_Table_Base {
                                 ) {
         parent::__construct($in_db_object, $in_db_result, $in_security_id_array);
         
+        $this->class_description = 'Abstract Base Class for Main Database Records -Should never be instantiated.';
+        
         if ($this->db_object) {
             $this->owner_id = null;
-            $this->name = null;
             $this->tags = array();
             $this->raw_payload = null;
         
             if (isset($in_db_result['owner_id'])) {
                 $this->owner_id = $in_db_result['owner_id'];
-            }
-    
-            if (isset($in_db_result['name'])) {
-                $this->name = $in_db_result['name'];
             }
 
             if (isset($in_db_result['payload']) ) {

@@ -11,12 +11,15 @@ if ( !defined('LGV_ERROR_CATCHER') ) {
     define('LGV_ERROR_CATCHER', 1);
 }
 
+require_once(CO_Config::db_class_dir().'/a_co_main_db_record.class.php');
+
 require_once(CO_Config::shared_class_dir().'/error.class.php');
 
 /**
  */
-class A_CO_DB {
+abstract class A_CO_DB {
     var $pdo_object;
+    var $class_description;
     var $error;
     
     private function instantiate_record(  $in_db_result
@@ -41,6 +44,8 @@ class A_CO_DB {
 
 	public function __construct(    $in_pdo_object
                                 ) {
+        $this->class_description = 'Abstract Base Class for Database -Should never be instantiated.';
+        
         $this->error = null;
         $this->pdo_object = $in_pdo_object;
     }
@@ -60,7 +65,7 @@ class A_CO_DB {
                                             ) {
         $ret = null;
         
-        $sql = 'SELECT * FROM `co_data_nodes` WHERE `id`=?';
+        $sql = 'SELECT * FROM `'.a_co_main_db_record::$s_table_name.'` WHERE `id`=?';
         $params = Array(intval($in_id));
         
         $temp = $this->execute_query($sql, $params);

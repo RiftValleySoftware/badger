@@ -26,7 +26,8 @@
             echo("<strong>Test class dir</strong>.......".CO_Config::test_class_dir()."\n");
             echo("</pre>");
         ?>
-        <h1>Attach Databases</h1>
+        <h1>Operation</h1>
+        <h2>Attach Databases</h2>
         <?php
             $access_instance = null;
             
@@ -39,15 +40,15 @@
             $access_instance = new CO_Access();
             
             if ($access_instance->valid) {
-                echo("<h2>Both Databases Connected!</h2>");
+                echo("<h3>Both Databases Connected!</h3>");
             } else {
-                echo("<h2>ERROR!</h2>");
+                echo("<h3>ERROR!</h3>");
                 echo("<pre>");
                 var_dump($access_instance->error);
                 echo("</pre>");
             }
         ?>
-        <h1>Get First Item</h1>
+        <h2>Access Databases</h2>
         <?php
             if ($access_instance->valid) {
                 $main_db = $access_instance->data_db_object;
@@ -55,15 +56,15 @@
                 if (isset($main_db)) {
                     $test_item = $main_db->get_single_record_by_id(1);
                     
+                    echo("<h3>Get First Main Database Item</h3>");
                     if ( isset($test_item) ) {
-                        echo("<pre>");
-                        var_dump($test_item);
-                        echo("</pre>");
+                        echo("<p>$test_item->class_description</p>");
+                        echo("<p>$test_item->instance_description</p>");
                     } else {
-                        echo("<h2>ERROR!</h2>");
+                        echo("<h3>NO ITEMS!</h3>");
                     }
                 } else {
-                    echo("<h2>ERROR!</h2>");
+                    echo("<h3>ERROR!</h3>");
                 }
             }
         ?>
