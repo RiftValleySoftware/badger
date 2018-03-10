@@ -6,14 +6,16 @@
 
 CREATE TABLE `co_data_nodes` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
-  `access_key` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
-  `owner` bigint(20) NOT NULL,
-  `read_security_id` bigint(20) NOT NULL,
-  `write_security_id` bigint(20) NOT NULL,
-  `last_access` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
   `access_class` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `last_access` datetime ON UPDATE CURRENT_TIMESTAMP,
+  `read_security_id` bigint(20) DEFAULT NULL,
+  `write_security_id` bigint(20) DEFAULT NULL,
+  `ttl` bigint(20) DEFAULT NULL,
   `access_class_context` blob,
+  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  `owner` bigint(20) DEFAULT NULL,
+  `longitude` double DEFAULT NULL,
+  `latitude` double DEFAULT NULL,
   `tag0` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
   `tag1` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
   `tag2` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
@@ -24,8 +26,7 @@ CREATE TABLE `co_data_nodes` (
   `tag7` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
   `tag8` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
   `tag9` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
-  `ttl` time DEFAULT NULL,
-  `payload` longblob
+  `payload` longblob DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -37,13 +38,15 @@ CREATE TABLE `co_data_nodes` (
 --
 ALTER TABLE `co_data_nodes`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `name` (`name`),
-  ADD KEY `access_key` (`access_key`),
-  ADD KEY `owner` (`owner`),
+  ADD KEY `access_class` (`access_class`),
   ADD KEY `last_access` (`last_access`),
   ADD KEY `write_security_id` (`write_security_id`),
   ADD KEY `read_security_id` (`read_security_id`),
-  ADD KEY `access_class` (`access_class`),
+  ADD KEY `ttl` (`ttl`),
+  ADD KEY `name` (`name`),
+  ADD KEY `owner` (`owner`),
+  ADD KEY `longitude` (`longitude`),
+  ADD KEY `latitude` (`latitude`),
   ADD KEY `tag0` (`tag0`),
   ADD KEY `tag1` (`tag1`),
   ADD KEY `tag2` (`tag2`),
@@ -53,8 +56,7 @@ ALTER TABLE `co_data_nodes`
   ADD KEY `tag6` (`tag6`),
   ADD KEY `tag7` (`tag7`),
   ADD KEY `tag8` (`tag8`),
-  ADD KEY `tag9` (`tag9`),
-  ADD KEY `ttl` (`ttl`);
+  ADD KEY `tag9` (`tag9`);
 
 --
 -- AUTO_INCREMENT for dumped tables

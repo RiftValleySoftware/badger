@@ -20,6 +20,7 @@
             echo("<strong>Base dir</strong>.............".CO_Config::db_class_dir()."\n");
             echo("<strong>Main class dir</strong>.......".CO_Config::main_class_dir()."\n");
             echo("<strong>Database class dir</strong>...".CO_Config::db_class_dir()."\n");
+            echo("<strong>Database classes dir</strong>.".CO_Config::db_classes_class_dir()."\n");
             echo("<strong>Shared class dir</strong>.....".CO_Config::shared_class_dir()."\n");
             echo("<strong>Localization dir</strong>.....".CO_Config::lang_class_dir()."\n");
             echo("<strong>Test class dir</strong>.......".CO_Config::test_class_dir()."\n");
@@ -44,6 +45,26 @@
                 echo("<pre>");
                 var_dump($access_instance->error);
                 echo("</pre>");
+            }
+        ?>
+        <h1>Get First Item</h1>
+        <?php
+            if ($access_instance->valid) {
+                $main_db = $access_instance->data_db_object;
+                
+                if (isset($main_db)) {
+                    $test_item = $main_db->get_single_record_by_id(1);
+                    
+                    if ( isset($test_item) ) {
+                        echo("<pre>");
+                        var_dump($test_item);
+                        echo("</pre>");
+                    } else {
+                        echo("<h2>ERROR!</h2>");
+                    }
+                } else {
+                    echo("<h2>ERROR!</h2>");
+                }
             }
         ?>
     </body>

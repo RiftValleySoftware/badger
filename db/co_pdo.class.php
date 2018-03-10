@@ -50,8 +50,6 @@ class CO_PDO {
 		Returns a multidimensional array depending on internal fetch mode setting ($this->fetchMode)
 		See PDO documentation about prepared queries.
 
-		If there isn't already a database connection, it will "lazy load" the connection.
-
 		Fetching key pairs- when $fetchKeyPair is set to TRUE, it will force the returned
 		array to be a one-dimensional array indexed on the first column in the query.
 		Note- query may contain only two columns or an exception/error is thrown.
@@ -74,25 +72,6 @@ class CO_PDO {
         } else {
             return $stmt->fetchAll();
 		}
-	}
-
-	/**
-		\brief Wrapper for preparing and executing a PDOStatement that does not return a resultset
-		e.g. INSERT or UPDATE SQL statements
-
-		See PDO documentation about prepared queries.
-		
-		If there isn't already a database connection, it will "lazy load" the connection.
-		
-		\throws Exception	 thrown if internal PDO exception is thrown
-		\returns true if execution is successful.
-	*/
-	public function preparedExec(
-										$sql,				///< same as kind provided to PDO::prepare()
-										$params = array()	///< same as kind provided to PDO::prepare()
-										) {
-		$stmt = $this->pdo->prepare($sql);
-		return $stmt->execute($params);
 	}
 
 	/**

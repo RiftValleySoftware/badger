@@ -6,13 +6,12 @@
 
 CREATE TABLE `co_security_nodes` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `access_key` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
-  `read_security_id` bigint(20) NOT NULL,
-  `write_security_id` bigint(20) NOT NULL,
-  `last_access` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
   `access_class` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
-  `access_class_context` blob,
-  `ttl` time DEFAULT NULL
+  `last_access` datetime ON UPDATE CURRENT_TIMESTAMP,
+  `read_security_id` bigint(20) DEFAULT NULL,
+  `write_security_id` bigint(20) DEFAULT NULL,
+  `ttl` bigint(20) DEFAULT NULL,
+  `access_class_context` blob
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -24,11 +23,10 @@ CREATE TABLE `co_security_nodes` (
 --
 ALTER TABLE `co_security_nodes`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `access_key` (`access_key`),
+  ADD KEY `access_class` (`access_class`),
+  ADD KEY `last_access` (`last_access`),
   ADD KEY `read_security_id` (`read_security_id`),
   ADD KEY `write_security_id` (`write_security_id`),
-  ADD KEY `last_access` (`last_access`),
-  ADD KEY `access_class` (`access_class`),
   ADD KEY `ttl` (`ttl`);
 
 --
@@ -49,13 +47,12 @@ ALTER TABLE `co_security_nodes`
 
 CREATE TABLE `co_security_collection` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `access_key` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
-  `read_security_id` bigint(20) NOT NULL,
-  `write_security_id` bigint(20) NOT NULL,
-  `last_access` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
   `access_class` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
-  `access_class_context` blob,
+  `last_access` datetime ON UPDATE CURRENT_TIMESTAMP,
+  `read_security_id` bigint(20) DEFAULT NULL,
+  `write_security_id` bigint(20) DEFAULT NULL,
   `ttl` time DEFAULT NULL,
+  `access_class_context` blob,
   `ids` varchar(4095) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -68,11 +65,10 @@ CREATE TABLE `co_security_collection` (
 --
 ALTER TABLE `co_security_collection`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `access_key` (`access_key`),
+  ADD KEY `access_class` (`access_class`),
+  ADD KEY `last_access` (`last_access`),
   ADD KEY `read_security_id` (`read_security_id`),
   ADD KEY `write_security_id` (`write_security_id`),
-  ADD KEY `last_access` (`last_access`),
-  ADD KEY `access_class` (`access_class`),
   ADD KEY `ttl` (`ttl`);
 
 --
