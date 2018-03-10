@@ -20,4 +20,19 @@ class CO_Security_DB extends A_CO_DB {
         
         $this->class_description = 'The security database class.';
     }
+    
+    public function get_single_record_by_login_id(  $in_login_id
+                                                ) {
+        $ret = null;
+        
+        $sql = 'SELECT * FROM `'.$this->table_name.'` WHERE `login_id`=?';
+        $params = Array($in_login_id);
+        
+        $temp = $this->execute_query($sql, $params);
+        if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
+            $ret = $this->instantiate_record($temp[0]);
+        }
+        
+        return $ret;
+    }
 };

@@ -23,7 +23,7 @@ abstract class A_CO_DB {
     var $error;
     var $table_name;
     
-    private function instantiate_record(  $in_db_result
+    function instantiate_record(  $in_db_result
                                             ) {
         $ret = null;
         

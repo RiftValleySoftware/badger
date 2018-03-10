@@ -27,67 +27,76 @@
             echo("</pre>");
         ?>
         <h1>Operation</h1>
-        <h2>Attach Databases</h2>
+        <h2>Attach Databases (no Login)</h2>
         <?php
-            $access_instance = null;
+            echo('<h3>First, Try attaching with no logins at all</h3>');
             
-	        if ( !defined('LGV_ACCESS_CATCHER') ) {
-                define('LGV_ACCESS_CATCHER', 1);
-            }
+            try_dbs();
             
-            require_once(CO_Config::main_class_dir().'/co_access.class.php');
+            echo('<h3>Next, Try attaching with a valid login ID, but invalid password</h3>');
             
-            $access_instance = new CO_Access();
+            try_dbs('admin', 'Ralph');
             
-            if ($access_instance->valid) {
-                echo("<h3>Both Databases Connected!</h3>");
-            } else {
-                echo("<h3>ERROR!</h3>");
-                echo("<pre>");
-                var_dump($access_instance->error);
-                echo("</pre>");
-            }
-        ?>
-        <h2>Access Databases</h2>
-        <h3>Security Database</h3>
-        <?php
-            if ($access_instance->valid) {
-                $security_db = $access_instance->security_db_object;
-                
-                if (isset($security_db)) {
-                    $test_item = $security_db->get_single_record_by_id(CO_Config::$god_mode_id);
-                    
-                    echo("<h4>Get God Mode Security Database Item</h4>");
-                    if ( isset($test_item) ) {
-                        echo("<p>$test_item->class_description</p>");
-                        echo("<p>$test_item->instance_description</p>");
-                    } else {
-                        echo("<h4>NO ITEMS!</h4>");
-                    }
-                } else {
-                    echo("<h4>ERROR!</h4>");
-                }
-            }
-        ?>
-        <h3>Main Database</h3>
-        <?php
-            if ($access_instance->valid) {
-                $main_db = $access_instance->data_db_object;
-                
-                if (isset($main_db)) {
-                    $test_item = $main_db->get_single_record_by_id(1);
-                    
-                    echo("<h4>Get First Main Database Item</h4>");
-                    if ( isset($test_item) ) {
-                        echo("<p>$test_item->class_description</p>");
-                        echo("<p>$test_item->instance_description</p>");
-                    } else {
-                        echo("<h4>NO ITEMS!</h4>");
-                    }
-                } else {
-                    echo("<h4>ERROR!</h4>");
-                }
-            }
+            echo('<h3>Next, Try attaching with an invalid login ID, but valid password</h3>');
+            
+            try_dbs('Fred', CO_Config::$god_mode_password);
+            
+            echo('<h3>Next, Try attaching with a valid login ID, and a valid password</h3>');
+            
+            try_dbs('admin', CO_Config::$god_mode_password);
         ?>
     </body>
 </html>
+<?php
+    function try_dbs($in_login = null, $in_password = null) {
+        $access_instance = null;
+        
+        if ( !defined('LGV_ACCESS_CATCHER') ) {
+            define('LGV_ACCESS_CATCHER', 1);
+        }
+        
+        require_once(CO_Config::main_class_dir().'/co_access.class.php');
+        
+        $access_instance = new CO_Access($in_login, $in_password);
+        
+        if ($access_instance->valid) {
+            echo("<h3>The access instance is valid!</h3>");
+            $security_db = $access_instance->security_db_object;
+        
+            if (isset($security_db) && ($security_db instanceof CO_Security_DB)) {
+                echo("<h4>We have a security DB</h4>");
+                $test_item = $security_db->get_single_record_by_id(CO_Config::$god_mode_id);
+                
+                echo("<h4>Get God Mode Security Database Item</h4>");
+                if ( isset($test_item) ) {
+                    echo("<p>$test_item->class_description</p>");
+                    echo("<p>$test_item->instance_description</p>");
+                } else {
+                    echo("<h4>NO ITEMS!</h4>");
+                }
+            } else {
+                echo("<h4>We do not have a security DB</h4>");
+            }
+        
+            $main_db = $access_instance->data_db_object;
+        
+            if (isset($main_db) && ($main_db instanceof CO_Main_Data_DB)) {
+                echo("<h4>We have a main DB</h4>");
+                $test_item = $main_db->get_single_record_by_id(1);
+                
+                echo("<h4>Get First Main Database Item</h4>");
+                if ( isset($test_item) ) {
+                    echo("<p>$test_item->class_description</p>");
+                    echo("<p>$test_item->instance_description</p>");
+                } else {
+                    echo("<h4>NO ITEMS!</h4>");
+                }
+            } else {
+                echo("<h4>We do not have a main DB</h4>");
+            }
+        } else {
+            echo("<h3>The access instance is not valid!</h3>");
+            echo('<p>Error: ('.$access_instance->error->error_code.') '.$access_instance->error->error_name.' ('.$access_instance->error->error_description.')</p>');
+        }
+    }
+?>
