@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Mar 10, 2018 at 10:00 PM
+-- Generation Time: Mar 11, 2018 at 06:22 PM
 -- Server version: 5.6.35
 -- PHP Version: 7.1.8
 
@@ -39,8 +39,9 @@ CREATE TABLE `co_security_nodes` (
 --
 
 INSERT INTO `co_security_nodes` (`id`, `login_id`, `access_class`, `last_access`, `read_security_id`, `write_security_id`, `ttl`, `name`, `access_class_context`, `ids`) VALUES
-(1, 'admin', 'CO_Security_Login', '1970-01-01 00:00:00', NULL, NULL, NULL, 'Default Admin', NULL, NULL),
-(2, 'secondary', 'CO_Security_Login', '2018-03-10 21:59:53', NULL, NULL, NULL, 'Secondary Login', 'a:1:{s:15:\"hashed_password\";s:13:\"CodYOzPtwxb4A\";}', NULL);
+(1, 'admin', 'CO_Security_Login', '2018-03-11 18:19:26', 1, 1, NULL, 'Default Admin', 'a:1:{s:15:\"hashed_password\";s:4:\"JUNK\";}', NULL),
+(2, 'secondary', 'CO_Security_Login', '2018-03-11 18:19:26', 2, 2, NULL, 'Secondary Login', 'a:1:{s:15:\"hashed_password\";s:13:\"CodYOzPtwxb4A\";}', NULL),
+(3, 'tertiary', 'CO_Security_Login', '2018-03-11 18:19:26', 3, 3, NULL, 'Tertiary Login', 'a:1:{s:15:\"hashed_password\";s:13:\"CodYOzPtwxb4A\";}', NULL);
 
 --
 -- Indexes for dumped tables
@@ -67,4 +68,4 @@ ALTER TABLE `co_security_nodes`
 -- AUTO_INCREMENT for table `co_security_nodes`
 --
 ALTER TABLE `co_security_nodes`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;

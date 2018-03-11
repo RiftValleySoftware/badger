@@ -67,12 +67,39 @@ abstract class A_CO_DB {
                                             ) {
         $ret = null;
         
-        $sql = 'SELECT * FROM `'.$this->table_name.'` WHERE `id`=?';
-        $params = Array(intval($in_id));
+        $temp = $this->get_multiple_records_by_id(Array($in_id));
         
+        if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
+            $ret = $temp[0];
+        }
+        
+        return $ret;
+    }
+    
+    public function get_multiple_records_by_id( $in_id_array
+                                                ) {
+        $ret = null;
+        
+        $sql = 'SELECT * FROM `'.$this->table_name.'` WHERE ';
+        $params = Array();
+        
+        $id_array = array_map(function($in){ return intval($in); }, $in_id_array);
+        
+        foreach ($id_array as $id) {
+            if (0 < $id) {
+                if (1 < count($params)) {
+                    $sql .= ' OR ';
+                }
+                $sql.= '(`id`=?)';
+                array_push($params, $id);
+            }
+        }
         $temp = $this->execute_query($sql, $params);
         if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
-            $ret = $this->instantiate_record($temp[0]);
+            $ret = Array();
+            foreach ($temp as $result) {
+                array_push($ret, $this->instantiate_record($result));
+            }
         }
         
         return $ret;

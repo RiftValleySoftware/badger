@@ -31,20 +31,15 @@ class CO_Access {
     static  $pdo_error_code_failed_to_open_security_db = 101;
     static  $pdo_error_code_invalid_login = 102;
     
-    private $_login_id;
-    private $_data_db_object;
-    private $_security_db_object;
+    protected $_data_db_object;
+    protected $_security_db_object;
+    protected $_login_id;
     
-    var $valid;
-    var $error;
-    
-    var $class_description;
-    
-    private function _scrub_dataset(    $in_dataset_array
+    protected function _scrub_dataset(    $in_dataset_array
                                     ) {
         $ret = array();
         
-        $security_id_array = $this->_get_security_ids();
+        $security_id_array = $this->get_security_ids();
         
         foreach ( $in_dataset_array as $data_item ) {
             
@@ -65,23 +60,13 @@ class CO_Access {
         return $ret;
     }
     
-    private function _get_security_ids() {
-        $ret = Array();
-        
-        if (isset($this->_login_id) && $this->_login_id && $this->_security_db_object) {
-            $temp = $this->_security_db_object->get_single_record_by_id($this->_login_id);
-            
-            if (isset($temp) && ($temp instanceof CO_Security_Login)) {
-                $ret = $temp->ids;
-            }
-        }
-        
-        return $ret;
-    }
-    
-    private function _bwuha_ha_ha() {
+    protected function _bwuha_ha_ha() {
         return $this->_login_id == CO_Config::$god_mode_id;
     }
+
+    public $valid;
+    public $error;
+    public $class_description;
     
 	public function __construct(    $in_login_id = null,
 	                                $in_password = null
@@ -163,6 +148,20 @@ class CO_Access {
         $this->valid = true;
     }
     
+    public function get_security_ids() {
+        $ret = Array();
+        
+        if (isset($this->_login_id) && $this->_login_id && $this->_security_db_object) {
+            $temp = $this->_security_db_object->get_single_record_by_id($this->_login_id);
+            
+            if (isset($temp) && ($temp instanceof CO_Security_Login)) {
+                $ret = $temp->ids;
+            }
+        }
+        
+        return $ret;
+    }
+    
     public function main_db_available() {
         return null != $this->_data_db_object;
     }
@@ -171,19 +170,27 @@ class CO_Access {
         return null != $this->_security_db_object;
     }
 
-    public function get_single_security_record_by_id(   $in_id
-                                                ) {
+    public function get_multiple_security_records_by_id(   $in_id_array
+                                                        ) {
         $ret = null;
         
         if (isset($this->_security_db_object) && $this->_security_db_object) {
-            $tmp = $this->_security_db_object->get_single_record_by_id($in_id);
-            $tmp = $this->_scrub_dataset(Array($tmp));
-
-            if (isset($tmp) && is_array($tmp) && (1 == count($tmp))) {
-                $ret = $tmp[0];
-            }
+            $tmp = $this->_security_db_object->get_multiple_records_by_id($in_id_array);
+            $ret = $this->_scrub_dataset($tmp);
         }
         
+        return $ret;
+    }
+
+    public function get_single_security_record_by_id(   $in_id
+                                                    ) {
+        $ret = null;
+        
+        $tmp = $this->get_multiple_security_records_by_id(Array($in_id));
+        if (isset($tmp) && is_array($tmp) && (1 == count($tmp))) {
+            $ret = $tmp[0];
+        }
+    
         return $ret;
     }
     

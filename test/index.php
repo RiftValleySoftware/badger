@@ -15,6 +15,7 @@
     </head>
     <body>
         <h1>Initial Setup</h1>
+        <div style="margin-left:1em">
         <?php
             echo("<pre>");
             echo("<strong>Base dir</strong>.............".CO_Config::db_class_dir()."\n");
@@ -27,29 +28,51 @@
             echo("</pre>");
             
         ?>
+        </div>
         <h1>Operation</h1>
-        <h2>Attach Databases (no Login)</h2>
-        <?php
-            echo('<h3>First, Try attaching with no logins at all</h3>');
+        <div style="margin-left:1em">
+            <h1>Initial Setup</h1>
+            <div style="margin-left:1em">
+                <?php
+                    echo('<h3>First, Try attaching with no logins at all</h3>');
             
-            try_dbs();
+                    echo('<div style="margin-left:1em">');
+                    try_dbs();
+                    echo('</div>');
             
-            echo('<h3>Next, Try attaching with a valid login ID, but invalid password</h3>');
+                    echo('<h3>Next, Try attaching with a valid login ID, but invalid password</h3>');
             
-            try_dbs('admin', 'Ralph');
+                    echo('<div style="margin-left:1em">');
+                    try_dbs('secondary', 'Ralph');
+                    echo('</div>');
             
-            echo('<h3>Next, Try attaching with an invalid login ID, but valid password</h3>');
+                    echo('<h3>Next, Try attaching with an invalid login ID, but valid password</h3>');
             
-            try_dbs('Fred', CO_Config::$god_mode_password);
+                    echo('<div style="margin-left:1em">');
+                    try_dbs('Fred', CO_Config::$god_mode_password);
+                    echo('</div>');
             
-            echo('<h3>Next, Try attaching with a valid God mode login ID, and a valid password</h3>');
+                    echo('<h3>Next, Try attaching with a valid God mode login ID, and a valid password</h3>');
             
-            try_dbs('admin', CO_Config::$god_mode_password);
+                    echo('<div style="margin-left:1em">');
+                    try_dbs('admin', CO_Config::$god_mode_password);
+                    echo('</div>');
             
-            echo('<h3>Next, Try attaching with a valid secondary login ID, and a valid password</h3>');
+                    echo('<h3>Next, Try attaching with a valid secondary login ID, and a valid password</h3>');
             
-            try_dbs('secondary', 'CoreysGoryStory');
-        ?>
+                    echo('<div style="margin-left:1em">');
+                    try_dbs('secondary', 'CoreysGoryStory');
+                    echo('</div>');
+            
+                    echo('<h3>Next, Try attaching with a valid tertiary login ID, and a valid password</h3>');
+            
+                    echo('<div style="margin-left:1em">');
+                    try_dbs('tertiary', 'CoreysGoryStory');
+                    echo('</div>');
+                ?>
+                </div>
+            </div>
+        </div>
     </body>
 </html>
 <?php
@@ -69,45 +92,92 @@
         
             if ($access_instance->security_db_available()) {
                 echo("<h4>We have a security DB</h4>");
-                $test_item = $access_instance->get_single_security_record_by_id(CO_Config::$god_mode_id);
                 
-                echo("<h4>Get God Mode Security Database Item</h4>");
-                if ( isset($test_item) ) {
-                    echo("<p>$test_item->class_description</p>");
-                    echo("<p>$test_item->instance_description</p>");
-                } else {
-                    echo("<h4>NO ITEM</h4>");
-                }
+                echo('<div style="margin-left:1em">');
+                    $test_item = $access_instance->get_single_security_record_by_id(1);
                 
-                $test_item = $access_instance->get_single_security_record_by_id(2);
-                echo("<h4>Get Secondary Security Database Item</h4>");
-                if ( isset($test_item) ) {
-                    echo("<p>$test_item->class_description</p>");
-                    echo("<p>$test_item->instance_description</p>");
-                } else {
-                    echo("<h4>NO ITEM</h4>");
-                }
+                    echo("<h4>Get First Security Database Item</h4>");
+                    echo('<div style="margin-left:1em">');
+                        if ( isset($test_item) ) {
+                            echo("<p>$test_item->class_description</p>");
+                            echo("<p>$test_item->instance_description</p>");
+                        } else {
+                            echo("<h4>NO ITEM</h4>");
+                        }
+                    echo('</div>');
+                
+                    $test_item = $access_instance->get_single_security_record_by_id(2);
+                    echo("<h4>Get Secondary Security Database Item</h4>");
+                
+                    echo('<div style="margin-left:1em">');
+                        if ( isset($test_item) ) {
+                            echo("<p>$test_item->class_description</p>");
+                            echo("<p>$test_item->instance_description</p>");
+                        } else {
+                            echo("<h4>NO ITEM</h4>");
+                        }
+                    echo('</div>');
+                
+                    $test_item = $access_instance->get_single_security_record_by_id(3);
+                    echo("<h4>Get Tertiary Security Database Item</h4>");
+                    echo('<div style="margin-left:1em">');
+                        if ( isset($test_item) ) {
+                            echo("<p>$test_item->class_description</p>");
+                            echo("<p>$test_item->instance_description</p>");
+                        } else {
+                            echo("<h4>NO ITEM</h4>");
+                        }
+                    echo('</div>');
+                echo('</div>');
             } else {
-                echo("<h4>We do not have a security DB</h4>");
+                echo('<h4 style="margin-left:1em">We do not have a security DB</h4>');
             }
         
             if ($access_instance->main_db_available()) {
                 echo("<h4>We have a main DB</h4>");
-                $test_item = $access_instance->get_single_data_record_by_id(1);
+                echo('<div style="margin-left:1em">');
+                    $test_item = $access_instance->get_single_data_record_by_id(1);
                 
-                echo("<h4>Get First Main Database Item</h4>");
-                if ( isset($test_item) ) {
-                    echo("<p>$test_item->class_description</p>");
-                    echo("<p>$test_item->instance_description</p>");
-                } else {
-                    echo("<h4>NO ITEMS!</h4>");
-                }
+                    echo("<h4>Get First Main Database Item</h4>");
+                
+                    echo('<div style="margin-left:1em">');
+                        if ( isset($test_item) ) {
+                            echo("<p>$test_item->class_description</p>");
+                            echo("<p>$test_item->instance_description</p>");
+                        } else {
+                            echo("<h4>NO ITEMS!</h4>");
+                        }
+                    echo('</div>');
+                
+                    $test_item = $access_instance->get_single_data_record_by_id(2);
+                
+                    echo("<h4>Get Second Main Database Item</h4>");
+                        echo('<div style="margin-left:1em">');
+                        if ( isset($test_item) ) {
+                            echo("<p>$test_item->class_description</p>");
+                            echo("<p>$test_item->instance_description</p>");
+                        } else {
+                            echo("<h4>NO ITEMS!</h4>");
+                        }
+                    echo('</div>');
+                    $test_item = $access_instance->get_single_data_record_by_id(3);
+                
+                    echo("<h4>Get Third Main Database Item</h4>");
+                    echo('<div style="margin-left:1em">');
+                        if ( isset($test_item) ) {
+                            echo("<p>$test_item->class_description</p>");
+                            echo("<p>$test_item->instance_description</p>");
+                        } else {
+                            echo("<h4>NO ITEMS!</h4>");
+                        }
+                    echo('</div>');
+                echo('</div>');
             } else {
-                echo("<h4>We do not have a main DB</h4>");
+                echo('<h4 style="margin-left:1em">We do not have a main DB</h4>');
             }
         } else {
             echo("<h3>The access instance is not valid!</h3>");
-            echo('<p>Error: ('.$access_instance->error->error_code.') '.$access_instance->error->error_name.' ('.$access_instance->error->error_description.')</p>');
+            echo('<p style="margin-left:1em">Error: ('.$access_instance->error->error_code.') '.$access_instance->error->error_name.' ('.$access_instance->error->error_description.')</p>');
         }
     }
 ?>
