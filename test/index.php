@@ -25,6 +25,7 @@
             echo("<strong>Localization dir</strong>.....".CO_Config::lang_class_dir()."\n");
             echo("<strong>Test class dir</strong>.......".CO_Config::test_class_dir()."\n");
             echo("</pre>");
+            
         ?>
         <h1>Operation</h1>
         <h2>Attach Databases (no Login)</h2>
@@ -41,9 +42,13 @@
             
             try_dbs('Fred', CO_Config::$god_mode_password);
             
-            echo('<h3>Next, Try attaching with a valid login ID, and a valid password</h3>');
+            echo('<h3>Next, Try attaching with a valid God mode login ID, and a valid password</h3>');
             
             try_dbs('admin', CO_Config::$god_mode_password);
+            
+            echo('<h3>Next, Try attaching with a valid secondary login ID, and a valid password</h3>');
+            
+            try_dbs('secondary', 'CoreysGoryStory');
         ?>
     </body>
 </html>
@@ -61,28 +66,34 @@
         
         if ($access_instance->valid) {
             echo("<h3>The access instance is valid!</h3>");
-            $security_db = $access_instance->security_db_object;
         
-            if (isset($security_db) && ($security_db instanceof CO_Security_DB)) {
+            if ($access_instance->security_db_available()) {
                 echo("<h4>We have a security DB</h4>");
-                $test_item = $security_db->get_single_record_by_id(CO_Config::$god_mode_id);
+                $test_item = $access_instance->get_single_security_record_by_id(CO_Config::$god_mode_id);
                 
                 echo("<h4>Get God Mode Security Database Item</h4>");
                 if ( isset($test_item) ) {
                     echo("<p>$test_item->class_description</p>");
                     echo("<p>$test_item->instance_description</p>");
                 } else {
-                    echo("<h4>NO ITEMS!</h4>");
+                    echo("<h4>NO ITEM</h4>");
+                }
+                
+                $test_item = $access_instance->get_single_security_record_by_id(2);
+                echo("<h4>Get Secondary Security Database Item</h4>");
+                if ( isset($test_item) ) {
+                    echo("<p>$test_item->class_description</p>");
+                    echo("<p>$test_item->instance_description</p>");
+                } else {
+                    echo("<h4>NO ITEM</h4>");
                 }
             } else {
                 echo("<h4>We do not have a security DB</h4>");
             }
         
-            $main_db = $access_instance->data_db_object;
-        
-            if (isset($main_db) && ($main_db instanceof CO_Main_Data_DB)) {
+            if ($access_instance->main_db_available()) {
                 echo("<h4>We have a main DB</h4>");
-                $test_item = $main_db->get_single_record_by_id(1);
+                $test_item = $access_instance->get_single_data_record_by_id(1);
                 
                 echo("<h4>Get First Main Database Item</h4>");
                 if ( isset($test_item) ) {

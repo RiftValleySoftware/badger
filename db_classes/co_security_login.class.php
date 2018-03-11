@@ -15,10 +15,9 @@ class CO_Security_Login extends CO_Security_Node {
     var $login_id;
     
 	public function __construct(    $in_db_object,
-	                                $in_db_result,
-	                                $in_security_id_array = null
+	                                $in_db_result
                                 ) {
-        parent::__construct($in_db_object, $in_db_result, $in_security_id_array);
+        parent::__construct($in_db_object, $in_db_result);
         
         $this->class_description = 'This is a security class for individual logins.';
         
@@ -40,7 +39,7 @@ class CO_Security_Login extends CO_Security_Node {
         $ret = FALSE;
         if (isset($this->login_id) && $this->login_id && ($this->login_id == $in_login_id)) {
             if ($this->id == CO_Config::$god_mode_id) { // God mode always reads directly from the config file, and does not encrypt.
-                $ret = $in_raw_password == CO_Config::$god_mode_password;
+                $ret = ($in_raw_password == CO_Config::$god_mode_password);
             } else {
                 if (isset($this->context['hashed_password']) && $this->context['hashed_password']) {
                     $comp = crypt($in_raw_password, $this->context['hashed_password']);

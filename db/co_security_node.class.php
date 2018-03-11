@@ -15,10 +15,9 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
     var $ids;
     
 	public function __construct(    $in_db_object,
-	                                $in_db_result,
-	                                $in_security_id_array = null
+	                                $in_db_result
                                 ) {
-        parent::__construct($in_db_object, $in_db_result, $in_security_id_array);
+        parent::__construct($in_db_object, $in_db_result);
         $this->class_description = 'The basic class for all security nodes. This should be specialized.';
                 
         $this->ids = null;

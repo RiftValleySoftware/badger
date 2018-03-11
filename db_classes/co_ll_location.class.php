@@ -12,10 +12,9 @@ class CO_LL_Location extends A_CO_Main_DB_Record {
     var $latitude;
     
 	public function __construct(    $in_db_object,
-	                                $in_db_result,
-	                                $in_security_id_array = null
+	                                $in_db_result
                                 ) {
-        parent::__construct($in_db_object, $in_db_result, $in_security_id_array);
+        parent::__construct($in_db_object, $in_db_result);
         
         $this->class_description = 'A basic class for long/lat locations.';
         

@@ -20,10 +20,9 @@ abstract class A_CO_Main_DB_Record extends A_CO_DB_Table_Base {
     private $raw_payload;
     
 	public function __construct(    $in_db_object,
-	                                $in_db_result,
-	                                $in_security_id_array = null
+	                                $in_db_result
                                 ) {
-        parent::__construct($in_db_object, $in_db_result, $in_security_id_array);
+        parent::__construct($in_db_object, $in_db_result);
         
         $this->class_description = 'Abstract Base Class for Main Database Records -Should never be instantiated.';
         
