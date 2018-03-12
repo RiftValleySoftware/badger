@@ -18,7 +18,7 @@
         <div style="margin-left:1em">
         <?php
             echo("<pre>");
-            echo("<strong>Base dir</strong>.............".CO_Config::db_class_dir()."\n");
+            echo("<strong>Base dir</strong>.............".CO_Config::base_dir()."\n");
             echo("<strong>Main class dir</strong>.......".CO_Config::main_class_dir()."\n");
             echo("<strong>Database class dir</strong>...".CO_Config::db_class_dir()."\n");
             echo("<strong>Database classes dir</strong>.".CO_Config::db_classes_class_dir()."\n");
