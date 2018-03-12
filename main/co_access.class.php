@@ -156,6 +156,10 @@ class CO_Access {
             
             if (isset($temp) && ($temp instanceof CO_Security_Login)) {
                 $ret = $temp->ids;
+                if (!in_array($temp->id,$ret)) {
+                    array_push($ret, $temp->id);
+                }
+                $ret = sort($ret);
             }
         }
         
@@ -168,6 +172,18 @@ class CO_Access {
     
     public function security_db_available() {
         return null != $this->_security_db_object;
+    }
+
+    public function get_multiple_data_records_by_id(   $in_id_array
+                                                        ) {
+        $ret = null;
+        
+        if (isset($this->_data_db_object) && $this->_data_db_object) {
+            $tmp = $this->_data_db_object->get_multiple_records_by_id($in_id_array);
+            $ret = $this->_scrub_dataset($tmp);
+        }
+        
+        return $ret;
     }
 
     public function get_multiple_security_records_by_id(   $in_id_array
@@ -193,20 +209,16 @@ class CO_Access {
     
         return $ret;
     }
-    
+
     public function get_single_data_record_by_id(   $in_id
-                                                ) {
+                                                    ) {
         $ret = null;
         
-        if (isset($this->_data_db_object) && $this->_data_db_object) {
-            $tmp = $this->_scrub_dataset(Array($this->_data_db_object->get_single_record_by_id($in_id)));
-            
-            if (isset($tmp) && is_array($tmp) && (1 == count($tmp))) {
-                $ret = $tmp[0];
-            }
+        $tmp = $this->get_multiple_data_records_by_id(Array($in_id));
+        if (isset($tmp) && is_array($tmp) && (1 == count($tmp))) {
+            $ret = $tmp[0];
         }
-        
+    
         return $ret;
     }
-
 };

@@ -25,8 +25,8 @@ CREATE TABLE `co_data_nodes` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `access_class` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   `last_access` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
-  `read_security_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `write_security_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `read_security_id` bigint(20) DEFAULT NULL,
+  `write_security_id` bigint(20) DEFAULT NULL,
   `ttl` bigint(20) UNSIGNED DEFAULT NULL,
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
   `access_class_context` blob,
@@ -51,9 +51,11 @@ CREATE TABLE `co_data_nodes` (
 --
 
 INSERT INTO `co_data_nodes` (`id`, `access_class`, `last_access`, `read_security_id`, `write_security_id`, `ttl`, `name`, `access_class_context`, `owner`, `longitude`, `latitude`, `tag0`, `tag1`, `tag2`, `tag3`, `tag4`, `tag5`, `tag6`, `tag7`, `tag8`, `tag9`, `payload`) VALUES
-(1, 'CO_LL_Location', NULL, NULL, NULL, NULL, 'Las Vegas', NULL, NULL, 36.1699, -115.1398, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(2, 'CO_LL_Location', NULL, 2, 2, NULL, 'Area 51', NULL, NULL, 37.2343, -115.8067, 'alien', 'spooks', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(3, 'CO_LL_Location', '2018-03-11 18:22:16', 3, 3, NULL, 'NA World Services', NULL, NULL, 34.23592, -118.563659, 'NA', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+(1, 'CO_LL_Location', '1970-01-01 00:00:00', NULL, NULL, NULL, 'Las Vegas', NULL, NULL, 36.1699, -115.1398, 'US', 'NV', 'nevada', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(2, 'CO_LL_Location', '1970-01-01 00:00:00', 2, 2, NULL, 'Area 51', NULL, NULL, 37.2343, -115.8067, 'alien', 'spooks', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(3, 'CO_LL_Location', '1970-01-01 00:00:00', 3, 3, NULL, 'NA World Services', NULL, NULL, 34.23592, -118.563659, 'NA', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(4, 'CO_LL_Location', '1970-01-01 00:00:00', 4, 4, NULL, 'Dubai', NULL, NULL, 25.2048, 55.2708, 'Middle East', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(5, 'CO_LL_Location', '1970-01-01 00:00:00', 4, 4, NULL, 'Anchorage', NULL, NULL, 61.2181, 149.9003, 'US', 'AL', 'alaska', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
 --
 -- Indexes for dumped tables
@@ -92,4 +94,4 @@ ALTER TABLE `co_data_nodes`
 -- AUTO_INCREMENT for table `co_data_nodes`
 --
 ALTER TABLE `co_data_nodes`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;

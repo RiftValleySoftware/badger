@@ -80,20 +80,23 @@ abstract class A_CO_DB {
                                                 ) {
         $ret = null;
         
-        $sql = 'SELECT * FROM `'.$this->table_name.'` WHERE ';
+        $sql = 'SELECT * FROM `'.$this->table_name.'` WHERE (';
         $params = Array();
         
         $id_array = array_map(function($in){ return intval($in); }, $in_id_array);
         
         foreach ($id_array as $id) {
             if (0 < $id) {
-                if (1 < count($params)) {
-                    $sql .= ' OR ';
+                if (0 < count($params)) {
+                    $sql .= ') OR (';
                 }
-                $sql.= '(`id`=?)';
+                $sql.= '`id`=?';
                 array_push($params, $id);
             }
         }
+        
+        $sql  .= ')';
+
         $temp = $this->execute_query($sql, $params);
         if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
             $ret = Array();

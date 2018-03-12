@@ -128,6 +128,31 @@
                             echo("<h4>NO ITEM</h4>");
                         }
                     echo('</div>');
+                    
+                    $test_item = $access_instance->get_multiple_security_records_by_id(Array(1,2,3,4,5));
+                
+                    echo("<h4>Get Multiple Security Database Items</h4>");
+                    echo('<div style="margin-left:1em">');
+                        if ( isset($test_item) ) {
+                            if (is_array($test_item)) {
+                                if (count($test_item)) {
+                                    foreach ( $test_item as $item ) {
+                                        echo("<h5>ITEM:</h5>");
+                                        echo('<div style="margin-left:1em">');
+                                            echo("<p>$item->class_description</p>");
+                                            echo("<p>$item->instance_description</p>");
+                                        echo('</div>');
+                                    }
+                                } else {
+                                    echo("<h4>NO ITEMS!</h4>");
+                                }
+                            } else {
+                                echo("<h4>NO ARRAY!</h4>");
+                            }
+                        } else {
+                            echo("<h4>NOTHING RETURNED!</h4>");
+                        }
+                    echo('</div>');
                 echo('</div>');
             } else {
                 echo('<h4 style="margin-left:1em">We do not have a security DB</h4>');
@@ -169,6 +194,33 @@
                             echo("<p>$test_item->instance_description</p>");
                         } else {
                             echo("<h4>NO ITEMS!</h4>");
+                        }
+                    echo('</div>');
+                
+                    $test_item = $access_instance->get_multiple_data_records_by_id(Array(1,2,3,4,5));
+                
+                    echo("<h4>Get Multiple Main Database Items</h4>");
+                    echo('<div style="margin-left:1em">');
+                        if ( isset($test_item) ) {
+                            if (is_array($test_item)) {
+                                if (count($test_item)) {
+                                    foreach ( $test_item as $item ) {
+                                        echo("<h5>ITEM:</h5>");
+                                        echo('<div style="margin-left:1em">');
+                                            echo("<p>$item->class_description</p>");
+                                            echo("<p>$item->instance_description</p>");
+                                            echo("<p>Read: $item->read_security_id</p>");
+                                            echo("<p>Write: $item->write_security_id</p>");
+                                        echo('</div>');
+                                    }
+                                } else {
+                                    echo("<h4>NO ITEMS!</h4>");
+                                }
+                            } else {
+                                echo("<h4>NO ARRAY!</h4>");
+                            }
+                        } else {
+                            echo("<h4>NOTHING RETURNED!</h4>");
                         }
                     echo('</div>');
                 echo('</div>');
