@@ -1,5 +1,5 @@
 <?php
-    $config_file_path = dirname(dirname(__FILE__)).'/config/s_config.class.php';
+    $config_file_path = dirname(__FILE__).'/config/s_config.class.php';
     
     if ( !defined('LGV_CONFIG_CATCHER') ) {
         define('LGV_CONFIG_CATCHER', 1);
