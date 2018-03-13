@@ -30,9 +30,12 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
                 if (isset ($temp) && $temp) {
                     $tempAr = explode(',', $temp);
                     if (is_array($tempAr) && count($tempAr)) {
-                        function mapper($in) { return intval($in); }
-                        $tempAr = array_map($tempAr, mapper);
-                        $this->ids = array_merge($this->ids, $tempAr);
+                        $tempAr = array_map(function($in) { return intval($in); }, $tempAr);
+                        $tempAr = array_merge($this->ids, $tempAr);
+                        if ( isset($tempAr) && is_array($tempAr) && count($tempAr)) {
+                            sort($tempAr);
+                            $this->ids = $tempAr;
+                        }
                     }
                 }
             }

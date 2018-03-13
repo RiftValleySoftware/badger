@@ -23,7 +23,26 @@ abstract class A_CO_DB {
     var $error;
     var $table_name;
     
-    function instantiate_record(  $in_db_result
+    protected function _create_security_predicate(  $in_access_ids
+                                                    ) {
+        if (1 == count($in_access_ids) && (-1 == intval($in_access_ids[0]))) {
+            return '1';
+        }
+        
+        $ret = '((`read_security_id`=0) OR (`read_security_id` IS NULL)';
+        
+        if (isset($in_access_ids) && is_array($in_access_ids) && count($in_access_ids)) {
+            foreach ($in_access_ids as $access_id) {
+                $ret .= ' OR (`read_security_id`='.intval($access_id).')';
+            }
+        }
+        
+        $ret .= ')';
+        
+        return $ret;
+    }
+    
+    public function instantiate_record(  $in_db_result
                                             ) {
         $ret = null;
         
@@ -63,11 +82,12 @@ abstract class A_CO_DB {
         return $ret;
     }
     
-    public function get_single_record_by_id(    $in_id
+    public function get_single_record_by_id(    $in_id,
+                                                $in_access_ids = NULL
                                             ) {
         $ret = null;
         
-        $temp = $this->get_multiple_records_by_id(Array($in_id));
+        $temp = $this->get_multiple_records_by_id(Array($in_id), $in_access_ids);
         
         if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
             $ret = $temp[0];
@@ -76,21 +96,23 @@ abstract class A_CO_DB {
         return $ret;
     }
     
-    public function get_multiple_records_by_id( $in_id_array
+    public function get_multiple_records_by_id( $in_id_array,
+                                                $in_access_ids = NULL
                                                 ) {
         $ret = null;
         
-        $sql = 'SELECT * FROM `'.$this->table_name.'` WHERE (';
-        $params = Array();
+        $predicate = $this->_create_security_predicate($in_access_ids);
         
+        $sql = 'SELECT * FROM `'.$this->table_name.'` WHERE '.$predicate. ' AND (';
+        $params = Array();
         $id_array = array_map(function($in){ return intval($in); }, $in_id_array);
         
         foreach ($id_array as $id) {
             if (0 < $id) {
                 if (0 < count($params)) {
-                    $sql .= ') OR (';
+                    $sql .= ' OR ';
                 }
-                $sql.= '`id`=?';
+                $sql.= '(`id`=?)';
                 array_push($params, $id);
             }
         }

@@ -35,31 +35,6 @@ class CO_Access {
     protected $_security_db_object;
     protected $_login_id;
     
-    protected function _scrub_dataset(    $in_dataset_array
-                                    ) {
-        $ret = array();
-        
-        $security_id_array = $this->get_security_ids();
-        
-        foreach ( $in_dataset_array as $data_item ) {
-            
-            if ($data_item instanceof A_CO_DB_Table_Base) {
-                $security_id = intval($data_item->read_security_id);
-            
-                if (!$security_id || $this->_bwuha_ha_ha()) {   // God Mode gets to see all.
-                    array_push($ret, $data_item);
-                    continue;
-                }
-                
-                if (isset($security_id_array) && $security_id_array && is_array($security_id_array) && count($security_id_array) && in_array($security_id, $security_id_array)) {
-                    array_push($ret, $data_item);
-                }
-            }
-        }
-        
-        return $ret;
-    }
-    
     protected function _bwuha_ha_ha() {
         return $this->_login_id == CO_Config::$god_mode_id;
     }
@@ -98,7 +73,7 @@ class CO_Access {
             try {
                 $pdo_security_db = new CO_PDO(CO_Config::$sec_db_type, CO_Config::$sec_db_host, CO_Config::$sec_db_name, CO_Config::$sec_db_login, CO_Config::$sec_db_password);
                 $this->_security_db_object = new CO_Security_DB($pdo_security_db);
-                $login_record = $this->_security_db_object->get_single_record_by_login_id($in_login_id);
+                $login_record = $this->_security_db_object->get_initial_record_by_login_id($in_login_id);
                 if (isset($login_record) && ($login_record instanceof CO_Security_Login)) {
                     if (!$login_record->is_login_valid($in_login_id, $in_password)) {
                         $this->error = new LGV_Error(   self::$pdo_error_code_invalid_login,
@@ -151,15 +126,18 @@ class CO_Access {
     public function get_security_ids() {
         $ret = Array();
         
-        if (isset($this->_login_id) && $this->_login_id && $this->_security_db_object) {
-            $temp = $this->_security_db_object->get_single_record_by_id($this->_login_id);
+        if ($this->_bwuha_ha_ha()) {
+            $ret = Array(-1);
+        } else {
+            if (isset($this->_login_id) && $this->_login_id && $this->_security_db_object) {
+                $temp = $this->_security_db_object->get_initial_record_by_id($this->_login_id);
             
-            if (isset($temp) && ($temp instanceof CO_Security_Login)) {
-                $ret = $temp->ids;
-                if (!in_array($temp->id,$ret)) {
+                if (isset($temp) && ($temp instanceof CO_Security_Login)) {
+                    $ret = $temp->ids;
                     array_push($ret, $temp->id);
+                    $ret = array_unique($ret);
+                    sort($ret);
                 }
-                $ret = sort($ret);
             }
         }
         
@@ -179,8 +157,7 @@ class CO_Access {
         $ret = null;
         
         if (isset($this->_data_db_object) && $this->_data_db_object) {
-            $tmp = $this->_data_db_object->get_multiple_records_by_id($in_id_array);
-            $ret = $this->_scrub_dataset($tmp);
+            $ret = $this->_data_db_object->get_multiple_records_by_id($in_id_array, $this->get_security_ids());
         }
         
         return $ret;
@@ -191,8 +168,7 @@ class CO_Access {
         $ret = null;
         
         if (isset($this->_security_db_object) && $this->_security_db_object) {
-            $tmp = $this->_security_db_object->get_multiple_records_by_id($in_id_array);
-            $ret = $this->_scrub_dataset($tmp);
+            $ret = $this->_security_db_object->get_multiple_records_by_id($in_id_array, $this->get_security_ids());
         }
         
         return $ret;

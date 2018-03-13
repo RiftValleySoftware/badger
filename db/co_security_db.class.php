@@ -21,16 +21,74 @@ class CO_Security_DB extends A_CO_DB {
         $this->class_description = 'The security database class.';
     }
     
-    public function get_single_record_by_login_id(  $in_login_id
-                                                ) {
+    public function get_initial_record_by_id(  $in_id
+                                            ) {
+        $ret = null;
+        
+        $sql = 'SELECT * FROM `'.$this->table_name.'` WHERE `id`='.intval($in_id);
+
+        $temp = $this->execute_query($sql, Array());
+        if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
+            $ret = $this->instantiate_record($temp[0]);
+        }
+        
+        return $ret;
+    }
+    
+    public function get_initial_record_by_login_id(  $in_login_id
+                                                    ) {
         $ret = null;
         
         $sql = 'SELECT * FROM `'.$this->table_name.'` WHERE `login_id`=?';
-        $params = Array($in_login_id);
-        
-        $temp = $this->execute_query($sql, $params);
+
+        $temp = $this->execute_query($sql, Array($in_login_id));
         if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
             $ret = $this->instantiate_record($temp[0]);
+        }
+        
+        return $ret;
+    }
+    
+    public function get_single_record_by_login_id(  $in_login_id,
+                                                    $in_access_ids
+                                                    ) {
+        $ret = null;
+        
+        $temp = $this->get_multiple_records_by_login_id(Array($in_login_id), $in_access_ids);
+        
+        if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
+            $ret = $temp[0];
+        }
+        
+        return $ret;
+    }
+    
+    public function get_multiple_records_by_login_id(   $in_login_id_array,
+                                                        $in_access_ids
+                                                    ) {
+        $ret = null;
+        
+        $sql = 'SELECT * FROM `'.$this->table_name.'` WHERE '.$this->_create_security_predicate($in_access_ids). ' AND (';
+        $params = Array();
+        
+        foreach ($in_login_id_array as $id) {
+            if (0 < $id) {
+                if (0 < count($params)) {
+                    $sql .= ') OR (';
+                }
+                $sql.= '`login_id`=?';
+                array_push($params, $id);
+            }
+        }
+        
+        $sql  .= ')';
+
+        $temp = $this->execute_query($sql, $params);
+        if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
+            $ret = Array();
+            foreach ($temp as $result) {
+                array_push($ret, $this->instantiate_record($result));
+            }
         }
         
         return $ret;

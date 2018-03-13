@@ -89,147 +89,150 @@
         
         if ($access_instance->valid) {
             echo("<h3>The access instance is valid!</h3>");
-        
-            if ($access_instance->security_db_available()) {
-                echo("<h4>We have a security DB</h4>");
-                
-                echo('<div style="margin-left:1em">');
-                    $test_item = $access_instance->get_single_security_record_by_id(1);
-                
-                    echo("<h4>Get First Security Database Item</h4>");
-                    echo('<div style="margin-left:1em">');
-                        if ( isset($test_item) ) {
-                            echo("<p>$test_item->class_description</p>");
-                            echo("<p>$test_item->instance_description</p>");
-                        } else {
-                            echo("<h4>NO ITEM</h4>");
-                        }
-                    echo('</div>');
-                
-                    $test_item = $access_instance->get_single_security_record_by_id(2);
-                    echo("<h4>Get Secondary Security Database Item</h4>");
-                
-                    echo('<div style="margin-left:1em">');
-                        if ( isset($test_item) ) {
-                            echo("<p>$test_item->class_description</p>");
-                            echo("<p>$test_item->instance_description</p>");
-                        } else {
-                            echo("<h4>NO ITEM</h4>");
-                        }
-                    echo('</div>');
-                
-                    $test_item = $access_instance->get_single_security_record_by_id(3);
-                    echo("<h4>Get Tertiary Security Database Item</h4>");
-                    echo('<div style="margin-left:1em">');
-                        if ( isset($test_item) ) {
-                            echo("<p>$test_item->class_description</p>");
-                            echo("<p>$test_item->instance_description</p>");
-                        } else {
-                            echo("<h4>NO ITEM</h4>");
-                        }
-                    echo('</div>');
-                    
-                    $test_item = $access_instance->get_multiple_security_records_by_id(Array(1,2,3,4,5));
-                
-                    echo("<h4>Get Multiple Security Database Items</h4>");
-                    echo('<div style="margin-left:1em">');
-                        if ( isset($test_item) ) {
-                            if (is_array($test_item)) {
-                                if (count($test_item)) {
-                                    foreach ( $test_item as $item ) {
-                                        echo("<h5>ITEM:</h5>");
-                                        echo('<div style="margin-left:1em">');
-                                            echo("<p>$item->class_description</p>");
-                                            echo("<p>$item->instance_description</p>");
-                                        echo('</div>');
-                                    }
-                                } else {
-                                    echo("<h4>NO ITEMS!</h4>");
-                                }
-                            } else {
-                                echo("<h4>NO ARRAY!</h4>");
-                            }
-                        } else {
-                            echo("<h4>NOTHING RETURNED!</h4>");
-                        }
-                    echo('</div>');
-                echo('</div>');
-            } else {
-                echo('<h4 style="margin-left:1em">We do not have a security DB</h4>');
-            }
-        
-            if ($access_instance->main_db_available()) {
-                echo("<h4>We have a main DB</h4>");
-                echo('<div style="margin-left:1em">');
-                    $test_item = $access_instance->get_single_data_record_by_id(1);
-                
-                    echo("<h4>Get First Main Database Item</h4>");
-                
-                    echo('<div style="margin-left:1em">');
-                        if ( isset($test_item) ) {
-                            echo("<p>$test_item->class_description</p>");
-                            echo("<p>$test_item->instance_description</p>");
-                        } else {
-                            echo("<h4>NO ITEMS!</h4>");
-                        }
-                    echo('</div>');
-                
-                    $test_item = $access_instance->get_single_data_record_by_id(2);
-                
-                    echo("<h4>Get Second Main Database Item</h4>");
-                        echo('<div style="margin-left:1em">');
-                        if ( isset($test_item) ) {
-                            echo("<p>$test_item->class_description</p>");
-                            echo("<p>$test_item->instance_description</p>");
-                        } else {
-                            echo("<h4>NO ITEMS!</h4>");
-                        }
-                    echo('</div>');
-                    $test_item = $access_instance->get_single_data_record_by_id(3);
-                
-                    echo("<h4>Get Third Main Database Item</h4>");
-                    echo('<div style="margin-left:1em">');
-                        if ( isset($test_item) ) {
-                            echo("<p>$test_item->class_description</p>");
-                            echo("<p>$test_item->instance_description</p>");
-                        } else {
-                            echo("<h4>NO ITEMS!</h4>");
-                        }
-                    echo('</div>');
-                
-                    $test_item = $access_instance->get_multiple_data_records_by_id(Array(1,2,3,4,5));
-                
-                    echo("<h4>Get Multiple Main Database Items</h4>");
-                    echo('<div style="margin-left:1em">');
-                        if ( isset($test_item) ) {
-                            if (is_array($test_item)) {
-                                if (count($test_item)) {
-                                    foreach ( $test_item as $item ) {
-                                        echo("<h5>ITEM:</h5>");
-                                        echo('<div style="margin-left:1em">');
-                                            echo("<p>$item->class_description</p>");
-                                            echo("<p>$item->instance_description</p>");
-                                            echo("<p>Read: $item->read_security_id</p>");
-                                            echo("<p>Write: $item->write_security_id</p>");
-                                        echo('</div>');
-                                    }
-                                } else {
-                                    echo("<h4>NO ITEMS!</h4>");
-                                }
-                            } else {
-                                echo("<h4>NO ARRAY!</h4>");
-                            }
-                        } else {
-                            echo("<h4>NOTHING RETURNED!</h4>");
-                        }
-                    echo('</div>');
-                echo('</div>');
-            } else {
-                echo('<h4 style="margin-left:1em">We do not have a main DB</h4>');
-            }
+            try_security_items($access_instance);
+            try_data_items($access_instance);
         } else {
             echo("<h3>The access instance is not valid!</h3>");
             echo('<p style="margin-left:1em">Error: ('.$access_instance->error->error_code.') '.$access_instance->error->error_name.' ('.$access_instance->error->error_description.')</p>');
+        }
+    }
+    
+    function try_data_items($access_instance) {
+        if ($access_instance->main_db_available()) {
+            echo("<h4>We have a main DB</h4>");
+            echo('<div style="margin-left:1em">');
+                for ($id_no = 1; $id_no < 6; $id_no++) {
+                    $test_item = $access_instance->get_single_data_record_by_id($id_no);
+            
+                    echo("<h4>Get Main Database Item $id_no</h4>");
+                    echo('<div style="margin-left:1em">');
+                        if ( isset($test_item) ) {
+                            echo("<p>$test_item->class_description</p>");
+                            echo("<p>$test_item->instance_description</p>");
+                            echo("<p>Read: $test_item->read_security_id</p>");
+                            echo("<p>Write: $test_item->write_security_id</p>");
+                        } else {
+                            echo("<h4>NO ITEM!</h4>");
+                        }
+                    echo('</div>');
+                }
+            
+                $test_item = $access_instance->get_multiple_data_records_by_id(Array(1,2,3,4,5));
+            
+                echo("<h4>Get Multiple Main Database Items</h4>");
+                echo('<div style="margin-left:1em">');
+                    if ( isset($test_item) ) {
+                        if (is_array($test_item)) {
+                            if (count($test_item)) {
+                                foreach ( $test_item as $item ) {
+                                    echo("<h5>ITEM:</h5>");
+                                    echo('<div style="margin-left:1em">');
+                                        echo("<p>$item->class_description</p>");
+                                        echo("<p>$item->instance_description</p>");
+                                        echo("<p>Read: $item->read_security_id</p>");
+                                        echo("<p>Write: $item->write_security_id</p>");
+                                    echo('</div>');
+                                }
+                            } else {
+                                echo("<h4>NO ITEMS!</h4>");
+                            }
+                        } else {
+                            echo("<h4>NO ARRAY!</h4>");
+                        }
+                    } else {
+                        echo("<h4>NOTHING RETURNED!</h4>");
+                    }
+                echo('</div>');
+            echo('</div>');
+        } else {
+            echo('<h4 style="margin-left:1em">We do not have a main DB</h4>');
+        }
+    }
+    
+    function try_security_items($access_instance) {
+        if ($access_instance->security_db_available()) {
+            echo("<h4>We have a security DB</h4>");
+            
+            echo('<div style="margin-left:1em">');
+                for ($id_no = 1; $id_no < 6; $id_no++) {
+                    $test_item = $access_instance->get_single_security_record_by_id($id_no);
+            
+                    echo("<h4>Get Security Database Item $id_no</h4>");
+                    echo('<div style="margin-left:1em">');
+                        if ( isset($test_item) ) {
+                            echo("<p>$test_item->class_description</p>");
+                            echo("<p>$test_item->instance_description</p>");
+                            echo("<p>Read: $test_item->read_security_id</p>");
+                            echo("<p>Write: $test_item->write_security_id</p>");
+                            if ( $test_item instanceof CO_Security_Login) {
+                                if ( isset($test_item->ids) && is_array($test_item->ids) && count($test_item->ids)) {
+                                    echo("<p>IDs: ");
+                                        $first = true;
+                                        foreach ( $test_item->ids as $id ) {
+                                            if (!$first) {
+                                                echo(", ");
+                                            } else {
+                                                $first = false;
+                                            }
+                                            echo($id);
+                                        }
+                                    echo("</p>");
+                                } else {
+                                    echo("<h4>NO IDS!</h4>");
+                                }
+                            }
+                        } else {
+                            echo("<h4>NO ITEM!</h4>");
+                        }
+                    echo('</div>');
+                }
+
+                $test_item = $access_instance->get_multiple_security_records_by_id(Array(1,2,3,4,5));
+            
+                echo("<h4>Get Multiple Security Database Items</h4>");
+                echo('<div style="margin-left:1em">');
+                    if ( isset($test_item) ) {
+                        if (is_array($test_item)) {
+                            if (count($test_item)) {
+                                foreach ( $test_item as $item ) {
+                                    echo("<h5>ITEM:</h5>");
+                                    echo('<div style="margin-left:1em">');
+                                        echo("<p>$item->class_description</p>");
+                                        echo("<p>$item->instance_description</p>");
+                                        echo("<p>Read: $item->read_security_id</p>");
+                                        echo("<p>Write: $item->write_security_id</p>");
+                                        if ( $item instanceof CO_Security_Login) {
+                                            if ( isset($item->ids) && is_array($item->ids) && count($item->ids)) {
+                                                echo("<p>IDs: ");
+                                                    $first = true;
+                                                    foreach ( $item->ids as $id ) {
+                                                        if (!$first) {
+                                                            echo(", ");
+                                                        } else {
+                                                            $first = false;
+                                                        }
+                                                        echo($id);
+                                                    }
+                                                echo("</p>");
+                                            } else {
+                                                echo("<h4>NO IDS!</h4>");
+                                            }
+                                        }
+                                    echo('</div>');
+                                }
+                            } else {
+                                echo("<h4>NO ITEMS!</h4>");
+                            }
+                        } else {
+                            echo("<h4>NO ARRAY!</h4>");
+                        }
+                    } else {
+                        echo("<h4>NOTHING RETURNED!</h4>");
+                    }
+                echo('</div>');
+            echo('</div>');
+        } else {
+            echo('<h4 style="margin-left:1em">We do not have a security DB</h4>');
         }
     }
 ?>
