@@ -101,7 +101,7 @@
         if ($access_instance->main_db_available()) {
             echo("<h4>We have a main DB</h4>");
             echo('<div style="margin-left:1em">');
-                for ($id_no = 1; $id_no < 6; $id_no++) {
+                for ($id_no = 1; $id_no < 9; $id_no++) {
                     $test_item = $access_instance->get_single_data_record_by_id($id_no);
             
                     echo("<h4>Get Main Database Item $id_no</h4>");
@@ -154,7 +154,7 @@
             echo("<h4>We have a security DB</h4>");
             
             echo('<div style="margin-left:1em">');
-                for ($id_no = 1; $id_no < 6; $id_no++) {
+                for ($id_no = 1; $id_no < 9; $id_no++) {
                     $test_item = $access_instance->get_single_security_record_by_id($id_no);
             
                     echo("<h4>Get Security Database Item $id_no</h4>");
@@ -187,7 +187,7 @@
                     echo('</div>');
                 }
 
-                $test_item = $access_instance->get_multiple_security_records_by_id(Array(1,2,3,4,5));
+                $test_item = $access_instance->get_multiple_security_records_by_id(Array(1,2,3,4,5,6,7,8));
             
                 echo("<h4>Get Multiple Security Database Items</h4>");
                 echo('<div style="margin-left:1em">');

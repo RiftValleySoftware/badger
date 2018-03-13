@@ -6,7 +6,7 @@ defined( 'LGV_ADBTB_CATCHER' ) or die ( 'Cannot Execute Directly' );	// Makes su
 /**
  */
 abstract class A_CO_DB_Table_Base {
-    var $db_object;
+    protected  $db_object;
     var $class_description;
     var $instance_description;
     
