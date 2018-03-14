@@ -89,6 +89,7 @@ class CO_Security_DB extends A_CO_DB {
             foreach ($temp as $result) {
                 array_push($ret, $this->instantiate_record($result));
             }
+            usort($ret, function($a, $b){return ($a->id > $b->id);});
         }
         
         return $ret;

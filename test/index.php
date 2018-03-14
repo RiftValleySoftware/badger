@@ -12,65 +12,100 @@
     <head>
         <meta charset="utf-8" />
         <title>DB APP</title>
+        <style>
+            *{margin:0;padding:0}
+            body {
+                font-family: Arial, San-serif;
+                }
+            
+            div.main_div {
+                margin-top:0.25em;
+                margin-bottom: 0.25em;
+                margin-left:1em;
+                padding: 0.5em;
+            }
+            
+            div.inner_div {
+                margin-top:0.25em;
+                margin-left:1em;
+                padding: 0.25em;
+            }
+            
+            .odd {
+                background-color: #efefef;
+            }
+            
+        </style>
     </head>
     <body>
-        <h1>Initial Setup</h1>
-        <div style="margin-left:1em">
-        <?php
-            echo("<pre>");
-            echo("<strong>Base dir</strong>.............".CO_Config::base_dir()."\n");
-            echo("<strong>Main class dir</strong>.......".CO_Config::main_class_dir()."\n");
-            echo("<strong>Database class dir</strong>...".CO_Config::db_class_dir()."\n");
-            echo("<strong>Database classes dir</strong>.".CO_Config::db_classes_class_dir()."\n");
-            echo("<strong>Shared class dir</strong>.....".CO_Config::shared_class_dir()."\n");
-            echo("<strong>Localization dir</strong>.....".CO_Config::lang_class_dir()."\n");
-            echo("<strong>Test class dir</strong>.......".CO_Config::test_class_dir()."\n");
-            echo("</pre>");
-            
-        ?>
-        </div>
-        <h1>Operation</h1>
-        <div style="margin-left:1em">
-            <h1>Initial Setup</h1>
-            <div style="margin-left:1em">
+        <div style="text-align:center;padding:1em;">
+            <img src="../icon.png" style="display:block;margin:auto;width:80px" alt="Honey badger Don't Care" />
+            <div style="display:table;margin-left:auto;margin-right:auto;text-align:left">
+                <h1>Initial Setup</h1>
+                <div class="main_div">
                 <?php
-                    echo('<h3>First, Try attaching with no logins at all</h3>');
+                    echo("<pre>");
+                    echo("<strong>Base dir</strong>.............".CO_Config::base_dir()."\n");
+                    echo("<strong>Main class dir</strong>.......".CO_Config::main_class_dir()."\n");
+                    echo("<strong>Database class dir</strong>...".CO_Config::db_class_dir()."\n");
+                    echo("<strong>Database classes dir</strong>.".CO_Config::db_classes_class_dir()."\n");
+                    echo("<strong>Shared class dir</strong>.....".CO_Config::shared_class_dir()."\n");
+                    echo("<strong>Localization dir</strong>.....".CO_Config::lang_class_dir()."\n");
+                    echo("<strong>Test class dir</strong>.......".CO_Config::test_class_dir()."\n");
+                    echo("</pre>");
             
-                    echo('<div style="margin-left:1em">');
-                    try_dbs();
-                    echo('</div>');
-            
-                    echo('<h3>Next, Try attaching with a valid login ID, but invalid password</h3>');
-            
-                    echo('<div style="margin-left:1em">');
-                    try_dbs('secondary', 'Ralph');
-                    echo('</div>');
-            
-                    echo('<h3>Next, Try attaching with an invalid login ID, but valid password</h3>');
-            
-                    echo('<div style="margin-left:1em">');
-                    try_dbs('Fred', CO_Config::$god_mode_password);
-                    echo('</div>');
-            
-                    echo('<h3>Next, Try attaching with a valid God mode login ID, and a valid password</h3>');
-            
-                    echo('<div style="margin-left:1em">');
-                    try_dbs('admin', CO_Config::$god_mode_password);
-                    echo('</div>');
-            
-                    echo('<h3>Next, Try attaching with a valid secondary login ID, and a valid password</h3>');
-            
-                    echo('<div style="margin-left:1em">');
-                    try_dbs('secondary', 'CoreysGoryStory');
-                    echo('</div>');
-            
-                    echo('<h3>Next, Try attaching with a valid tertiary login ID, and a valid password</h3>');
-            
-                    echo('<div style="margin-left:1em">');
-                    try_dbs('tertiary', 'CoreysGoryStory');
-                    echo('</div>');
                 ?>
                 </div>
+                <h1>Operation</h1>
+                <?php
+                    echo('<div class="main_div odd">');
+                    echo('<h3>First, Try attaching with no logins at all</h3>');
+    
+                    echo('<div class="main_div">');
+                    try_dbs();
+                    echo('</div>');
+                    echo('</div>');
+    
+                    echo('<div class="main_div">');
+                    echo('<h3>Next, Try attaching with a valid login ID, but invalid password</h3>');
+    
+                    echo('<div class="main_div">');
+                    try_dbs('secondary', 'Ralph');
+                    echo('</div>');
+                    echo('</div>');
+    
+                    echo('<div class="main_div odd">');
+                    echo('<h3>Next, Try attaching with an invalid login ID, but valid password</h3>');
+    
+                    echo('<div class="main_div">');
+                    try_dbs('Fred', CO_Config::$god_mode_password);
+                    echo('</div>');
+                    echo('</div>');
+    
+                    echo('<div class="main_div">');
+                    echo('<h3>Next, Try attaching with a valid God mode login ID, and a valid password</h3>');
+    
+                    echo('<div class="main_div">');
+                    try_dbs('admin', CO_Config::$god_mode_password);
+                    echo('</div>');
+                    echo('</div>');
+    
+                    echo('<div class="main_div odd">');
+                    echo('<h3>Next, Try attaching with a valid secondary login ID, and a valid password</h3>');
+    
+                    echo('<div class="main_div">');
+                    try_dbs('secondary', 'CoreysGoryStory');
+                    echo('</div>');
+                    echo('</div>');
+    
+                    echo('<div class="main_div">');
+                    echo('<h3>Next, Try attaching with a valid tertiary login ID, and a valid password</h3>');
+    
+                    echo('<div class="main_div">');
+                    try_dbs('tertiary', 'CoreysGoryStory');
+                    echo('</div>');
+                    echo('</div>');
+                ?>
             </div>
         </div>
     </body>
@@ -99,140 +134,234 @@
     
     function try_data_items($access_instance) {
         if ($access_instance->main_db_available()) {
-            echo("<h4>We have a main DB</h4>");
-            echo('<div style="margin-left:1em">');
+            echo('<div class="inner_div">');
+                echo("<h4 style=\"text-align:center;margin-top:0.5em;background-color:black;color:white\">Main Database</h4>");
+            
+                $test_item = $access_instance->get_all_data_readable_records();
+            
+                echo('<div class="inner_div">');
+                    echo("<h4>Get All Available Main Database Items</h4>");
+                    echo('<div class="inner_div">');
+                        if ( isset($test_item) ) {
+                            if (is_array($test_item)) {
+                                if (count($test_item)) {
+                                    foreach ( $test_item as $item ) {
+                                        echo("<h5>ITEM:</h5>");
+                                        echo('<div class="inner_div">');
+                                            echo("<p>ID: $item->id</p>");
+                                            echo("<p>$item->class_description</p>");
+                                            echo("<p>$item->instance_description</p>");
+                                            echo("<p>Read: $item->read_security_id</p>");
+                                            echo("<p>Write: $item->write_security_id</p>");
+                                        echo('</div>');
+                                    }
+                                } else {
+                                    echo("<h4>NO ITEMS!</h4>");
+                                }
+                            } else {
+                                echo("<h4>NO ARRAY!</h4>");
+                            }
+                        } else {
+                            echo("<h4>NOTHING RETURNED!</h4>");
+                        }
+                    echo('</div>');
+                echo('</div>');
+
                 for ($id_no = 1; $id_no < 9; $id_no++) {
                     $test_item = $access_instance->get_single_data_record_by_id($id_no);
             
-                    echo("<h4>Get Main Database Item $id_no</h4>");
-                    echo('<div style="margin-left:1em">');
-                        if ( isset($test_item) ) {
-                            echo("<p>$test_item->class_description</p>");
-                            echo("<p>$test_item->instance_description</p>");
-                            echo("<p>Read: $test_item->read_security_id</p>");
-                            echo("<p>Write: $test_item->write_security_id</p>");
-                        } else {
-                            echo("<h4>NO ITEM!</h4>");
-                        }
+                    echo('<div class="inner_div">');
+                        echo("<h4>Get Single Indexed Main Database Item $id_no</h4>");
+                        echo('<div class="inner_div">');
+                            if ( isset($test_item) ) {
+                                echo("<p>ID: $test_item->id</p>");
+                                echo("<p>$test_item->class_description</p>");
+                                echo("<p>$test_item->instance_description</p>");
+                                echo("<p>Read: $test_item->read_security_id</p>");
+                                echo("<p>Write: $test_item->write_security_id</p>");
+                            } else {
+                                echo("<h4>NO ITEM!</h4>");
+                            }
+                        echo('</div>');
                     echo('</div>');
                 }
             
-                $test_item = $access_instance->get_multiple_data_records_by_id(Array(1,2,3,4,5));
+                $test_item = $access_instance->get_multiple_data_records_by_id(Array(1,3,5,7));
             
-                echo("<h4>Get Multiple Main Database Items</h4>");
-                echo('<div style="margin-left:1em">');
-                    if ( isset($test_item) ) {
-                        if (is_array($test_item)) {
-                            if (count($test_item)) {
-                                foreach ( $test_item as $item ) {
-                                    echo("<h5>ITEM:</h5>");
-                                    echo('<div style="margin-left:1em">');
-                                        echo("<p>$item->class_description</p>");
-                                        echo("<p>$item->instance_description</p>");
-                                        echo("<p>Read: $item->read_security_id</p>");
-                                        echo("<p>Write: $item->write_security_id</p>");
-                                    echo('</div>');
+                echo('<div class="inner_div">');
+                    echo("<h4>Get Multiple Indexed Main Database Items (1, 3, 5, 7)</h4>");
+                    echo('<div class="inner_div">');
+                        if ( isset($test_item) ) {
+                            if (is_array($test_item)) {
+                                if (count($test_item)) {
+                                    foreach ( $test_item as $item ) {
+                                        echo("<h5>ITEM:</h5>");
+                                        echo('<div class="inner_div">');
+                                            echo("<p>ID: $item->id</p>");
+                                            echo("<p>$item->class_description</p>");
+                                            echo("<p>$item->instance_description</p>");
+                                            echo("<p>Read: $item->read_security_id</p>");
+                                            echo("<p>Write: $item->write_security_id</p>");
+                                        echo('</div>');
+                                    }
+                                } else {
+                                    echo("<h4>NO ITEMS!</h4>");
                                 }
                             } else {
-                                echo("<h4>NO ITEMS!</h4>");
+                                echo("<h4>NO ARRAY!</h4>");
                             }
                         } else {
-                            echo("<h4>NO ARRAY!</h4>");
+                            echo("<h4>NOTHING RETURNED!</h4>");
                         }
-                    } else {
-                        echo("<h4>NOTHING RETURNED!</h4>");
-                    }
+                    echo('</div>');
                 echo('</div>');
             echo('</div>');
         } else {
-            echo('<h4 style="margin-left:1em">We do not have a main DB</h4>');
+            echo('<div class="inner_div">');
+                echo('<h4 style="text-align:center;margin-top:0.5em">We do not have a main DB</h4>');
+            echo('</div>');
         }
     }
     
     function try_security_items($access_instance) {
         if ($access_instance->security_db_available()) {
-            echo("<h4>We have a security DB</h4>");
+            echo('<div class="inner_div">');
+                echo("<h4 style=\"text-align:center;margin-top:0.5em;background-color:black;color:white\">Security Database</h4>");
             
-            echo('<div style="margin-left:1em">');
-                for ($id_no = 1; $id_no < 9; $id_no++) {
-                    $test_item = $access_instance->get_single_security_record_by_id($id_no);
+                $test_item = $access_instance->get_all_security_readable_records();
             
-                    echo("<h4>Get Security Database Item $id_no</h4>");
-                    echo('<div style="margin-left:1em">');
+                echo('<div class="inner_div">');
+                    echo("<h4>Get All Available Security Database Items</h4>");
+                    echo('<div class="inner_div">');
                         if ( isset($test_item) ) {
-                            echo("<p>$test_item->class_description</p>");
-                            echo("<p>$test_item->instance_description</p>");
-                            echo("<p>Read: $test_item->read_security_id</p>");
-                            echo("<p>Write: $test_item->write_security_id</p>");
-                            if ( $test_item instanceof CO_Security_Login) {
-                                if ( isset($test_item->ids) && is_array($test_item->ids) && count($test_item->ids)) {
-                                    echo("<p>IDs: ");
-                                        $first = true;
-                                        foreach ( $test_item->ids as $id ) {
-                                            if (!$first) {
-                                                echo(", ");
-                                            } else {
-                                                $first = false;
+                            if (is_array($test_item)) {
+                                if (count($test_item)) {
+                                    foreach ( $test_item as $item ) {
+                                        echo("<h5>ITEM:</h5>");
+                                        echo('<div class="inner_div">');
+                                            echo("<p>ID: $item->id</p>");
+                                            echo("<p>$item->class_description</p>");
+                                            echo("<p>$item->instance_description</p>");
+                                            echo("<p>Read: $item->read_security_id</p>");
+                                            echo("<p>Write: $item->write_security_id</p>");
+                                            if ( $item instanceof CO_Security_Login) {
+                                                if ( isset($item->ids) && is_array($item->ids) && count($item->ids)) {
+                                                    echo("<p>IDs: ");
+                                                        $first = true;
+                                                        foreach ( $item->ids as $id ) {
+                                                            if (!$first) {
+                                                                echo(", ");
+                                                            } else {
+                                                                $first = false;
+                                                            }
+                                                            echo($id);
+                                                        }
+                                                    echo("</p>");
+                                                } else {
+                                                    echo("<h4>NO IDS!</h4>");
+                                                }
                                             }
-                                            echo($id);
-                                        }
-                                    echo("</p>");
+                                        echo('</div>');
+                                    }
                                 } else {
-                                    echo("<h4>NO IDS!</h4>");
+                                    echo("<h4>NO ITEMS!</h4>");
                                 }
+                            } else {
+                                echo("<h4>NO ARRAY!</h4>");
                             }
                         } else {
-                            echo("<h4>NO ITEM!</h4>");
+                            echo("<h4>NOTHING RETURNED!</h4>");
                         }
+                    echo('</div>');
+                echo('</div>');
+
+                for ($id_no = 1; $id_no < 6; $id_no++) {
+                    $test_item = $access_instance->get_single_security_record_by_id($id_no);
+            
+                    echo('<div class="inner_div">');
+                        echo("<h4>Get Single Indexed Security Database Item $id_no</h4>");
+                        echo('<div class="inner_div">');
+                            if ( isset($test_item) ) {
+                                echo("<p>ID: $test_item->id</p>");
+                                echo("<p>$test_item->class_description</p>");
+                                echo("<p>$test_item->instance_description</p>");
+                                echo("<p>Read: $test_item->read_security_id</p>");
+                                echo("<p>Write: $test_item->write_security_id</p>");
+                                if ( $test_item instanceof CO_Security_Login) {
+                                    if ( isset($test_item->ids) && is_array($test_item->ids) && count($test_item->ids)) {
+                                        echo("<p>IDs: ");
+                                            $first = true;
+                                            foreach ( $test_item->ids as $id ) {
+                                                if (!$first) {
+                                                    echo(", ");
+                                                } else {
+                                                    $first = false;
+                                                }
+                                                echo($id);
+                                            }
+                                        echo("</p>");
+                                    } else {
+                                        echo("<h4>NO IDS!</h4>");
+                                    }
+                                }
+                            } else {
+                                echo("<h4>NO ITEM!</h4>");
+                            }
+                        echo('</div>');
                     echo('</div>');
                 }
 
-                $test_item = $access_instance->get_multiple_security_records_by_id(Array(1,2,3,4,5,6,7,8));
+                $test_item = $access_instance->get_multiple_security_records_by_id(Array(1,2,3,5));
             
-                echo("<h4>Get Multiple Security Database Items</h4>");
-                echo('<div style="margin-left:1em">');
-                    if ( isset($test_item) ) {
-                        if (is_array($test_item)) {
-                            if (count($test_item)) {
-                                foreach ( $test_item as $item ) {
-                                    echo("<h5>ITEM:</h5>");
-                                    echo('<div style="margin-left:1em">');
-                                        echo("<p>$item->class_description</p>");
-                                        echo("<p>$item->instance_description</p>");
-                                        echo("<p>Read: $item->read_security_id</p>");
-                                        echo("<p>Write: $item->write_security_id</p>");
-                                        if ( $item instanceof CO_Security_Login) {
-                                            if ( isset($item->ids) && is_array($item->ids) && count($item->ids)) {
-                                                echo("<p>IDs: ");
-                                                    $first = true;
-                                                    foreach ( $item->ids as $id ) {
-                                                        if (!$first) {
-                                                            echo(", ");
-                                                        } else {
-                                                            $first = false;
+                echo('<div class="inner_div">');
+                    echo("<h4>Get Multiple Security Database Items (1, 2, 3, 5)</h4>");
+                    echo('<div class="inner_div">');
+                        if ( isset($test_item) ) {
+                            if (is_array($test_item)) {
+                                if (count($test_item)) {
+                                    foreach ( $test_item as $item ) {
+                                        echo("<h5>ITEM:</h5>");
+                                        echo('<div class="inner_div">');
+                                            echo("<p>ID: $item->id</p>");
+                                            echo("<p>$item->class_description</p>");
+                                            echo("<p>$item->instance_description</p>");
+                                            echo("<p>Read: $item->read_security_id</p>");
+                                            echo("<p>Write: $item->write_security_id</p>");
+                                            if ( $item instanceof CO_Security_Login) {
+                                                if ( isset($item->ids) && is_array($item->ids) && count($item->ids)) {
+                                                    echo("<p>IDs: ");
+                                                        $first = true;
+                                                        foreach ( $item->ids as $id ) {
+                                                            if (!$first) {
+                                                                echo(", ");
+                                                            } else {
+                                                                $first = false;
+                                                            }
+                                                            echo($id);
                                                         }
-                                                        echo($id);
-                                                    }
-                                                echo("</p>");
-                                            } else {
-                                                echo("<h4>NO IDS!</h4>");
+                                                    echo("</p>");
+                                                } else {
+                                                    echo("<h4>NO IDS!</h4>");
+                                                }
                                             }
-                                        }
-                                    echo('</div>');
+                                        echo('</div>');
+                                    }
+                                } else {
+                                    echo("<h4>NO ITEMS!</h4>");
                                 }
                             } else {
-                                echo("<h4>NO ITEMS!</h4>");
+                                echo("<h4>NO ARRAY!</h4>");
                             }
                         } else {
-                            echo("<h4>NO ARRAY!</h4>");
+                            echo("<h4>NOTHING RETURNED!</h4>");
                         }
-                    } else {
-                        echo("<h4>NOTHING RETURNED!</h4>");
-                    }
+                    echo('</div>');
                 echo('</div>');
             echo('</div>');
         } else {
-            echo('<h4 style="margin-left:1em">We do not have a security DB</h4>');
+            echo('<div class="inner_div">');
+                echo('<h4 style="text-align:center;margin-top:0.5em">We do not have a security DB</h4>');
+            echo('</div>');
         }
     }
 ?>

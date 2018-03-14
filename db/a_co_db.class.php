@@ -125,6 +125,27 @@ abstract class A_CO_DB {
             foreach ($temp as $result) {
                 array_push($ret, $this->instantiate_record($result));
             }
+            usort($ret, function($a, $b){return ($a->id > $b->id);});
+        }
+        
+        return $ret;
+    }
+    
+    public function get_all_readable_records(   $in_access_ids = NULL
+                                            ) {
+        $ret = null;
+        
+        $predicate = $this->_create_security_predicate($in_access_ids);
+        
+        $sql = 'SELECT * FROM `'.$this->table_name.'` WHERE '.$predicate;
+
+        $temp = $this->execute_query($sql, Array());
+        if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
+            $ret = Array();
+            foreach ($temp as $result) {
+                array_push($ret, $this->instantiate_record($result));
+            }
+            usort($ret, function($a, $b){return ($a->id > $b->id);});
         }
         
         return $ret;

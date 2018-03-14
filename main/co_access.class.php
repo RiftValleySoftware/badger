@@ -147,13 +147,9 @@ class CO_Access {
     public function main_db_available() {
         return null != $this->_data_db_object;
     }
-    
-    public function security_db_available() {
-        return null != $this->_security_db_object;
-    }
 
-    public function get_multiple_data_records_by_id(   $in_id_array
-                                                        ) {
+    public function get_multiple_data_records_by_id(    $in_id_array
+                                                    ) {
         $ret = null;
         
         if (isset($this->_data_db_object) && $this->_data_db_object) {
@@ -163,7 +159,33 @@ class CO_Access {
         return $ret;
     }
 
-    public function get_multiple_security_records_by_id(   $in_id_array
+    public function get_single_data_record_by_id(   $in_id
+                                                ) {
+        $ret = null;
+        
+        $tmp = $this->get_multiple_data_records_by_id(Array($in_id));
+        if (isset($tmp) && is_array($tmp) && (1 == count($tmp))) {
+            $ret = $tmp[0];
+        }
+    
+        return $ret;
+    }
+
+    public function get_all_data_readable_records() {
+        $ret = null;
+        
+        if (isset($this->_data_db_object) && $this->_data_db_object) {
+            $ret = $this->_data_db_object->get_all_readable_records($this->get_security_ids());
+        }
+        
+        return $ret;
+    }
+    
+    public function security_db_available() {
+        return null != $this->_security_db_object;
+    }
+
+    public function get_multiple_security_records_by_id(    $in_id_array
                                                         ) {
         $ret = null;
         
@@ -186,15 +208,13 @@ class CO_Access {
         return $ret;
     }
 
-    public function get_single_data_record_by_id(   $in_id
-                                                    ) {
+    public function get_all_security_readable_records() {
         $ret = null;
         
-        $tmp = $this->get_multiple_data_records_by_id(Array($in_id));
-        if (isset($tmp) && is_array($tmp) && (1 == count($tmp))) {
-            $ret = $tmp[0];
+        if (isset($this->_security_db_object) && $this->_security_db_object) {
+            $ret = $this->_security_db_object->get_all_readable_records($this->get_security_ids());
         }
-    
+        
         return $ret;
     }
 };
