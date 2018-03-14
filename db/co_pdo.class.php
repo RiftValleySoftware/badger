@@ -11,7 +11,7 @@ defined( 'LGV_DB_CATCHER' ) or die ( 'Cannot Execute Directly' );	// Makes sure 
  */
 class CO_PDO {
 	/// \brief Internal PDO object
-	private $pdo = null;
+	private $pdo = NULL;
 	
 	var $class_description;
 
@@ -29,20 +29,20 @@ class CO_PDO {
 								$driver,			///< database server type (ex: 'mysql')
 								$host,				///< database server host
 								$database,			///< database name
-								$user = null,		///< user, optional
-								$password = null,	///< password, optional
-								$charset = null		///< connection charset, optional
+								$user = NULL,		///< user, optional
+								$password = NULL,	///< password, optional
+								$charset = NULL		///< connection charset, optional
 								) {
         
         $this->class_description = 'A class for managing PDO access to the databases.';
 
-		$this->pdo = null;
+		$this->pdo = NULL;
 		
         $dsn = $driver . ':host=' . $host . ';dbname=' . $database;
         $this->pdo = new PDO($dsn, $user, $password, array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'utf8'"));
         $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $this->pdo->setAttribute(PDO::ATTR_CASE, PDO::CASE_LOWER);
-        $this->pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
+        $this->pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, TRUE);
         if (strlen($charset) > 0) {
             self::preparedExec('SET NAMES :charset', array(':charset' => $charset));
         }
@@ -66,7 +66,7 @@ class CO_PDO {
 	public function preparedQuery(
 										$sql,					///< same as kind provided to PDO::prepare()
 										$params = array(),		///< same as kind provided to PDO::prepare()
-										$fetchKeyPair = false	///< See description in method documentation
+										$fetchKeyPair = FALSE	///< See description in method documentation
 										) {
         $stmt = $this->pdo->prepare($sql);
         $stmt->setFetchMode($this->fetchMode);

@@ -22,14 +22,14 @@ abstract class A_CO_DB_Table_Base {
 	                                $in_db_result
                                 ) {
         $this->class_description = 'Abstract Base Class for Records -Should never be instantiated.';
-        $this->id = null;
-        $this->last_access = null;
+        $this->id = NULL;
+        $this->last_access = NULL;
         $this->read_security_id = 0;
         $this->write_security_id = 0;
-        $this->ttl = null;
-        $this->name = null;
-        $this->context = null;
-        $this->instance_description = null;
+        $this->ttl = NULL;
+        $this->name = NULL;
+        $this->context = NULL;
+        $this->instance_description = NULL;
         $this->db_object = $in_db_object;
     
         if (isset($in_db_object) && isset($in_db_result) && isset($in_db_result['id']) && intval($in_db_result['id'])) {

@@ -111,8 +111,8 @@
     </body>
 </html>
 <?php
-    function try_dbs($in_login = null, $in_password = null) {
-        $access_instance = null;
+    function try_dbs($in_login = NULL, $in_password = NULL) {
+        $access_instance = NULL;
         
         if ( !defined('LGV_ACCESS_CATCHER') ) {
             define('LGV_ACCESS_CATCHER', 1);
@@ -140,7 +140,37 @@
                 $test_item = $access_instance->get_all_data_readable_records();
             
                 echo('<div class="inner_div">');
-                    echo("<h4>Get All Available Main Database Items</h4>");
+                    echo("<h4>Get All Readable Main Database Items</h4>");
+                    echo('<div class="inner_div">');
+                        if ( isset($test_item) ) {
+                            if (is_array($test_item)) {
+                                if (count($test_item)) {
+                                    foreach ( $test_item as $item ) {
+                                        echo("<h5>ITEM:</h5>");
+                                        echo('<div class="inner_div">');
+                                            echo("<p>ID: $item->id</p>");
+                                            echo("<p>$item->class_description</p>");
+                                            echo("<p>$item->instance_description</p>");
+                                            echo("<p>Read: $item->read_security_id</p>");
+                                            echo("<p>Write: $item->write_security_id</p>");
+                                        echo('</div>');
+                                    }
+                                } else {
+                                    echo("<h4>NO ITEMS!</h4>");
+                                }
+                            } else {
+                                echo("<h4>NO ARRAY!</h4>");
+                            }
+                        } else {
+                            echo("<h4>NOTHING RETURNED!</h4>");
+                        }
+                    echo('</div>');
+                echo('</div>');
+            
+                $test_item = $access_instance->get_all_data_writeable_records();
+            
+                echo('<div class="inner_div">');
+                    echo("<h4>Get All Writable Main Database Items</h4>");
                     echo('<div class="inner_div">');
                         if ( isset($test_item) ) {
                             if (is_array($test_item)) {
@@ -231,7 +261,7 @@
                 $test_item = $access_instance->get_all_security_readable_records();
             
                 echo('<div class="inner_div">');
-                    echo("<h4>Get All Available Security Database Items</h4>");
+                    echo("<h4>Get All Readable Security Database Items</h4>");
                     echo('<div class="inner_div">');
                         if ( isset($test_item) ) {
                             if (is_array($test_item)) {
@@ -247,12 +277,59 @@
                                             if ( $item instanceof CO_Security_Login) {
                                                 if ( isset($item->ids) && is_array($item->ids) && count($item->ids)) {
                                                     echo("<p>IDs: ");
-                                                        $first = true;
+                                                        $first = TRUE;
                                                         foreach ( $item->ids as $id ) {
                                                             if (!$first) {
                                                                 echo(", ");
                                                             } else {
-                                                                $first = false;
+                                                                $first = FALSE;
+                                                            }
+                                                            echo($id);
+                                                        }
+                                                    echo("</p>");
+                                                } else {
+                                                    echo("<h4>NO IDS!</h4>");
+                                                }
+                                            }
+                                        echo('</div>');
+                                    }
+                                } else {
+                                    echo("<h4>NO ITEMS!</h4>");
+                                }
+                            } else {
+                                echo("<h4>NO ARRAY!</h4>");
+                            }
+                        } else {
+                            echo("<h4>NOTHING RETURNED!</h4>");
+                        }
+                    echo('</div>');
+                echo('</div>');
+            
+                $test_item = $access_instance->get_all_security_writeable_records();
+            
+                echo('<div class="inner_div">');
+                    echo("<h4>Get All Writeable Security Database Items</h4>");
+                    echo('<div class="inner_div">');
+                        if ( isset($test_item) ) {
+                            if (is_array($test_item)) {
+                                if (count($test_item)) {
+                                    foreach ( $test_item as $item ) {
+                                        echo("<h5>ITEM:</h5>");
+                                        echo('<div class="inner_div">');
+                                            echo("<p>ID: $item->id</p>");
+                                            echo("<p>$item->class_description</p>");
+                                            echo("<p>$item->instance_description</p>");
+                                            echo("<p>Read: $item->read_security_id</p>");
+                                            echo("<p>Write: $item->write_security_id</p>");
+                                            if ( $item instanceof CO_Security_Login) {
+                                                if ( isset($item->ids) && is_array($item->ids) && count($item->ids)) {
+                                                    echo("<p>IDs: ");
+                                                        $first = TRUE;
+                                                        foreach ( $item->ids as $id ) {
+                                                            if (!$first) {
+                                                                echo(", ");
+                                                            } else {
+                                                                $first = FALSE;
                                                             }
                                                             echo($id);
                                                         }
@@ -290,12 +367,12 @@
                                 if ( $test_item instanceof CO_Security_Login) {
                                     if ( isset($test_item->ids) && is_array($test_item->ids) && count($test_item->ids)) {
                                         echo("<p>IDs: ");
-                                            $first = true;
+                                            $first = TRUE;
                                             foreach ( $test_item->ids as $id ) {
                                                 if (!$first) {
                                                     echo(", ");
                                                 } else {
-                                                    $first = false;
+                                                    $first = FALSE;
                                                 }
                                                 echo($id);
                                             }
@@ -330,12 +407,12 @@
                                             if ( $item instanceof CO_Security_Login) {
                                                 if ( isset($item->ids) && is_array($item->ids) && count($item->ids)) {
                                                     echo("<p>IDs: ");
-                                                        $first = true;
+                                                        $first = TRUE;
                                                         foreach ( $item->ids as $id ) {
                                                             if (!$first) {
                                                                 echo(", ");
                                                             } else {
-                                                                $first = false;
+                                                                $first = FALSE;
                                                             }
                                                             echo($id);
                                                         }

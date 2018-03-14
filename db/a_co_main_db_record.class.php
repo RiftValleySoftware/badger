@@ -27,9 +27,9 @@ abstract class A_CO_Main_DB_Record extends A_CO_DB_Table_Base {
         $this->class_description = 'Abstract Base Class for Main Database Records -Should never be instantiated.';
         
         if ($this->db_object) {
-            $this->owner_id = null;
+            $this->owner_id = NULL;
             $this->tags = array();
-            $this->raw_payload = null;
+            $this->raw_payload = NULL;
         
             if (isset($in_db_result['owner_id'])) {
                 $this->owner_id = $in_db_result['owner_id'];
@@ -41,7 +41,7 @@ abstract class A_CO_Main_DB_Record extends A_CO_DB_Table_Base {
         
             for ($i = 0; $i < 10; $i++) {
                 $tagname = 'tag'.$i;
-                $this->tags[$i] = null;
+                $this->tags[$i] = NULL;
                 if (isset($in_db_result[$tagname])) {
                     $this->tags[$i] = $in_db_result[$tagname];
                 }
@@ -49,7 +49,7 @@ abstract class A_CO_Main_DB_Record extends A_CO_DB_Table_Base {
         }
     }
     
-    public function payload(    $in_private_key = null
+    public function payload(    $in_private_key = NULL
                             ) {
         if ($in_private_key) {
             $ret = $this->decrypt_payload_with_private_key($in_private_key);
@@ -62,10 +62,10 @@ abstract class A_CO_Main_DB_Record extends A_CO_DB_Table_Base {
     
     public function decrypt_payload_with_private_key(   $in_private_key
                                                     ) {
-        $ret = null;
+        $ret = NULL;
         
         if (!openssl_private_decrypt($this->raw_payload, $ret, $in_private_key)) {
-            $ret = null;
+            $ret = NULL;
         }
         
         return $ret;

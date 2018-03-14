@@ -23,7 +23,7 @@ class CO_Security_DB extends A_CO_DB {
     
     public function get_initial_record_by_id(  $in_id
                                             ) {
-        $ret = null;
+        $ret = NULL;
         
         $sql = 'SELECT * FROM `'.$this->table_name.'` WHERE `id`='.intval($in_id);
 
@@ -37,7 +37,7 @@ class CO_Security_DB extends A_CO_DB {
     
     public function get_initial_record_by_login_id(  $in_login_id
                                                     ) {
-        $ret = null;
+        $ret = NULL;
         
         $sql = 'SELECT * FROM `'.$this->table_name.'` WHERE `login_id`=?';
 
@@ -50,11 +50,12 @@ class CO_Security_DB extends A_CO_DB {
     }
     
     public function get_single_record_by_login_id(  $in_login_id,
-                                                    $in_access_ids
+                                                    $in_access_ids,
+                                                    $and_write = FALSE
                                                     ) {
-        $ret = null;
+        $ret = NULL;
         
-        $temp = $this->get_multiple_records_by_login_id(Array($in_login_id), $in_access_ids);
+        $temp = $this->get_multiple_records_by_login_id(Array($in_login_id), $in_access_ids, $and_write);
         
         if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
             $ret = $temp[0];
@@ -64,11 +65,12 @@ class CO_Security_DB extends A_CO_DB {
     }
     
     public function get_multiple_records_by_login_id(   $in_login_id_array,
-                                                        $in_access_ids
+                                                        $in_access_ids,
+                                                        $and_write = FALSE
                                                     ) {
-        $ret = null;
+        $ret = NULL;
         
-        $sql = 'SELECT * FROM `'.$this->table_name.'` WHERE '.$this->_create_security_predicate($in_access_ids). ' AND (';
+        $sql = 'SELECT * FROM `'.$this->table_name.'` WHERE '.$this->_create_security_predicate($in_access_ids, $and_write). ' AND (';
         $params = Array();
         
         foreach ($in_login_id_array as $id) {

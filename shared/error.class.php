@@ -19,11 +19,11 @@ class LGV_Error {
 
 	public function __construct(
                                 $error_code = 0,
-                                $error_name = null,
-                                $error_description = null,
-                                $error_file = null,
-                                $error_line = null,
-                                $error_detailed_description = null
+                                $error_name = NULL,
+                                $error_description = NULL,
+                                $error_file = NULL,
+                                $error_line = NULL,
+                                $error_detailed_description = NULL
 	                            ) {
 	    $this->error_code = $error_code;
 	    $this->error_name = $error_name;
