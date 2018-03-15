@@ -35,6 +35,10 @@
                 background-color: #efefef;
             }
             
+            .godd {
+                background-color: #ffeded;
+            }
+            
         </style>
     </head>
     <body>
@@ -82,7 +86,7 @@
                     echo('</div>');
                     echo('</div>');
     
-                    echo('<div class="main_div">');
+                    echo('<div class="main_div godd">');
                     echo('<h3>Next, Try attaching with a valid God mode login ID, and a valid password</h3>');
     
                     echo('<div class="main_div">');
@@ -127,8 +131,8 @@
             try_security_items($access_instance);
             try_data_items($access_instance);
         } else {
-            echo("<h3>The access instance is not valid!</h3>");
-            echo('<p style="margin-left:1em">Error: ('.$access_instance->error->error_code.') '.$access_instance->error->error_name.' ('.$access_instance->error->error_description.')</p>');
+            echo("<h3 style=\"color:red;font-weight:bold\">The access instance is not valid!</h3>");
+            echo('<p style="margin-left:1em;color:red;font-weight:bold">Error: ('.$access_instance->error->error_code.') '.$access_instance->error->error_name.' ('.$access_instance->error->error_description.')</p>');
         }
     }
     
@@ -146,9 +150,8 @@
                             if (is_array($test_item)) {
                                 if (count($test_item)) {
                                     foreach ( $test_item as $item ) {
-                                        echo("<h5>ITEM:</h5>");
+                                        echo("<h5>ITEM $item->id:</h5>");
                                         echo('<div class="inner_div">');
-                                            echo("<p>ID: $item->id</p>");
                                             echo("<p>$item->class_description</p>");
                                             echo("<p>$item->instance_description</p>");
                                             echo("<p>Read: $item->read_security_id</p>");
@@ -159,10 +162,10 @@
                                     echo("<h4>NO ITEMS!</h4>");
                                 }
                             } else {
-                                echo("<h4>NO ARRAY!</h4>");
+                                echo("<h4 style=\"color:red;font-weight:bold\">NO ARRAY!</h4>");
                             }
                         } else {
-                            echo("<h4>NOTHING RETURNED!</h4>");
+                            echo("<h4 style=\"color:red;font-weight:bold\">NOTHING RETURNED!</h4>");
                         }
                     echo('</div>');
                 echo('</div>');
@@ -176,9 +179,8 @@
                             if (is_array($test_item)) {
                                 if (count($test_item)) {
                                     foreach ( $test_item as $item ) {
-                                        echo("<h5>ITEM:</h5>");
+                                        echo("<h5>ITEM $item->id:</h5>");
                                         echo('<div class="inner_div">');
-                                            echo("<p>ID: $item->id</p>");
                                             echo("<p>$item->class_description</p>");
                                             echo("<p>$item->instance_description</p>");
                                             echo("<p>Read: $item->read_security_id</p>");
@@ -189,31 +191,35 @@
                                     echo("<h4>NO ITEMS!</h4>");
                                 }
                             } else {
-                                echo("<h4>NO ARRAY!</h4>");
+                                echo("<h4 style=\"color:red;font-weight:bold\">NO ARRAY!</h4>");
                             }
                         } else {
-                            echo("<h4>NOTHING RETURNED!</h4>");
+                            echo("<h4 style=\"color:red;font-weight:bold\">NOTHING RETURNED!</h4>");
                         }
                     echo('</div>');
                 echo('</div>');
 
                 for ($id_no = 1; $id_no < 9; $id_no++) {
                     $test_item = $access_instance->get_single_data_record_by_id($id_no);
-            
-                    echo('<div class="inner_div">');
-                        echo("<h4>Get Single Indexed Main Database Item $id_no</h4>");
+                    
+                    if ($test_item) {
                         echo('<div class="inner_div">');
-                            if ( isset($test_item) ) {
-                                echo("<p>ID: $test_item->id</p>");
-                                echo("<p>$test_item->class_description</p>");
-                                echo("<p>$test_item->instance_description</p>");
-                                echo("<p>Read: $test_item->read_security_id</p>");
-                                echo("<p>Write: $test_item->write_security_id</p>");
-                            } else {
-                                echo("<h4>NO ITEM!</h4>");
-                            }
+                            echo("<h4>Get Single Indexed Main Database Item $id_no</h4>");
+                            echo('<div class="inner_div">');
+                                if ( isset($test_item) ) {
+                                    echo("<p>ID: $test_item->id</p>");
+                                    echo("<p>$test_item->class_description</p>");
+                                    echo("<p>$test_item->instance_description</p>");
+                                    echo("<p>Read: $test_item->read_security_id</p>");
+                                    echo("<p>Write: $test_item->write_security_id</p>");
+                                } else {
+                                    echo("<h4>NO ITEM!</h4>");
+                                }
+                            echo('</div>');
                         echo('</div>');
-                    echo('</div>');
+                    } else {
+                        echo("<h4 style=\"color:red;font-weight:bold\">DATA ITEM $id_no IS NOT ACCESSIBLE</h4>");
+                    }
                 }
             
                 $test_item = $access_instance->get_multiple_data_records_by_id(Array(1,3,5,7));
@@ -225,9 +231,8 @@
                             if (is_array($test_item)) {
                                 if (count($test_item)) {
                                     foreach ( $test_item as $item ) {
-                                        echo("<h5>ITEM:</h5>");
+                                        echo("<h5>ITEM $item->id:</h5>");
                                         echo('<div class="inner_div">');
-                                            echo("<p>ID: $item->id</p>");
                                             echo("<p>$item->class_description</p>");
                                             echo("<p>$item->instance_description</p>");
                                             echo("<p>Read: $item->read_security_id</p>");
@@ -238,10 +243,10 @@
                                     echo("<h4>NO ITEMS!</h4>");
                                 }
                             } else {
-                                echo("<h4>NO ARRAY!</h4>");
+                                echo("<h4 style=\"color:red;font-weight:bold\">NO ARRAY!</h4>");
                             }
                         } else {
-                            echo("<h4>NOTHING RETURNED!</h4>");
+                            echo("<h4 style=\"color:red;font-weight:bold\">NOTHING RETURNED!</h4>");
                         }
                     echo('</div>');
                 echo('</div>');
@@ -267,9 +272,8 @@
                             if (is_array($test_item)) {
                                 if (count($test_item)) {
                                     foreach ( $test_item as $item ) {
-                                        echo("<h5>ITEM:</h5>");
+                                        echo("<h5>ITEM $item->id:</h5>");
                                         echo('<div class="inner_div">');
-                                            echo("<p>ID: $item->id</p>");
                                             echo("<p>$item->class_description</p>");
                                             echo("<p>$item->instance_description</p>");
                                             echo("<p>Read: $item->read_security_id</p>");
@@ -297,10 +301,10 @@
                                     echo("<h4>NO ITEMS!</h4>");
                                 }
                             } else {
-                                echo("<h4>NO ARRAY!</h4>");
+                                echo("<h4 style=\"color:red;font-weight:bold\">NO ARRAY!</h4>");
                             }
                         } else {
-                            echo("<h4>NOTHING RETURNED!</h4>");
+                            echo("<h4 style=\"color:red;font-weight:bold\">NOTHING RETURNED!</h4>");
                         }
                     echo('</div>');
                 echo('</div>');
@@ -314,9 +318,8 @@
                             if (is_array($test_item)) {
                                 if (count($test_item)) {
                                     foreach ( $test_item as $item ) {
-                                        echo("<h5>ITEM:</h5>");
+                                        echo("<h5>ITEM $item->id:</h5>");
                                         echo('<div class="inner_div">');
-                                            echo("<p>ID: $item->id</p>");
                                             echo("<p>$item->class_description</p>");
                                             echo("<p>$item->instance_description</p>");
                                             echo("<p>Read: $item->read_security_id</p>");
@@ -344,10 +347,10 @@
                                     echo("<h4>NO ITEMS!</h4>");
                                 }
                             } else {
-                                echo("<h4>NO ARRAY!</h4>");
+                                echo("<h4 style=\"color:red;font-weight:bold\">NO ARRAY!</h4>");
                             }
                         } else {
-                            echo("<h4>NOTHING RETURNED!</h4>");
+                            echo("<h4 style=\"color:red;font-weight:bold\">NOTHING RETURNED!</h4>");
                         }
                     echo('</div>');
                 echo('</div>');
@@ -355,37 +358,41 @@
                 for ($id_no = 1; $id_no < 6; $id_no++) {
                     $test_item = $access_instance->get_single_security_record_by_id($id_no);
             
-                    echo('<div class="inner_div">');
-                        echo("<h4>Get Single Indexed Security Database Item $id_no</h4>");
+                    if ($test_item) {
                         echo('<div class="inner_div">');
-                            if ( isset($test_item) ) {
-                                echo("<p>ID: $test_item->id</p>");
-                                echo("<p>$test_item->class_description</p>");
-                                echo("<p>$test_item->instance_description</p>");
-                                echo("<p>Read: $test_item->read_security_id</p>");
-                                echo("<p>Write: $test_item->write_security_id</p>");
-                                if ( $test_item instanceof CO_Security_Login) {
-                                    if ( isset($test_item->ids) && is_array($test_item->ids) && count($test_item->ids)) {
-                                        echo("<p>IDs: ");
-                                            $first = TRUE;
-                                            foreach ( $test_item->ids as $id ) {
-                                                if (!$first) {
-                                                    echo(", ");
-                                                } else {
-                                                    $first = FALSE;
+                            echo("<h4>Get Single Indexed Security Database Item $id_no</h4>");
+                            echo('<div class="inner_div">');
+                                if ( isset($test_item) ) {
+                                    echo("<p>ID: $test_item->id</p>");
+                                    echo("<p>$test_item->class_description</p>");
+                                    echo("<p>$test_item->instance_description</p>");
+                                    echo("<p>Read: $test_item->read_security_id</p>");
+                                    echo("<p>Write: $test_item->write_security_id</p>");
+                                    if ( $test_item instanceof CO_Security_Login) {
+                                        if ( isset($test_item->ids) && is_array($test_item->ids) && count($test_item->ids)) {
+                                            echo("<p>IDs: ");
+                                                $first = TRUE;
+                                                foreach ( $test_item->ids as $id ) {
+                                                    if (!$first) {
+                                                        echo(", ");
+                                                    } else {
+                                                        $first = FALSE;
+                                                    }
+                                                    echo($id);
                                                 }
-                                                echo($id);
-                                            }
-                                        echo("</p>");
-                                    } else {
-                                        echo("<h4>NO IDS!</h4>");
+                                            echo("</p>");
+                                        } else {
+                                            echo("<h4>NO IDS!</h4>");
+                                        }
                                     }
+                                } else {
+                                    echo("<h4>NO ITEM!</h4>");
                                 }
-                            } else {
-                                echo("<h4>NO ITEM!</h4>");
-                            }
+                            echo('</div>');
                         echo('</div>');
-                    echo('</div>');
+                    } else {
+                        echo("<h4 style=\"color:red;font-weight:bold\">SECURITY ITEM $id_no IS NOT ACCESSIBLE</h4>");
+                    }
                 }
 
                 $test_item = $access_instance->get_multiple_security_records_by_id(Array(1,2,3,5));
@@ -397,9 +404,8 @@
                             if (is_array($test_item)) {
                                 if (count($test_item)) {
                                     foreach ( $test_item as $item ) {
-                                        echo("<h5>ITEM:</h5>");
+                                        echo("<h5>ITEM $item->id:</h5>");
                                         echo('<div class="inner_div">');
-                                            echo("<p>ID: $item->id</p>");
                                             echo("<p>$item->class_description</p>");
                                             echo("<p>$item->instance_description</p>");
                                             echo("<p>Read: $item->read_security_id</p>");
@@ -427,10 +433,10 @@
                                     echo("<h4>NO ITEMS!</h4>");
                                 }
                             } else {
-                                echo("<h4>NO ARRAY!</h4>");
+                                echo("<h4 style=\"color:red;font-weight:bold\">NO ARRAY!</h4>");
                             }
                         } else {
-                            echo("<h4>NOTHING RETURNED!</h4>");
+                            echo("<h4 style=\"color:red;font-weight:bold\">NOTHING RETURNED!</h4>");
                         }
                     echo('</div>');
                 echo('</div>');
