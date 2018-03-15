@@ -61,8 +61,6 @@
                 <h1>Initial Setup</h1>
                 <div class="main_div">
                 <?php
-                    prepare_databases();
-
                     echo("<pre>");
                     echo("<strong>Base dir</strong>.............".CO_Config::base_dir()."\n");
                     echo("<strong>Main class dir</strong>.......".CO_Config::main_class_dir()."\n");
@@ -73,6 +71,7 @@
                     echo("<strong>Test class dir</strong>.......".CO_Config::test_class_dir()."\n");
                     echo("</pre>");
             
+                    prepare_databases();
                 ?>
                 </div>
                 <h1>Operation</h1>
@@ -144,9 +143,9 @@
         
                 try {
                     $pdo_data_db->preparedExec($data_db_sql);
-                    echo('<h2 style="margin-left:1em">Sucessfully initialized the data DB</h1>');
+                    echo('<h3 style="text-align:center">Sucessfully initialized the data DB</h3>');
                     $pdo_security_db->preparedExec($security_db_sql);
-                    echo('<h2 style="margin-left:1em">Sucessfully initialized the security DB</h1>');
+                    echo('<h3 style="text-align:center">Sucessfully initialized the security DB</h3>');
                 } catch (Exception $exception) {
                     $error = new LGV_Error( 1,
                                             'INITIAL DATABASE SETUP FAILURE',
