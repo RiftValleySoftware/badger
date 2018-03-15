@@ -8,17 +8,6 @@
     }
     
     require_once($config_file_path);
-        if ( !defined('LGV_DB_CATCHER') ) {
-            define('LGV_DB_CATCHER', 1);
-        }
-
-        require_once(CO_Config::db_class_dir().'/co_pdo.class.php');
-        
-        if ( !defined('LGV_ERROR_CATCHER') ) {
-            define('LGV_ERROR_CATCHER', 1);
-        }
-
-        require_once(CO_Config::shared_class_dir().'/error.class.php');
     
 ?><!DOCTYPE html>
 <html lang="en">
@@ -52,9 +41,13 @@
                 background-color: #ffeded;
             }
             
+            .explain {
+                font-style: italic;
+            }
         </style>
     </head>
     <body>
+        <h1 style="text-align:center">BADGER DATABASE FRAMEWORK TEST</h1>
         <div style="text-align:center;padding:1em;">
             <img src="../icon.png" style="display:block;margin:auto;width:80px" alt="Honey badger Don't Care" />
             <div style="display:table;margin-left:auto;margin-right:auto;text-align:left">
@@ -80,47 +73,123 @@
                     echo('<h3>First, Try attaching with no logins at all</h3>');
     
                     echo('<div class="main_div">');
+                    ?>
+                    <div class="main_div" style="margin-right:2em">
+                    <p class="explain">What is expected here, is that we will have no security database (It won't even be instantiated if there's no login),</p>
+                    <p class="explain">and only the publicly readable data items will be visible (items 1, 7, 8).</p>
+                    <p class="explain">There will be no writable items.</p>
+                    </div>
+                    <?php
                     try_dbs();
                     echo('</div>');
                     echo('</div>');
     
                     echo('<div class="main_div">');
-                    echo('<h3>Next, Try attaching with a valid login ID, but invalid password</h3>');
+                    echo('<h3>Next, Try attaching with a valid login ("secondary") ID, but invalid password ("Ralph")</h3>');
     
                     echo('<div class="main_div">');
-                    try_dbs('secondary', 'Ralph');
+                    ?>
+                    <div class="main_div" style="margin-right:2em">
+                    <p class="explain">This should flat-out fail.</p>
+                    </div>
+                    <?php
+                    try_dbs('secondary', '', 'Ralph');
                     echo('</div>');
                     echo('</div>');
     
                     echo('<div class="main_div odd">');
-                    echo('<h3>Next, Try attaching with an invalid login ID, but valid password</h3>');
+                    echo('<h3>Next, Try attaching with an invalid login ID ("Fred"), but valid God Mode password ("'.CO_Config::$god_mode_password.'")</h3>');
     
                     echo('<div class="main_div">');
+                    ?>
+                    <div class="main_div" style="margin-right:2em">
+                    <p class="explain">This should flat-out fail.</p>
+                    </div>
+                    <?php
                     try_dbs('Fred', CO_Config::$god_mode_password);
                     echo('</div>');
                     echo('</div>');
     
-                    echo('<div class="main_div godd">');
-                    echo('<h3>Next, Try attaching with a valid God mode login ID, and a valid password</h3>');
+                    echo('<div class="main_div">');
+                    echo('<h3>Next, Try attaching with an invalid login ID ("Fred"), but valid password ("CoreysGoryStory")</h3>');
     
                     echo('<div class="main_div">');
-                    try_dbs('admin', CO_Config::$god_mode_password);
+                    ?>
+                    <div class="main_div" style="margin-right:2em">
+                    <p class="explain">This should flat-out fail.</p>
+                    </div>
+                    <?php
+                    try_dbs('Fred', CO_Config::$god_mode_password);
                     echo('</div>');
                     echo('</div>');
     
                     echo('<div class="main_div odd">');
-                    echo('<h3>Next, Try attaching with a valid secondary login ID, and a valid password</h3>');
+                    echo('<h3>Next, Try attaching with an valid login ID ("secondary"), but invalid hashed password ("CoreysGoryStory")</h3>');
     
                     echo('<div class="main_div">');
+                    ?>
+                    <div class="main_div" style="margin-right:2em">
+                    <p class="explain">This should flat-out fail.</p>
+                    </div>
+                    <?php
                     try_dbs('secondary', 'CoreysGoryStory');
                     echo('</div>');
                     echo('</div>');
     
                     echo('<div class="main_div">');
-                    echo('<h3>Next, Try attaching with a valid tertiary login ID, and a valid password</h3>');
+                    echo('<h3>Next, Try attaching with an invalid login ID ("Fred"), but valid hashed password ("CodYOzPtwxb4A")</h3>');
     
                     echo('<div class="main_div">');
-                    try_dbs('tertiary', 'CoreysGoryStory');
+                    ?>
+                    <div class="main_div" style="margin-right:2em">
+                    <p class="explain">This should flat-out fail.</p>
+                    </div>
+                    <?php
+                    try_dbs('Fred', 'CodYOzPtwxb4A');
+                    echo('</div>');
+                    echo('</div>');
+    
+                    echo('<div class="main_div godd">');
+                    echo('<h3>Next, Try attaching with a valid God Mode login ID ("admin"), and valid God Mode password ("'.CO_Config::$god_mode_password.'")</h3>');
+    
+                    echo('<div class="main_div">');
+                    ?>
+                    <div class="main_div" style="margin-right:2em">
+                    <p class="explain">This ID should have read and write access to every single item in both databases.</p>
+                    </div>
+                    <?php
+                    try_dbs('admin', NULL, CO_Config::$god_mode_password);
+                    echo('</div>');
+                    echo('</div>');
+    
+                    echo('<div class="main_div">');
+                    echo('<h3>Next, Try attaching with a valid secondary login ID, and a valid password</h3>');
+    
+                    echo('<div class="main_div">');
+                    ?>
+                    <div class="main_div" style="margin-right:2em">
+                    <p class="explain">This ID has access (read and write) only to itself in the security database.</p>
+                    <p class="explain">It has read-write access to items 1, 2, 4, 5, 6, 7, 8 of the main database.</p>
+                    <p class="explain">It has no access to item 3 of the main database.</p>
+                    </div>
+                    <?php
+                    try_dbs('secondary', '', 'CoreysGoryStory');
+                    echo('</div>');
+                    echo('</div>');
+    
+                    echo('<div class="main_div odd">');
+                    echo('<h3>Next, Try attaching with a valid tertiary login ID, and a valid hashed password</h3>');
+    
+                    echo('<div class="main_div">');
+                    ?>
+                    <div class="main_div" style="margin-right:2em">
+                    <p class="explain">This ID has access (read and write) only to itself in the security database.</p>
+                    <p class="explain">It has read-write access to items 1, 3, 6, 8 of the main database.</p>
+                    <p class="explain">It has read-only access to items 1, 3, 6, 7, 8 of the main database.</p>
+                    <p class="explain">It has no access to items 2, 4, 5 of the main database.</p>
+                    </div>
+                    <?php
+                    try_dbs('tertiary', 'CodYOzPtwxb4A');
                     echo('</div>');
                     echo('</div>');
                 ?>
@@ -130,6 +199,20 @@
 </html>
 <?php
     function prepare_databases() {
+        if ( !defined('LGV_DB_CATCHER') ) {
+            define('LGV_DB_CATCHER', 1);
+        }
+
+        require_once(CO_Config::db_class_dir().'/co_pdo.class.php');
+    
+        if ( !defined('LGV_ERROR_CATCHER') ) {
+            define('LGV_ERROR_CATCHER', 1);
+        }
+
+        require_once(CO_Config::shared_class_dir().'/error.class.php');
+        
+        echo('<h2 style="margin-top:1em">Setting Up Initial Database Structure</h2>');
+        echo('<div class="main_div">');
         $pdo_data_db = new CO_PDO(CO_Config::$data_db_type, CO_Config::$data_db_host, CO_Config::$data_db_name, CO_Config::$data_db_login, CO_Config::$data_db_password);
         
         if ($pdo_data_db) {
@@ -143,9 +226,9 @@
         
                 try {
                     $pdo_data_db->preparedExec($data_db_sql);
-                    echo('<h3 style="text-align:center">Sucessfully initialized the data DB</h3>');
+                    echo('<h3>Sucessfully initialized the data DB</h3>');
                     $pdo_security_db->preparedExec($security_db_sql);
-                    echo('<h3 style="text-align:center">Sucessfully initialized the security DB</h3>');
+                    echo('<h3>Sucessfully initialized the security DB</h3>');
                 } catch (Exception $exception) {
                     $error = new LGV_Error( 1,
                                             'INITIAL DATABASE SETUP FAILURE',
@@ -157,15 +240,16 @@
                 echo('<h1 style="color:red">ERROR WHILE TRYING TO OPEN DATABASES!</h1>');
                 echo('<pre>'.htmlspecialchars(print_r($error, true)).'</pre>');
                 }
-                
-                return;
+            echo('</div>');
+            return;
             }
         }
+        echo('</div>');
 
         echo('<h1 style="color:red">UNABLE TO OPEN DATABASE!</h1>');
     }
     
-    function try_dbs($in_login = NULL, $in_password = NULL) {
+    function try_dbs($in_login = NULL, $in_hashed_password = NULL, $in_password = NULL) {
         $access_instance = NULL;
         
         if ( !defined('LGV_ACCESS_CATCHER') ) {
@@ -174,7 +258,7 @@
         
         require_once(CO_Config::main_class_dir().'/co_access.class.php');
         
-        $access_instance = new CO_Access($in_login, $in_password);
+        $access_instance = new CO_Access($in_login, $in_hashed_password, $in_password);
         
         if ($access_instance->valid) {
             echo("<h3>The access instance is valid!</h3>");

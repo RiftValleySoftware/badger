@@ -35,15 +35,21 @@ class CO_Security_Login extends CO_Security_Node {
     }
     
     public function is_login_valid( $in_login_id,
-                                    $in_raw_password) {
+                                    $in_hashed_password = NULL,
+                                    $in_raw_password = NULL) {
         $ret = FALSE;
         if (isset($this->login_id) && $this->login_id && ($this->login_id == $in_login_id)) {
             if ($this->id == CO_Config::$god_mode_id) { // God mode always reads directly from the config file, and does not encrypt.
                 $ret = ($in_raw_password == CO_Config::$god_mode_password);
             } else {
                 if (isset($this->context['hashed_password']) && $this->context['hashed_password']) {
-                    $comp = crypt($in_raw_password, $this->context['hashed_password']);
-                    $ret = $comp == $this->context['hashed_password'];
+                    // First, see if this is in the hashed password.
+                    if ($in_hashed_password) {
+                        $ret = ($in_hashed_password == $this->context['hashed_password']);
+                    } else { // If not, see if it's the raw password.
+                        $comp = crypt($in_raw_password, $this->context['hashed_password']);
+                        $ret = ($comp == $this->context['hashed_password']);
+                    }
                 }
             }
         }

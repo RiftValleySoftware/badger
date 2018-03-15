@@ -202,17 +202,20 @@ abstract class A_CO_DB {
                                             ) {
         $ret = NULL;
         
-        $predicate = $this->_create_security_predicate($in_access_ids, TRUE);
+        // Only logged-in users can write.
+        if (isset($in_access_ids) && is_array($in_access_ids) && count($in_access_ids)) {
+            $predicate = $this->_create_security_predicate($in_access_ids, TRUE);
         
-        $sql = 'SELECT * FROM `'.$this->table_name.'` WHERE '.$predicate;
+            $sql = 'SELECT * FROM `'.$this->table_name.'` WHERE '.$predicate;
 
-        $temp = $this->execute_query($sql, Array());
-        if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
-            $ret = Array();
-            foreach ($temp as $result) {
-                array_push($ret, $this->instantiate_record($result));
+            $temp = $this->execute_query($sql, Array());
+            if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
+                $ret = Array();
+                foreach ($temp as $result) {
+                    array_push($ret, $this->instantiate_record($result));
+                }
+                usort($ret, function($a, $b){return ($a->id > $b->id);});
             }
-            usort($ret, function($a, $b){return ($a->id > $b->id);});
         }
         
         return $ret;

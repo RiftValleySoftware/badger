@@ -44,7 +44,8 @@ class CO_Access {
     public $class_description;
     
 	public function __construct(    $in_login_id = NULL,
-	                                $in_password = NULL
+	                                $in_hashed_password = NULL,
+	                                $in_raw_password = NULL
 	                            ) {
         $this->class_description = 'The main data access class.';
         
@@ -69,7 +70,7 @@ class CO_Access {
         require_once(CO_Config::db_class_dir().'/co_pdo.class.php');
         
         // We only load the security DB if there was a login/password sent in.
-        if ((isset($in_login_id) && $in_login_id) && (isset($in_password) && $in_password)) {
+        if ((isset($in_login_id) && $in_login_id) && ((isset($in_hashed_password) && $in_hashed_password) || (isset($in_raw_password) && $in_raw_password))) {
             try {
                 $pdo_security_db = new CO_PDO(CO_Config::$sec_db_type, CO_Config::$sec_db_host, CO_Config::$sec_db_name, CO_Config::$sec_db_login, CO_Config::$sec_db_password);
                 $this->_security_db_object = new CO_Security_DB($pdo_security_db);
@@ -80,7 +81,7 @@ class CO_Access {
                     return;
                 }
                 if (isset($login_record) && ($login_record instanceof CO_Security_Login)) {
-                    if (!$login_record->is_login_valid($in_login_id, $in_password)) {
+                    if (!$login_record->is_login_valid($in_login_id, $in_hashed_password, $in_raw_password)) {
                         $this->error = new LGV_Error(   self::$pdo_error_code_invalid_login,
                                                         self::$pdo_error_name_invalid_login,
                                                         self::$pdo_error_desc_invalid_login);
@@ -99,7 +100,6 @@ class CO_Access {
                 
                 $this->_login_id = $login_record->id;
             } catch (Exception $exception) {
-die('<pre>'.htmlspecialchars(print_r('HAI', true)).'</pre>');
                 $this->error = new LGV_Error(   self::$pdo_error_code_failed_to_open_security_db,
                                                 self::$pdo_error_name_failed_to_open_security_db,
                                                 self::$pdo_error_desc_failed_to_open_security_db,
