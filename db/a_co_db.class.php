@@ -115,9 +115,9 @@ abstract class A_CO_DB {
         try {
             $ret = $this->pdo_object->preparedQuery($in_sql, $in_parameters, FALSE);
         } catch (Exception $exception) {
-            $this->error = new LGV_Error(   self::$pdo_error_code_failed_to_open_security_db,
-                                            self::$pdo_error_name_failed_to_open_security_db,
-                                            self::$pdo_error_desc_failed_to_open_security_db,
+            $this->error = new LGV_Error(   CO_Access::$pdo_error_code_failed_to_open_security_db,
+                                            CO_Access::$pdo_error_name_failed_to_open_security_db,
+                                            CO_Access::$pdo_error_desc_failed_to_open_security_db,
                                             $exception->getFile(),
                                             $exception->getLine(),
                                             $exception->getMessage());

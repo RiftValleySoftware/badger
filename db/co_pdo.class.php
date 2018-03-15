@@ -44,8 +44,36 @@ class CO_PDO {
         $this->pdo->setAttribute(PDO::ATTR_CASE, PDO::CASE_LOWER);
         $this->pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, TRUE);
         if (strlen($charset) > 0) {
-            self::preparedExec('SET NAMES :charset', array(':charset' => $charset));
+            self::preparedExec('SET NAMES :charset', array(':charset' => $charset), FALSE);
         }
+	}
+
+	/**
+		\brief Wrapper for preparing and executing a PDOStatement that does not return a resultset
+		e.g. INSERT or UPDATE SQL statements
+
+		See PDO documentation about prepared queries.
+		
+		If there isn't already a database connection, it will "lazy load" the connection.
+		
+		\throws Exception	 thrown if internal PDO exception is thrown
+		\returns true if execution is successful.
+	*/
+	public function preparedExec(
+								    $sql,				///< same as kind provided to PDO::prepare()
+								    $params = array()	///< same as kind provided to PDO::prepare()
+						        )
+	{
+		try
+			{
+			$stmt = $this->pdo->prepare($sql);
+
+			return $stmt->execute($params);
+			}
+		catch (PDOException $exception)
+			{
+			throw new Exception(__METHOD__ . '() ' . $exception->getMessage());
+			}
 	}
 
 	/**
@@ -66,7 +94,7 @@ class CO_PDO {
 	public function preparedQuery(
 										$sql,					///< same as kind provided to PDO::prepare()
 										$params = array(),		///< same as kind provided to PDO::prepare()
-										$fetchKeyPair = FALSE	///< See description in method documentation
+										$fetchKeyPair = FALSE   ///< See description in method documentation
 										) {
         $stmt = $this->pdo->prepare($sql);
         $stmt->setFetchMode($this->fetchMode);
@@ -76,7 +104,9 @@ class CO_PDO {
             return $stmt->fetchAll(PDO::FETCH_KEY_PAIR);
         } else {
             return $stmt->fetchAll();
-		}
+        }
+        
+        return;
 	}
 
 	/**

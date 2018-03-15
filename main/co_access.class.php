@@ -99,6 +99,7 @@ class CO_Access {
                 
                 $this->_login_id = $login_record->id;
             } catch (Exception $exception) {
+die('<pre>'.htmlspecialchars(print_r('HAI', true)).'</pre>');
                 $this->error = new LGV_Error(   self::$pdo_error_code_failed_to_open_security_db,
                                                 self::$pdo_error_name_failed_to_open_security_db,
                                                 self::$pdo_error_desc_failed_to_open_security_db,
