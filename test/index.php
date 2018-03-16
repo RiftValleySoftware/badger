@@ -33,10 +33,6 @@
                 padding: 0.25em;
             }
             
-            .odd {
-                background-color: #efefef;
-            }
-            
             .godd {
                 background-color: #ffeded;
             }
@@ -44,7 +40,62 @@
             .explain {
                 font-style: italic;
             }
+            
+            div.open h2.header {
+            }
+            
+            div.closed h2.header {
+            }
+            
+            div.open div.container {
+                margin-left:1em;
+                display: block;
+            }
+            
+            div.closed div.container {
+                display: none;
+            }
+            
+            div.inner_open h3.inner_header {
+            }
+            
+            div.inner_closed h3.inner_header {
+            }
+            
+            div.inner_open div.inner_container {
+                margin-left:1em;
+                display: block;
+            }
+            
+            div.inner_closed div.inner_container {
+                display: none;
+            }
+            
         </style>
+        
+        <script type="text/javascript">
+            function toggle_main_state(in_id) {
+                var item = document.getElementById(in_id);
+                
+                if ( item.className == 'closed' ) {
+                    item.className = 'open';
+                } else {
+                    item.className = 'closed';
+                };
+                
+            };
+            
+            function toggle_inner_state(in_id) {
+                var item = document.getElementById(in_id);
+                
+                if ( item.className == 'inner_closed' ) {
+                    item.className = 'inner_open';
+                } else {
+                    item.className = 'inner_closed';
+                };
+                
+            };
+        </script>
     </head>
     <body>
         <h1 style="text-align:center">BADGER DATABASE FRAMEWORK TEST</h1>
@@ -52,7 +103,9 @@
             <img src="../icon.png" style="display:block;margin:auto;width:80px" alt="Honey badger Don't Care" />
             <div style="display:table;margin-left:auto;margin-right:auto;text-align:left">
                 <h1>Initial Setup</h1>
-                <div class="main_div">
+                <div id="initial-setup" class="closed">
+                <h2 class="header"><a href="javascript:toggle_main_state('initial-setup')">ENVIRONMENT SETUP</a></h2>
+                <div class="main_div container">
                 <?php
                     echo("<pre>");
                     echo("<strong>Base dir</strong>.............".CO_Config::base_dir()."\n");
@@ -67,130 +120,137 @@
                     prepare_databases();
                 ?>
                 </div>
+                </div>
                 <h1>Operation</h1>
                 <?php
-                    echo('<div class="main_div odd">');
-                    echo('<h3>First, Try attaching with no logins at all</h3>');
+                    echo('<div id="login-tests" class="closed">');
+                        echo('<h2 class="header"><a href="javascript:toggle_main_state(\'login-tests\')">LOGIN TESTS</a></h2>');
+                        echo('<div class="container">');
+                    
+                            echo('<div id="test-001" class="inner_closed">');
+                                echo('<h3><a href="javascript:toggle_inner_state(\'test-001\')">First, Try attaching with no logins at all</a></h3>');
     
-                    echo('<div class="main_div">');
-                    ?>
-                    <div class="main_div" style="margin-right:2em">
-                    <p class="explain">What is expected here, is that we will have no security database (It won't even be instantiated if there's no login),</p>
-                    <p class="explain">and only the publicly readable data items will be visible (items 1, 7, 8).</p>
-                    <p class="explain">There will be no writable items.</p>
-                    </div>
-                    <?php
-                    try_dbs();
-                    echo('</div>');
-                    echo('</div>');
+                                echo('<div class="main_div odd inner_container">');
+                                    ?>
+                                    <div class="main_div" style="margin-right:2em">
+                                    <p class="explain">What is expected here, is that we will have no security database (It won't even be instantiated if there's no login),</p>
+                                    <p class="explain">and only the publicly readable data items will be visible (items 1, 7, 8).</p>
+                                    <p class="explain">There will be no writable items.</p>
+                                    </div>
+                                    <?php
+                                    try_dbs();
+                                echo('</div>');
+                            echo('</div>');
     
-                    echo('<div class="main_div">');
-                    echo('<h3>Next, Try attaching with a valid login ("secondary") ID, but invalid password ("Ralph")</h3>');
+                            echo('<div id="test-002" class="inner_closed">');
+                                echo('<h3 class="inner_header"><a href="javascript:toggle_inner_state(\'test-002\')">Next, Try attaching with a valid login ("secondary") ID, but invalid password ("Ralph")</a></h3>');
     
-                    echo('<div class="main_div">');
-                    ?>
-                    <div class="main_div" style="margin-right:2em">
-                    <p class="explain">This should flat-out fail.</p>
-                    </div>
-                    <?php
-                    try_dbs('secondary', '', 'Ralph');
-                    echo('</div>');
-                    echo('</div>');
+                                echo('<div class="main_div inner_container">');
+                                    ?>
+                                    <div class="main_div" style="margin-right:2em">
+                                    <p class="explain">This should flat-out fail.</p>
+                                    </div>
+                                    <?php
+                                    try_dbs('secondary', '', 'Ralph');
+                                echo('</div>');
+                            echo('</div>');
     
-                    echo('<div class="main_div odd">');
-                    echo('<h3>Next, Try attaching with an invalid login ID ("Fred"), but valid God Mode password ("'.CO_Config::$god_mode_password.'")</h3>');
+                            echo('<div id="test-003" class="inner_closed">');
+                                echo('<h3 class="inner_header"><a href="javascript:toggle_inner_state(\'test-003\')">Next, Try attaching with an invalid login ID ("Fred"), but valid God Mode password ("'.CO_Config::$god_mode_password.'")</a></h3>');
     
-                    echo('<div class="main_div">');
-                    ?>
-                    <div class="main_div" style="margin-right:2em">
-                    <p class="explain">This should flat-out fail.</p>
-                    </div>
-                    <?php
-                    try_dbs('Fred', CO_Config::$god_mode_password);
-                    echo('</div>');
-                    echo('</div>');
+                                echo('<div class="main_div inner_container">');
+                                    ?>
+                                    <div class="main_div" style="margin-right:2em">
+                                    <p class="explain">This should flat-out fail.</p>
+                                    </div>
+                                    <?php
+                                    try_dbs('Fred', CO_Config::$god_mode_password);
+                                echo('</div>');
+                            echo('</div>');
     
-                    echo('<div class="main_div">');
-                    echo('<h3>Next, Try attaching with an invalid login ID ("Fred"), but valid password ("CoreysGoryStory")</h3>');
+                            echo('<div id="test-004" class="inner_closed">');
+                                echo('<h3 class="inner_header"><a href="javascript:toggle_inner_state(\'test-004\')">Next, Try attaching with an invalid login ID ("Fred"), but valid password ("CoreysGoryStory")</a></h3>');
     
-                    echo('<div class="main_div">');
-                    ?>
-                    <div class="main_div" style="margin-right:2em">
-                    <p class="explain">This should flat-out fail.</p>
-                    </div>
-                    <?php
-                    try_dbs('Fred', CO_Config::$god_mode_password);
-                    echo('</div>');
-                    echo('</div>');
+                                echo('<div class="main_div inner_container">');
+                                    ?>
+                                    <div class="main_div" style="margin-right:2em">
+                                    <p class="explain">This should flat-out fail.</p>
+                                    </div>
+                                    <?php
+                                    try_dbs('Fred', CO_Config::$god_mode_password);
+                                echo('</div>');
+                            echo('</div>');
     
-                    echo('<div class="main_div odd">');
-                    echo('<h3>Next, Try attaching with an valid login ID ("secondary"), but invalid hashed password ("CoreysGoryStory")</h3>');
+                            echo('<div id="test-005" class="inner_closed">');
+                                echo('<h3 class="inner_header"><a href="javascript:toggle_inner_state(\'test-005\')">Next, Try attaching with an valid login ID ("secondary"), but invalid hashed password ("CoreysGoryStory")</a></h3>');
     
-                    echo('<div class="main_div">');
-                    ?>
-                    <div class="main_div" style="margin-right:2em">
-                    <p class="explain">This should flat-out fail.</p>
-                    </div>
-                    <?php
-                    try_dbs('secondary', 'CoreysGoryStory');
-                    echo('</div>');
-                    echo('</div>');
+                                echo('<div class="main_div inner_container">');
+                                    ?>
+                                    <div class="main_div" style="margin-right:2em">
+                                    <p class="explain">This should flat-out fail.</p>
+                                    </div>
+                                    <?php
+                                    try_dbs('secondary', 'CoreysGoryStory');
+                                echo('</div>');
+                            echo('</div>');
     
-                    echo('<div class="main_div">');
-                    echo('<h3>Next, Try attaching with an invalid login ID ("Fred"), but valid hashed password ("CodYOzPtwxb4A")</h3>');
+                            echo('<div id="test-006" class="inner_closed">');
+                                echo('<h3 class="inner_header"><a href="javascript:toggle_inner_state(\'test-006\')">Next, Try attaching with an invalid login ID ("Fred"), but valid hashed password ("CodYOzPtwxb4A")</a></h3>');
     
-                    echo('<div class="main_div">');
-                    ?>
-                    <div class="main_div" style="margin-right:2em">
-                    <p class="explain">This should flat-out fail.</p>
-                    </div>
-                    <?php
-                    try_dbs('Fred', 'CodYOzPtwxb4A');
-                    echo('</div>');
-                    echo('</div>');
+                                echo('<div class="main_div inner_container">');
+                                    ?>
+                                    <div class="main_div" style="margin-right:2em">
+                                    <p class="explain">This should flat-out fail.</p>
+                                    </div>
+                                    <?php
+                                    try_dbs('Fred', 'CodYOzPtwxb4A');
+                                echo('</div>');
+                            echo('</div>');
     
-                    echo('<div class="main_div godd">');
-                    echo('<h3>Next, Try attaching with a valid God Mode login ID ("admin"), and valid God Mode password ("'.CO_Config::$god_mode_password.'")</h3>');
+                            echo('<div id="test-007" class="inner_closed">');
+                                echo('<h3 class="inner_header"><a href="javascript:toggle_inner_state(\'test-007\')">Next, Try attaching with a valid God Mode login ID ("admin"), and valid God Mode password ("'.CO_Config::$god_mode_password.'")</a></h3>');
     
-                    echo('<div class="main_div">');
-                    ?>
-                    <div class="main_div" style="margin-right:2em">
-                    <p class="explain">This ID should have read and write access to every single item in both databases.</p>
-                    </div>
-                    <?php
-                    try_dbs('admin', NULL, CO_Config::$god_mode_password);
-                    echo('</div>');
-                    echo('</div>');
+                                echo('<div class="main_div godd inner_container">');
+                                    ?>
+                                    <div class="main_div" style="margin-right:2em">
+                                    <p class="explain">This ID should have read and write access to every single item in both databases.</p>
+                                    </div>
+                                    <?php
+                                    try_dbs('admin', NULL, CO_Config::$god_mode_password);
+                                echo('</div>');
+                            echo('</div>');
     
-                    echo('<div class="main_div">');
-                    echo('<h3>Next, Try attaching with a valid secondary login ID, and a valid password</h3>');
+                            echo('<div id="test-008" class="inner_closed">');
+                                echo('<h3 class="inner_header"><a href="javascript:toggle_inner_state(\'test-008\')">Next, Try attaching with a valid secondary login ID ("secondary"), and a valid password ("CoreysGoryStory")</a></h3>');
     
-                    echo('<div class="main_div">');
-                    ?>
-                    <div class="main_div" style="margin-right:2em">
-                    <p class="explain">This ID has access (read and write) only to itself in the security database.</p>
-                    <p class="explain">It has read-write access to items 1, 2, 4, 5, 6, 7, 8 of the main database.</p>
-                    <p class="explain">It has no access to item 3 of the main database.</p>
-                    </div>
-                    <?php
-                    try_dbs('secondary', '', 'CoreysGoryStory');
-                    echo('</div>');
-                    echo('</div>');
+                                echo('<div class="main_div inner_container">');
+                                    ?>
+                                    <div class="main_div" style="margin-right:2em">
+                                    <p class="explain">This ID has access (read and write) only to itself in the security database.</p>
+                                    <p class="explain">It has read-write access to items 1, 2, 4, 5, 6, 7, 8 of the main database.</p>
+                                    <p class="explain">It has no access to item 3 of the main database.</p>
+                                    </div>
+                                    <?php
+                                    try_dbs('secondary', '', 'CoreysGoryStory');
+                                echo('</div>');
+                            echo('</div>');
     
-                    echo('<div class="main_div odd">');
-                    echo('<h3>Next, Try attaching with a valid tertiary login ID, and a valid hashed password</h3>');
+                            echo('<div id="test-009" class="inner_closed">');
+                                echo('<h3 class="inner_header"><a href="javascript:toggle_inner_state(\'test-009\')">Next, Try attaching with a valid tertiary login ID ("tertiary"), and a valid hashed password ("CodYOzPtwxb4A")</a></h3>');
     
-                    echo('<div class="main_div">');
-                    ?>
-                    <div class="main_div" style="margin-right:2em">
-                    <p class="explain">This ID has access (read and write) only to itself in the security database.</p>
-                    <p class="explain">It has read-write access to items 1, 3, 6, 8 of the main database.</p>
-                    <p class="explain">It has read-only access to items 1, 3, 6, 7, 8 of the main database.</p>
-                    <p class="explain">It has no access to items 2, 4, 5 of the main database.</p>
-                    </div>
-                    <?php
-                    try_dbs('tertiary', 'CodYOzPtwxb4A');
-                    echo('</div>');
+                                echo('<div class="main_div inner_container">');
+                                    ?>
+                                    <div class="main_div" style="margin-right:2em">
+                                    <p class="explain">This ID has access (read and write) only to itself in the security database.</p>
+                                    <p class="explain">It has read-write access to items 1, 3, 6, 8 of the main database.</p>
+                                    <p class="explain">It has read-only access to items 1, 3, 6, 7, 8 of the main database.</p>
+                                    <p class="explain">It has no access to items 2, 4, 5 of the main database.</p>
+                                    </div>
+                                    <?php
+                                    try_dbs('tertiary', 'CodYOzPtwxb4A');
+                                echo('</div>');
+                            echo('</div>');
+                        echo('</div>');
                     echo('</div>');
                 ?>
             </div>

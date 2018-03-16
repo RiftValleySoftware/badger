@@ -27,9 +27,13 @@ class CO_Access {
     static  $pdo_error_name_invalid_login = 'Invalid Login.';
     static  $pdo_error_desc_invalid_login = 'The login or password provided was not valid.';
     
+    static  $pdo_error_name_illegal_write_attempt = 'Illegal Database Write Attempt.';
+    static  $pdo_error_desc_illegal_write_attempt = 'There was an attempt to write to a record for which the user does not have write permission.';
+    
     static  $pdo_error_code_failed_to_open_data_db = 100;
     static  $pdo_error_code_failed_to_open_security_db = 101;
     static  $pdo_error_code_invalid_login = 102;
+    static  $pdo_error_code_illegal_write_attempt = 200;
     
     protected $_data_db_object;
     protected $_security_db_object;

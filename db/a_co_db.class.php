@@ -226,6 +226,37 @@ abstract class A_CO_DB {
                                 ) {
         $ret = NULL;
         
+        if (isset($params_associative_array) && is_array($params_associative_array) && count($params_associative_array)
+            && isset($params_associative_array['id']) && (0 < intval($params_associative_array['id']))) {
+            if (isset($in_access_ids) && is_array($in_access_ids) && count($in_access_ids)) {
+                $predicate = $this->_create_security_predicate($in_access_ids, TRUE);
+            
+                $id = intval($params_associative_array['id']);  // We extract  the ID from the fields.
+                
+                // First, we look for a record with our ID, and for which we have write permission.
+                $sql = 'SELECT * FROM `'.$this->table_name.'` WHERE '.$predicate.' AND `id`='.$id;
+
+                $temp = $this->execute_query($sql, Array());
+                
+                if (isset($temp) && $temp && is_array($temp) && (1 == count($temp)) ) { // If we  got a record, then we'll be updating it.
+                    // We will keep the current values by extracting them from the original rcord
+                } else {
+                    if (!$temp) {   // See if we failed a security test (scrags  the attmpt).
+                        $sql = 'SELECT * FROM `'.$this->table_name.'` WHERE `id`='.$id;
+
+                        $temp = $this->execute_query($sql, Array());
+                        if (isset($temp) && $temp && is_array($temp) && count($temp) ) { // If we  got a record, then we're aborting, as we tried to change an existing rcord.
+                            $this->error = new LGV_Error(   CO_Access::$pdo_error_code_illegal_write_attempt,
+                                                            CO_Access::$pdo_error_name_illegal_write_attempt,
+                                                            CO_Access::$pdo_error_desc_illegal_write_attempt);
+                        } else {    // OK. We'll be adding a new record.
+                        }
+                    } else {
+                    }
+                }
+            }
+        }
+                
         return $ret;
     }
     
