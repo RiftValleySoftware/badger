@@ -11,7 +11,7 @@ require_once(CO_Config::db_class_dir().'/a_co_db_table_base.class.php');
 
 /**
  */
-abstract class A_CO_Main_DB_Record extends A_CO_DB_Table_Base {
+class CO_Main_DB_Record extends A_CO_DB_Table_Base {
     static  $s_table_name = 'co_data_nodes';
 
     var $owner_id;
@@ -24,8 +24,9 @@ abstract class A_CO_Main_DB_Record extends A_CO_DB_Table_Base {
                                 ) {
         parent::__construct($in_db_object, $in_db_result);
         
-        $this->class_description = 'Abstract Base Class for Main Database Records -Should never be instantiated.';
-        
+        $this->class_description = 'Base Class for Main Database Records.';
+        $this->name = (isset($this->name) && trim($this->name)) ? trim($this->name) : "Base Class Instance ($this->id)";
+            
         if ($this->db_object) {
             $this->owner_id = NULL;
             $this->tags = array();

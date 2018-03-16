@@ -3,11 +3,11 @@
 */
 defined( 'LGV_DBF_CATCHER' ) or die ( 'Cannot Execute Directly' );	// Makes sure that this file is in the correct context.
 
-require_once(CO_Config::db_class_dir().'/a_co_main_db_record.class.php');
+require_once(CO_Config::db_class_dir().'/co_main_db_record.class.php');
 
 /**
  */
-class CO_LL_Location extends A_CO_Main_DB_Record {
+class CO_LL_Location extends CO_Main_DB_Record {
     var $longitude;
     var $latitude;
     

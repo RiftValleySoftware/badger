@@ -110,26 +110,26 @@
             <img src="../icon.png" style="display:block;margin:auto;width:80px" alt="Honey badger Don't Care" />
             <div style="display:table;margin-left:auto;margin-right:auto;text-align:left">
                 <div id="initial-setup" class="closed">
-                <h1 class="header"><a href="javascript:toggle_main_state('initial-setup')">ENVIRONMENT SETUP</a></h1>
-                <div class="main_div container">
-                <?php
-                    echo("<pre>");
-                    echo("<strong>Base dir</strong>.............".CO_Config::base_dir()."\n");
-                    echo("<strong>Main class dir</strong>.......".CO_Config::main_class_dir()."\n");
-                    echo("<strong>Database class dir</strong>...".CO_Config::db_class_dir()."\n");
-                    echo("<strong>Database classes dir</strong>.".CO_Config::db_classes_class_dir()."\n");
-                    echo("<strong>Shared class dir</strong>.....".CO_Config::shared_class_dir()."\n");
-                    echo("<strong>Localization dir</strong>.....".CO_Config::lang_class_dir()."\n");
-                    echo("<strong>Test class dir</strong>.......".CO_Config::test_class_dir()."\n");
-                    echo("</pre>");
+                    <h1 class="header"><a href="javascript:toggle_main_state('initial-setup')">ENVIRONMENT SETUP</a></h1>
+                    <div class="main_div container">
+                        <?php
+                            echo("<pre>");
+                            echo("<strong>Base dir</strong>.............".CO_Config::base_dir()."\n");
+                            echo("<strong>Main class dir</strong>.......".CO_Config::main_class_dir()."\n");
+                            echo("<strong>Database class dir</strong>...".CO_Config::db_class_dir()."\n");
+                            echo("<strong>Database classes dir</strong>.".CO_Config::db_classes_class_dir()."\n");
+                            echo("<strong>Shared class dir</strong>.....".CO_Config::shared_class_dir()."\n");
+                            echo("<strong>Localization dir</strong>.....".CO_Config::lang_class_dir()."\n");
+                            echo("<strong>Test class dir</strong>.......".CO_Config::test_class_dir()."\n");
+                            echo("</pre>");
             
-                    prepare_databases();
-                ?>
-                </div>
+                            prepare_databases();
+                        ?>
+                    </div>
                 </div>
                 <?php
                     echo('<div id="login-tests" class="closed">');
-                        echo('<h1 class="header"><a href="javascript:toggle_main_state(\'login-tests\')">LOGIN TESTS</a></h1>');
+                        echo('<h1 class="header"><a href="javascript:toggle_main_state(\'login-tests\')">LOGIN/READ TESTS</a></h1>');
                         echo('<div class="container">');
                     
                             echo('<div id="test-001" class="inner_closed">');
@@ -139,7 +139,7 @@
                                     ?>
                                     <div class="main_div" style="margin-right:2em">
                                     <p class="explain">What is expected here, is that we will have no security database (It won't even be instantiated if there's no login),</p>
-                                    <p class="explain">and only the publicly readable data items will be visible (items 1, 7, 8).</p>
+                                    <p class="explain">and only the publicly readable data items will be visible (items 2, 8, 9).</p>
                                     <p class="explain">There will be no writable items.</p>
                                     </div>
                                     <?php
@@ -232,8 +232,8 @@
                                     ?>
                                     <div class="main_div" style="margin-right:2em">
                                     <p class="explain">This ID has access (read and write) only to itself in the security database.</p>
-                                    <p class="explain">It has read-write access to items 1, 2, 4, 5, 6, 7, 8 of the main database.</p>
-                                    <p class="explain">It has no access to item 3 of the main database.</p>
+                                    <p class="explain">It has read-write access to items 2, 3, 5, 6, 7, 8, 9 of the main database.</p>
+                                    <p class="explain">It has no access to item 4 of the main database.</p>
                                     </div>
                                     <?php
                                     try_dbs('secondary', '', 'CoreysGoryStory');
@@ -247,14 +247,63 @@
                                     ?>
                                     <div class="main_div" style="margin-right:2em">
                                     <p class="explain">This ID has access (read and write) only to itself in the security database.</p>
-                                    <p class="explain">It has read-write access to items 1, 3, 6, 8 of the main database.</p>
-                                    <p class="explain">It has read-only access to items 1, 3, 6, 7, 8 of the main database.</p>
-                                    <p class="explain">It has no access to items 2, 4, 5 of the main database.</p>
+                                    <p class="explain">It has read-write access to items 2, 4, 7, 9 of the main database.</p>
+                                    <p class="explain">It has read-only access to items 2, 4, 7, 8, 9 of the main database.</p>
+                                    <p class="explain">It has no access to items 3, 5, 6 of the main database.</p>
                                     </div>
                                     <?php
                                     try_dbs('tertiary', 'CodYOzPtwxb4A');
                                 echo('</div>');
                             echo('</div>');
+                        echo('</div>');
+                    echo('</div>');
+                    echo('<div id="write-tests" class="closed">');
+                        echo('<h1 class="header"><a href="javascript:toggle_main_state(\'write-tests\')">DIRECT ACCESS OBJECT WRITE/DELETE TESTS</a></h1>');
+                        echo('<div class="container">');
+                            ?>
+                            <div class="main_div" style="margin-right:2em">
+                            <p class="explain">These tests all directly access the access object, as opposed to going through class instances of rows.</p>
+                            </div>
+                            <?php
+                            echo('<div id="test-010" class="inner_closed">');
+                                echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-010\')">TEST 10: Log in and change an existing record</a></h2>');
+    
+                                echo('<div class="main_div inner_container">');
+                                    ?>
+                                    <div class="main_div" style="margin-right:2em">
+                                    <p class="explain">We log in, then change the name "Las Vegas" to "Lost Wages", and the first tag from "US" to "Fantasyland".</p>
+                                    </div>
+                                    <?php
+                                    try_write_dbs('tertiary', 'CodYOzPtwxb4A');
+                                echo('</div>');
+                            echo('</div>');
+                            $new_record = 0;
+                            echo('<div id="test-011" class="inner_closed">');
+                                echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-011\')">TEST 11: Log in and create a new record</a></h2>');
+    
+                                echo('<div class="main_div inner_container">');
+                                    ?>
+                                    <div class="main_div" style="margin-right:2em">
+                                    <p class="explain">We log in, then create a new Long/Lat record.</p>
+                                    </div>
+                                    <?php
+                                    $new_record = try_new_dbs('secondary', 'CodYOzPtwxb4A');
+                                echo('</div>');
+                            echo('</div>');
+                            if ($new_record) {
+                                echo('<div id="test-012" class="inner_closed">');
+                                    echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-012\')">TEST 12: Log in and delete that new record</a></h2>');
+    
+                                    echo('<div class="main_div inner_container">');
+                                        ?>
+                                        <div class="main_div" style="margin-right:2em">
+                                        <p class="explain">We log in, then delete the record we just created.</p>
+                                        </div>
+                                        <?php
+                                        try_delete_dbs('secondary', 'CodYOzPtwxb4A', $new_record);
+                                    echo('</div>');
+                                echo('</div>');
+                            }
                         echo('</div>');
                     echo('</div>');
                 ?>
@@ -278,7 +327,7 @@
         
         echo('<h1 style="margin-top:1em">Setting Up Initial Database Structure</h1>');
         ?><div class="main_div" style="margin-right:2em">
-            <p class="explain">In order to run these tests, you should set up two (2) blank databases. They can both be the same DB, but that's not the advised configuration for Badger.</p>
+            <p class="explain">In order to run these tests, you should set up two (2) blank databases. They can both be the same DB, but that is not the advised configuration for Badger.</p>
             <p class="explain">The first (main) database should be called "<?php echo(CO_Config::$data_db_name) ?>", and the second (security) database should be called "<?php echo(CO_Config::$sec_db_name) ?>".</p>
             <p class="explain">The main database should be have a full rights login named "<?php echo(CO_Config::$data_db_login) ?>", with a password of "<?php echo(CO_Config::$data_db_password) ?>".</p>
             <p class="explain">The security database should be have a full rights login named "<?php echo(CO_Config::$sec_db_login) ?>", with a password of "<?php echo(CO_Config::$sec_db_password) ?>".</p>
@@ -374,6 +423,13 @@
                                             echo("<p>$item->instance_description</p>");
                                             echo("<p>Read: $item->read_security_id</p>");
                                             echo("<p>Write: $item->write_security_id</p>");
+                                            for ($tagid = 0; $tagid < 10; $tagid++ ) {
+                                                $tag = NULL;
+                                                if (isset($item->tags[$tagid])) {
+                                                    $tag = trim($item->tags[$tagid]);
+                                                    echo("<p>Tag $tagid: \"$tag\"</p>");
+                                                }
+                                            }
                                         echo('</div>');
                                     }
                                 } else {
@@ -403,6 +459,13 @@
                                             echo("<p>$item->instance_description</p>");
                                             echo("<p>Read: $item->read_security_id</p>");
                                             echo("<p>Write: $item->write_security_id</p>");
+                                            for ($tagid = 0; $tagid < 10; $tagid++ ) {
+                                                $tag = NULL;
+                                                eval("if (isset(\$item->tags[$tagid])) {\$tag = trim(\$item->tags[$tagid]);};");
+                                                if ($tag) {
+                                                    echo("<p>Tag $tagid: '$tag'</p>");
+                                                }
+                                            }
                                         echo('</div>');
                                     }
                                 } else {
@@ -417,7 +480,7 @@
                     echo('</div>');
                 echo('</div>');
 
-                for ($id_no = 1; $id_no < 9; $id_no++) {
+                for ($id_no = 2; $id_no < 10; $id_no++) {
                     $test_item = $access_instance->get_single_data_record_by_id($id_no);
                     
                     if ($test_item) {
@@ -430,6 +493,13 @@
                                     echo("<p>$test_item->instance_description</p>");
                                     echo("<p>Read: $test_item->read_security_id</p>");
                                     echo("<p>Write: $test_item->write_security_id</p>");
+                                    for ($tagid = 0; $tagid < 10; $tagid++ ) {
+                                        $tag = NULL;
+                                        eval("if (isset(\$test_item->tags[$tagid])) {\$tag = trim(\$test_item->tags[$tagid]);};");
+                                        if ($tag) {
+                                            echo("<p>Tag $tagid: '$tag'</p>");
+                                        }
+                                    }
                                 } else {
                                     echo("<h4>NO ITEM!</h4>");
                                 }
@@ -440,10 +510,10 @@
                     }
                 }
             
-                $test_item = $access_instance->get_multiple_data_records_by_id(Array(1,3,5,7));
+                $test_item = $access_instance->get_multiple_data_records_by_id(Array(2,4,6,8));
             
                 echo('<div class="inner_div">');
-                    echo("<h4>Get Multiple Indexed Main Database Items (1, 3, 5, 7)</h4>");
+                    echo("<h4>Get Multiple Indexed Main Database Items (2, 4, 6, 8)</h4>");
                     echo('<div class="inner_div">');
                         if ( isset($test_item) ) {
                             if (is_array($test_item)) {
@@ -455,6 +525,13 @@
                                             echo("<p>$item->instance_description</p>");
                                             echo("<p>Read: $item->read_security_id</p>");
                                             echo("<p>Write: $item->write_security_id</p>");
+                                            for ($tagid = 0; $tagid < 10; $tagid++ ) {
+                                                $tag = NULL;
+                                                eval("if (isset(\$item->tags[$tagid])) {\$tag = trim(\$item->tags[$tagid]);};");
+                                                if ($tag) {
+                                                    echo("<p>Tag $tagid: '$tag'</p>");
+                                                }
+                                            }
                                         echo('</div>');
                                     }
                                 } else {
@@ -573,7 +650,7 @@
                     echo('</div>');
                 echo('</div>');
 
-                for ($id_no = 1; $id_no < 6; $id_no++) {
+                for ($id_no = 2; $id_no < 7; $id_no++) {
                     $test_item = $access_instance->get_single_security_record_by_id($id_no);
             
                     if ($test_item) {
@@ -613,10 +690,10 @@
                     }
                 }
 
-                $test_item = $access_instance->get_multiple_security_records_by_id(Array(1,2,3,5));
+                $test_item = $access_instance->get_multiple_security_records_by_id(Array(2,3,4,6));
             
                 echo('<div class="inner_div">');
-                    echo("<h4>Get Multiple Security Database Items (1, 2, 3, 5)</h4>");
+                    echo("<h4>Get Multiple Security Database Items (2, 3, 4, 6)</h4>");
                     echo('<div class="inner_div">');
                         if ( isset($test_item) ) {
                             if (is_array($test_item)) {
@@ -663,6 +740,188 @@
             echo('<div class="inner_div">');
                 echo('<h4 style="text-align:center;margin-top:0.5em">We do not have a security DB</h4>');
             echo('</div>');
+        }
+    }
+    
+    function try_write_dbs($in_login, $in_hashed_password) {
+        $access_instance = NULL;
+        
+        if ( !defined('LGV_ACCESS_CATCHER') ) {
+            define('LGV_ACCESS_CATCHER', 1);
+        }
+        
+        require_once(CO_Config::main_class_dir().'/co_access.class.php');
+        
+        $access_instance = new CO_Access($in_login, $in_hashed_password);
+        
+        if ($access_instance->valid) {
+            try_basic_data_write($access_instance);
+        } else {
+            echo("<h2 style=\"color:red;font-weight:bold\">The access instance is not valid!</h2>");
+            echo('<p style="margin-left:1em;color:red;font-weight:bold">Error: ('.$access_instance->error->error_code.') '.$access_instance->error->error_name.' ('.$access_instance->error->error_description.')</p>');
+        }
+    }
+    
+    function try_new_dbs($in_login, $in_hashed_password) {
+        $access_instance = NULL;
+        
+        if ( !defined('LGV_ACCESS_CATCHER') ) {
+            define('LGV_ACCESS_CATCHER', 1);
+        }
+        
+        require_once(CO_Config::main_class_dir().'/co_access.class.php');
+        
+        $access_instance = new CO_Access($in_login, $in_hashed_password);
+        
+        if ($access_instance->valid) {
+            return try_basic_data_add($access_instance);
+        } else {
+            echo("<h2 style=\"color:red;font-weight:bold\">The access instance is not valid!</h2>");
+            echo('<p style="margin-left:1em;color:red;font-weight:bold">Error: ('.$access_instance->error->error_code.') '.$access_instance->error->error_name.' ('.$access_instance->error->error_description.')</p>');
+        }
+    }
+    
+    function try_basic_data_write(  $access_instance
+                                    ) {
+        $id_no = 2;
+        
+        $test_item = $access_instance->get_single_data_record_by_id($id_no);
+        
+        if ($test_item) {
+            echo('<div class="inner_div">');
+                echo("<h4>BEFORE:</h4>");
+                echo('<div class="inner_div">');
+                    if ( isset($test_item) ) {
+                        echo("<p>ID: $test_item->id</p>");
+                        echo("<p>$test_item->class_description</p>");
+                        echo("<p>$test_item->instance_description</p>");
+                        echo("<p>Read: $test_item->read_security_id</p>");
+                        echo("<p>Write: $test_item->write_security_id</p>");
+                        for ($tagid = 0; $tagid < 10; $tagid++ ) {
+                            $tag = NULL;
+                            eval("if (isset(\$test_item->tags[$tagid])) {\$tag = trim(\$test_item->tags[$tagid]);};");
+                            if ($tag) {
+                                echo("<p>Tag $tagid: '$tag'</p>");
+                            }
+                        }
+                    } else {
+                        echo("<h4>NO ITEM!</h4>");
+                    }
+                echo('</div>');
+            echo('</div>');
+        } else {
+            echo("<h4 style=\"color:red;font-weight:bold\">DATA ITEM $id_no IS NOT ACCESSIBLE</h4>");
+        }
+    
+        $params = Array('id' => $id_no, 'object_name' => 'Lost Wages', 'tag0' => 'Fantasyland');
+        
+        $access_instance->write_data_record($params);
+        
+        if ($access_instance->error) {
+            echo("<h2 style=\"color:red;font-weight:bold\">Write Error!</h2>");
+            echo('<p style="margin-left:1em;color:red;font-weight:bold">Error: ('.$access_instance->error->error_code.') '.$access_instance->error->error_name.' ('.$access_instance->error->error_description.')</p>');
+        } else {
+            $test_item = $access_instance->get_single_data_record_by_id($id_no);
+            
+            if ($test_item) {
+                echo('<div class="inner_div">');
+                    echo("<h4>AFTER:</h4>");
+                    echo('<div class="inner_div">');
+                        if ( isset($test_item) ) {
+                            echo("<p>ID: $test_item->id</p>");
+                            echo("<p>$test_item->class_description</p>");
+                            echo("<p>$test_item->instance_description</p>");
+                            echo("<p>Read: $test_item->read_security_id</p>");
+                            echo("<p>Write: $test_item->write_security_id</p>");
+                            for ($tagid = 0; $tagid < 10; $tagid++ ) {
+                                $tag = NULL;
+                                eval("if (isset(\$test_item->tags[$tagid])) {\$tag = trim(\$test_item->tags[$tagid]);};");
+                                if ($tag) {
+                                    echo("<p>Tag $tagid: '$tag'</p>");
+                                }
+                            }
+                        } else {
+                            echo("<h4>NO ITEM!</h4>");
+                        }
+                    echo('</div>');
+                echo('</div>');
+            } else {
+                echo("<h4 style=\"color:red;font-weight:bold\">DATA ITEM $id_no IS NOT ACCESSIBLE</h4>");
+            }
+        }
+    }
+    
+    function try_basic_data_add(  $access_instance
+                                    ) {
+        $params = Array('id' => 0, 'access_class' => 'CO_LL_Location', 'last_access' => '1970-01-01 00:00:00', 'object_name' => 'San Francisco', 'longitude' => -122.4194, 'latitude' => 37.7749);
+        
+        $id_no = $access_instance->write_data_record($params);
+        
+        if ($access_instance->error) {
+            echo("<h2 style=\"color:red;font-weight:bold\">Write Error!</h2>");
+            echo('<p style="margin-left:1em;color:red;font-weight:bold">Error: ('.$access_instance->error->error_code.') '.$access_instance->error->error_name.' ('.$access_instance->error->error_description.')</p>');
+        } else {
+            $test_item = $access_instance->get_single_data_record_by_id($id_no);
+            
+            if ($test_item) {
+                echo('<div class="inner_div">');
+                    echo("<h4>AFTER:</h4>");
+                    echo('<div class="inner_div">');
+                        if ( isset($test_item) ) {
+                            echo("<p>ID: $test_item->id</p>");
+                            echo("<p>$test_item->class_description</p>");
+                            echo("<p>$test_item->instance_description</p>");
+                            echo("<p>Read: $test_item->read_security_id</p>");
+                            echo("<p>Write: $test_item->write_security_id</p>");
+                            for ($tagid = 0; $tagid < 10; $tagid++ ) {
+                                $tag = NULL;
+                                eval("if (isset(\$test_item->tags[$tagid])) {\$tag = trim(\$test_item->tags[$tagid]);};");
+                                if ($tag) {
+                                    echo("<p>Tag $tagid: '$tag'</p>");
+                                }
+                            }
+                        } else {
+                            echo("<h4>NO ITEM!</h4>");
+                        }
+                    echo('</div>');
+                echo('</div>');
+            } else {
+                echo("<h4 style=\"color:red;font-weight:bold\">DATA ITEM $id_no IS NOT ACCESSIBLE</h4>");
+            }
+        }
+        
+        return $id_no;
+    }
+    
+    function try_delete_dbs($in_login, $in_hashed_password, $in_id) {
+        $access_instance = NULL;
+        
+        if ( !defined('LGV_ACCESS_CATCHER') ) {
+            define('LGV_ACCESS_CATCHER', 1);
+        }
+        
+        require_once(CO_Config::main_class_dir().'/co_access.class.php');
+        
+        $access_instance = new CO_Access($in_login, $in_hashed_password);
+        
+        if ($access_instance->valid) {
+            try_basic_data_delete($access_instance, $in_id);
+        } else {
+            echo("<h2 style=\"color:red;font-weight:bold\">The access instance is not valid!</h2>");
+            echo('<p style="margin-left:1em;color:red;font-weight:bold">Error: ('.$access_instance->error->error_code.') '.$access_instance->error->error_name.' ('.$access_instance->error->error_description.')</p>');
+        }
+    }
+    
+    function try_basic_data_delete( $access_instance,
+                                    $in_id
+                                    ) {
+        $id_no = $access_instance->delete_data_record($in_id);
+        
+        if ($access_instance->error) {
+            echo("<h2 style=\"color:red;font-weight:bold\">Write Error!</h2>");
+            echo('<p style="margin-left:1em;color:red;font-weight:bold">Error: ('.$access_instance->error->error_code.') '.$access_instance->error->error_name.' ('.$access_instance->error->error_description.')</p>');
+        } else {
+            echo("<h2>Successfully deleted Data item $in_id</h2>");
         }
     }
 ?>

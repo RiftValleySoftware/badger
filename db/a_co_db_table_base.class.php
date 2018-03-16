@@ -53,8 +53,8 @@ abstract class A_CO_DB_Table_Base {
                 $this->ttl = $in_db_result['ttl'];
             }
             
-            if (isset($in_db_result['name'])) {
-                $this->name = $in_db_result['name'];
+            if (isset($in_db_result['object_name'])) {
+                $this->name = $in_db_result['object_name'];
             }
             
             if (isset($in_db_result['access_class_context'])) {

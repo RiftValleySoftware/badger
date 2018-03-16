@@ -37,7 +37,7 @@ class CO_Config {
     
     static $lang = 'en';
     
-    static $god_mode_id = 1;
+    static $god_mode_id = 2;
     static $god_mode_password = 'BWU-HA-HAAAA-HA!';
     
     static $data_db_name = 'badger_test_data';

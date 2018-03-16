@@ -30,10 +30,18 @@ class CO_Access {
     static  $pdo_error_name_illegal_write_attempt = 'Illegal Database Write Attempt.';
     static  $pdo_error_desc_illegal_write_attempt = 'There was an attempt to write to a record for which the user does not have write permission.';
     
+    static  $pdo_error_name_illegal_delete_attempt = 'Illegal Database delete Attempt.';
+    static  $pdo_error_desc_illegal_delete_attempt = 'There was an attempt to delete a record for which the user does not have write permission.';
+    
+    static  $pdo_error_name_failed_delete_attempt = 'Failed Database delete Attempt.';
+    static  $pdo_error_desc_failed_delete_attempt = 'There was a failure during an attempt to delete a record.';
+    
     static  $pdo_error_code_failed_to_open_data_db = 100;
     static  $pdo_error_code_failed_to_open_security_db = 101;
     static  $pdo_error_code_invalid_login = 102;
     static  $pdo_error_code_illegal_write_attempt = 200;
+    static  $pdo_error_code_illegal_delete_attempt = 201;
+    static  $pdo_error_code_failed_delete_attempt = 202;
     
     protected $_data_db_object;
     protected $_security_db_object;
@@ -282,5 +290,21 @@ class CO_Access {
         }
         
         return $ret;
+    }
+    
+    public function write_data_record(  $params_associative_array
+                                    ) {
+        if (isset($this->_data_db_object) && $this->_data_db_object) {
+            return $this->_data_db_object->write_record($params_associative_array, $this->get_security_ids());
+        }
+        
+        return FALSE;
+    }
+    
+    public function delete_data_record( $id
+                                        ) {
+        if (isset($this->_data_db_object) && $this->_data_db_object) {
+            $this->_data_db_object->delete_record($id, $this->get_security_ids());
+        }
     }
 };
