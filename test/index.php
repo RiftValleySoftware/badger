@@ -277,8 +277,27 @@
         require_once(CO_Config::shared_class_dir().'/error.class.php');
         
         echo('<h1 style="margin-top:1em">Setting Up Initial Database Structure</h1>');
+        ?><div class="main_div" style="margin-right:2em">
+            <p class="explain">In order to run these tests, you should set up two (2) blank databases. They can both be the same DB, but that's not the advised configuration for Badger.</p>
+            <p class="explain">The first (main) database should be called "<?php echo(CO_Config::$data_db_name) ?>", and the second (security) database should be called "<?php echo(CO_Config::$sec_db_name) ?>".</p>
+            <p class="explain">The main database should be have a full rights login named "<?php echo(CO_Config::$data_db_login) ?>", with a password of "<?php echo(CO_Config::$data_db_password) ?>".</p>
+            <p class="explain">The security database should be have a full rights login named "<?php echo(CO_Config::$sec_db_login) ?>", with a password of "<?php echo(CO_Config::$sec_db_password) ?>".</p>
+            <p class="explain">This test will wipe out the tables, and set up pre-initialized tables, so it goes without saying that these should be databases (and users) reserved for testing only.</p>
+        </div><?php
         echo('<div class="main_div">');
-        $pdo_data_db = new CO_PDO(CO_Config::$data_db_type, CO_Config::$data_db_host, CO_Config::$data_db_name, CO_Config::$data_db_login, CO_Config::$data_db_password);
+        $pdo_data_db = NULL;
+        try {
+            $pdo_data_db = new CO_PDO(CO_Config::$data_db_type, CO_Config::$data_db_host, CO_Config::$data_db_name, CO_Config::$data_db_login, CO_Config::$data_db_password);
+        } catch (Exception $exception) {
+                    $error = new LGV_Error( 1,
+                                            'INITIAL DATABASE SETUP FAILURE',
+                                            'FAILED TO INITIALIZE A DATABASE!',
+                                            $exception->getFile(),
+                                            $exception->getLine(),
+                                            $exception->getMessage());
+                echo('<h1 style="color:red">ERROR WHILE TRYING TO ACCESS DATABASES!</h1>');
+                echo('<pre>'.htmlspecialchars(print_r($error, true)).'</pre>');
+        }
         
         if ($pdo_data_db) {
             $pdo_security_db = new CO_PDO(CO_Config::$sec_db_type, CO_Config::$sec_db_host, CO_Config::$sec_db_name, CO_Config::$sec_db_login, CO_Config::$sec_db_password);

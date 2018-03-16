@@ -39,12 +39,16 @@ class CO_PDO {
 		$this->pdo = NULL;
 		
         $dsn = $driver . ':host=' . $host . ';dbname=' . $database;
-        $this->pdo = new PDO($dsn, $user, $password, array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'utf8'"));
-        $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $this->pdo->setAttribute(PDO::ATTR_CASE, PDO::CASE_LOWER);
-        $this->pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, TRUE);
-        if (strlen($charset) > 0) {
-            self::preparedExec('SET NAMES :charset', array(':charset' => $charset), FALSE);
+		try {
+            $this->pdo = new PDO($dsn, $user, $password, array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'utf8'"));
+            $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $this->pdo->setAttribute(PDO::ATTR_CASE, PDO::CASE_LOWER);
+            $this->pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, TRUE);
+            if (strlen($charset) > 0) {
+                self::preparedExec('SET NAMES :charset', array(':charset' => $charset), FALSE);
+            }
+        } catch (PDOException $exception) {
+			throw new Exception(__METHOD__ . '() ' . $exception->getMessage());
         }
 	}
 
@@ -64,16 +68,13 @@ class CO_PDO {
 								    $params = array()	///< same as kind provided to PDO::prepare()
 						        )
 	{
-		try
-			{
+		try {
 			$stmt = $this->pdo->prepare($sql);
 
 			return $stmt->execute($params);
-			}
-		catch (PDOException $exception)
-			{
+		} catch (PDOException $exception) {
 			throw new Exception(__METHOD__ . '() ' . $exception->getMessage());
-			}
+		}
 	}
 
 	/**
