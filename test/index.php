@@ -33,18 +33,19 @@
                 padding: 0.25em;
             }
             
-            .godd {
-                background-color: #ffeded;
-            }
-            
             .explain {
                 font-style: italic;
             }
             
-            div.open h2.header {
+            h1.header {
+                font-size: large;
+                margin-top: 1em;
             }
             
-            div.closed h2.header {
+            div.open h1.header {
+            }
+            
+            div.closed h1.header {
             }
             
             div.open div.container {
@@ -56,15 +57,20 @@
                 display: none;
             }
             
-            div.inner_open h3.inner_header {
+            h2.inner_header {
+                font-size: medium;
             }
             
-            div.inner_closed h3.inner_header {
+            div.inner_open h2.inner_header {
+            }
+            
+            div.inner_closed h2.inner_header {
             }
             
             div.inner_open div.inner_container {
                 margin-left:1em;
                 display: block;
+                border:1px dashed #555;
             }
             
             div.inner_closed div.inner_container {
@@ -102,9 +108,8 @@
         <div style="text-align:center;padding:1em;">
             <img src="../icon.png" style="display:block;margin:auto;width:80px" alt="Honey badger Don't Care" />
             <div style="display:table;margin-left:auto;margin-right:auto;text-align:left">
-                <h1>Initial Setup</h1>
                 <div id="initial-setup" class="closed">
-                <h2 class="header"><a href="javascript:toggle_main_state('initial-setup')">ENVIRONMENT SETUP</a></h2>
+                <h1 class="header"><a href="javascript:toggle_main_state('initial-setup')">ENVIRONMENT SETUP</a></h1>
                 <div class="main_div container">
                 <?php
                     echo("<pre>");
@@ -121,14 +126,13 @@
                 ?>
                 </div>
                 </div>
-                <h1>Operation</h1>
                 <?php
                     echo('<div id="login-tests" class="closed">');
-                        echo('<h2 class="header"><a href="javascript:toggle_main_state(\'login-tests\')">LOGIN TESTS</a></h2>');
+                        echo('<h1 class="header"><a href="javascript:toggle_main_state(\'login-tests\')">LOGIN TESTS</a></h1>');
                         echo('<div class="container">');
                     
                             echo('<div id="test-001" class="inner_closed">');
-                                echo('<h3><a href="javascript:toggle_inner_state(\'test-001\')">First, Try attaching with no logins at all</a></h3>');
+                                echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-001\')">TEST 1: Try attaching with no logins at all</a></h2>');
     
                                 echo('<div class="main_div odd inner_container">');
                                     ?>
@@ -143,7 +147,7 @@
                             echo('</div>');
     
                             echo('<div id="test-002" class="inner_closed">');
-                                echo('<h3 class="inner_header"><a href="javascript:toggle_inner_state(\'test-002\')">Next, Try attaching with a valid login ("secondary") ID, but invalid password ("Ralph")</a></h3>');
+                                echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-002\')">TEST 2: Try attaching with a valid login ("secondary") ID, but invalid password ("Ralph")</a></h2>');
     
                                 echo('<div class="main_div inner_container">');
                                     ?>
@@ -156,7 +160,7 @@
                             echo('</div>');
     
                             echo('<div id="test-003" class="inner_closed">');
-                                echo('<h3 class="inner_header"><a href="javascript:toggle_inner_state(\'test-003\')">Next, Try attaching with an invalid login ID ("Fred"), but valid God Mode password ("'.CO_Config::$god_mode_password.'")</a></h3>');
+                                echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-003\')">TEST 3: Try attaching with an invalid login ID ("Fred"), but valid God Mode password ("'.CO_Config::$god_mode_password.'")</a></h2>');
     
                                 echo('<div class="main_div inner_container">');
                                     ?>
@@ -169,7 +173,7 @@
                             echo('</div>');
     
                             echo('<div id="test-004" class="inner_closed">');
-                                echo('<h3 class="inner_header"><a href="javascript:toggle_inner_state(\'test-004\')">Next, Try attaching with an invalid login ID ("Fred"), but valid password ("CoreysGoryStory")</a></h3>');
+                                echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-004\')">TEST 4: Try attaching with an invalid login ID ("Fred"), but valid password ("CoreysGoryStory")</a></h2>');
     
                                 echo('<div class="main_div inner_container">');
                                     ?>
@@ -182,7 +186,7 @@
                             echo('</div>');
     
                             echo('<div id="test-005" class="inner_closed">');
-                                echo('<h3 class="inner_header"><a href="javascript:toggle_inner_state(\'test-005\')">Next, Try attaching with an valid login ID ("secondary"), but invalid hashed password ("CoreysGoryStory")</a></h3>');
+                                echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-005\')">TEST 5: Try attaching with an valid login ID ("secondary"), but invalid hashed password ("CoreysGoryStory")</a></h2>');
     
                                 echo('<div class="main_div inner_container">');
                                     ?>
@@ -195,7 +199,7 @@
                             echo('</div>');
     
                             echo('<div id="test-006" class="inner_closed">');
-                                echo('<h3 class="inner_header"><a href="javascript:toggle_inner_state(\'test-006\')">Next, Try attaching with an invalid login ID ("Fred"), but valid hashed password ("CodYOzPtwxb4A")</a></h3>');
+                                echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-006\')">TEST 6: Try attaching with an invalid login ID ("Fred"), but valid hashed password ("CodYOzPtwxb4A")</a></h2>');
     
                                 echo('<div class="main_div inner_container">');
                                     ?>
@@ -208,9 +212,9 @@
                             echo('</div>');
     
                             echo('<div id="test-007" class="inner_closed">');
-                                echo('<h3 class="inner_header"><a href="javascript:toggle_inner_state(\'test-007\')">Next, Try attaching with a valid God Mode login ID ("admin"), and valid God Mode password ("'.CO_Config::$god_mode_password.'")</a></h3>');
+                                echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-007\')">TEST 7: Try attaching with a valid God Mode login ID ("admin"), and valid God Mode password ("'.CO_Config::$god_mode_password.'")</a></h2>');
     
-                                echo('<div class="main_div godd inner_container">');
+                                echo('<div class="main_div inner_container">');
                                     ?>
                                     <div class="main_div" style="margin-right:2em">
                                     <p class="explain">This ID should have read and write access to every single item in both databases.</p>
@@ -221,7 +225,7 @@
                             echo('</div>');
     
                             echo('<div id="test-008" class="inner_closed">');
-                                echo('<h3 class="inner_header"><a href="javascript:toggle_inner_state(\'test-008\')">Next, Try attaching with a valid secondary login ID ("secondary"), and a valid password ("CoreysGoryStory")</a></h3>');
+                                echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-008\')">TEST 8: Try attaching with a valid secondary login ID ("secondary"), and a valid password ("CoreysGoryStory")</a></h2>');
     
                                 echo('<div class="main_div inner_container">');
                                     ?>
@@ -236,7 +240,7 @@
                             echo('</div>');
     
                             echo('<div id="test-009" class="inner_closed">');
-                                echo('<h3 class="inner_header"><a href="javascript:toggle_inner_state(\'test-009\')">Next, Try attaching with a valid tertiary login ID ("tertiary"), and a valid hashed password ("CodYOzPtwxb4A")</a></h3>');
+                                echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-009\')">TEST 9: Try attaching with a valid tertiary login ID ("tertiary"), and a valid hashed password ("CodYOzPtwxb4A")</a></h2>');
     
                                 echo('<div class="main_div inner_container">');
                                     ?>
@@ -271,7 +275,7 @@
 
         require_once(CO_Config::shared_class_dir().'/error.class.php');
         
-        echo('<h2 style="margin-top:1em">Setting Up Initial Database Structure</h2>');
+        echo('<h1 style="margin-top:1em">Setting Up Initial Database Structure</h1>');
         echo('<div class="main_div">');
         $pdo_data_db = new CO_PDO(CO_Config::$data_db_type, CO_Config::$data_db_host, CO_Config::$data_db_name, CO_Config::$data_db_login, CO_Config::$data_db_password);
         
@@ -286,9 +290,9 @@
         
                 try {
                     $pdo_data_db->preparedExec($data_db_sql);
-                    echo('<h3>Sucessfully initialized the data DB</h3>');
+                    echo('<h2>Sucessfully initialized the data DB</h2>');
                     $pdo_security_db->preparedExec($security_db_sql);
-                    echo('<h3>Sucessfully initialized the security DB</h3>');
+                    echo('<h2>Sucessfully initialized the security DB</h2>');
                 } catch (Exception $exception) {
                     $error = new LGV_Error( 1,
                                             'INITIAL DATABASE SETUP FAILURE',
@@ -321,11 +325,11 @@
         $access_instance = new CO_Access($in_login, $in_hashed_password, $in_password);
         
         if ($access_instance->valid) {
-            echo("<h3>The access instance is valid!</h3>");
+            echo("<h2>The access instance is valid!</h2>");
             try_security_items($access_instance);
             try_data_items($access_instance);
         } else {
-            echo("<h3 style=\"color:red;font-weight:bold\">The access instance is not valid!</h3>");
+            echo("<h2 style=\"color:red;font-weight:bold\">The access instance is not valid!</h2>");
             echo('<p style="margin-left:1em;color:red;font-weight:bold">Error: ('.$access_instance->error->error_code.') '.$access_instance->error->error_name.' ('.$access_instance->error->error_description.')</p>');
         }
     }
