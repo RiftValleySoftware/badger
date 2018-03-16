@@ -40,6 +40,7 @@
             h1.header {
                 font-size: large;
                 margin-top: 1em;
+                text-align:center;
             }
             
             div.open h1.header {
