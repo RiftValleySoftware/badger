@@ -312,6 +312,58 @@
     </body>
 </html>
 <?php
+    function display_record($in_record_object) {
+        echo("<h5>ITEM $in_record_object->id:</h5>");
+        echo('<div class="inner_div">');
+            echo("<p>$in_record_object->class_description</p>");
+            echo("<p>$in_record_object->instance_description</p>");
+            echo("<p>Read: $in_record_object->read_security_id</p>");
+            echo("<p>Write: $in_record_object->write_security_id</p>");
+            
+            if (isset($in_record_object->ttl)) {
+                $color = "green";
+                
+                if (0 > $in_record_object->seconds_remaining_to_live()) {
+                    $color = "red";
+                } elseif ((60 * 60 * 24) > $in_record_object->seconds_remaining_to_live()) {
+                    $color = "orange";
+                }
+                
+                echo("<p style=\"color:$color\">Seconds Remaining to Live: ".$in_record_object->seconds_remaining_to_live()."</p>");
+            }
+            
+            if (isset($in_record_object->last_access)) {
+                echo("<p>Last access: ".date('g:i:s A, F j, Y', $in_record_object->last_access)."</p>");
+            }
+            
+            for ($tagid = 0; $tagid < 10; $tagid++ ) {
+                $tag = NULL;
+                if (isset($in_record_object->tags[$tagid])) {
+                    $tag = trim($in_record_object->tags[$tagid]);
+                    echo("<p>Tag $tagid: \"$tag\"</p>");
+                }
+            }
+            
+            if ( $in_record_object instanceof CO_Security_Login) {
+                if ( isset($in_record_object->ids) && is_array($in_record_object->ids) && count($in_record_object->ids)) {
+                    echo("<p>IDs: ");
+                        $first = TRUE;
+                        foreach ( $in_record_object->ids as $id ) {
+                            if (!$first) {
+                                echo(", ");
+                            } else {
+                                $first = FALSE;
+                            }
+                            echo($id);
+                        }
+                    echo("</p>");
+                } else {
+                    echo("<h4>NO IDS!</h4>");
+                }
+            }
+        echo('</div>');
+    }
+    
     function prepare_databases() {
         if ( !defined('LGV_DB_CATCHER') ) {
             define('LGV_DB_CATCHER', 1);
@@ -417,20 +469,7 @@
                             if (is_array($test_item)) {
                                 if (count($test_item)) {
                                     foreach ( $test_item as $item ) {
-                                        echo("<h5>ITEM $item->id:</h5>");
-                                        echo('<div class="inner_div">');
-                                            echo("<p>$item->class_description</p>");
-                                            echo("<p>$item->instance_description</p>");
-                                            echo("<p>Read: $item->read_security_id</p>");
-                                            echo("<p>Write: $item->write_security_id</p>");
-                                            for ($tagid = 0; $tagid < 10; $tagid++ ) {
-                                                $tag = NULL;
-                                                if (isset($item->tags[$tagid])) {
-                                                    $tag = trim($item->tags[$tagid]);
-                                                    echo("<p>Tag $tagid: \"$tag\"</p>");
-                                                }
-                                            }
-                                        echo('</div>');
+                                        display_record($item);
                                     }
                                 } else {
                                     echo("<h4>NO ITEMS!</h4>");
@@ -453,20 +492,7 @@
                             if (is_array($test_item)) {
                                 if (count($test_item)) {
                                     foreach ( $test_item as $item ) {
-                                        echo("<h5>ITEM $item->id:</h5>");
-                                        echo('<div class="inner_div">');
-                                            echo("<p>$item->class_description</p>");
-                                            echo("<p>$item->instance_description</p>");
-                                            echo("<p>Read: $item->read_security_id</p>");
-                                            echo("<p>Write: $item->write_security_id</p>");
-                                            for ($tagid = 0; $tagid < 10; $tagid++ ) {
-                                                $tag = NULL;
-                                                eval("if (isset(\$item->tags[$tagid])) {\$tag = trim(\$item->tags[$tagid]);};");
-                                                if ($tag) {
-                                                    echo("<p>Tag $tagid: '$tag'</p>");
-                                                }
-                                            }
-                                        echo('</div>');
+                                        display_record($item);
                                     }
                                 } else {
                                     echo("<h4>NO ITEMS!</h4>");
@@ -488,18 +514,7 @@
                             echo("<h4>Get Single Indexed Main Database Item $id_no</h4>");
                             echo('<div class="inner_div">');
                                 if ( isset($test_item) ) {
-                                    echo("<p>ID: $test_item->id</p>");
-                                    echo("<p>$test_item->class_description</p>");
-                                    echo("<p>$test_item->instance_description</p>");
-                                    echo("<p>Read: $test_item->read_security_id</p>");
-                                    echo("<p>Write: $test_item->write_security_id</p>");
-                                    for ($tagid = 0; $tagid < 10; $tagid++ ) {
-                                        $tag = NULL;
-                                        eval("if (isset(\$test_item->tags[$tagid])) {\$tag = trim(\$test_item->tags[$tagid]);};");
-                                        if ($tag) {
-                                            echo("<p>Tag $tagid: '$tag'</p>");
-                                        }
-                                    }
+                                    display_record($test_item);
                                 } else {
                                     echo("<h4>NO ITEM!</h4>");
                                 }
@@ -519,20 +534,7 @@
                             if (is_array($test_item)) {
                                 if (count($test_item)) {
                                     foreach ( $test_item as $item ) {
-                                        echo("<h5>ITEM $item->id:</h5>");
-                                        echo('<div class="inner_div">');
-                                            echo("<p>$item->class_description</p>");
-                                            echo("<p>$item->instance_description</p>");
-                                            echo("<p>Read: $item->read_security_id</p>");
-                                            echo("<p>Write: $item->write_security_id</p>");
-                                            for ($tagid = 0; $tagid < 10; $tagid++ ) {
-                                                $tag = NULL;
-                                                eval("if (isset(\$item->tags[$tagid])) {\$tag = trim(\$item->tags[$tagid]);};");
-                                                if ($tag) {
-                                                    echo("<p>Tag $tagid: '$tag'</p>");
-                                                }
-                                            }
-                                        echo('</div>');
+                                        display_record($item);
                                     }
                                 } else {
                                     echo("<h4>NO ITEMS!</h4>");
@@ -567,30 +569,7 @@
                             if (is_array($test_item)) {
                                 if (count($test_item)) {
                                     foreach ( $test_item as $item ) {
-                                        echo("<h5>ITEM $item->id:</h5>");
-                                        echo('<div class="inner_div">');
-                                            echo("<p>$item->class_description</p>");
-                                            echo("<p>$item->instance_description</p>");
-                                            echo("<p>Read: $item->read_security_id</p>");
-                                            echo("<p>Write: $item->write_security_id</p>");
-                                            if ( $item instanceof CO_Security_Login) {
-                                                if ( isset($item->ids) && is_array($item->ids) && count($item->ids)) {
-                                                    echo("<p>IDs: ");
-                                                        $first = TRUE;
-                                                        foreach ( $item->ids as $id ) {
-                                                            if (!$first) {
-                                                                echo(", ");
-                                                            } else {
-                                                                $first = FALSE;
-                                                            }
-                                                            echo($id);
-                                                        }
-                                                    echo("</p>");
-                                                } else {
-                                                    echo("<h4>NO IDS!</h4>");
-                                                }
-                                            }
-                                        echo('</div>');
+                                        display_record($item);
                                     }
                                 } else {
                                     echo("<h4>NO ITEMS!</h4>");
@@ -613,30 +592,7 @@
                             if (is_array($test_item)) {
                                 if (count($test_item)) {
                                     foreach ( $test_item as $item ) {
-                                        echo("<h5>ITEM $item->id:</h5>");
-                                        echo('<div class="inner_div">');
-                                            echo("<p>$item->class_description</p>");
-                                            echo("<p>$item->instance_description</p>");
-                                            echo("<p>Read: $item->read_security_id</p>");
-                                            echo("<p>Write: $item->write_security_id</p>");
-                                            if ( $item instanceof CO_Security_Login) {
-                                                if ( isset($item->ids) && is_array($item->ids) && count($item->ids)) {
-                                                    echo("<p>IDs: ");
-                                                        $first = TRUE;
-                                                        foreach ( $item->ids as $id ) {
-                                                            if (!$first) {
-                                                                echo(", ");
-                                                            } else {
-                                                                $first = FALSE;
-                                                            }
-                                                            echo($id);
-                                                        }
-                                                    echo("</p>");
-                                                } else {
-                                                    echo("<h4>NO IDS!</h4>");
-                                                }
-                                            }
-                                        echo('</div>');
+                                        display_record($item);
                                     }
                                 } else {
                                     echo("<h4>NO ITEMS!</h4>");
@@ -658,28 +614,7 @@
                             echo("<h4>Get Single Indexed Security Database Item $id_no</h4>");
                             echo('<div class="inner_div">');
                                 if ( isset($test_item) ) {
-                                    echo("<p>ID: $test_item->id</p>");
-                                    echo("<p>$test_item->class_description</p>");
-                                    echo("<p>$test_item->instance_description</p>");
-                                    echo("<p>Read: $test_item->read_security_id</p>");
-                                    echo("<p>Write: $test_item->write_security_id</p>");
-                                    if ( $test_item instanceof CO_Security_Login) {
-                                        if ( isset($test_item->ids) && is_array($test_item->ids) && count($test_item->ids)) {
-                                            echo("<p>IDs: ");
-                                                $first = TRUE;
-                                                foreach ( $test_item->ids as $id ) {
-                                                    if (!$first) {
-                                                        echo(", ");
-                                                    } else {
-                                                        $first = FALSE;
-                                                    }
-                                                    echo($id);
-                                                }
-                                            echo("</p>");
-                                        } else {
-                                            echo("<h4>NO IDS!</h4>");
-                                        }
-                                    }
+                                    display_record($test_item);
                                 } else {
                                     echo("<h4>NO ITEM!</h4>");
                                 }
@@ -699,30 +634,7 @@
                             if (is_array($test_item)) {
                                 if (count($test_item)) {
                                     foreach ( $test_item as $item ) {
-                                        echo("<h5>ITEM $item->id:</h5>");
-                                        echo('<div class="inner_div">');
-                                            echo("<p>$item->class_description</p>");
-                                            echo("<p>$item->instance_description</p>");
-                                            echo("<p>Read: $item->read_security_id</p>");
-                                            echo("<p>Write: $item->write_security_id</p>");
-                                            if ( $item instanceof CO_Security_Login) {
-                                                if ( isset($item->ids) && is_array($item->ids) && count($item->ids)) {
-                                                    echo("<p>IDs: ");
-                                                        $first = TRUE;
-                                                        foreach ( $item->ids as $id ) {
-                                                            if (!$first) {
-                                                                echo(", ");
-                                                            } else {
-                                                                $first = FALSE;
-                                                            }
-                                                            echo($id);
-                                                        }
-                                                    echo("</p>");
-                                                } else {
-                                                    echo("<h4>NO IDS!</h4>");
-                                                }
-                                            }
-                                        echo('</div>');
+                                        display_record($item);
                                     }
                                 } else {
                                     echo("<h4>NO ITEMS!</h4>");
@@ -792,18 +704,7 @@
                 echo("<h4>BEFORE:</h4>");
                 echo('<div class="inner_div">');
                     if ( isset($test_item) ) {
-                        echo("<p>ID: $test_item->id</p>");
-                        echo("<p>$test_item->class_description</p>");
-                        echo("<p>$test_item->instance_description</p>");
-                        echo("<p>Read: $test_item->read_security_id</p>");
-                        echo("<p>Write: $test_item->write_security_id</p>");
-                        for ($tagid = 0; $tagid < 10; $tagid++ ) {
-                            $tag = NULL;
-                            eval("if (isset(\$test_item->tags[$tagid])) {\$tag = trim(\$test_item->tags[$tagid]);};");
-                            if ($tag) {
-                                echo("<p>Tag $tagid: '$tag'</p>");
-                            }
-                        }
+                        display_record($test_item);
                     } else {
                         echo("<h4>NO ITEM!</h4>");
                     }
@@ -828,18 +729,7 @@
                     echo("<h4>AFTER:</h4>");
                     echo('<div class="inner_div">');
                         if ( isset($test_item) ) {
-                            echo("<p>ID: $test_item->id</p>");
-                            echo("<p>$test_item->class_description</p>");
-                            echo("<p>$test_item->instance_description</p>");
-                            echo("<p>Read: $test_item->read_security_id</p>");
-                            echo("<p>Write: $test_item->write_security_id</p>");
-                            for ($tagid = 0; $tagid < 10; $tagid++ ) {
-                                $tag = NULL;
-                                eval("if (isset(\$test_item->tags[$tagid])) {\$tag = trim(\$test_item->tags[$tagid]);};");
-                                if ($tag) {
-                                    echo("<p>Tag $tagid: '$tag'</p>");
-                                }
-                            }
+                            display_record($test_item);
                         } else {
                             echo("<h4>NO ITEM!</h4>");
                         }
@@ -868,18 +758,7 @@
                     echo("<h4>AFTER:</h4>");
                     echo('<div class="inner_div">');
                         if ( isset($test_item) ) {
-                            echo("<p>ID: $test_item->id</p>");
-                            echo("<p>$test_item->class_description</p>");
-                            echo("<p>$test_item->instance_description</p>");
-                            echo("<p>Read: $test_item->read_security_id</p>");
-                            echo("<p>Write: $test_item->write_security_id</p>");
-                            for ($tagid = 0; $tagid < 10; $tagid++ ) {
-                                $tag = NULL;
-                                eval("if (isset(\$test_item->tags[$tagid])) {\$tag = trim(\$test_item->tags[$tagid]);};");
-                                if ($tag) {
-                                    echo("<p>Tag $tagid: '$tag'</p>");
-                                }
-                            }
+                            display_record($test_item);
                         } else {
                             echo("<h4>NO ITEM!</h4>");
                         }

@@ -36,7 +36,7 @@ abstract class A_CO_DB_Table_Base {
             $this->id = intval($in_db_result['id']);
         
             if (isset($in_db_result['last_access'])) {
-                $this->last_access = $in_db_result['last_access'];
+                $this->last_access = strtotime($in_db_result['last_access']);
             }
         
             if (isset($in_db_result['read_security_id'])) {
@@ -50,11 +50,11 @@ abstract class A_CO_DB_Table_Base {
             }
             
             if (isset($in_db_result['ttl'])) {
-                $this->ttl = $in_db_result['ttl'];
+                $this->ttl = intval($in_db_result['ttl']);
             }
             
             if (isset($in_db_result['object_name'])) {
-                $this->name = $in_db_result['object_name'];
+                $this->name = strval($in_db_result['object_name']);
             }
             
             if (isset($in_db_result['access_class_context'])) {
@@ -65,5 +65,19 @@ abstract class A_CO_DB_Table_Base {
                 }
             }
         }
+    }
+    
+    public function seconds_remaining_to_live() {
+        $interval = NULL;
+        
+        if (isset($this->last_access) && (NULL != $this->last_access)) {
+            $interval = time() - intval($this->last_access);
+        }
+        
+        return $interval;
+    }
+    
+    public function past_sell_by_date() {
+        return ((NULL != $this->seconds_remaining_to_live()) && (NULL != $this->ttl) && intval($this->ttl)) ? intval($this->seconds_remaining_to_live()) > intval($this->ttl) : FALSE;
     }
 };
