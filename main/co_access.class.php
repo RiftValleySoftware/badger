@@ -15,7 +15,15 @@ if ( !defined('LGV_SD_CATCHER') ) {
 
 require_once(CO_Config::db_class_dir().'/co_security_db.class.php');
 
-$lang_file = CO_Config::lang_class_dir().'/'.CO_Config::$lang.'.php';
+$lang = CO_Config::$lang;
+
+global $g_lang_override;    // This allows us to override the configured language at initiation time.
+
+if (isset($g_lang_override) && $g_lang_override && file_exists(CO_Config::lang_class_dir().'/'.$g_lang_override.'.php')) {
+    $lang = $g_lang_override;
+}
+
+$lang_file = CO_Config::lang_class_dir().'/'.$lang.'.php';
 $lang_common_file = CO_Config::lang_class_dir().'/common.inc.php';
 
 if ( !defined('LGV_LANG_CATCHER') ) {
