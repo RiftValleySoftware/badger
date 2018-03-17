@@ -15,34 +15,19 @@ if ( !defined('LGV_SD_CATCHER') ) {
 
 require_once(CO_Config::db_class_dir().'/co_security_db.class.php');
 
+$lang_file = CO_Config::lang_class_dir().'/'.CO_Config::$lang.'.php';
+$lang_common_file = CO_Config::lang_class_dir().'/common.inc.php';
+
+if ( !defined('LGV_LANG_CATCHER') ) {
+    define('LGV_LANG_CATCHER', 1);
+}
+
+require_once($lang_file);
+require_once($lang_common_file);
+
 /**
  */
-class CO_Access {
-    static  $pdo_error_name_failed_to_open_data_db = 'Failed to open the data storage database.';
-    static  $pdo_error_desc_failed_to_open_data_db = 'There was an error while trying to access the main data storage database.';
-
-    static  $pdo_error_name_failed_to_open_security_db = 'Failed to open the security database.';
-    static  $pdo_error_desc_failed_to_open_security_db = 'There was an error while trying to access the security database.';
-
-    static  $pdo_error_name_invalid_login = 'Invalid Login.';
-    static  $pdo_error_desc_invalid_login = 'The login or password provided was not valid.';
-    
-    static  $pdo_error_name_illegal_write_attempt = 'Illegal Database Write Attempt.';
-    static  $pdo_error_desc_illegal_write_attempt = 'There was an attempt to write to a record for which the user does not have write permission.';
-    
-    static  $pdo_error_name_illegal_delete_attempt = 'Illegal Database delete Attempt.';
-    static  $pdo_error_desc_illegal_delete_attempt = 'There was an attempt to delete a record for which the user does not have write permission.';
-    
-    static  $pdo_error_name_failed_delete_attempt = 'Failed Database delete Attempt.';
-    static  $pdo_error_desc_failed_delete_attempt = 'There was a failure during an attempt to delete a record.';
-    
-    static  $pdo_error_code_failed_to_open_data_db = 100;
-    static  $pdo_error_code_failed_to_open_security_db = 101;
-    static  $pdo_error_code_invalid_login = 102;
-    static  $pdo_error_code_illegal_write_attempt = 200;
-    static  $pdo_error_code_illegal_delete_attempt = 201;
-    static  $pdo_error_code_failed_delete_attempt = 202;
-    
+class CO_Access {    
     protected $_data_db_object;
     protected $_security_db_object;
     protected $_login_id;
@@ -94,17 +79,17 @@ class CO_Access {
                 }
                 if (isset($login_record) && ($login_record instanceof CO_Security_Login)) {
                     if (!$login_record->is_login_valid($in_login_id, $in_hashed_password, $in_raw_password)) {
-                        $this->error = new LGV_Error(   self::$pdo_error_code_invalid_login,
-                                                        self::$pdo_error_name_invalid_login,
-                                                        self::$pdo_error_desc_invalid_login);
+                        $this->error = new LGV_Error(   CO_Lang_Common::$pdo_error_code_invalid_login,
+                                                        CO_Lang::$pdo_error_name_invalid_login,
+                                                        CO_Lang::$pdo_error_desc_invalid_login);
                 
                         $this->_security_db_object = NULL;
                         return;
                     }
                 } else {
-                    $this->error = new LGV_Error(   self::$pdo_error_code_invalid_login,
-                                                    self::$pdo_error_name_invalid_login,
-                                                    self::$pdo_error_desc_invalid_login);
+                    $this->error = new LGV_Error(   CO_Lang_Common::$pdo_error_code_invalid_login,
+                                                    CO_Lang::$pdo_error_name_invalid_login,
+                                                    CO_Lang::$pdo_error_desc_invalid_login);
             
                     $this->_security_db_object = NULL;
                     return;
@@ -112,9 +97,9 @@ class CO_Access {
                 
                 $this->_login_id = $login_record->id;
             } catch (Exception $exception) {
-                $this->error = new LGV_Error(   self::$pdo_error_code_failed_to_open_security_db,
-                                                self::$pdo_error_name_failed_to_open_security_db,
-                                                self::$pdo_error_desc_failed_to_open_security_db,
+                $this->error = new LGV_Error(   CO_Lang_Common::$pdo_error_code_failed_to_open_security_db,
+                                                CO_Lang::$pdo_error_name_failed_to_open_security_db,
+                                                CO_Lang::$pdo_error_desc_failed_to_open_security_db,
                                                 $exception->getFile(),
                                                 $exception->getLine(),
                                                 $exception->getMessage());
@@ -127,9 +112,9 @@ class CO_Access {
             $pdo_data_db = new CO_PDO(CO_Config::$data_db_type, CO_Config::$data_db_host, CO_Config::$data_db_name, CO_Config::$data_db_login, CO_Config::$data_db_password);
             $this->_data_db_object = new CO_Main_Data_DB($pdo_data_db);
         } catch (Exception $exception) {
-            $this->error = new LGV_Error(   self::$pdo_error_code_failed_to_open_data_db,
-                                            self::$pdo_error_name_failed_to_open_data_db,
-                                            self::$pdo_error_desc_failed_to_open_data_db,
+            $this->error = new LGV_Error(   CO_Lang_Common::$pdo_error_code_failed_to_open_data_db,
+                                            CO_Lang::$pdo_error_name_failed_to_open_data_db,
+                                            CO_Lang::$pdo_error_desc_failed_to_open_data_db,
                                             $exception->getFile(),
                                             $exception->getLine(),
                                             $exception->getMessage());

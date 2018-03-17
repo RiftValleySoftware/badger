@@ -120,9 +120,9 @@ abstract class A_CO_DB {
                 $ret = $this->pdo_object->preparedQuery($in_sql, $in_parameters, FALSE);
             }
         } catch (Exception $exception) {
-            $this->error = new LGV_Error(   CO_Access::$pdo_error_code_failed_to_open_security_db,
-                                            CO_Access::$pdo_error_name_failed_to_open_security_db,
-                                            CO_Access::$pdo_error_desc_failed_to_open_security_db,
+            $this->error = new LGV_Error(   CO_Lang_Common::$pdo_error_code_failed_to_open_security_db,
+                                            CO_Lang::$pdo_error_name_failed_to_open_security_db,
+                                            CO_Lang::$pdo_error_desc_failed_to_open_security_db,
                                             $exception->getFile(),
                                             $exception->getLine(),
                                             $exception->getMessage());
@@ -279,9 +279,9 @@ abstract class A_CO_DB {
                         $temp = $this->execute_query($sql, Array());
                         
                         if (isset($temp) && $temp && is_array($temp) && count($temp)) { // If we  got a record, then we're aborting, as we tried to change an existing rcord.
-                            $this->error = new LGV_Error(   CO_Access::$pdo_error_code_illegal_write_attempt,
-                                                            CO_Access::$pdo_error_name_illegal_write_attempt,
-                                                            CO_Access::$pdo_error_desc_illegal_write_attempt);
+                            $this->error = new LGV_Error(   CO_Lang_Common::$pdo_error_code_illegal_write_attempt,
+                                                            CO_Lang::$pdo_error_name_illegal_write_attempt,
+                                                            CO_Lang::$pdo_error_desc_illegal_write_attempt);
                         }
                     }
                 } else {
@@ -341,9 +341,9 @@ abstract class A_CO_DB {
                             $ret = $id_ar[0]['last_insert_id()'];
                         }
                     } else {
-                        $this->error = new LGV_Error(   CO_Access::$pdo_error_code_illegal_write_attempt,
-                                                        CO_Access::$pdo_error_name_illegal_write_attempt,
-                                                        CO_Access::$pdo_error_desc_illegal_write_attempt);
+                        $this->error = new LGV_Error(   CO_Lang_Common::$pdo_error_code_illegal_write_attempt,
+                                                        CO_Lang::$pdo_error_name_illegal_write_attempt,
+                                                        CO_Lang::$pdo_error_desc_illegal_write_attempt);
                     }
                 }
             }
@@ -365,9 +365,9 @@ abstract class A_CO_DB {
             $sql = 'DELETE FROM `'.$this->table_name.'` WHERE `id`='.$id;
             $this->execute_query($sql, Array(), TRUE);
             if ($this->error) {
-                $this->error = new LGV_Error(   CO_Access::$pdo_error_code_failed_delete_attempt,
-                                                CO_Access::$pdo_error_name_failed_delete_attempt,
-                                                CO_Access::$pdo_error_desc_failed_delete_attempt);
+                $this->error = new LGV_Error(   CO_Lang_Common::$pdo_error_code_failed_delete_attempt,
+                                                CO_Lang::$pdo_error_name_failed_delete_attempt,
+                                                CO_Lang::$pdo_error_desc_failed_delete_attempt);
             } else {
                 // Make sure she's dead, Jim.
                 $sql = 'SELECT id FROM `'.$this->table_name.'` WHERE ('.$predicate.' AND `id`='.$id.')';
@@ -375,15 +375,15 @@ abstract class A_CO_DB {
         
                 if (!$this->error && isset($temp) && $temp && is_array($temp) && (0 == count($temp))) {
                 } else {
-                    $this->error = new LGV_Error(   CO_Access::$pdo_error_code_failed_delete_attempt,
-                                                    CO_Access::$pdo_error_name_failed_delete_attempt,
-                                                    CO_Access::$pdo_error_desc_failed_delete_attempt);
+                    $this->error = new LGV_Error(   CO_Lang_Common::$pdo_error_code_failed_delete_attempt,
+                                                    CO_Lang::$pdo_error_name_failed_delete_attempt,
+                                                    CO_Lang::$pdo_error_desc_failed_delete_attempt);
                 }
             }
         } else {
-            $this->error = new LGV_Error(   CO_Access::$pdo_error_code_illegal_delete_attempt,
-                                            CO_Access::$pdo_error_name_illegal_delete_attempt,
-                                            CO_Access::$pdo_error_desc_illegal_delete_attempt);
+            $this->error = new LGV_Error(   CO_Lang_Common::$pdo_error_code_illegal_delete_attempt,
+                                            CO_Lang::$pdo_error_name_illegal_delete_attempt,
+                                            CO_Lang::$pdo_error_desc_illegal_delete_attempt);
         }
     }
 };
