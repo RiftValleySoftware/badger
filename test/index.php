@@ -322,14 +322,15 @@
             
             if (isset($in_record_object->ttl)) {
                 $color = "green";
+                $seconds = $in_record_object->seconds_remaining_to_live();
                 
-                if (0 > $in_record_object->seconds_remaining_to_live()) {
+                if (0 > $seconds) {
                     $color = "red";
-                } elseif ((60 * 60 * 24) > $in_record_object->seconds_remaining_to_live()) {
+                } elseif ((60 * 60 * 24) > $seconds) {
                     $color = "orange";
                 }
                 
-                echo("<p style=\"color:$color\">Seconds Remaining to Live: ".$in_record_object->seconds_remaining_to_live()."</p>");
+                echo("<p style=\"color:$color\">Seconds Remaining to Live: ".$seconds."</p>");
             }
             
             if (isset($in_record_object->last_access)) {

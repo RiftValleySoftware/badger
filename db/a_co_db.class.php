@@ -319,6 +319,8 @@ abstract class A_CO_DB {
                             $params_associative_array['write_security_id'] = $in_access_ids[1];
                         }
                         
+                        $params_associative_array['last_access'] = date('Y-m-d H:i:s');
+                        
                         foreach ($params_associative_array as $key => $value) {
                             if (isset($temp[$key])) {
                                 $temp[$key] = $value;

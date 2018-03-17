@@ -70,8 +70,9 @@ abstract class A_CO_DB_Table_Base {
     public function seconds_remaining_to_live() {
         $interval = NULL;
         
-        if (isset($this->last_access) && (NULL != $this->last_access)) {
-            $interval = time() - intval($this->last_access);
+        if (isset($this->last_access) && (NULL != $this->last_access) && (NULL != $this->ttl) && intval($this->ttl)) {
+            $time = time();
+            $interval = intval($this->ttl) - (intval($time) - intval($this->last_access));
         }
         
         return $interval;
