@@ -13,13 +13,21 @@ require_once(CO_Config::db_class_dir().'/co_security_node.class.php');
  */
 class CO_Security_ID extends CO_Security_Node {
     var $login_id;
+
+    protected function _load_from_db($in_db_result) {
+        $ret = parent::_load_from_db($in_db_result);
+        
+        if ($ret) {
+            $this->class_description = 'This is a security class for IDs.';
+            $this->instance_description = isset($this->name) && $this->name ? "$this->name ($this->id)" : "Unnamed ID Node ($this->id)";
+        }
+        
+        return $ret;
+    }
     
 	public function __construct(    $in_db_object,
 	                                $in_db_result
                                 ) {
         parent::__construct($in_db_object, $in_db_result);
-        
-        $this->class_description = 'This is a security class for IDs.';
-        $this->instance_description = isset($this->name) && $this->name ? "$this->name ($this->id)" : "Unnamed ID Node ($this->id)";
     }
 };

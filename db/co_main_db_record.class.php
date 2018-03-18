@@ -18,36 +18,44 @@ class CO_Main_DB_Record extends A_CO_DB_Table_Base {
     var $tags;
     
     private $raw_payload;
+
+    protected function _load_from_db($in_db_result) {
+        $ret = parent::_load_from_db($in_db_result);
+        
+        if ($ret) {
+            $this->class_description = 'Base Class for Main Database Records.';
+            $this->name = (isset($this->name) && trim($this->name)) ? trim($this->name) : "Base Class Instance ($this->id)";
+            
+            if ($this->db_object) {
+                $this->owner_id = NULL;
+                $this->tags = array();
+                $this->raw_payload = NULL;
+        
+                if (isset($in_db_result['owner_id'])) {
+                    $this->owner_id = $in_db_result['owner_id'];
+                }
+
+                if (isset($in_db_result['payload']) ) {
+                    $this->raw_payload = $in_db_result['payload'];
+                }
+        
+                for ($i = 0; $i < 10; $i++) {
+                    $tagname = 'tag'.$i;
+                    $this->tags[$i] = NULL;
+                    if (isset($in_db_result[$tagname])) {
+                        $this->tags[$i] = $in_db_result[$tagname];
+                    }
+                }
+            }
+        }
+        
+        return $ret;
+    }
     
 	public function __construct(    $in_db_object,
 	                                $in_db_result
                                 ) {
         parent::__construct($in_db_object, $in_db_result);
-        
-        $this->class_description = 'Base Class for Main Database Records.';
-        $this->name = (isset($this->name) && trim($this->name)) ? trim($this->name) : "Base Class Instance ($this->id)";
-            
-        if ($this->db_object) {
-            $this->owner_id = NULL;
-            $this->tags = array();
-            $this->raw_payload = NULL;
-        
-            if (isset($in_db_result['owner_id'])) {
-                $this->owner_id = $in_db_result['owner_id'];
-            }
-
-            if (isset($in_db_result['payload']) ) {
-                $this->raw_payload = $in_db_result['payload'];
-            }
-        
-            for ($i = 0; $i < 10; $i++) {
-                $tagname = 'tag'.$i;
-                $this->tags[$i] = NULL;
-                if (isset($in_db_result[$tagname])) {
-                    $this->tags[$i] = $in_db_result[$tagname];
-                }
-            }
-        }
     }
     
     public function payload(    $in_private_key = NULL
@@ -70,5 +78,10 @@ class CO_Main_DB_Record extends A_CO_DB_Table_Base {
         }
         
         return $ret;
+    }
+    
+    public function reload_from_db() {
+        $db_result = $this->$db_object->access_object->get_single_data_record_by_id($this->id);
+        return $this->_load_from_db($db_result);
     }
 };

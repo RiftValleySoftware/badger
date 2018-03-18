@@ -18,23 +18,14 @@ abstract class A_CO_DB_Table_Base {
     var $write_security_id;
     var $context;
     
-	public function __construct(    $in_db_object,
-	                                $in_db_result
-                                ) {
-        $this->class_description = 'Abstract Base Class for Records -Should never be instantiated.';
-        $this->id = NULL;
-        $this->last_access = NULL;
-        $this->read_security_id = 0;
-        $this->write_security_id = 0;
-        $this->ttl = NULL;
-        $this->name = NULL;
-        $this->context = NULL;
-        $this->instance_description = NULL;
-        $this->db_object = $in_db_object;
-    
-        if (isset($in_db_object) && isset($in_db_result) && isset($in_db_result['id']) && intval($in_db_result['id'])) {
-            $this->id = intval($in_db_result['id']);
+    protected function _load_from_db($in_db_result) {
+        $ret = FALSE;
         
+        if (isset($this->db_object) && isset($in_db_result) && isset($in_db_result['id']) && intval($in_db_result['id'])) {
+            $ret = TRUE;
+        
+            $this->id = intval($in_db_result['id']);
+            
             if (isset($in_db_result['last_access'])) {
                 $this->last_access = strtotime($in_db_result['last_access']);
             }
@@ -65,6 +56,25 @@ abstract class A_CO_DB_Table_Base {
                 }
             }
         }
+        
+        return $ret;
+    }
+    
+	public function __construct(    $in_db_object,
+	                                $in_db_result
+                                ) {
+        $this->class_description = 'Abstract Base Class for Records -Should never be instantiated.';
+        $this->id = NULL;
+        $this->last_access = NULL;
+        $this->read_security_id = 0;
+        $this->write_security_id = 0;
+        $this->ttl = NULL;
+        $this->name = NULL;
+        $this->context = NULL;
+        $this->instance_description = NULL;
+        $this->db_object = $in_db_object;
+    
+        $this->_load_from_db($in_db_result);
     }
     
     public function seconds_remaining_to_live() {
@@ -80,5 +90,9 @@ abstract class A_CO_DB_Table_Base {
     
     public function past_sell_by_date() {
         return ((NULL != $this->seconds_remaining_to_live()) && (NULL != $this->ttl) && intval($this->ttl)) ? intval($this->seconds_remaining_to_live()) > intval($this->ttl) : FALSE;
+    }
+    
+    public function reload_from_db() {
+        return FALSE;
     }
 };

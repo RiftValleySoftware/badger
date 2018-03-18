@@ -43,4 +43,9 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
         
         $this->instance_description = isset($this->name) && $this->name ? "$this->name ($this->id)" : "Unnamed Security Node ($this->id)";
     }
+    
+    public function reload_from_db() {
+        $db_result = $this->$db_object->access_object->get_single_security_record_by_id($this->id);
+        return $this->_load_from_db($db_result);
+    }
 };

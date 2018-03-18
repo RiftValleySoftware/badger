@@ -19,20 +19,21 @@ require_once(CO_Config::shared_class_dir().'/error.class.php');
  */
 abstract class A_CO_DB {
     var $pdo_object;
+    var $access_object;
     var $class_description;
     var $error;
     var $table_name;
     
-    protected function _create_read_security_predicate(  $in_access_ids
-                                                    ) {
-        if (1 == count($in_access_ids) && (-1 == intval($in_access_ids[0]))) {
+    protected function _create_read_security_predicate() {
+        $access_ids = $this->access_object->get_security_ids();
+        if (1 == count($access_ids) && (-1 == intval($access_ids[0]))) {
             return '1';
         }
         
         $ret = '((`read_security_id`=0) OR (`read_security_id` IS NULL)';
         
-        if (isset($in_access_ids) && is_array($in_access_ids) && count($in_access_ids)) {
-            foreach ($in_access_ids as $access_id) {
+        if (isset($access_ids) && is_array($access_ids) && count($access_ids)) {
+            foreach ($access_ids as $access_id) {
                 $ret .= ' OR (`read_security_id`='.intval($access_id).')';
             }
         }
@@ -42,16 +43,16 @@ abstract class A_CO_DB {
         return $ret;
     }
     
-    protected function _create_write_security_predicate(  $in_access_ids
-                                                    ) {
-        if (1 == count($in_access_ids) && (-1 == intval($in_access_ids[0]))) {
+    protected function _create_write_security_predicate() {
+        $access_ids = $this->access_object->get_security_ids();
+        if (1 == count($access_ids) && (-1 == intval($access_ids[0]))) {
             return '1';
         }
         
         $ret = '((`write_security_id`=0) OR (`write_security_id` IS NULL)';
         
-        if (isset($in_access_ids) && is_array($in_access_ids) && count($in_access_ids)) {
-            foreach ($in_access_ids as $access_id) {
+        if (isset($access_ids) && is_array($access_ids) && count($access_ids)) {
+            foreach ($access_ids as $access_id) {
                 $ret .= ' OR (`write_security_id`='.intval($access_id).')';
             }
         }
@@ -61,17 +62,17 @@ abstract class A_CO_DB {
         return $ret;
     }
     
-    protected function _create_security_predicate(  $in_access_ids,
-                                                    $and_write = FALSE
+    protected function _create_security_predicate(  $and_write = FALSE
                                                     ) {
-        if (1 == count($in_access_ids) && (-1 == intval($in_access_ids[0]))) {
+        $access_ids = $this->access_object->get_security_ids();
+        if (1 == count($access_ids) && (-1 == intval($access_ids[0]))) {
             return '1';
         }
         
-        $ret = $this->_create_read_security_predicate($in_access_ids);
+        $ret = $this->_create_read_security_predicate($access_ids);
         
         if ($and_write) {
-            $ret .= ' AND '.$this->_create_write_security_predicate($in_access_ids);
+            $ret .= ' AND '.$this->_create_write_security_predicate($access_ids);
         }
         
         return $ret;
@@ -97,10 +98,12 @@ abstract class A_CO_DB {
         return $ret;
     }
 
-	public function __construct(    $in_pdo_object
+	public function __construct(    $in_pdo_object,
+	                                $in_access_object = NULL
                                 ) {
         $this->class_description = 'Abstract Base Class for Database -Should never be instantiated.';
         
+        $this->access_object = $in_access_object;
         $this->error = NULL;
         $this->table_name = NULL;
         $this->pdo_object = $in_pdo_object;
@@ -133,12 +136,11 @@ abstract class A_CO_DB {
     }
     
     public function get_single_record_by_id(    $in_id,
-                                                $in_access_ids = NULL,
                                                 $and_write = FALSE
                                             ) {
         $ret = NULL;
         
-        $temp = $this->get_multiple_records_by_id(Array($in_id), $in_access_ids, $and_write);
+        $temp = $this->get_multiple_records_by_id(Array($in_id), $and_write);
         
         if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
             $ret = $temp[0];
@@ -148,12 +150,11 @@ abstract class A_CO_DB {
     }
     
     public function get_multiple_records_by_id( $in_id_array,
-                                                $in_access_ids = NULL,
                                                 $and_write = FALSE
                                                 ) {
         $ret = NULL;
         
-        $predicate = $this->_create_security_predicate($in_access_ids, $and_write);
+        $predicate = $this->_create_security_predicate($and_write);
         
         $sql = 'SELECT * FROM `'.$this->table_name.'` WHERE '.$predicate. ' AND (';
         $params = Array();
@@ -183,11 +184,10 @@ abstract class A_CO_DB {
         return $ret;
     }
     
-    public function get_all_readable_records(   $in_access_ids = NULL
-                                            ) {
+    public function get_all_readable_records() {
         $ret = NULL;
         
-        $predicate = $this->_create_security_predicate($in_access_ids);
+        $predicate = $this->_create_security_predicate();
         
         $sql = 'SELECT * FROM `'.$this->table_name.'` WHERE '.$predicate;
 
@@ -203,13 +203,13 @@ abstract class A_CO_DB {
         return $ret;
     }
     
-    public function get_all_writeable_records(  $in_access_ids = NULL
-                                            ) {
+    public function get_all_writeable_records() {
         $ret = NULL;
         
+        $access_ids = $this->access_object->get_security_ids();
         // Only logged-in users can write.
-        if (isset($in_access_ids) && is_array($in_access_ids) && count($in_access_ids)) {
-            $predicate = $this->_create_security_predicate($in_access_ids, TRUE);
+        if (isset($access_ids) && is_array($access_ids) && count($access_ids)) {
+            $predicate = $this->_create_security_predicate(TRUE);
         
             $sql = 'SELECT * FROM `'.$this->table_name.'` WHERE '.$predicate;
 
@@ -226,14 +226,14 @@ abstract class A_CO_DB {
         return $ret;
     }
     
-    public function write_record(   $params_associative_array,
-                                    $in_access_ids
+    public function write_record(   $params_associative_array
                                 ) {
         $ret = FALSE;
         
         if (isset($params_associative_array) && is_array($params_associative_array) && count($params_associative_array)) {
-            if (isset($in_access_ids) && is_array($in_access_ids) && count($in_access_ids)) {
-                $predicate = $this->_create_security_predicate($in_access_ids, TRUE);
+            $access_ids = $this->access_object->get_security_ids();
+            if (isset($access_ids) && is_array($access_ids) && count($access_ids)) {
+                $predicate = $this->_create_security_predicate(TRUE);
             
                 $id = isset($params_associative_array['id']) ? intval($params_associative_array['id']) : 0;  // We extract  the ID from the fields, or assume a new record.
                 
@@ -250,7 +250,7 @@ abstract class A_CO_DB {
                         // Make sure that we aren't changing the security ID to one we can't read.
                         if (isset($params_associative_array['read_security_id'])) {
                             $new_read_id = intval($params_associative_array['read_security_id']);
-                            if ($new_read_id && !in_array($new_read_id, $in_access_ids)) {
+                            if ($new_read_id && !in_array($new_read_id, $access_ids)) {
                                 unset($params_associative_array['read_security_id']);
                             }
                         }
@@ -258,7 +258,7 @@ abstract class A_CO_DB {
                         // Make sure that we aren't changing the security ID to one we can't write.
                         if (isset($params_associative_array['write_security_id'])) {
                             $new_write_id = intval($params_associative_array['write_security_id']);
-                            if ($new_write_id && !in_array($new_write_id, $in_access_ids)) {
+                            if ($new_write_id && !in_array($new_write_id, $access_ids)) {
                                 unset($params_associative_array['write_security_id']);
                             }
                         }
@@ -296,7 +296,7 @@ abstract class A_CO_DB {
                         // Make sure that we aren't setting the security ID to one we can't read.
                         if (isset($params_associative_array['read_security_id'])) {
                             $new_read_id = intval($params_associative_array['read_security_id']);
-                            if ($new_read_id && !in_array($new_read_id, $in_access_ids)) {
+                            if ($new_read_id && !in_array($new_read_id, $access_ids)) {
                                 unset($params_associative_array['read_security_id']);
                             }
                         }
@@ -304,7 +304,7 @@ abstract class A_CO_DB {
                         // Make sure that we aren't setting the security ID to one we can't write.
                         if (isset($params_associative_array['write_security_id'])) {
                             $new_write_id = intval($params_associative_array['write_security_id']);
-                            if ($new_write_id && !in_array($new_write_id, $in_access_ids)) {
+                            if ($new_write_id && !in_array($new_write_id, $access_ids)) {
                                 unset($params_associative_array['write_security_id']);
                             }
                         }
@@ -316,7 +316,7 @@ abstract class A_CO_DB {
                         
                         // If there is no write ID specified, then we simply take the first one off the list.
                         if (!isset($params_associative_array['write_security_id'])) {
-                            $params_associative_array['write_security_id'] = $in_access_ids[1];
+                            $params_associative_array['write_security_id'] = $access_ids[1];
                         }
                         
                         $params_associative_array['last_access'] = date('Y-m-d H:i:s');
@@ -354,11 +354,10 @@ abstract class A_CO_DB {
         return $ret;
     }
     
-    public function delete_record(  $id,
-                                    $in_access_ids
+    public function delete_record(  $id
                                 ) {
         $id = intval($id);
-        $predicate = $this->_create_security_predicate($in_access_ids, TRUE);
+        $predicate = $this->_create_security_predicate(TRUE);
         // First, make sure we have write permission for this record, and that the record exists.
         $sql = 'SELECT id FROM `'.$this->table_name.'` WHERE ('.$predicate.' AND `id`='.$id.')';
         $temp = $this->execute_query($sql);

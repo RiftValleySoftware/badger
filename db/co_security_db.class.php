@@ -12,9 +12,10 @@ require_once(CO_Config::db_class_dir().'/a_co_db.class.php');
 /**
  */
 class CO_Security_DB extends A_CO_DB {
-	public function __construct(    $in_pdo_object
+	public function __construct(    $in_pdo_object,
+        	                        $in_access_object = NULL
                                 ) {
-        parent::__construct($in_pdo_object);
+        parent::__construct($in_pdo_object, $in_access_object);
         
         $this->table_name = 'co_security_nodes';
         

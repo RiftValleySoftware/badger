@@ -78,7 +78,7 @@ class CO_Access {
         if ((isset($in_login_id) && $in_login_id) && ((isset($in_hashed_password) && $in_hashed_password) || (isset($in_raw_password) && $in_raw_password))) {
             try {
                 $pdo_security_db = new CO_PDO(CO_Config::$sec_db_type, CO_Config::$sec_db_host, CO_Config::$sec_db_name, CO_Config::$sec_db_login, CO_Config::$sec_db_password);
-                $this->_security_db_object = new CO_Security_DB($pdo_security_db);
+                $this->_security_db_object = new CO_Security_DB($pdo_security_db, $this);
                 $login_record = $this->_security_db_object->get_initial_record_by_login_id($in_login_id);
                 if ($this->_security_db_object->error) {
                     $this->error = $this->_security_db_object->error;
@@ -118,7 +118,7 @@ class CO_Access {
         
         try {
             $pdo_data_db = new CO_PDO(CO_Config::$data_db_type, CO_Config::$data_db_host, CO_Config::$data_db_name, CO_Config::$data_db_login, CO_Config::$data_db_password);
-            $this->_data_db_object = new CO_Main_Data_DB($pdo_data_db);
+            $this->_data_db_object = new CO_Main_Data_DB($pdo_data_db, $this);
         } catch (Exception $exception) {
             $this->error = new LGV_Error(   CO_Lang_Common::$pdo_error_code_failed_to_open_data_db,
                                             CO_Lang::$pdo_error_name_failed_to_open_data_db,

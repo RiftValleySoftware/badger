@@ -13,25 +13,33 @@ require_once(CO_Config::db_class_dir().'/co_security_node.class.php');
  */
 class CO_Security_Login extends CO_Security_Node {
     var $login_id;
+
+    protected function _load_from_db($in_db_result) {
+        $ret = parent::_load_from_db($in_db_result);
+        
+        if ($ret) {
+            $this->class_description = 'This is a security class for individual logins.';
+        
+            if (isset($in_db_result['login_id'])) {
+                $this->login_id = $in_db_result['login_id'];
+            }
+        
+            if ($this->id == CO_Config::$god_mode_id) {
+                // God Mode is always forced to use the config password.
+                $this->context['hashed_password'] = bin2hex(openssl_random_pseudo_bytes(4));    // Just create a randomish junk password. It will never be used.
+                $this->instance_description = 'GOD MODE: '.(isset($this->name) && $this->name ? "$this->name ($this->id)" : "Unnamed Login Node ($this->id)");
+            } else {
+                $this->instance_description = isset($this->name) && $this->name ? "$this->name ($this->id)" : "Unnamed Login Node ($this->id)";
+            }
+        }
+        
+        return $ret;
+    }
     
 	public function __construct(    $in_db_object,
 	                                $in_db_result
                                 ) {
         parent::__construct($in_db_object, $in_db_result);
-        
-        $this->class_description = 'This is a security class for individual logins.';
-        
-        if (isset($in_db_result['login_id'])) {
-            $this->login_id = $in_db_result['login_id'];
-        }
-        
-        if ($this->id == CO_Config::$god_mode_id) {
-            // God Mode is always forced to use the config password.
-            $this->context['hashed_password'] = bin2hex(openssl_random_pseudo_bytes(4));    // Just create a randomish junk password. It will never be used.
-            $this->instance_description = 'GOD MODE: '.(isset($this->name) && $this->name ? "$this->name ($this->id)" : "Unnamed Login Node ($this->id)");
-        } else {
-            $this->instance_description = isset($this->name) && $this->name ? "$this->name ($this->id)" : "Unnamed Login Node ($this->id)";
-        }
     }
     
     public function is_login_valid( $in_login_id,
