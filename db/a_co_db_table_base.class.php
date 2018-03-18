@@ -60,6 +60,35 @@ abstract class A_CO_DB_Table_Base {
         return $ret;
     }
     
+    protected function _write_to_db() {
+        $ret = FALSE;
+        
+        if (isset($this->db_object) && isset($in_db_result)) {
+            $params = $this->_build_parameter_array();
+            
+            if (isset($params) && is_array($params) && count($params)) {
+                $ret = $this->db_object->write_record($params);
+            }
+        }
+        
+        return $ret;
+    }
+    
+    protected function _build_parameter_array() {
+        $ret = Array();
+        
+        $ret['id'] = $this->id;
+        $ret['access_class'] = get_class($this);
+        $ret['last_access'] = NULL;
+        $ret['read_security_id'] = $this->read_security_id;
+        $ret['write_security_id'] = $this->write_security_id;
+        $ret['ttl'] = $this->ttl;
+        $ret['object_name'] = $this->name;
+        $ret['access_class_context'] = $this->context ? serialize($this->context) : NULL;
+        
+        return $ret;
+    }
+    
 	public function __construct(    $in_db_object,
 	                                $in_db_result
                                 ) {
@@ -90,6 +119,10 @@ abstract class A_CO_DB_Table_Base {
     
     public function past_sell_by_date() {
         return ((NULL != $this->seconds_remaining_to_live()) && (NULL != $this->ttl) && intval($this->ttl)) ? intval($this->seconds_remaining_to_live()) > intval($this->ttl) : FALSE;
+    }
+    
+    public function update_db() {
+        return $this->_write_to_db();
     }
     
     public function reload_from_db() {

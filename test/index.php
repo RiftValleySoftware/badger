@@ -71,6 +71,60 @@
 
         echo('<h1 style="color:red">UNABLE TO OPEN DATABASE!</h1>');
     }
+    
+    function display_record($in_record_object) {
+        echo("<h5>ITEM $in_record_object->id:</h5>");
+        echo('<div class="inner_div">');
+            echo("<p>$in_record_object->class_description</p>");
+            echo("<p>$in_record_object->instance_description</p>");
+            echo("<p>Read: $in_record_object->read_security_id</p>");
+            echo("<p>Write: $in_record_object->write_security_id</p>");
+            
+            if (isset($in_record_object->ttl)) {
+                $color = "green";
+                $seconds = $in_record_object->seconds_remaining_to_live();
+                
+                if (0 > $seconds) {
+                    $color = "red";
+                } elseif ((60 * 60 * 24) > $seconds) {
+                    $color = "orange";
+                }
+                
+                echo("<p style=\"color:$color\">Seconds Remaining to Live: ".$seconds."</p>");
+            }
+            
+            if (isset($in_record_object->last_access)) {
+                echo("<p>Last access: ".date('g:i:s A, F j, Y', $in_record_object->last_access)."</p>");
+            }
+            
+            for ($tagid = 0; $tagid < 10; $tagid++ ) {
+                $tag = NULL;
+                if (isset($in_record_object->tags[$tagid])) {
+                    $tag = trim($in_record_object->tags[$tagid]);
+                    echo("<p>Tag $tagid: \"$tag\"</p>");
+                }
+            }
+            
+            if ( $in_record_object instanceof CO_Security_Login) {
+                if ( isset($in_record_object->ids) && is_array($in_record_object->ids) && count($in_record_object->ids)) {
+                    echo("<p>IDs: ");
+                        $first = TRUE;
+                        foreach ( $in_record_object->ids as $id ) {
+                            if (!$first) {
+                                echo(", ");
+                            } else {
+                                $first = FALSE;
+                            }
+                            echo($id);
+                        }
+                    echo("</p>");
+                } else {
+                    echo("<h4>NO IDS!</h4>");
+                }
+            }
+        echo('</div>');
+    }
+        
 ?><!DOCTYPE html>
 <html lang="en">
     <head>
@@ -180,11 +234,13 @@
         <div style="text-align:center;padding:1em;">
             <img src="../icon.png" style="display:block;margin:auto;width:80px" alt="Honey badger Don't Care" />
             <div id="environment-setup" class="closed">
-                <h1 class="header"><a href="javascript:toggle_main_state('environment-setup')">ENVIRONMENT SETUP</a></h1>
+                <h1 class="header"><a href="javascript:toggle_main_state('environment-setup')">MAIN ENVIRONMENT SETUP</a></h1>
                 <div style="text-align:left;margin:auto;display:table">
                     <div class="main_div container">
                         <?php
-                            echo("<div style=\"margin:auto;text-align:center;display:table\"><pre style=\"margin:auto;text-align:left;display:table\">");
+                            echo("<div style=\"margin:auto;text-align:center;display:table\">");
+                            echo("<h2>File/Folder Locations</h2>");
+                            echo("<pre style=\"margin:auto;text-align:left;display:table\">");
                             echo("<strong>Base dir</strong>.............".CO_Config::base_dir()."\n");
                             echo("<strong>Main class dir</strong>.......".CO_Config::main_class_dir()."\n");
                             echo("<strong>Database class dir</strong>...".CO_Config::db_class_dir()."\n");
@@ -195,6 +251,7 @@
                             echo("</pre></div>");
                         ?>
                         <div class="main_div">
+                            <h2 style="text-align:center">Instructions</h2>
                             <p class="explain">In order to run these tests, you should set up two (2) blank databases. They can both be the same DB, but that is not the advised configuration for Badger.</p>
                             <p class="explain">The first (main) database should be called "<?php echo(CO_Config::$data_db_name) ?>", and the second (security) database should be called "<?php echo(CO_Config::$sec_db_name) ?>".</p>
                             <p class="explain">The main database should be have a full rights login named "<?php echo(CO_Config::$data_db_login) ?>", with a password of "<?php echo(CO_Config::$data_db_password) ?>".</p>
@@ -207,6 +264,10 @@
             <div id="basic_tests" class="test-wrapper">
                 <h2>BASIC TESTS</h2>
                 <?php include('basic_tests.php'); ?>
+            </div>
+            <div id="first_layer_tests" class="test-wrapper">
+                <h2>FIRST ABSTRACTION LAYER TESTS</h2>
+                <?php include('first_layer_tests.php'); ?>
             </div>
         </div>
     </body>

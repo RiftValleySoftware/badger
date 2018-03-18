@@ -52,18 +52,76 @@ class CO_Main_DB_Record extends A_CO_DB_Table_Base {
         return $ret;
     }
     
+    protected function _build_parameter_array() {
+        $ret = parent::_build_parameter_array();
+        
+        $ret['owner_id'] = $this->owner_id;
+        for ($tag_no = 0; $tag_no < 10; $tag_no++) {
+            $key = "tag$tag_no";
+            $ret[$key] = $this->tags[$tag_no];
+        }
+        
+        $ret['payload'] = $this->get_storage_payload();
+        
+        return $ret;
+    }
+    
 	public function __construct(    $in_db_object,
 	                                $in_db_result
                                 ) {
         parent::__construct($in_db_object, $in_db_result);
     }
     
-    public function payload(    $in_private_key = NULL
-                            ) {
-        if ($in_private_key) {
-            $ret = $this->decrypt_payload_with_private_key($in_private_key);
-        } else {
+    public function get_payload() {
+        $ret = $this->get_decrypted_payload();
+        
+        if (!$ret) {
             $ret = $this->raw_payload;
+        }
+        
+        return $ret;
+    }
+    
+    public function get_storage_payload() {
+        $ret = $this->get_encrypted_payload();
+        
+        if (!$ret) {
+            $ret = $this->raw_payload;
+        }
+        
+        return $ret;
+    }
+    
+    public function get_decrypted_payload() {
+        $private_key = $this->access_object->get_login_item()->get_private_key();
+        
+        $ret = NULL;
+
+        if ($private_key) {
+            $ret = $this->decrypt_payload_with_private_key($private_key);
+        }
+        
+        return $ret;
+    }
+    
+    public function get_encrypted_payload() {
+        $private_key = $this->access_object->get_login_item()->get_private_key();
+        
+        $ret = NULL;
+
+        if ($private_key) {
+            $ret = $this->encrypt_payload_with_private_key($private_key);
+        }
+        
+        return $ret;
+    }
+    
+    public function encrypt_payload_with_private_key(   $in_private_key
+                                                    ) {
+        $ret = NULL;
+        
+        if (!openssl_private_encrypt($this->raw_payload, $ret, $in_private_key)) {
+            $ret = NULL;
         }
         
         return $ret;

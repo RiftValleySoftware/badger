@@ -1,6 +1,6 @@
 <div style="display:table;margin-left:auto;margin-right:auto;text-align:left">
-    <div id="initial-setup" class="closed">
-        <h1 class="header"><a href="javascript:toggle_main_state('initial-setup')">ENVIRONMENT SETUP</a></h1>
+    <div id="basic-initial-setup" class="closed">
+        <h1 class="header"><a href="javascript:toggle_main_state('basic-initial-setup')">ENVIRONMENT SETUP</a></h1>
         <div class="main_div container">
             <?php
                 prepare_databases('basic_test');
@@ -8,8 +8,8 @@
         </div>
     </div>
     <?php
-        echo('<div id="login-tests" class="closed">');
-            echo('<h1 class="header"><a href="javascript:toggle_main_state(\'login-tests\')">LOGIN/READ TESTS</a></h1>');
+        echo('<div id="basic-login-tests" class="closed">');
+            echo('<h1 class="header"><a href="javascript:toggle_main_state(\'basic-login-tests\')">LOGIN/READ TESTS</a></h1>');
             echo('<div class="container">');
         
                 echo('<div id="test-001" class="inner_closed">');
@@ -189,59 +189,6 @@
     ?>
 </div>
 <?php
-    function display_record($in_record_object) {
-        echo("<h5>ITEM $in_record_object->id:</h5>");
-        echo('<div class="inner_div">');
-            echo("<p>$in_record_object->class_description</p>");
-            echo("<p>$in_record_object->instance_description</p>");
-            echo("<p>Read: $in_record_object->read_security_id</p>");
-            echo("<p>Write: $in_record_object->write_security_id</p>");
-            
-            if (isset($in_record_object->ttl)) {
-                $color = "green";
-                $seconds = $in_record_object->seconds_remaining_to_live();
-                
-                if (0 > $seconds) {
-                    $color = "red";
-                } elseif ((60 * 60 * 24) > $seconds) {
-                    $color = "orange";
-                }
-                
-                echo("<p style=\"color:$color\">Seconds Remaining to Live: ".$seconds."</p>");
-            }
-            
-            if (isset($in_record_object->last_access)) {
-                echo("<p>Last access: ".date('g:i:s A, F j, Y', $in_record_object->last_access)."</p>");
-            }
-            
-            for ($tagid = 0; $tagid < 10; $tagid++ ) {
-                $tag = NULL;
-                if (isset($in_record_object->tags[$tagid])) {
-                    $tag = trim($in_record_object->tags[$tagid]);
-                    echo("<p>Tag $tagid: \"$tag\"</p>");
-                }
-            }
-            
-            if ( $in_record_object instanceof CO_Security_Login) {
-                if ( isset($in_record_object->ids) && is_array($in_record_object->ids) && count($in_record_object->ids)) {
-                    echo("<p>IDs: ");
-                        $first = TRUE;
-                        foreach ( $in_record_object->ids as $id ) {
-                            if (!$first) {
-                                echo(", ");
-                            } else {
-                                $first = FALSE;
-                            }
-                            echo($id);
-                        }
-                    echo("</p>");
-                } else {
-                    echo("<h4>NO IDS!</h4>");
-                }
-            }
-        echo('</div>');
-    }
-        
     function try_dbs($in_login = NULL, $in_hashed_password = NULL, $in_password = NULL) {
         $access_instance = NULL;
         

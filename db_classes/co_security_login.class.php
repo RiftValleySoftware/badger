@@ -42,6 +42,21 @@ class CO_Security_Login extends CO_Security_Node {
         parent::__construct($in_db_object, $in_db_result);
     }
     
+    public function get_private_key() {
+        $this->reload_from_db();
+        
+        $ret = (isset($this->context['p_key']) && $this->context['p_key']) ? $this->context['p_key'] : NULL;
+        
+        return $ret;
+    }
+    
+    public function set_private_key($in_private_key
+                                    ) {
+        $this->context['p_key'] = (isset($in_private_key) && $in_private_key) ? $in_private_key : NULL;
+        
+        $this->_write_to_db();
+    }
+    
     public function is_login_valid( $in_login_id,
                                     $in_hashed_password = NULL,
                                     $in_raw_password = NULL) {

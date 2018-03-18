@@ -164,6 +164,10 @@ class CO_Access {
     public function main_db_available() {
         return NULL != $this->_data_db_object;
     }
+    
+    public function get_login_item() {
+        return $this->get_single_security_record_by_id($this->_login_id);
+    }
 
     public function get_multiple_data_records_by_id(    $in_id_array
                                                     ) {
