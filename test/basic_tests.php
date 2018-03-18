@@ -3,17 +3,7 @@
         <h1 class="header"><a href="javascript:toggle_main_state('initial-setup')">ENVIRONMENT SETUP</a></h1>
         <div class="main_div container">
             <?php
-                echo("<pre>");
-                echo("<strong>Base dir</strong>.............".CO_Config::base_dir()."\n");
-                echo("<strong>Main class dir</strong>.......".CO_Config::main_class_dir()."\n");
-                echo("<strong>Database class dir</strong>...".CO_Config::db_class_dir()."\n");
-                echo("<strong>Database classes dir</strong>.".CO_Config::db_classes_class_dir()."\n");
-                echo("<strong>Shared class dir</strong>.....".CO_Config::shared_class_dir()."\n");
-                echo("<strong>Localization dir</strong>.....".CO_Config::lang_class_dir()."\n");
-                echo("<strong>Test class dir</strong>.......".CO_Config::test_class_dir()."\n");
-                echo("</pre>");
-
-                prepare_databases();
+                prepare_databases('basic_test');
             ?>
         </div>
     </div>
@@ -251,77 +241,7 @@
             }
         echo('</div>');
     }
-    
-    function prepare_databases() {
-        if ( !defined('LGV_DB_CATCHER') ) {
-            define('LGV_DB_CATCHER', 1);
-        }
-
-        require_once(CO_Config::db_class_dir().'/co_pdo.class.php');
-    
-        if ( !defined('LGV_ERROR_CATCHER') ) {
-            define('LGV_ERROR_CATCHER', 1);
-        }
-
-        require_once(CO_Config::shared_class_dir().'/error.class.php');
         
-        echo('<h1 style="margin-top:1em">Setting Up Initial Database Structure</h1>');
-        ?><div class="main_div" style="margin-right:2em">
-            <p class="explain">In order to run these tests, you should set up two (2) blank databases. They can both be the same DB, but that is not the advised configuration for Badger.</p>
-            <p class="explain">The first (main) database should be called "<?php echo(CO_Config::$data_db_name) ?>", and the second (security) database should be called "<?php echo(CO_Config::$sec_db_name) ?>".</p>
-            <p class="explain">The main database should be have a full rights login named "<?php echo(CO_Config::$data_db_login) ?>", with a password of "<?php echo(CO_Config::$data_db_password) ?>".</p>
-            <p class="explain">The security database should be have a full rights login named "<?php echo(CO_Config::$sec_db_login) ?>", with a password of "<?php echo(CO_Config::$sec_db_password) ?>".</p>
-            <p class="explain">This test will wipe out the tables, and set up pre-initialized tables, so it goes without saying that these should be databases (and users) reserved for testing only.</p>
-        </div><?php
-        echo('<div class="main_div">');
-        $pdo_data_db = NULL;
-        try {
-            $pdo_data_db = new CO_PDO(CO_Config::$data_db_type, CO_Config::$data_db_host, CO_Config::$data_db_name, CO_Config::$data_db_login, CO_Config::$data_db_password);
-        } catch (Exception $exception) {
-                    $error = new LGV_Error( 1,
-                                            'INITIAL DATABASE SETUP FAILURE',
-                                            'FAILED TO INITIALIZE A DATABASE!',
-                                            $exception->getFile(),
-                                            $exception->getLine(),
-                                            $exception->getMessage());
-                echo('<h1 style="color:red">ERROR WHILE TRYING TO ACCESS DATABASES!</h1>');
-                echo('<pre>'.htmlspecialchars(print_r($error, true)).'</pre>');
-        }
-        
-        if ($pdo_data_db) {
-            $pdo_security_db = new CO_PDO(CO_Config::$sec_db_type, CO_Config::$sec_db_host, CO_Config::$sec_db_name, CO_Config::$sec_db_login, CO_Config::$sec_db_password);
-            
-            if ($pdo_security_db) {
-                $data_db_sql = file_get_contents(CO_Config::test_class_dir().'/sql/badger_test_data.sql');
-                $security_db_sql = file_get_contents(CO_Config::test_class_dir().'/sql/badger_test_security.sql');
-                
-                $error = NULL;
-        
-                try {
-                    $pdo_data_db->preparedExec($data_db_sql);
-                    echo('<h2>Sucessfully initialized the data DB</h2>');
-                    $pdo_security_db->preparedExec($security_db_sql);
-                    echo('<h2>Sucessfully initialized the security DB</h2>');
-                } catch (Exception $exception) {
-                    $error = new LGV_Error( 1,
-                                            'INITIAL DATABASE SETUP FAILURE',
-                                            'FAILED TO INITIALIZE A DATABASE!',
-                                            $exception->getFile(),
-                                            $exception->getLine(),
-                                            $exception->getMessage());
-                                                    
-                echo('<h1 style="color:red">ERROR WHILE TRYING TO OPEN DATABASES!</h1>');
-                echo('<pre>'.htmlspecialchars(print_r($error, true)).'</pre>');
-                }
-            echo('</div>');
-            return;
-            }
-        }
-        echo('</div>');
-
-        echo('<h1 style="color:red">UNABLE TO OPEN DATABASE!</h1>');
-    }
-    
     function try_dbs($in_login = NULL, $in_hashed_password = NULL, $in_password = NULL) {
         $access_instance = NULL;
         
