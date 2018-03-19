@@ -233,8 +233,10 @@
         <h1 style="text-align:center">BADGER DATABASE FRAMEWORK TEST</h1>
         <div style="text-align:center;padding:1em;">
             <img src="../icon.png" style="display:block;margin:auto;width:80px" alt="Honey badger Don't Care" />
-            <div id="environment-setup" class="closed">
-                <h1 class="header"><a href="javascript:toggle_main_state('environment-setup')">MAIN ENVIRONMENT SETUP</a></h1>
+                <?php
+                    if (!isset($_GET['run_tests'])) {
+                ?>
+                <h1 class="header">MAIN ENVIRONMENT SETUP</h1>
                 <div style="text-align:left;margin:auto;display:table">
                     <div class="main_div container">
                         <?php
@@ -260,15 +262,19 @@
                         </div>
                     </div>
                 </div>
+                <h3><a href="./?run_tests">RUN THE TESTS</a></h3>
             </div>
-            <div id="basic_tests" class="test-wrapper">
-                <h2>BASIC TESTS</h2>
-                <?php include('basic_tests.php'); ?>
-            </div>
-            <div id="first_layer_tests" class="test-wrapper">
-                <h2>FIRST ABSTRACTION LAYER TESTS</h2>
-                <?php include('first_layer_tests.php'); ?>
-            </div>
+            <?php } else { ?>
+                <div id="basic_tests" class="test-wrapper">
+                    <h2>BASIC TESTS</h2>
+                    <?php include('basic_tests.php'); ?>
+                </div>
+                <div id="first_layer_tests" class="test-wrapper">
+                    <h2>FIRST ABSTRACTION LAYER TESTS</h2>
+                    <?php include('first_layer_tests.php'); ?>
+                </div>
+                <h3 style="margin-top:1em"><a href="./">RETURN TO MAIN ENVIRONMENT SETUP</a></h3>
+            <?php } ?>
         </div>
     </body>
 </html>
