@@ -37,6 +37,32 @@
                         try_change_record('secondary', '', 'CoreysGoryStory', 2);
                     echo('</div>');
                 echo('</div>');
+                echo('<div id="test-015" class="inner_closed">');
+                    echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-015\')">TEST 15: Try attaching with the secondary login, and modify the NA World Services record.</a></h2>');
+
+                    echo('<div class="main_div odd inner_container">');
+                        ?>
+                        <div class="main_div" style="margin-right:2em">
+                        <p class="explain">This test accesses as a secondary member, and then tries to modify a record that is not on the "guest list."</p>
+                        <p class="explain">We expect this to fail completely, as we don't even have read access.</p>
+                        </div>
+                        <?php
+                        try_change_record('secondary', '', 'CoreysGoryStory', 4);
+                    echo('</div>');
+                echo('</div>');
+                echo('<div id="test-016" class="inner_closed">');
+                    echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-016\')">TEST 16: Try attaching with the tertiary login, and modify the San Jose (Costa Rica) record.</a></h2>');
+
+                    echo('<div class="main_div odd inner_container">');
+                        ?>
+                        <div class="main_div" style="margin-right:2em">
+                        <p class="explain">This test accesses as a teriary member, and then tries to modify a record that is readable, but not writeable."</p>
+                        <p class="explain">We expect this to fail, as we don't have write access.</p>
+                        </div>
+                        <?php
+                        try_change_record('tertiary', 'CodYOzPtwxb4A', '', 8);
+                    echo('</div>');
+                echo('</div>');
             echo('</div>');
         echo('</div>');
     ?>
@@ -56,7 +82,12 @@
         if ($access_instance->valid) {
             echo("<h2>The access instance is valid!</h2>");
             $test_item = $access_instance->get_single_data_record_by_id($in_record_id);
-            try_to_change_this_record($test_item, $access_instance);
+            if ( isset($test_item) ) {
+                display_record($test_item);
+                try_to_change_this_record($test_item, $access_instance);
+            } else {
+                echo("<h4>NO ITEM!</h4>");
+            }
         } else {
             echo("<h2 style=\"color:red;font-weight:bold\">The access instance is not valid!</h2>");
             echo('<p style="margin-left:1em;color:red;font-weight:bold">Error: ('.$access_instance->error->error_code.') '.$access_instance->error->error_name.' ('.$access_instance->error->error_description.')</p>');

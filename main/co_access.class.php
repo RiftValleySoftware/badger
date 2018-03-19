@@ -151,8 +151,8 @@ class CO_Access {
 
                 if (isset($temp) && ($temp instanceof CO_Security_Login)) {
                     $ret = $temp->ids;
-                    array_push($ret, $temp->id);
-                    $ret = array_unique($ret);
+                    array_unshift($ret, $temp->id); // We unshift, so the login ID will always be first.
+                    $ret = array_unique($ret);      // This makes sure we don't duplicate IDs (no harm, if so, but I definitely, positively, without a doubt, conclusively, adamantly hate repetitive redundancy).
                     sort($ret);
                 }
             }
@@ -174,7 +174,7 @@ class CO_Access {
         $ret = NULL;
         
         if (isset($this->_data_db_object) && $this->_data_db_object) {
-            $ret = $this->_data_db_object->get_multiple_records_by_id($in_id_array, $this->get_security_ids());
+            $ret = $this->_data_db_object->get_multiple_records_by_id($in_id_array);
         
             if ($this->_data_db_object->error) {
                 $this->error = $this->_data_db_object->error;
@@ -202,7 +202,7 @@ class CO_Access {
         $ret = NULL;
         
         if (isset($this->_data_db_object) && $this->_data_db_object) {
-            $ret = $this->_data_db_object->get_all_readable_records($this->get_security_ids());
+            $ret = $this->_data_db_object->get_all_readable_records();
         }
         
         return $ret;
@@ -212,7 +212,7 @@ class CO_Access {
         $ret = NULL;
         
         if (isset($this->_data_db_object) && $this->_data_db_object) {
-            $ret = $this->_data_db_object->get_all_writeable_records($this->get_security_ids());
+            $ret = $this->_data_db_object->get_all_writeable_records();
         
             if ($this->_data_db_object->error) {
                 $this->error = $this->_data_db_object->error;
@@ -233,7 +233,7 @@ class CO_Access {
         $ret = NULL;
         
         if (isset($this->_security_db_object) && $this->_security_db_object) {
-            $ret = $this->_security_db_object->get_multiple_records_by_id($in_id_array, $this->get_security_ids());
+            $ret = $this->_security_db_object->get_multiple_records_by_id($in_id_array);
         
             if ($this->_security_db_object->error) {
                 $this->error = $this->_security_db_object->error;
@@ -292,7 +292,7 @@ class CO_Access {
     public function write_data_record(  $params_associative_array
                                     ) {
         if (isset($this->_data_db_object) && $this->_data_db_object) {
-            return $this->_data_db_object->write_record($params_associative_array, $this->get_security_ids());
+            return $this->_data_db_object->write_record($params_associative_array);
         }
         
         return FALSE;
@@ -301,7 +301,7 @@ class CO_Access {
     public function delete_data_record( $id
                                         ) {
         if (isset($this->_data_db_object) && $this->_data_db_object) {
-            $this->_data_db_object->delete_record($id, $this->get_security_ids());
+            $this->_data_db_object->delete_record($id);
         }
     }
 };
