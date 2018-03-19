@@ -1,4 +1,16 @@
 <?php
+/***************************************************************************************************************************/
+/**
+    Badger Hardened Baseline Database Component
+    
+    © Copyright 2018, Little Green Viper Software Development LLC.
+    
+    This code is proprietary and confidential code, 
+    It is NOT to be reused or combined into any application,
+    unless done so, specifically under written license from Little Green Viper Software Development LLC.
+
+    Little Green Viper Software Development: https://littlegreenviper.com
+*/
     $config_file_path = dirname(__FILE__).'/config/s_config.class.php';
     $data_sql_file_path = dirname(__FILE__).'/sql/badger_test_data.sql';
     $security_sql_file_path = dirname(__FILE__).'/sql/badger_test_security.sql';

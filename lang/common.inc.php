@@ -1,5 +1,15 @@
 <?php
+/***************************************************************************************************************************/
 /**
+    Badger Hardened Baseline Database Component
+    
+    © Copyright 2018, Little Green Viper Software Development LLC.
+    
+    This code is proprietary and confidential code, 
+    It is NOT to be reused or combined into any application,
+    unless done so, specifically under written license from Little Green Viper Software Development LLC.
+
+    Little Green Viper Software Development: https://littlegreenviper.com
 */
 class CO_Lang_Common {
     static  $pdo_error_code_failed_to_open_data_db = 100;

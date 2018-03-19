@@ -1,4 +1,17 @@
-<div style="display:table;margin-left:auto;margin-right:auto;text-align:left">
+<?php
+/***************************************************************************************************************************/
+/**
+    Badger Hardened Baseline Database Component
+    
+    © Copyright 2018, Little Green Viper Software Development LLC.
+    
+    This code is proprietary and confidential code, 
+    It is NOT to be reused or combined into any application,
+    unless done so, specifically under written license from Little Green Viper Software Development LLC.
+
+    Little Green Viper Software Development: https://littlegreenviper.com
+*/
+?><div style="display:table;margin-left:auto;margin-right:auto;text-align:left">
     <div id="basic-initial-setup" class="closed">
         <h1 class="header"><a href="javascript:toggle_main_state('basic-initial-setup')">ENVIRONMENT SETUP</a></h1>
         <div class="main_div container">

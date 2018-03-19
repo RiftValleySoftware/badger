@@ -1,5 +1,5 @@
 ![Honey Badger Don't Care](icon.png)
-*[Honey Badger Don't Care](https://en.wikipedia.org/wiki/The_Crazy_Nastyass_Honey_Badger#Honey_Badger_Don't_Care)*
+
 INTRODUCTION
 ============
 
@@ -7,6 +7,14 @@ INTRODUCTION
 
 This is the baseline database system for the secure database toolbox.
 It's a low-level database storage system that implements a generic KVP database and a separate security database.
+
+LICENSE
+=======
+© Copyright 2018, [Little Green Viper Software Development LLC](https://littlegreenviper.com).
+This code is ENTIRELY proprietary and not to be reused, unless under specific, written license from [Little Green Viper Software Development LLC](https://littlegreenviper.com).
+
+DESCRIPTION
+===========
 
 PDO
 ---
