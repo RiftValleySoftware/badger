@@ -19,6 +19,19 @@ abstract class A_CO_DB_Table_Base {
     var $context;
     var $error;
     
+    protected function _default_setup() {
+        $default_setup = Array( 'id'                    => 0,
+                                'last_access'           => NULL,
+                                'ttl'                   => 0,
+                                'object_name'           => '',
+                                'read_security_id'      => 0,
+                                'write_security_id'     => 0,
+                                'access_class_context'  => NULL
+                                );
+                                
+        return $default_setup;
+    }
+    
     protected function _load_from_db($in_db_result) {
         $ret = FALSE;
         
@@ -75,6 +88,16 @@ abstract class A_CO_DB_Table_Base {
         return $ret;
     }
     
+    protected function _seppuku() {
+        $ret = FALSE;
+        
+        if ($this->id && isset($this->db_object)) {
+            $ret = $this->db_object->delete_record($this->id);
+        }
+        
+        return $ret;
+    }
+    
     protected function _build_parameter_array() {
         $ret = Array();
         
@@ -91,7 +114,7 @@ abstract class A_CO_DB_Table_Base {
     }
     
 	public function __construct(    $in_db_object,
-	                                $in_db_result
+	                                $in_db_result = NULL
                                 ) {
         $this->class_description = 'Abstract Base Class for Records -Should never be instantiated.';
         $this->id = NULL;
@@ -104,7 +127,11 @@ abstract class A_CO_DB_Table_Base {
         $this->instance_description = NULL;
         $this->db_object = $in_db_object;
         $this->error = NULL;
-    
+        
+        if (!$in_db_result) {
+            $in_db_result = $this->_default_setup();
+        }
+        
         $this->_load_from_db($in_db_result);
     }
     
@@ -117,6 +144,10 @@ abstract class A_CO_DB_Table_Base {
         }
         
         return $interval;
+    }
+    
+    public function past_sell_by_date() {
+        return ((NULL != $this->seconds_remaining_to_live()) && (NULL != $this->ttl) && intval($this->ttl)) ? intval($this->seconds_remaining_to_live()) > intval($this->ttl) : FALSE;
     }
     
     public function set_read_security_id($in_new_id
@@ -167,8 +198,8 @@ abstract class A_CO_DB_Table_Base {
         return $ret;
     }
     
-    public function past_sell_by_date() {
-        return ((NULL != $this->seconds_remaining_to_live()) && (NULL != $this->ttl) && intval($this->ttl)) ? intval($this->seconds_remaining_to_live()) > intval($this->ttl) : FALSE;
+    public function delete_from_db() {
+        return $this->_seppuku();
     }
     
     public function update_db() {

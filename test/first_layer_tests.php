@@ -31,7 +31,7 @@
                         ?>
                         <div class="main_div" style="margin-right:2em">
                         <p class="explain">This test accesses as a secondary member, and then tries to modify a record with a '0' mod level (can be modified by any logged-in member).</p>
-                        <p class="explain">We expect this to fail.</p>
+                        <p class="explain">We expect this to succeed.</p>
                         </div>
                         <?php
                         try_change_record('secondary', '', 'CoreysGoryStory');

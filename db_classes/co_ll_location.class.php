@@ -11,6 +11,14 @@ class CO_LL_Location extends CO_Main_DB_Record {
     var $longitude;
     var $latitude;
     
+    protected function _default_setup() {
+        $default_setup = parent::_default_setup();
+        $default_setup['longitude'] = (NULL != $this->longitude) ? $this->longitude : 0;
+        $default_setup['latitude'] = (NULL != $this->latitude) ? $this->latitude : 0;
+        
+        return $default_setup;
+    }
+    
     protected function _build_parameter_array() {
         $ret = parent::_build_parameter_array();
         
@@ -43,9 +51,16 @@ class CO_LL_Location extends CO_Main_DB_Record {
     }
     
 	public function __construct(    $in_db_object,
-	                                $in_db_result
+	                                $in_db_result,
+	                                $in_longitude = NULL,
+	                                $in_latitude = NULL,
+	                                $in_owner_id = NULL,
+	                                $in_tags = NULL
                                 ) {
-        parent::__construct($in_db_object, $in_db_result);
+        $this->longitude = $in_longitude;
+        $this->latitude = $in_latitude;
+        
+        parent::__construct($in_db_object, $in_db_result, $in_owner_id, $in_tags);
     }
     
     public function set_longitude(  $in_new_value

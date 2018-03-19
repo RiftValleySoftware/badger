@@ -14,6 +14,13 @@ require_once(CO_Config::db_class_dir().'/co_security_node.class.php');
 class CO_Security_Login extends CO_Security_Node {
     var $login_id;
     
+    protected function _default_setup() {
+        $default_setup = parent::_default_setup();
+        $default_setup['login_id'] = $this->login_id;
+        
+        return $default_setup;
+    }
+
     protected function _build_parameter_array() {
         $ret = parent::_build_parameter_array();
         
@@ -45,9 +52,12 @@ class CO_Security_Login extends CO_Security_Node {
     }
     
 	public function __construct(    $in_db_object,
-	                                $in_db_result
+	                                $in_db_result,
+	                                $in_login_id = NULL,
+	                                $in_ids = NULL
                                 ) {
-        parent::__construct($in_db_object, $in_db_result);
+        $this->login_id = $in_login_id;
+        parent::__construct($in_db_object, $in_db_result, $in_ids);
     }
     
     public function get_private_key() {

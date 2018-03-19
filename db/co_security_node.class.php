@@ -14,6 +14,12 @@ require_once(CO_Config::db_class_dir().'/a_co_db_table_base.class.php');
 class CO_Security_Node extends A_CO_DB_Table_Base {
     var $ids;
     
+    protected function _default_setup() {
+        $default_setup = parent::_default_setup();
+        $default_setup['ids'] = (NULL != $this->ids) ? $this->ids : '';
+        return $default_setup;
+    }
+    
     protected function _build_parameter_array() {
         $ret = parent::_build_parameter_array();
         
@@ -27,13 +33,15 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
     }
     
 	public function __construct(    $in_db_object,
-	                                $in_db_result
+	                                $in_db_result,
+	                                $in_ids = NULL
                                 ) {
+                                
+        $this->ids = $in_ids;
+        
         parent::__construct($in_db_object, $in_db_result);
         $this->class_description = 'The basic class for all security nodes. This should be specialized.';
                 
-        $this->ids = NULL;
-        
         if ($this->db_object) {
             $this->ids = Array($this->id);
             if (isset($in_db_result['ids'])) {

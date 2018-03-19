@@ -12,6 +12,12 @@ require_once(CO_Config::db_class_dir().'/co_security_node.class.php');
 /**
  */
 class CO_Security_ID extends CO_Security_Node {
+    protected function _default_setup() {
+        $default_setup = parent::_default_setup();
+        
+        return $default_setup;
+    }
+
     protected function _load_from_db($in_db_result) {
         $ret = parent::_load_from_db($in_db_result);
         

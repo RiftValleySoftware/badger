@@ -18,6 +18,19 @@ class CO_Main_DB_Record extends A_CO_DB_Table_Base {
     var $tags;
     
     private $raw_payload;
+    
+    protected function _default_setup() {
+        $default_setup = parent::_default_setup();
+        $default_setup['owner_id'] = $this->owner_id;
+
+        for ($tag_no = 0; $tag_no < 10; $tag_no++) {
+            $key = "tag$tag_no";
+            $tag_val = (isset($this->tags) && is_array($this->tags) && ($tag_no < count($this->tags))) ? $this->tags[$tag_no] : '';
+            $default_setup[$key] = $tag_val;
+        }
+        
+        return $default_setup;
+    }
 
     protected function _load_from_db($in_db_result) {
         $ret = parent::_load_from_db($in_db_result);
@@ -38,10 +51,16 @@ class CO_Main_DB_Record extends A_CO_DB_Table_Base {
                 if (isset($in_db_result['payload']) ) {
                     $this->raw_payload = $in_db_result['payload'];
                 }
+                
+                for ($tag_no = 0; $tag_no < 10; $tag_no++) {
+                    $key = "tag$tag_no";
+                    $tag_val = (isset($in_db_result[$key])) && $in_db_result[$key] ? $in_db_result[$key] : '';
+                    $this->tags[$tag_no] = $tag_val;
+                }
         
                 for ($i = 0; $i < 10; $i++) {
                     $tagname = 'tag'.$i;
-                    $this->tags[$i] = NULL;
+                    $this->tags[$i] = '';
                     if (isset($in_db_result[$tagname])) {
                         $this->tags[$i] = $in_db_result[$tagname];
                     }
@@ -131,8 +150,12 @@ class CO_Main_DB_Record extends A_CO_DB_Table_Base {
     }
     
 	public function __construct(    $in_db_object,
-	                                $in_db_result
+	                                $in_db_result,
+	                                $in_owner_id = NULL,
+	                                $in_tags = NULL
                                 ) {
+        $this->owner_id = $in_owner_id;
+        $this->tags = $in_tags;
         parent::__construct($in_db_object, $in_db_result);
     }
     
@@ -185,6 +208,30 @@ class CO_Main_DB_Record extends A_CO_DB_Table_Base {
         
         if (!$ret) {
             $ret = $this->raw_payload;
+        }
+        
+        return $ret;
+    }
+    
+    public function set_payload(    $in_payload,
+                                    $encrypted = FALSE
+                                ) {
+        $ret = FALSE;
+        
+        if ($encrypted && $in_payload) {
+            $private_key = $login_item->get_private_key();
+            
+            if ($private_key) {
+                $encrypted_payload = NULL;
+            
+                if (openssl_private_encrypt($in_payload, $encrypted_payload, $in_private_key)) {
+                    $this->_raw_payload = $encrypted_payload;
+                    $ret = $this->update_db();
+                }
+            }
+        } else {
+            $this->_raw_payload = $in_payload;
+            $ret = $this->update_db();
         }
         
         return $ret;
