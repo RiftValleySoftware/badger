@@ -10,7 +10,7 @@ abstract class A_CO_DB_Table_Base {
     var $class_description;
     var $instance_description;
     
-    var $id;
+    protected $_id;
     var $last_access;
     var $ttl;
     var $name;
@@ -37,7 +37,7 @@ abstract class A_CO_DB_Table_Base {
         
         if (isset($this->db_object) && isset($in_db_result) && isset($in_db_result['id']) && intval($in_db_result['id'])) {
             $ret = TRUE;
-            $this->id = intval($in_db_result['id']);
+            $this->_id = intval($in_db_result['id']);
             
             if (isset($in_db_result['last_access'])) {
                 $this->last_access = strtotime($in_db_result['last_access']);
@@ -70,6 +70,8 @@ abstract class A_CO_DB_Table_Base {
             }
         }
         
+        $this->class_description = 'Abstract Base Class for Records -Should never be instantiated.';
+
         return $ret;
     }
     
@@ -82,6 +84,9 @@ abstract class A_CO_DB_Table_Base {
             if (isset($params) && is_array($params) && count($params)) {
                 $ret = $this->db_object->write_record($params);
                 $this->error = $this->db_object->access_object->error;
+                if ((1 < intval($ret)) && !$this->error) {
+                    $this->_id = intval($ret);
+                }
             }
         }
         
@@ -91,8 +96,8 @@ abstract class A_CO_DB_Table_Base {
     protected function _seppuku() {
         $ret = FALSE;
         
-        if ($this->id && isset($this->db_object)) {
-            $ret = $this->db_object->delete_record($this->id);
+        if ($this->id() && isset($this->db_object)) {
+            $ret = $this->db_object->delete_record($this->id());
         }
         
         return $ret;
@@ -101,7 +106,7 @@ abstract class A_CO_DB_Table_Base {
     protected function _build_parameter_array() {
         $ret = Array();
         
-        $ret['id'] = $this->id;
+        $ret['id'] = $this->id();
         $ret['access_class'] = get_class($this);
         $ret['last_access'] = NULL;
         $ret['read_security_id'] = $this->read_security_id;
@@ -113,11 +118,11 @@ abstract class A_CO_DB_Table_Base {
         return $ret;
     }
     
-	public function __construct(    $in_db_object,
+	public function __construct(    $in_db_object = NULL,
 	                                $in_db_result = NULL
                                 ) {
-        $this->class_description = 'Abstract Base Class for Records -Should never be instantiated.';
-        $this->id = NULL;
+        $this->class_description = '';
+        $this->_id = NULL;
         $this->last_access = NULL;
         $this->read_security_id = 0;
         $this->write_security_id = 0;
@@ -128,11 +133,17 @@ abstract class A_CO_DB_Table_Base {
         $this->db_object = $in_db_object;
         $this->error = NULL;
         
-        if (!$in_db_result) {
-            $in_db_result = $this->_default_setup();
-        }
+        if ($in_db_object) {
+            if (!$in_db_result) {
+                $in_db_result = $this->_default_setup();
+            }
         
-        $this->_load_from_db($in_db_result);
+            $this->_load_from_db($in_db_result);
+        }
+    }
+    
+    public function id() {
+        return $this->_id;
     }
     
     public function seconds_remaining_to_live() {
@@ -187,7 +198,7 @@ abstract class A_CO_DB_Table_Base {
     }
     
     public function set_name($in_new_value
-                                        ) {
+                            ) {
         $ret = FALSE;
         
         if (isset($in_new_value)) {

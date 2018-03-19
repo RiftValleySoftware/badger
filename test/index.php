@@ -73,7 +73,7 @@
     }
     
     function display_record($in_record_object) {
-        echo("<h5>ITEM $in_record_object->id:</h5>");
+        echo("<h5 style=\"margin-top:0.5em\">ITEM ".$in_record_object->id().":</h5>");
         echo('<div class="inner_div">');
             echo("<p>$in_record_object->class_description</p>");
             echo("<p>$in_record_object->instance_description</p>");

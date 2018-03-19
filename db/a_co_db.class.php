@@ -194,7 +194,7 @@ abstract class A_CO_DB {
             foreach ($temp as $result) {
                 array_push($ret, $this->instantiate_record($result));
             }
-            usort($ret, function($a, $b){return ($a->id > $b->id);});
+            usort($ret, function($a, $b){return ($a->id() > $b->id());});
         }
         
         return $ret;
@@ -213,7 +213,7 @@ abstract class A_CO_DB {
             foreach ($temp as $result) {
                 array_push($ret, $this->instantiate_record($result));
             }
-            usort($ret, function($a, $b){return ($a->id > $b->id);});
+            usort($ret, function($a, $b){return ($a->id() > $b->id());});
         }
         
         return $ret;
@@ -235,7 +235,7 @@ abstract class A_CO_DB {
                 foreach ($temp as $result) {
                     array_push($ret, $this->instantiate_record($result));
                 }
-                usort($ret, function($a, $b){return ($a->id > $b->id);});
+                usort($ret, function($a, $b){return ($a->id() > $b->id());});
             }
         }
         
@@ -349,12 +349,14 @@ abstract class A_CO_DB {
                         $sql .= " $keys_sql VALUES $values_sql";
                         $this->execute_query($sql, array_values($params_associative_array), TRUE);
                         
-                        $sql = 'SELECT LAST_INSERT_ID() FROM `'.$this->table_name.'`';
-                        $id_ar = $this->execute_query($sql, array_values($params_associative_array));
+                        if (!$this->error) {
+                            $sql = 'SELECT LAST_INSERT_ID() FROM `'.$this->table_name.'`';
+                            $id_ar = $this->execute_query($sql, array_values($params_associative_array));
 
-                        if (!$this->error && isset($id_ar) && is_array($id_ar) && count($id_ar)) {
-                            // Get the ID of the new row we just created.
-                            $ret = $id_ar[0]['last_insert_id()'];
+                            if (!$this->error && isset($id_ar) && is_array($id_ar) && count($id_ar)) {
+                                // Get the ID of the new row we just created.
+                                $ret = $id_ar[0]['last_insert_id()'];
+                            }
                         }
                     } else {
                         $this->error = new LGV_Error(   CO_Lang_Common::$pdo_error_code_illegal_write_attempt,

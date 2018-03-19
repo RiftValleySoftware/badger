@@ -103,7 +103,7 @@ class CO_Access {
                     return;
                 }
                 
-                $this->_login_id = $login_record->id;
+                $this->_login_id = $login_record->id();
             } catch (Exception $exception) {
                 $this->error = new LGV_Error(   CO_Lang_Common::$pdo_error_code_failed_to_open_security_db,
                                                 CO_Lang::$pdo_error_name_failed_to_open_security_db,
@@ -151,7 +151,7 @@ class CO_Access {
 
                 if (isset($temp) && ($temp instanceof CO_Security_Login)) {
                     $ret = $temp->ids;
-                    array_unshift($ret, $temp->id); // We unshift, so the login ID will always be first.
+                    array_unshift($ret, $temp->id()); // We unshift, so the login ID will always be first.
                     $ret = array_unique($ret);      // This makes sure we don't duplicate IDs (no harm, if so, but I definitely, positively, without a doubt, conclusively, adamantly hate repetitive redundancy).
                     sort($ret);
                 }
@@ -180,6 +180,36 @@ class CO_Access {
                 $this->error = $this->_data_db_object->error;
                 
                 return NULL;
+            }
+        }
+        
+        return $ret;
+    }
+    
+    public function make_new_blank_record(  $in_classname
+                                        ) {
+        $ret = NULL;
+        
+        // We create an empty instance to test which database gets assigned.
+        if ($in_classname) {
+            if (!class_exists($in_classname)) {
+                $filename = CO_Config::db_classes_class_dir().'/'.strtolower($in_classname).'.class.php';
+                require_once($filename);
+            }
+            
+            if (class_exists($in_classname)) {
+                $test_instance = new $in_classname();
+
+                if ($this->_security_db_object && ($test_instance instanceof CO_Main_DB_Record)) {
+                    $ret = new $in_classname($this->_data_db_object);
+                } elseif ($this->_data_db_object && ($test_instance instanceof CO_Security_Node)) {
+                    $ret = new $in_classname($this->_security_db_object);
+                }
+        
+                if ($ret) {
+                    $ret->write_security_id = intval($this->_login_id);
+                    $ret->update_db();   // Make sure it gets saved.
+                }
             }
         }
         

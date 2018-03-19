@@ -37,7 +37,7 @@ class CO_Main_DB_Record extends A_CO_DB_Table_Base {
         
         if ($ret) {
             $this->class_description = 'Base Class for Main Database Records.';
-            $this->name = (isset($this->name) && trim($this->name)) ? trim($this->name) : "Base Class Instance ($this->id)";
+            $this->name = (isset($this->name) && trim($this->name)) ? trim($this->name) : "Base Class Instance ($this->_id)";
             
             if ($this->db_object) {
                 $this->owner_id = NULL;
@@ -149,8 +149,8 @@ class CO_Main_DB_Record extends A_CO_DB_Table_Base {
         return $ret;
     }
     
-	public function __construct(    $in_db_object,
-	                                $in_db_result,
+	public function __construct(    $in_db_object = NULL,
+	                                $in_db_result = NULL,
 	                                $in_owner_id = NULL,
 	                                $in_tags = NULL
                                 ) {
@@ -238,7 +238,7 @@ class CO_Main_DB_Record extends A_CO_DB_Table_Base {
     }
     
     public function reload_from_db() {
-        $db_result = $this->db_object->get_single_raw_row_by_id($this->id);
+        $db_result = $this->db_object->get_single_raw_row_by_id($this->id());
         $this->error = $this->db_object->access_object->error;
         return $this->_load_from_db($db_result);
     }

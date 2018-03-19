@@ -32,8 +32,8 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
         return $ret;
     }
     
-	public function __construct(    $in_db_object,
-	                                $in_db_result,
+	public function __construct(    $in_db_object = NULL,
+	                                $in_db_result = NULL,
 	                                $in_ids = NULL
                                 ) {
                                 
@@ -43,7 +43,7 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
         $this->class_description = 'The basic class for all security nodes. This should be specialized.';
                 
         if ($this->db_object) {
-            $this->ids = Array($this->id);
+            $this->ids = Array($this->id());
             if (isset($in_db_result['ids'])) {
                 $temp = $in_db_result['ids'];
                 
@@ -61,7 +61,7 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
             }
         }
         
-        $this->instance_description = isset($this->name) && $this->name ? "$this->name ($this->id)" : "Unnamed Security Node ($this->id)";
+        $this->instance_description = isset($this->name) && $this->name ? "$this->name ($this->_id)" : "Unnamed Security Node ($this->_id)";
     }
     
     public function set_ids($in_ids_array
@@ -91,7 +91,7 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
     }
     
     public function reload_from_db() {
-        $db_result = $this->db_object->get_single_raw_row_by_id($this->id);
+        $db_result = $this->db_object->get_single_raw_row_by_id($this->id());
         $this->error = $this->db_object->access_object->error;
         return $this->_load_from_db($db_result);
     }
