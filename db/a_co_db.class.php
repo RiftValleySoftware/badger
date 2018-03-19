@@ -149,6 +149,23 @@ abstract class A_CO_DB {
         return $ret;
     }
     
+    public function get_single_raw_row_by_id(   $in_id,
+                                                $and_write = FALSE
+                                            ) {
+        $ret = NULL;
+        
+        $predicate = $this->_create_security_predicate($and_write);
+        
+        $sql = 'SELECT * FROM `'.$this->table_name.'` WHERE '.$predicate. ' AND `id`='.intval($in_id);
+
+        $ret = $this->execute_query($sql, Array());
+        
+        if (isset($ret) && is_array($ret) && count($ret)) {
+            $ret = $ret[0];
+        }
+        return $ret;
+    }
+    
     public function get_multiple_records_by_id( $in_id_array,
                                                 $and_write = FALSE
                                                 ) {
@@ -229,7 +246,6 @@ abstract class A_CO_DB {
     public function write_record(   $params_associative_array
                                 ) {
         $ret = FALSE;
-        
         if (isset($params_associative_array) && is_array($params_associative_array) && count($params_associative_array)) {
             $access_ids = $this->access_object->get_security_ids();
             if (isset($access_ids) && is_array($access_ids) && count($access_ids)) {

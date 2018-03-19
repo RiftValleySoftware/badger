@@ -14,6 +14,18 @@ require_once(CO_Config::db_class_dir().'/a_co_db_table_base.class.php');
 class CO_Security_Node extends A_CO_DB_Table_Base {
     var $ids;
     
+    protected function _build_parameter_array() {
+        $ret = parent::_build_parameter_array();
+        
+        $ids_as_string_array = array_map(function($in) { return strval($in); }, $this->ids);
+        
+        $id_list_string = implode(',', ids_as_string_array);
+        
+        $ret['ids'] = $id_list_string;
+        
+        return $ret;
+    }
+    
 	public function __construct(    $in_db_object,
 	                                $in_db_result
                                 ) {
@@ -44,8 +56,35 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
         $this->instance_description = isset($this->name) && $this->name ? "$this->name ($this->id)" : "Unnamed Security Node ($this->id)";
     }
     
+    public function set_ids($in_ids_array
+                            ) {
+        $ret = FALSE;
+        
+        if (isset($in_ids_array) && is_array($in_ids_array) && count($in_ids_array)) {
+            $this->ids = array_map(function($in) { return intval($in); }, $in_ids_array);
+            $ret = $this->update_db();
+        }
+        
+        return $ret;
+    }
+    
+    public function add_id( $in_id
+                            ) {
+        $ret = FALSE;
+        
+        return $ret;
+    }
+    
+    public function remove_id( $in_id
+                            ) {
+        $ret = FALSE;
+        
+        return $ret;
+    }
+    
     public function reload_from_db() {
-        $db_result = $this->$db_object->access_object->get_single_security_record_by_id($this->id);
+        $db_result = $this->db_object->get_single_raw_row_by_id($this->id);
+        $this->error = $this->db_object->access_object->error;
         return $this->_load_from_db($db_result);
     }
 };

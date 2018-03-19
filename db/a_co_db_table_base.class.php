@@ -17,13 +17,13 @@ abstract class A_CO_DB_Table_Base {
     var $read_security_id;
     var $write_security_id;
     var $context;
+    var $error;
     
     protected function _load_from_db($in_db_result) {
         $ret = FALSE;
         
         if (isset($this->db_object) && isset($in_db_result) && isset($in_db_result['id']) && intval($in_db_result['id'])) {
             $ret = TRUE;
-        
             $this->id = intval($in_db_result['id']);
             
             if (isset($in_db_result['last_access'])) {
@@ -63,11 +63,12 @@ abstract class A_CO_DB_Table_Base {
     protected function _write_to_db() {
         $ret = FALSE;
         
-        if (isset($this->db_object) && isset($in_db_result)) {
+        if (isset($this->db_object)) {
             $params = $this->_build_parameter_array();
             
             if (isset($params) && is_array($params) && count($params)) {
                 $ret = $this->db_object->write_record($params);
+                $this->error = $this->db_object->access_object->error;
             }
         }
         
@@ -102,6 +103,7 @@ abstract class A_CO_DB_Table_Base {
         $this->context = NULL;
         $this->instance_description = NULL;
         $this->db_object = $in_db_object;
+        $this->error = NULL;
     
         $this->_load_from_db($in_db_result);
     }
@@ -115,6 +117,54 @@ abstract class A_CO_DB_Table_Base {
         }
         
         return $interval;
+    }
+    
+    public function set_read_security_id($in_new_id
+                                        ) {
+        $ret = FALSE;
+        
+        if (isset($in_new_id)) {
+            $this->read_security_id = intval($in_new_id);
+            $ret = $this->update_db();
+        }
+        
+        return $ret;
+    }
+    
+    public function set_write_security_id($in_new_id
+                                        ) {
+        $ret = FALSE;
+        
+        if (isset($in_new_id)) {
+            $this->write_security_id = intval($in_new_id);
+            $ret = $this->update_db();
+        }
+        
+        return $ret;
+    }
+    
+    public function set_ttl($in_new_value
+                                        ) {
+        $ret = FALSE;
+        
+        if (isset($in_new_value)) {
+            $this->ttl = intval($in_new_value);
+            $ret = $this->update_db();
+        }
+        
+        return $ret;
+    }
+    
+    public function set_name($in_new_value
+                                        ) {
+        $ret = FALSE;
+        
+        if (isset($in_new_value)) {
+            $this->name = strval($in_new_value);
+            $ret = $this->update_db();
+        }
+        
+        return $ret;
     }
     
     public function past_sell_by_date() {
