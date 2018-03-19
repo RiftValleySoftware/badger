@@ -246,7 +246,6 @@ abstract class A_CO_DB {
                                 ) {
         $ret = FALSE;
         if (isset($params_associative_array) && is_array($params_associative_array) && count($params_associative_array)) {
-            $params_associative_array['last_access'] = date('Y-m-d H:i:s'); // This is the new date.
             $access_ids = $this->access_object->get_security_ids();
             if (isset($access_ids) && is_array($access_ids) && count($access_ids)) {
                 $predicate = $this->_create_security_predicate(TRUE);

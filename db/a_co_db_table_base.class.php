@@ -21,7 +21,7 @@ abstract class A_CO_DB_Table_Base {
     
     protected function _default_setup() {
         $default_setup = Array( 'id'                    => 0,
-                                'last_access'           => NULL,
+                                'last_access'           => date('Y-m-d H:i:s'),
                                 'ttl'                   => 0,
                                 'object_name'           => '',
                                 'read_security_id'      => 0,
@@ -108,7 +108,7 @@ abstract class A_CO_DB_Table_Base {
         
         $ret['id'] = $this->id();
         $ret['access_class'] = get_class($this);
-        $ret['last_access'] = NULL;
+        $ret['last_access'] = date('Y-m-d H:i:s');
         $ret['read_security_id'] = $this->read_security_id;
         $ret['write_security_id'] = $this->write_security_id;
         $ret['ttl'] = $this->ttl;
@@ -123,7 +123,7 @@ abstract class A_CO_DB_Table_Base {
                                 ) {
         $this->class_description = '';
         $this->_id = NULL;
-        $this->last_access = NULL;
+        $this->last_access = time();
         $this->read_security_id = 0;
         $this->write_security_id = 0;
         $this->ttl = NULL;

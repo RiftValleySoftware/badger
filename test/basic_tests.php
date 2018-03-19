@@ -15,7 +15,7 @@
                 echo('<div id="test-001" class="inner_closed">');
                     echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-001\')">TEST 1: Try attaching with no logins at all</a></h2>');
 
-                    echo('<div class="main_div odd inner_container">');
+                    echo('<div class="main_div inner_container">');
                         ?>
                         <div class="main_div" style="margin-right:2em">
                         <p class="explain">What is expected here, is that we will have no security database (It won't even be instantiated if there's no login),</p>

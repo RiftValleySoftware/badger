@@ -129,7 +129,7 @@
 <html lang="en">
     <head>
         <meta charset="utf-8" />
-        <title>DB APP</title>
+        <title>Honey Badger Don't Care</title>
         <style>
             *{margin:0;padding:0}
             body {
@@ -227,6 +227,18 @@
                 };
                 
             };
+            
+            function expose_tests() {
+                var item = document.getElementById('throbber-container');
+                
+                item.style="display:none";
+                
+                var item = document.getElementById('tests-wrapped-up');
+                
+                item.style="display:block";
+            };
+            
+            window.onload = expose_tests;
         </script>
     </head>
     <body>
@@ -265,15 +277,18 @@
                 <h3><a href="./?run_tests">RUN THE TESTS</a></h3>
             </div>
             <?php } else { ?>
-                <div id="basic_tests" class="test-wrapper">
-                    <h2>BASIC TESTS</h2>
-                    <?php include('basic_tests.php'); ?>
+                <div id="throbber-container" style="text-align:center"><img src="images/throbber.gif" alt="throbber" /></div>
+                <div id="tests-wrapped-up" style="display:none">
+                    <div id="basic_tests" class="test-wrapper">
+                        <h2>BASIC TESTS</h2>
+                        <?php include('basic_tests.php'); ?>
+                    </div>
+                    <div id="first_layer_tests" class="test-wrapper">
+                        <h2>FIRST ABSTRACTION LAYER TESTS</h2>
+                        <?php include('first_layer_tests.php'); ?>
+                    </div>
+                    <h3 style="margin-top:1em"><a href="./">RETURN TO MAIN ENVIRONMENT SETUP</a></h3>
                 </div>
-                <div id="first_layer_tests" class="test-wrapper">
-                    <h2>FIRST ABSTRACTION LAYER TESTS</h2>
-                    <?php include('first_layer_tests.php'); ?>
-                </div>
-                <h3 style="margin-top:1em"><a href="./">RETURN TO MAIN ENVIRONMENT SETUP</a></h3>
             <?php } ?>
         </div>
     </body>

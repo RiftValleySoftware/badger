@@ -14,7 +14,7 @@
                 echo('<div id="test-013" class="inner_closed">');
                     echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-013\')">TEST 13: Try attaching with no logins at all, and try to modify the Las Vegas record.</a></h2>');
 
-                    echo('<div class="main_div odd inner_container">');
+                    echo('<div class="main_div inner_container">');
                         ?>
                         <div class="main_div" style="margin-right:2em">
                         <p class="explain">This test accesses as a public anonymous member, and then tries to modify a record with a '0' mod level (can be modified by any logged-in member).</p>
@@ -27,7 +27,7 @@
                 echo('<div id="test-014" class="inner_closed">');
                     echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-014\')">TEST 14: Try attaching with the secondary login, and modify the Las Vegas record.</a></h2>');
 
-                    echo('<div class="main_div odd inner_container">');
+                    echo('<div class="main_div inner_container">');
                         ?>
                         <div class="main_div" style="margin-right:2em">
                         <p class="explain">This test accesses as a secondary member, and then tries to modify a record with a '0' mod level (can be modified by any logged-in member).</p>
@@ -40,7 +40,7 @@
                 echo('<div id="test-015" class="inner_closed">');
                     echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-015\')">TEST 15: Try attaching with the secondary login, and modify the NA World Services record.</a></h2>');
 
-                    echo('<div class="main_div odd inner_container">');
+                    echo('<div class="main_div inner_container">');
                         ?>
                         <div class="main_div" style="margin-right:2em">
                         <p class="explain">This test accesses as a secondary member, and then tries to modify a record that is not on the "guest list."</p>
@@ -53,7 +53,7 @@
                 echo('<div id="test-016" class="inner_closed">');
                     echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-016\')">TEST 16: Try attaching with the tertiary login, and modify the San Jose (Costa Rica) record.</a></h2>');
 
-                    echo('<div class="main_div odd inner_container">');
+                    echo('<div class="main_div inner_container">');
                         ?>
                         <div class="main_div" style="margin-right:2em">
                         <p class="explain">This test accesses as a tertiary member, and then tries to modify a record that is readable, but not writeable.</p>
@@ -64,9 +64,9 @@
                     echo('</div>');
                 echo('</div>');
                 echo('<div id="test-017" class="inner_closed">');
-                    echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-017\')">TEST 17: Make a new, blank record.</a></h2>');
+                    echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-017\')">TEST 17: Make a new, blank record, then modify it.</a></h2>');
 
-                    echo('<div class="main_div odd inner_container">');
+                    echo('<div class="main_div inner_container">');
                         ?>
                         <div class="main_div" style="margin-right:2em">
                         <p class="explain">This test accesses as a tertiary member, and then creates a new record. The ID of the record should be ten.</p>
@@ -77,11 +77,70 @@
                         try_make_new_data_record('tertiary', 'CodYOzPtwxb4A', '', 8);
                     echo('</div>');
                 echo('</div>');
+                echo('<div id="test-018" class="inner_closed">');
+                    echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-018\')">TEST 18: Delete the Record Formerly Known as Las Vegas.</a></h2>');
+
+                    echo('<div class="main_div inner_container">');
+                        ?>
+                        <div class="main_div" style="margin-right:2em">
+                        <p class="explain">This test accesses as a tertiary member, and then deletes the second record (the one that used to be "Las Vegas" before we abused it).</p>
+                        <p class="explain">We expect this to succeed.</p>
+                        </div>
+                        <?php
+                        try_delete_old_data_record('tertiary', 'CodYOzPtwxb4A', '', 2);
+                    echo('</div>');
+                echo('</div>');
+                echo('<div id="test-019" class="inner_closed">');
+                    echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-019\')">TEST 19: Try to delete a record we have no write privileges to.</a></h2>');
+
+                    echo('<div class="main_div inner_container">');
+                        ?>
+                        <div class="main_div" style="margin-right:2em">
+                        <p class="explain">This test accesses as a tertiary member, and then deletes the eighth record (we have read, but no write).</p>
+                        <p class="explain">We expect this to fail.</p>
+                        </div>
+                        <?php
+                        try_delete_old_data_record('tertiary', 'CodYOzPtwxb4A', '', 8);
+                    echo('</div>');
+                echo('</div>');
             echo('</div>');
         echo('</div>');
     ?>
 </div>
 <?php
+    function try_delete_old_data_record($in_login = NULL, $in_hashed_password = NULL, $in_password = NULL, $in_record_id = 2) {
+        $access_instance = NULL;
+        
+        if ( !defined('LGV_ACCESS_CATCHER') ) {
+            define('LGV_ACCESS_CATCHER', 1);
+        }
+        
+        require_once(CO_Config::main_class_dir().'/co_access.class.php');
+        
+        $access_instance = new CO_Access($in_login, $in_hashed_password, $in_password);
+        
+        if ($access_instance->valid) {
+            echo("<h2>The access instance is valid!</h2>");
+            $test_item = $access_instance->get_single_data_record_by_id($in_record_id);
+            if ( isset($test_item) ) {
+                display_record($test_item);
+                $test_item->delete_from_db();
+                $test_item = $access_instance->get_single_data_record_by_id($in_record_id);
+                if ( isset($test_item) ) {
+                    echo("<h4 style=\"color:red;font-weight:bold\">ERROR! This Should Not Exist!</h4>");
+                    display_record($test_item);
+                } else {
+                    echo("<h4>Suscess! Yes, We have no bananas!</h4>");
+                }
+            } else {
+                echo("<h4>NO ITEM!</h4>");
+            }
+        } else {
+            echo("<h2 style=\"color:red;font-weight:bold\">The access instance is not valid!</h2>");
+            echo('<p style="margin-left:1em;color:red;font-weight:bold">Error: ('.$access_instance->error->error_code.') '.$access_instance->error->error_name.' ('.$access_instance->error->error_description.')</p>');
+        }
+    }
+    
     function try_make_new_data_record($in_login = NULL, $in_hashed_password = NULL, $in_password = NULL) {
         $access_instance = NULL;
         
@@ -142,6 +201,9 @@
             } else {
                 echo("<h4>NO ITEM!</h4>");
             }
+        } else {
+            echo("<h2 style=\"color:red;font-weight:bold\">The access instance is not valid!</h2>");
+            echo('<p style="margin-left:1em;color:red;font-weight:bold">Error: ('.$access_instance->error->error_code.') '.$access_instance->error->error_name.' ('.$access_instance->error->error_description.')</p>');
         }
     }
     
