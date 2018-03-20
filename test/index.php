@@ -34,8 +34,6 @@
 
         require_once(CO_Config::shared_class_dir().'/error.class.php');
         
-        echo('<h1 style="margin-top:1em">Setting Up Initial Database Structure</h1>');
-        echo('<div class="main_div">');
         $pdo_data_db = NULL;
         try {
             $pdo_data_db = new CO_PDO(CO_Config::$data_db_type, CO_Config::$data_db_host, CO_Config::$data_db_name, CO_Config::$data_db_login, CO_Config::$data_db_password);
@@ -61,9 +59,7 @@
         
                 try {
                     $pdo_data_db->preparedExec($data_db_sql);
-                    echo('<h2>Sucessfully initialized the data DB</h2>');
                     $pdo_security_db->preparedExec($security_db_sql);
-                    echo('<h2>Sucessfully initialized the security DB</h2>');
                 } catch (Exception $exception) {
                     $error = new LGV_Error( 1,
                                             'INITIAL DATABASE SETUP FAILURE',
@@ -75,12 +71,10 @@
                 echo('<h1 style="color:red">ERROR WHILE TRYING TO OPEN DATABASES!</h1>');
                 echo('<pre>'.htmlspecialchars(print_r($error, true)).'</pre>');
                 }
-            echo('</div>');
             return;
             }
         }
-        echo('</div>');
-
+        echo('');
         echo('<h1 style="color:red">UNABLE TO OPEN DATABASE!</h1>');
     }
     
@@ -213,6 +207,7 @@
                 margin-top:1em;
                 border-radius:0.5em;
                 border:2px solid #999;
+                min-width:30em;
             }
             
         </style>
@@ -289,7 +284,7 @@
                 <h3><a href="./?run_tests">RUN THE TESTS</a></h3>
             </div>
             <?php } else { ?>
-                <div id="throbber-container" style="text-align:center"><img src="images/throbber.gif" alt="throbber" /></div>
+                <div id="throbber-container" style="text-align:center"><img src="images/throbber.gif" alt="throbber" style="position:absolute;width:190px;top:50%;left:50%;margin-top:-95px;margin-left:-95px" /></div>
                 <div id="tests-wrapped-up" style="display:none">
                     <div id="basic_tests" class="test-wrapper">
                         <h2>BASIC TESTS</h2>
@@ -298,6 +293,10 @@
                     <div id="first_layer_tests" class="test-wrapper">
                         <h2>FIRST ABSTRACTION LAYER TESTS</h2>
                         <?php include('first_layer_tests.php'); ?>
+                    </div>
+                    <div id="first_layer_tests" class="test-wrapper">
+                        <h2>SIMPLE STRESS TESTS</h2>
+                        <?php include('stress_tests.php'); ?>
                     </div>
                     <h3 style="margin-top:1em"><a href="./">RETURN TO MAIN ENVIRONMENT SETUP</a></h3>
                 </div>

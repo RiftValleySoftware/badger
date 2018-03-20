@@ -12,15 +12,8 @@
     Little Green Viper Software Development: https://littlegreenviper.com
 */
 ?><div style="display:table;margin-left:auto;margin-right:auto;text-align:left">
-    <div id="basic-initial-setup" class="closed">
-        <h1 class="header"><a href="javascript:toggle_main_state('basic-initial-setup')">ENVIRONMENT SETUP</a></h1>
-        <div class="main_div container">
-            <?php
-                prepare_databases('basic_test');
-            ?>
-        </div>
-    </div>
     <?php
+        prepare_databases('basic_test');
         echo('<div id="basic-login-tests" class="closed">');
             echo('<h1 class="header"><a href="javascript:toggle_main_state(\'basic-login-tests\')">LOGIN/READ TESTS</a></h1>');
             echo('<div class="container">');

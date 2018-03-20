@@ -233,12 +233,12 @@ abstract class A_CO_DB {
         $ret = NULL;
         
         $access_ids = $this->access_object->get_security_ids();
+
         // Only logged-in users can write.
         if (isset($access_ids) && is_array($access_ids) && count($access_ids)) {
             $predicate = $this->_create_security_predicate(TRUE);
         
             $sql = 'SELECT * FROM `'.$this->table_name.'` WHERE '.$predicate;
-
             $temp = $this->execute_query($sql, Array());
             if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
                 $ret = Array();
