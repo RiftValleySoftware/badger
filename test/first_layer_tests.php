@@ -24,6 +24,11 @@
         echo('<div id="item-access-tests" class="closed">');
             echo('<h1 class="header"><a href="javascript:toggle_main_state(\'item-access-tests\')">ACCESS ITEMS TEST</a></h1>');
             echo('<div class="container">');
+                ?>
+                <div class="main_div" style="margin-right:2em">
+                    <p class="explain">These tests actually use the record instances, themselves, to access information, and make modifications, as opposed to using the access object.</p>
+                </div>
+                <?php
                 echo('<div id="test-013" class="inner_closed">');
                     echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-013\')">TEST 13: Try attaching with no logins at all, and try to modify the Las Vegas record.</a></h2>');
 
@@ -143,7 +148,7 @@
                     echo("<h4 style=\"color:red;font-weight:bold\">ERROR! This Should Not Exist!</h4>");
                     display_record($test_item);
                 } else {
-                    echo("<h4>Suscess! Yes, We have no bananas!</h4>");
+                    echo("<h4>Success! Yes, We have no bananas!</h4>");
                 }
             } else {
                 echo("<h4>NO ITEM!</h4>");

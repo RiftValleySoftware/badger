@@ -155,7 +155,7 @@
             echo('<div class="container">');
                 ?>
                 <div class="main_div" style="margin-right:2em">
-                <p class="explain">These tests all directly access the access object, as opposed to going through class instances of rows.</p>
+                    <p class="explain">These tests all use the access object to perform database operations, as opposed to going through individual class instances of rows.</p>
                 </div>
                 <?php
                 echo('<div id="test-010" class="inner_closed">');
