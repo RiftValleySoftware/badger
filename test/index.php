@@ -251,10 +251,10 @@
     <body>
         <h1 style="text-align:center">BADGER DATABASE FRAMEWORK TEST</h1>
         <div style="text-align:center;padding:1em;">
-            <img src="../icon.png" style="display:block;margin:auto;width:80px" alt="Honey badger Don't Care" />
-                <?php
-                    if (!isset($_GET['run_tests'])) {
-                ?>
+            <?php
+                if (!isset($_GET['run_tests'])) {
+            ?>
+                <img src="../icon.png" style="display:block;margin:auto;width:80px" alt="Honey badger Don't Care" />
                 <h1 class="header">MAIN ENVIRONMENT SETUP</h1>
                 <div style="text-align:left;margin:auto;display:table">
                     <div class="main_div container">
@@ -286,6 +286,7 @@
             <?php } else { ?>
                 <div id="throbber-container" style="text-align:center"><img src="images/throbber.gif" alt="throbber" style="position:absolute;width:190px;top:50%;left:50%;margin-top:-95px;margin-left:-95px" /></div>
                 <div id="tests-wrapped-up" style="display:none">
+                    <img src="../icon.png" style="display:block;margin:auto;width:80px" alt="Honey badger Don't Care" />
                     <div id="basic_tests" class="test-wrapper">
                         <h2>BASIC TESTS</h2>
                         <?php include('basic_tests.php'); ?>
