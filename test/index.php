@@ -289,16 +289,26 @@
                     <img src="../icon.png" style="display:block;margin:auto;width:80px" alt="Honey badger Don't Care" />
                     <div id="basic_tests" class="test-wrapper">
                         <h2>BASIC TESTS</h2>
-                        <?php include('basic_tests.php'); ?>
+                        <?php
+                        $start_time = microtime(TRUE);
+                        include('basic_tests.php');
+                        ?>
                     </div>
                     <div id="first_layer_tests" class="test-wrapper">
                         <h2>FIRST ABSTRACTION LAYER TESTS</h2>
                         <?php include('first_layer_tests.php'); ?>
                     </div>
                     <div id="first_layer_tests" class="test-wrapper">
-                        <h2>SIMPLE STRESS TESTS</h2>
-                        <?php include('stress_tests.php'); ?>
+                        <h2>BIG-ASS STRESS TESTS</h2>
+                        <?php
+                        include('stress_tests.php');
+                        $end_time = microtime(TRUE);
+                        $seconds = $end_time - $start_time;
+                        $minutes = intval($seconds / 60.0);
+                        $seconds -= floatval($minutes * 60);
+                        ?>
                     </div>
+                    <?php echo("<h3>The entire test suite took ".(((0 < $minutes) ? "$minutes minute".((1 < $minutes) ? 's' : '') : '')." and ").sprintf('%01.3f', $seconds)." seconds to run.</h3>"); ?>
                     <h3 style="margin-top:1em"><a href="./">RETURN TO MAIN ENVIRONMENT SETUP</a></h3>
                 </div>
             <?php } ?>
