@@ -19,6 +19,7 @@ if ( !defined('LGV_ADBTB_CATCHER') ) {
 
 require_once(CO_Config::db_class_dir().'/a_co_db_table_base.class.php');
 
+/***************************************************************************************************************************/
 /**
  */
 class CO_Main_DB_Record extends A_CO_DB_Table_Base {
@@ -27,8 +28,12 @@ class CO_Main_DB_Record extends A_CO_DB_Table_Base {
     var $owner_id;
     var $tags;
     
-    private $raw_payload;
+    private $_raw_payload;
     
+    /***********************************************************************************************************************/
+    /***********************/
+    /**
+     */
     protected function _default_setup() {
         $default_setup = parent::_default_setup();
         $default_setup['owner_id'] = $this->owner_id;
@@ -42,6 +47,9 @@ class CO_Main_DB_Record extends A_CO_DB_Table_Base {
         return $default_setup;
     }
 
+    /***********************/
+    /**
+     */
     protected function _load_from_db($in_db_result) {
         $ret = parent::_load_from_db($in_db_result);
         
@@ -49,17 +57,17 @@ class CO_Main_DB_Record extends A_CO_DB_Table_Base {
             $this->class_description = 'Base Class for Main Database Records.';
             $this->name = (isset($this->name) && trim($this->name)) ? trim($this->name) : "Base Class Instance ($this->_id)";
             
-            if ($this->db_object) {
+            if ($this->_db_object) {
                 $this->owner_id = NULL;
                 $this->tags = array();
-                $this->raw_payload = NULL;
+                $this->_raw_payload = NULL;
         
                 if (isset($in_db_result['owner_id'])) {
                     $this->owner_id = $in_db_result['owner_id'];
                 }
 
                 if (isset($in_db_result['payload']) ) {
-                    $this->raw_payload = $in_db_result['payload'];
+                    $this->_raw_payload = $in_db_result['payload'];
                 }
                 
                 for ($tag_no = 0; $tag_no < 10; $tag_no++) {
@@ -81,6 +89,9 @@ class CO_Main_DB_Record extends A_CO_DB_Table_Base {
         return $ret;
     }
     
+    /***********************/
+    /**
+     */
     protected function _build_parameter_array() {
         $ret = parent::_build_parameter_array();
         
@@ -95,20 +106,26 @@ class CO_Main_DB_Record extends A_CO_DB_Table_Base {
         return $ret;
     }
     
+    /***********************/
+    /**
+     */
     protected function _get_storage_payload() {
         $ret = $this->_get_encrypted_payload();
         
         if (!$ret) {
-            $ret = $this->raw_payload;
+            $ret = $this->_raw_payload;
         }
         
         return $ret;
     }
     
+    /***********************/
+    /**
+     */
     protected function _get_decrypted_payload() {
         $ret = NULL;
 
-        $login_item = $this->db_object->access_object->get_login_item();
+        $login_item = $this->_db_object->access_object->get_login_item();
 
         if (isset($login_item) && $login_item) {
             $private_key = $login_item->get_private_key();
@@ -121,10 +138,13 @@ class CO_Main_DB_Record extends A_CO_DB_Table_Base {
         return $ret;
     }
     
+    /***********************/
+    /**
+     */
     protected function _get_encrypted_payload() {
         $ret = NULL;
 
-        $login_item = $this->db_object->access_object->get_login_item();
+        $login_item = $this->_db_object->access_object->get_login_item();
 
         if (isset($login_item) && $login_item) {
             $private_key = $login_item->get_private_key();
@@ -137,28 +157,38 @@ class CO_Main_DB_Record extends A_CO_DB_Table_Base {
         return $ret;
     }
     
+    /***********************/
+    /**
+     */
     protected function _encrypt_payload_with_private_key(   $in_private_key
                                                     ) {
         $ret = NULL;
         
-        if (!openssl_private_encrypt($this->raw_payload, $ret, $in_private_key)) {
+        if (!openssl_private_encrypt($this->_raw_payload, $ret, $in_private_key)) {
             $ret = NULL;
         }
         
         return $ret;
     }
     
+    /***********************/
+    /**
+     */
     protected function _decrypt_payload_with_private_key(   $in_private_key
                                                     ) {
         $ret = NULL;
         
-        if (!openssl_private_decrypt($this->raw_payload, $ret, $in_private_key)) {
+        if (!openssl_private_decrypt($this->_raw_payload, $ret, $in_private_key)) {
             $ret = NULL;
         }
         
         return $ret;
     }
     
+    /***********************************************************************************************************************/
+    /***********************/
+    /**
+     */
 	public function __construct(    $in_db_object = NULL,
 	                                $in_db_result = NULL,
 	                                $in_owner_id = NULL,
@@ -169,6 +199,9 @@ class CO_Main_DB_Record extends A_CO_DB_Table_Base {
         parent::__construct($in_db_object, $in_db_result);
     }
     
+    /***********************/
+    /**
+     */
     public function set_owner_id($in_new_id
                                         ) {
         $ret = FALSE;
@@ -181,6 +214,9 @@ class CO_Main_DB_Record extends A_CO_DB_Table_Base {
         return $ret;
     }
     
+    /***********************/
+    /**
+     */
     public function set_tags($in_tags_array
                             ) {
         $ret = FALSE;
@@ -193,6 +229,9 @@ class CO_Main_DB_Record extends A_CO_DB_Table_Base {
         return $ret;
     }
     
+    /***********************/
+    /**
+     */
     public function set_tag($in_tag_index,
                             $in_tag_value
                             ) {
@@ -213,16 +252,22 @@ class CO_Main_DB_Record extends A_CO_DB_Table_Base {
         return $ret;
     }
     
+    /***********************/
+    /**
+     */
     public function get_payload() {
         $ret = $this->_get_decrypted_payload();
         
         if (!$ret) {
-            $ret = $this->raw_payload;
+            $ret = $this->_raw_payload;
         }
         
         return $ret;
     }
     
+    /***********************/
+    /**
+     */
     public function set_payload(    $in_payload,
                                     $encrypted = FALSE
                                 ) {
@@ -247,9 +292,12 @@ class CO_Main_DB_Record extends A_CO_DB_Table_Base {
         return $ret;
     }
     
+    /***********************/
+    /**
+     */
     public function reload_from_db() {
-        $db_result = $this->db_object->get_single_raw_row_by_id($this->id());
-        $this->error = $this->db_object->access_object->error;
+        $db_result = $this->_db_object->get_single_raw_row_by_id($this->id());
+        $this->error = $this->_db_object->access_object->error;
         return $this->_load_from_db($db_result);
     }
 };

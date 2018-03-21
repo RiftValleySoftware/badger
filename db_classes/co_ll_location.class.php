@@ -15,12 +15,17 @@ defined( 'LGV_DBF_CATCHER' ) or die ( 'Cannot Execute Directly' );	// Makes sure
 
 require_once(CO_Config::db_class_dir().'/co_main_db_record.class.php');
 
+/***************************************************************************************************************************/
 /**
  */
 class CO_LL_Location extends CO_Main_DB_Record {
     var $longitude;
     var $latitude;
     
+    /***********************************************************************************************************************/
+    /***********************/
+    /**
+     */
     protected function _default_setup() {
         $default_setup = parent::_default_setup();
         $default_setup['longitude'] = (NULL != $this->longitude) ? $this->longitude : 0;
@@ -29,6 +34,9 @@ class CO_LL_Location extends CO_Main_DB_Record {
         return $default_setup;
     }
     
+    /***********************/
+    /**
+     */
     protected function _build_parameter_array() {
         $ret = parent::_build_parameter_array();
         
@@ -38,13 +46,16 @@ class CO_LL_Location extends CO_Main_DB_Record {
         return $ret;
     }
 
+    /***********************/
+    /**
+     */
     protected function _load_from_db($in_db_result) {
         $ret = parent::_load_from_db($in_db_result);
         
         if ($ret) {
             $this->class_description = 'A basic class for long/lat locations.';
         
-            if ($this->db_object) {
+            if ($this->_db_object) {
                 if (isset($in_db_result['longitude'])) {
                     $this->longitude = doubleval($in_db_result['longitude']);
                 }
@@ -61,6 +72,10 @@ class CO_LL_Location extends CO_Main_DB_Record {
         return $ret;
     }
     
+    /***********************************************************************************************************************/
+    /***********************/
+    /**
+     */
 	public function __construct(    $in_db_object = NULL,
 	                                $in_db_result = NULL,
 	                                $in_longitude = NULL,
@@ -74,6 +89,9 @@ class CO_LL_Location extends CO_Main_DB_Record {
         parent::__construct($in_db_object, $in_db_result, $in_owner_id, $in_tags);
     }
     
+    /***********************/
+    /**
+     */
     public function update_db() {
         $ret = parent::update_db();
         if ($ret) {
@@ -83,6 +101,9 @@ class CO_LL_Location extends CO_Main_DB_Record {
         return $ret;
     }
     
+    /***********************/
+    /**
+     */
     public function set_longitude(  $in_new_value
                                     ) {
         $ret = FALSE;
@@ -95,6 +116,9 @@ class CO_LL_Location extends CO_Main_DB_Record {
         return $ret;
     }
     
+    /***********************/
+    /**
+     */
     public function set_latitude(   $in_new_value
                                     ) {
         $ret = FALSE;

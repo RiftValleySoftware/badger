@@ -107,7 +107,7 @@
                         <p class="explain">We then log in as secondary, and make sure that we can read what needs to be read, and can't read what shouldn't be.</p>
                         </div>
                         <?php
-                        echo("<h4>Log In With God Mode</h4>");
+                        echo("<h4>Log In With Secondary</h4>");
                         $start = microtime(TRUE);
                         just_randomize_writes('secondary', '', 'CoreysGoryStory');
                         echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
@@ -176,15 +176,17 @@
         
         if ($access_instance->valid) {
             echo("<h2>The access instance is valid!</h2>");
+            $st1 = microtime(TRUE);
             $test_item = $access_instance->get_all_data_readable_records();
-        
+            $fetchTime = microtime(TRUE) - $st1;
+            
             echo('<div class="inner_div">');
                 echo("<h4>Get All Writable Main Database Items</h4>");
                 echo('<div class="inner_div">');
                     if ( isset($test_item) ) {
                         if (is_array($test_item)) {
                             if (count($test_item)) {
-                                echo("<h4>We got ".count($test_item)." records.</h4>");
+                                echo("<h4>We got ".count($test_item)." records in $fetchTime seconds.</h4>");
                                 $count = 0;
                                 foreach ( $test_item as $item ) {
                                     $id = $item->id();
@@ -238,7 +240,9 @@
         
         if ($access_instance->valid) {
             echo("<h2>The access instance is valid!</h2>");
+            $st1 = microtime(TRUE);
             $test_item = $access_instance->get_all_data_readable_records();
+            $fetchTime = microtime(TRUE) - $st1;
         
             echo('<div class="inner_div">');
                 echo("<h4>Get All Readable Main Database Items</h4>");
@@ -246,6 +250,7 @@
                     if ( isset($test_item) ) {
                         if (is_array($test_item)) {
                             if (count($test_item)) {
+                                echo("<h4>We got ".count($test_item)." records in $fetchTime seconds.</h4>");
                                 foreach ( $test_item as $item ) {
                                     display_record($item);
                                 }
@@ -278,7 +283,9 @@
         
         if ($access_instance->valid) {
             echo("<h2>The access instance is valid!</h2>");
+            $st1 = microtime(TRUE);
             $test_item = $access_instance->get_all_data_writeable_records();
+            $fetchTime = microtime(TRUE) - $st1;
         
             echo('<div class="inner_div">');
                 echo("<h4>Get All Writeable Main Database Items</h4>");
@@ -286,6 +293,7 @@
                     if ( isset($test_item) ) {
                         if (is_array($test_item)) {
                             if (count($test_item)) {
+                                echo("<h4>We got ".count($test_item)." records in $fetchTime seconds.</h4>");
                                 foreach ( $test_item as $item ) {
                                     display_record($item);
                                 }

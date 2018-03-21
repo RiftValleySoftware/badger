@@ -19,17 +19,25 @@ if ( !defined('LGV_ADBTB_CATCHER') ) {
 
 require_once(CO_Config::db_class_dir().'/a_co_db_table_base.class.php');
 
+/***************************************************************************************************************************/
 /**
  */
 class CO_Security_Node extends A_CO_DB_Table_Base {
     var $ids;
     
+    /***********************************************************************************************************************/
+    /***********************/
+    /**
+     */
     protected function _default_setup() {
         $default_setup = parent::_default_setup();
         $default_setup['ids'] = (NULL != $this->ids) ? $this->ids : '';
         return $default_setup;
     }
     
+    /***********************/
+    /**
+     */
     protected function _build_parameter_array() {
         $ret = parent::_build_parameter_array();
         
@@ -42,6 +50,10 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
         return $ret;
     }
     
+    /***********************************************************************************************************************/
+    /***********************/
+    /**
+     */
 	public function __construct(    $in_db_object = NULL,
 	                                $in_db_result = NULL,
 	                                $in_ids = NULL
@@ -52,7 +64,7 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
         parent::__construct($in_db_object, $in_db_result);
         $this->class_description = 'The basic class for all security nodes. This should be specialized.';
                 
-        if ($this->db_object) {
+        if ($this->_db_object) {
             $this->ids = Array($this->id());
             if (isset($in_db_result['ids'])) {
                 $temp = $in_db_result['ids'];
@@ -74,6 +86,9 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
         $this->instance_description = isset($this->name) && $this->name ? "$this->name ($this->_id)" : "Unnamed Security Node ($this->_id)";
     }
     
+    /***********************/
+    /**
+     */
     public function set_ids($in_ids_array
                             ) {
         $ret = FALSE;
@@ -86,6 +101,9 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
         return $ret;
     }
     
+    /***********************/
+    /**
+     */
     public function add_id( $in_id
                             ) {
         $ret = FALSE;
@@ -93,6 +111,9 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
         return $ret;
     }
     
+    /***********************/
+    /**
+     */
     public function remove_id( $in_id
                             ) {
         $ret = FALSE;
@@ -100,9 +121,12 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
         return $ret;
     }
     
+    /***********************/
+    /**
+     */
     public function reload_from_db() {
-        $db_result = $this->db_object->get_single_raw_row_by_id($this->id());
-        $this->error = $this->db_object->access_object->error;
+        $db_result = $this->_db_object->get_single_raw_row_by_id($this->id());
+        $this->error = $this->_db_object->access_object->error;
         return $this->_load_from_db($db_result);
     }
 };

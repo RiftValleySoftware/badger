@@ -19,11 +19,16 @@ if ( !defined('LGV_SDBN_CATCHER') ) {
 
 require_once(CO_Config::db_class_dir().'/co_security_node.class.php');
 
+/***************************************************************************************************************************/
 /**
  */
 class CO_Security_Login extends CO_Security_Node {
     var $login_id;
     
+    /***********************************************************************************************************************/
+    /***********************/
+    /**
+     */
     protected function _default_setup() {
         $default_setup = parent::_default_setup();
         $default_setup['login_id'] = $this->login_id;
@@ -31,6 +36,9 @@ class CO_Security_Login extends CO_Security_Node {
         return $default_setup;
     }
 
+    /***********************/
+    /**
+     */
     protected function _build_parameter_array() {
         $ret = parent::_build_parameter_array();
         
@@ -39,6 +47,9 @@ class CO_Security_Login extends CO_Security_Node {
         return $ret;
     }
 
+    /***********************/
+    /**
+     */
     protected function _load_from_db($in_db_result) {
         $ret = parent::_load_from_db($in_db_result);
         
@@ -61,6 +72,10 @@ class CO_Security_Login extends CO_Security_Node {
         return $ret;
     }
     
+    /***********************************************************************************************************************/
+    /***********************/
+    /**
+     */
 	public function __construct(    $in_db_object = NULL,
 	                                $in_db_result = NULL,
 	                                $in_login_id = NULL,
@@ -70,6 +85,9 @@ class CO_Security_Login extends CO_Security_Node {
         parent::__construct($in_db_object, $in_db_result, $in_ids);
     }
     
+    /***********************/
+    /**
+     */
     public function get_private_key() {
         $this->reload_from_db();
         
@@ -78,6 +96,9 @@ class CO_Security_Login extends CO_Security_Node {
         return $ret;
     }
     
+    /***********************/
+    /**
+     */
     public function set_private_key($in_private_key
                                     ) {
         $this->context['p_key'] = (isset($in_private_key) && $in_private_key) ? $in_private_key : NULL;
@@ -85,6 +106,9 @@ class CO_Security_Login extends CO_Security_Node {
         $this->_write_to_db();
     }
     
+    /***********************/
+    /**
+     */
     public function is_login_valid( $in_login_id,
                                     $in_hashed_password = NULL,
                                     $in_raw_password = NULL) {

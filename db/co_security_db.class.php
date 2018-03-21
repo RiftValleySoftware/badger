@@ -19,9 +19,14 @@ if ( !defined('LGV_ADB_CATCHER') ) {
 
 require_once(CO_Config::db_class_dir().'/a_co_db.class.php');
 
+/***************************************************************************************************************************/
 /**
  */
 class CO_Security_DB extends A_CO_DB {
+    /***********************************************************************************************************************/
+    /***********************/
+    /**
+     */
 	public function __construct(    $in_pdo_object,
         	                        $in_access_object = NULL
                                 ) {
@@ -32,6 +37,9 @@ class CO_Security_DB extends A_CO_DB {
         $this->class_description = 'The security database class.';
     }
     
+    /***********************/
+    /**
+     */
     public function get_initial_record_by_id(  $in_id
                                             ) {
         $ret = NULL;
@@ -46,6 +54,9 @@ class CO_Security_DB extends A_CO_DB {
         return $ret;
     }
     
+    /***********************/
+    /**
+     */
     public function get_initial_record_by_login_id(  $in_login_id
                                                     ) {
         $ret = NULL;
@@ -60,6 +71,9 @@ class CO_Security_DB extends A_CO_DB {
         return $ret;
     }
     
+    /***********************/
+    /**
+     */
     public function get_single_record_by_login_id(  $in_login_id,
                                                     $in_access_ids,
                                                     $and_write = FALSE
@@ -75,6 +89,9 @@ class CO_Security_DB extends A_CO_DB {
         return $ret;
     }
     
+    /***********************/
+    /**
+     */
     public function get_multiple_records_by_login_id(   $in_login_id_array,
                                                         $in_access_ids,
                                                         $and_write = FALSE

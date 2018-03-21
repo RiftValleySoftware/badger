@@ -13,6 +13,9 @@
 */
 defined( 'LGV_LANG_CATCHER' ) or die ( 'Cannot Execute Directly' );	// Makes sure that this file is in the correct context.
     
+/***************************************************************************************************************************/
+/**
+ */
 class CO_Lang {
     static  $pdo_error_name_failed_to_open_data_db = 'Failed to open the data storage database.';
     static  $pdo_error_desc_failed_to_open_data_db = 'There was an error while trying to access the main data storage database.';

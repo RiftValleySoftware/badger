@@ -13,6 +13,7 @@
 */
 defined( 'LGV_ERROR_CATCHER' ) or die ( 'Cannot Execute Directly' );	// Makes sure that this file is in the correct context.
 
+/***************************************************************************************************************************/
 /**
     \brief This class provides a general error report, with file, method and error information.
  */
@@ -24,6 +25,10 @@ class LGV_Error {
     var $error_line;
     var $error_detailed_description;
 
+    /***********************************************************************************************************************/
+    /***********************/
+    /**
+     */
 	public function __construct(
                                 $error_code = 0,
                                 $error_name = NULL,

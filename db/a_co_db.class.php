@@ -25,6 +25,7 @@ require_once(CO_Config::db_class_dir().'/co_main_db_record.class.php');
 
 require_once(CO_Config::shared_class_dir().'/error.class.php');
 
+/***************************************************************************************************************************/
 /**
  */
 abstract class A_CO_DB {
@@ -34,6 +35,10 @@ abstract class A_CO_DB {
     var $error;
     var $table_name;
     
+    /***********************************************************************************************************************/
+    /***********************/
+    /**
+     */
     protected function _create_read_security_predicate() {
         $access_ids = $this->access_object->get_security_ids();
         if (1 == count($access_ids) && (-1 == intval($access_ids[0]))) {
@@ -53,6 +58,9 @@ abstract class A_CO_DB {
         return $ret;
     }
     
+    /***********************/
+    /**
+     */
     protected function _create_write_security_predicate() {
         $access_ids = $this->access_object->get_security_ids();
         if (1 == count($access_ids) && (-1 == intval($access_ids[0]))) {
@@ -72,6 +80,9 @@ abstract class A_CO_DB {
         return $ret;
     }
     
+    /***********************/
+    /**
+     */
     protected function _create_security_predicate(  $and_write = FALSE
                                                     ) {
         $access_ids = $this->access_object->get_security_ids();
@@ -88,6 +99,9 @@ abstract class A_CO_DB {
         return $ret;
     }
     
+    /***********************/
+    /**
+     */
     public function instantiate_record(  $in_db_result
                                             ) {
         $ret = NULL;
@@ -108,6 +122,10 @@ abstract class A_CO_DB {
         return $ret;
     }
 
+    /***********************************************************************************************************************/
+    /***********************/
+    /**
+     */
 	public function __construct(    $in_pdo_object,
 	                                $in_access_object = NULL
                                 ) {
@@ -119,6 +137,9 @@ abstract class A_CO_DB {
         $this->pdo_object = $in_pdo_object;
     }
     
+    /***********************/
+    /**
+     */
     public function execute_query(  $in_sql,
                                     $in_parameters = NULL,
                                     $exec_only = FALSE
@@ -145,6 +166,9 @@ abstract class A_CO_DB {
         return $ret;
     }
     
+    /***********************/
+    /**
+     */
     public function get_single_record_by_id(    $in_id,
                                                 $and_write = FALSE
                                             ) {
@@ -159,6 +183,9 @@ abstract class A_CO_DB {
         return $ret;
     }
     
+    /***********************/
+    /**
+     */
     public function get_single_raw_row_by_id(   $in_id,
                                                 $and_write = FALSE
                                             ) {
@@ -176,6 +203,9 @@ abstract class A_CO_DB {
         return $ret;
     }
     
+    /***********************/
+    /**
+     */
     public function get_multiple_records_by_id( $in_id_array,
                                                 $and_write = FALSE
                                                 ) {
@@ -210,6 +240,9 @@ abstract class A_CO_DB {
         return $ret;
     }
     
+    /***********************/
+    /**
+     */
     public function get_all_readable_records() {
         $ret = NULL;
         
@@ -229,6 +262,9 @@ abstract class A_CO_DB {
         return $ret;
     }
     
+    /***********************/
+    /**
+     */
     public function get_all_writeable_records() {
         $ret = NULL;
         
@@ -252,6 +288,9 @@ abstract class A_CO_DB {
         return $ret;
     }
     
+    /***********************/
+    /**
+     */
     public function write_record(   $params_associative_array
                                 ) {
         $ret = FALSE;
@@ -379,6 +418,9 @@ abstract class A_CO_DB {
         return $ret;
     }
     
+    /***********************/
+    /**
+     */
     public function delete_record(  $id
                                 ) {
         $id = intval($id);

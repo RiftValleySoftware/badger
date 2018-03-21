@@ -13,14 +13,16 @@
 */
 defined( 'LGV_ADBTB_CATCHER' ) or die ( 'Cannot Execute Directly' );	// Makes sure that this file is in the correct context.
 
+/***************************************************************************************************************************/
 /**
  */
 abstract class A_CO_DB_Table_Base {
-    protected  $db_object;
+    protected   $_db_object;
+    protected   $_id;
+    
     var $class_description;
     var $instance_description;
     
-    protected $_id;
     var $last_access;
     var $ttl;
     var $name;
@@ -29,6 +31,10 @@ abstract class A_CO_DB_Table_Base {
     var $context;
     var $error;
     
+    /***********************************************************************************************************************/
+    /***********************/
+    /**
+     */
     protected function _default_setup() {
         $default_setup = Array( 'id'                    => 0,
                                 'last_access'           => date('Y-m-d H:i:s'),
@@ -42,10 +48,13 @@ abstract class A_CO_DB_Table_Base {
         return $default_setup;
     }
     
+    /***********************/
+    /**
+     */
     protected function _load_from_db($in_db_result) {
         $ret = FALSE;
         
-        if (isset($this->db_object) && isset($in_db_result) && isset($in_db_result['id']) && intval($in_db_result['id'])) {
+        if (isset($this->_db_object) && isset($in_db_result) && isset($in_db_result['id']) && intval($in_db_result['id'])) {
             $ret = TRUE;
             $this->_id = intval($in_db_result['id']);
             
@@ -85,15 +94,18 @@ abstract class A_CO_DB_Table_Base {
         return $ret;
     }
     
+    /***********************/
+    /**
+     */
     protected function _write_to_db() {
         $ret = FALSE;
         
-        if (isset($this->db_object)) {
+        if (isset($this->_db_object)) {
             $params = $this->_build_parameter_array();
             
             if (isset($params) && is_array($params) && count($params)) {
-                $ret = $this->db_object->write_record($params);
-                $this->error = $this->db_object->access_object->error;
+                $ret = $this->_db_object->write_record($params);
+                $this->error = $this->_db_object->access_object->error;
                 if ((1 < intval($ret)) && !$this->error) {
                     $this->_id = intval($ret);
                 }
@@ -103,16 +115,22 @@ abstract class A_CO_DB_Table_Base {
         return $ret;
     }
     
+    /***********************/
+    /**
+     */
     protected function _seppuku() {
         $ret = FALSE;
         
-        if ($this->id() && isset($this->db_object)) {
-            $ret = $this->db_object->delete_record($this->id());
+        if ($this->id() && isset($this->_db_object)) {
+            $ret = $this->_db_object->delete_record($this->id());
         }
         
         return $ret;
     }
     
+    /***********************/
+    /**
+     */
     protected function _build_parameter_array() {
         $ret = Array();
         
@@ -128,6 +146,10 @@ abstract class A_CO_DB_Table_Base {
         return $ret;
     }
     
+    /***********************************************************************************************************************/
+    /***********************/
+    /**
+     */
 	public function __construct(    $in_db_object = NULL,
 	                                $in_db_result = NULL
                                 ) {
@@ -140,7 +162,7 @@ abstract class A_CO_DB_Table_Base {
         $this->name = NULL;
         $this->context = NULL;
         $this->instance_description = NULL;
-        $this->db_object = $in_db_object;
+        $this->_db_object = $in_db_object;
         $this->error = NULL;
         
         if ($in_db_object) {
@@ -152,10 +174,16 @@ abstract class A_CO_DB_Table_Base {
         }
     }
     
+    /***********************/
+    /**
+     */
     public function id() {
         return $this->_id;
     }
     
+    /***********************/
+    /**
+     */
     public function seconds_remaining_to_live() {
         $interval = NULL;
         
@@ -167,10 +195,16 @@ abstract class A_CO_DB_Table_Base {
         return $interval;
     }
     
+    /***********************/
+    /**
+     */
     public function past_sell_by_date() {
         return ((NULL != $this->seconds_remaining_to_live()) && (NULL != $this->ttl) && intval($this->ttl)) ? intval($this->seconds_remaining_to_live()) > intval($this->ttl) : FALSE;
     }
     
+    /***********************/
+    /**
+     */
     public function set_read_security_id($in_new_id
                                         ) {
         $ret = FALSE;
@@ -183,6 +217,9 @@ abstract class A_CO_DB_Table_Base {
         return $ret;
     }
     
+    /***********************/
+    /**
+     */
     public function set_write_security_id($in_new_id
                                         ) {
         $ret = FALSE;
@@ -195,6 +232,9 @@ abstract class A_CO_DB_Table_Base {
         return $ret;
     }
     
+    /***********************/
+    /**
+     */
     public function set_ttl($in_new_value
                                         ) {
         $ret = FALSE;
@@ -207,6 +247,9 @@ abstract class A_CO_DB_Table_Base {
         return $ret;
     }
     
+    /***********************/
+    /**
+     */
     public function set_name($in_new_value
                             ) {
         $ret = FALSE;
@@ -219,14 +262,23 @@ abstract class A_CO_DB_Table_Base {
         return $ret;
     }
     
+    /***********************/
+    /**
+     */
     public function delete_from_db() {
         return $this->_seppuku();
     }
     
+    /***********************/
+    /**
+     */
     public function update_db() {
         return $this->_write_to_db();
     }
     
+    /***********************/
+    /**
+     */
     public function reload_from_db() {
         return FALSE;
     }

@@ -11,6 +11,11 @@
 
     Little Green Viper Software Development: https://littlegreenviper.com
 */
+defined( 'LGV_LANG_CATCHER' ) or die ( 'Cannot Execute Directly' );	// Makes sure that this file is in the correct context.
+    
+/***************************************************************************************************************************/
+/**
+ */
 class CO_Lang_Common {
     static  $pdo_error_code_failed_to_open_data_db = 100;
     static  $pdo_error_code_failed_to_open_security_db = 101;

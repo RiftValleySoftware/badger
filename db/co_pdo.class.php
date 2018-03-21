@@ -13,6 +13,7 @@
 */
 defined( 'LGV_DB_CATCHER' ) or die ( 'Cannot Execute Directly' );	// Makes sure that this file is in the correct context.
 
+/***************************************************************************************************************************/
 /**
     \brief This class provides a genericized interface to the <a href="http://us.php.net/pdo">PHP PDO</a> toolkit. It is a completely static class.
  */
@@ -25,6 +26,8 @@ class CO_PDO {
 	/// \brief Default fetch mode for internal PDOStatements
 	private $fetchMode = PDO::FETCH_ASSOC;
 
+    /***********************************************************************************************************************/
+    /***********************/
 	/**
 		\brief Initializes connection param class members.
 		
@@ -59,6 +62,7 @@ class CO_PDO {
         }
 	}
 
+    /***********************/
 	/**
 		\brief Wrapper for preparing and executing a PDOStatement that does not return a resultset
 		e.g. INSERT or UPDATE SQL statements
@@ -84,6 +88,7 @@ class CO_PDO {
 		}
 	}
 
+    /***********************/
 	/**
 		\brief Wrapper for preparing and executing a PDOStatement that returns a resultset
 		e.g. SELECT SQL statements.
@@ -117,6 +122,7 @@ class CO_PDO {
         return;
 	}
 
+    /***********************/
 	/**
 		\brief Wrapper for PDO::lastInsertId()
 		

@@ -43,21 +43,30 @@ if ( !defined('LGV_LANG_CATCHER') ) {
 require_once($lang_file);
 require_once($lang_common_file);
 
+/***************************************************************************************************************************/
 /**
  */
 class CO_Access {    
     protected $_data_db_object;
     protected $_security_db_object;
     protected $_login_id;
-    
-    protected function _bwuha_ha_ha() {
-        return $this->_login_id == CO_Config::$god_mode_id;
-    }
 
     public $valid;
     public $error;
     public $class_description;
     
+    /***********************************************************************************************************************/
+    /***********************/
+    /**
+     */
+    protected function _bwuha_ha_ha() {
+        return $this->_login_id == CO_Config::$god_mode_id;
+    }
+    
+    /***********************************************************************************************************************/
+    /***********************/
+    /**
+     */
 	public function __construct(    $in_login_id = NULL,
 	                                $in_hashed_password = NULL,
 	                                $in_raw_password = NULL
@@ -144,6 +153,9 @@ class CO_Access {
         $this->valid = TRUE;
     }
     
+    /***********************/
+    /**
+     */
     public function get_security_ids() {
         $ret = Array();
         
@@ -171,14 +183,23 @@ class CO_Access {
         return $ret;
     }
     
+    /***********************/
+    /**
+     */
     public function main_db_available() {
         return NULL != $this->_data_db_object;
     }
     
+    /***********************/
+    /**
+     */
     public function get_login_item() {
         return $this->get_single_security_record_by_id($this->_login_id);
     }
 
+    /***********************/
+    /**
+     */
     public function get_multiple_data_records_by_id(    $in_id_array
                                                     ) {
         $ret = NULL;
@@ -196,6 +217,9 @@ class CO_Access {
         return $ret;
     }
     
+    /***********************/
+    /**
+     */
     public function make_new_blank_record(  $in_classname
                                         ) {
         $ret = NULL;
@@ -226,6 +250,9 @@ class CO_Access {
         return $ret;
     }
 
+    /***********************/
+    /**
+     */
     public function get_single_data_record_by_id(   $in_id
                                                 ) {
         $ret = NULL;
@@ -238,6 +265,9 @@ class CO_Access {
         return $ret;
     }
 
+    /***********************/
+    /**
+     */
     public function get_all_data_readable_records() {
         $ret = NULL;
         
@@ -248,6 +278,9 @@ class CO_Access {
         return $ret;
     }
 
+    /***********************/
+    /**
+     */
     public function get_all_data_writeable_records() {
         $ret = NULL;
         
@@ -264,10 +297,16 @@ class CO_Access {
         return $ret;
     }
     
+    /***********************/
+    /**
+     */
     public function security_db_available() {
         return NULL != $this->_security_db_object;
     }
 
+    /***********************/
+    /**
+     */
     public function get_multiple_security_records_by_id(    $in_id_array
                                                         ) {
         $ret = NULL;
@@ -285,6 +324,9 @@ class CO_Access {
         return $ret;
     }
 
+    /***********************/
+    /**
+     */
     public function get_single_security_record_by_id(   $in_id
                                                     ) {
         $ret = NULL;
@@ -297,6 +339,9 @@ class CO_Access {
         return $ret;
     }
 
+    /***********************/
+    /**
+     */
     public function get_all_security_readable_records() {
         $ret = NULL;
         
@@ -313,6 +358,9 @@ class CO_Access {
         return $ret;
     }
 
+    /***********************/
+    /**
+     */
     public function get_all_security_writeable_records() {
         $ret = NULL;
         
@@ -329,6 +377,9 @@ class CO_Access {
         return $ret;
     }
     
+    /***********************/
+    /**
+     */
     public function write_data_record(  $params_associative_array
                                     ) {
         if (isset($this->_data_db_object) && $this->_data_db_object) {
@@ -338,6 +389,9 @@ class CO_Access {
         return FALSE;
     }
     
+    /***********************/
+    /**
+     */
     public function delete_data_record( $id
                                         ) {
         if (isset($this->_data_db_object) && $this->_data_db_object) {
