@@ -71,15 +71,15 @@ class CO_Config {
     static $god_mode_id = 2;
     static $god_mode_password = 'BWU-HA-HAAAA-HA!';
     
-    static $data_db_name = 'badger_test_data';
+    static $data_db_name = 'littlegr_badger_data';
     static $data_db_host = 'localhost';
     static $data_db_type = 'mysql';
-    static $data_db_login = 'badger_test';
-    static $data_db_password = 'm8GK9C0MR1JrR8w8';
+    static $data_db_login = 'littlegr_badg';
+    static $data_db_password = 'pnpbxI1aU0L(';
 
-    static $sec_db_name = 'badger_test_security';
+    static $sec_db_name = 'littlegr_badger_security';
     static $sec_db_host = 'localhost';
     static $sec_db_type = 'mysql';
-    static $sec_db_login = 'badger_test';
-    static $sec_db_password = 'm8GK9C0MR1JrR8w8';
+    static $sec_db_login = 'littlegr_badg';
+    static $sec_db_password = 'pnpbxI1aU0L(';
 }

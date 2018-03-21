@@ -308,7 +308,7 @@
                         $seconds -= floatval($minutes * 60);
                         ?>
                     </div>
-                    <?php echo("<h3 style=\"margin-top:1em\">The entire test suite took ".(((0 < $minutes) ? "$minutes minute".((1 < $minutes) ? 's' : '') : '')." and ").sprintf('%01.3f', $seconds)." seconds to run.</h3>"); ?>
+                    <?php echo("<h3 style=\"margin-top:1em\">The entire test suite took ".(((0 < $minutes) ? "$minutes minute".((1 < $minutes) ? 's' : ''). ' and ' : '')).sprintf('%01.3f', $seconds)." seconds to run.</h3>"); ?>
                     <h3 style="margin-top:1em"><a href="./">RETURN TO MAIN ENVIRONMENT SETUP</a></h3>
                 </div>
             <?php } ?>
