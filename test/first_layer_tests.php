@@ -32,7 +32,9 @@
                         <p class="explain">We expect this to fail.</p>
                         </div>
                         <?php
+                        $start = microtime(TRUE);
                         try_change_record(NULL, NULL, NULL, 2);
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
                 echo('<div id="test-014" class="inner_closed">');
@@ -45,7 +47,9 @@
                         <p class="explain">We expect this to succeed.</p>
                         </div>
                         <?php
+                        $start = microtime(TRUE);
                         try_change_record('secondary', '', 'CoreysGoryStory', 2);
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
                 echo('<div id="test-015" class="inner_closed">');
@@ -58,7 +62,9 @@
                         <p class="explain">We expect this to fail completely, as we do not even have read access.</p>
                         </div>
                         <?php
+                        $start = microtime(TRUE);
                         try_change_record('secondary', '', 'CoreysGoryStory', 4);
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
                 echo('<div id="test-016" class="inner_closed">');
@@ -71,7 +77,9 @@
                         <p class="explain">We expect this to fail, as we do not have write access.</p>
                         </div>
                         <?php
+                        $start = microtime(TRUE);
                         try_change_record('tertiary', 'CodYOzPtwxb4A', '', 8);
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
                 echo('<div id="test-017" class="inner_closed">');
@@ -85,7 +93,9 @@
                         <p class="explain">We expect this to succeed.</p>
                         </div>
                         <?php
+                        $start = microtime(TRUE);
                         try_make_new_data_record('tertiary', 'CodYOzPtwxb4A', '', 8);
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
                 echo('<div id="test-018" class="inner_closed">');
@@ -98,7 +108,9 @@
                         <p class="explain">We expect this to succeed.</p>
                         </div>
                         <?php
+                        $start = microtime(TRUE);
                         try_delete_old_data_record('tertiary', 'CodYOzPtwxb4A', '', 2);
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
                 echo('<div id="test-019" class="inner_closed">');
@@ -111,7 +123,9 @@
                         <p class="explain">We expect this to fail.</p>
                         </div>
                         <?php
+                        $start = microtime(TRUE);
                         try_delete_old_data_record('tertiary', 'CodYOzPtwxb4A', '', 8);
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
             echo('</div>');
