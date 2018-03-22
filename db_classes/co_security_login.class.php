@@ -54,18 +54,8 @@ class CO_Security_Login extends CO_Security_Node {
         $ret = parent::_load_from_db($in_db_result);
         
         if ($ret) {
-            $this->class_description = 'This is a security class for individual logins.';
-        
             if (isset($in_db_result['login_id'])) {
                 $this->login_id = $in_db_result['login_id'];
-            }
-        
-            if ($this->id() == CO_Config::$god_mode_id) {
-                // God Mode is always forced to use the config password.
-                $this->context['hashed_password'] = bin2hex(openssl_random_pseudo_bytes(4));    // Just create a randomish junk password. It will never be used.
-                $this->instance_description = 'GOD MODE: '.(isset($this->name) && $this->name ? "$this->name ($this->_id)" : "Unnamed Login Node ($this->_id)");
-            } else {
-                $this->instance_description = isset($this->name) && $this->name ? "$this->name ($this->_id)" : "Unnamed Login Node ($this->_id)";
             }
         }
         
@@ -83,6 +73,15 @@ class CO_Security_Login extends CO_Security_Node {
                                 ) {
         $this->login_id = $in_login_id;
         parent::__construct($in_db_object, $in_db_result, $in_ids);
+        $this->class_description = 'This is a security class for individual logins.';
+        
+        if (intval($this->id()) == intval(CO_Config::$god_mode_id)) {
+            // God Mode is always forced to use the config password.
+            $this->context['hashed_password'] = bin2hex(openssl_random_pseudo_bytes(4));    // Just create a randomish junk password. It will never be used.
+            $this->instance_description = 'GOD MODE: '.(isset($this->name) && $this->name ? "$this->name ($this->_id)" : "Unnamed Login Node ($this->_id)");
+        } else {
+            $this->instance_description = isset($this->name) && $this->name ? "$this->name ($this->_id)" : "Unnamed Login Node ($this->_id)";
+        }
     }
     
     /***********************/

@@ -55,6 +55,11 @@ abstract class A_CO_DB {
         
         $ret .= ')';
         
+        // Only God can access God...
+        if (($this instanceof CO_Security_DB) && !$this->access_object->god_mode()) {
+            $ret .= ' AND (`id`<>'.intval(CO_Config::$god_mode_id).')';
+        }
+
         return $ret;
     }
     

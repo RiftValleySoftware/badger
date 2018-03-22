@@ -15,7 +15,7 @@ CREATE TABLE `co_security_nodes` (
 INSERT INTO `co_security_nodes` (`id`, `login_id`, `access_class`, `last_access`, `read_security_id`, `write_security_id`, `ttl`, `object_name`, `access_class_context`, `ids`) VALUES
 (1, NULL, 'CO_Security_Node', '1970-01-01 00:00:00', -1, -1, NULL, NULL, NULL, NULL),
 (2, 'admin', 'CO_Security_Login', '1970-01-01 00:00:00', 2, 2, NULL, 'Default Admin', 'a:1:{s:15:\"hashed_password\";s:4:\"JUNK\";}', NULL),
-(3, 'secondary', 'CO_Security_Login', '1970-01-01 00:00:00', 3, 3, NULL, 'Secondary Login', 'a:1:{s:15:\"hashed_password\";s:13:\"CodYOzPtwxb4A\";}', '5,6'),
+(3, 'secondary', 'CO_Security_Login', '1970-01-01 00:00:00', 3, 3, NULL, 'Secondary Login', 'a:1:{s:15:\"hashed_password\";s:13:\"CodYOzPtwxb4A\";}', '2,5,6'),
 (4, 'tertiary', 'CO_Security_Login', '1970-01-01 00:00:00', 4, 4, NULL, 'Tertiary Login', 'a:1:{s:15:\"hashed_password\";s:13:\"CodYOzPtwxb4A\";}', '6'),
 (5, NULL, 'CO_Security_ID', '1970-01-01 00:00:00', -1, -1, NULL, 'Security ID 4', '', NULL),
 (6, NULL, 'CO_Security_ID', '1970-01-01 00:00:00', -1, -1, NULL, 'Security ID 5', '', NULL);

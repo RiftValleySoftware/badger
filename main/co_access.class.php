@@ -60,7 +60,7 @@ class CO_Access {
     /**
      */
     public function god_mode() {
-        return $this->_login_id == CO_Config::$god_mode_id;
+        return intval($this->_login_id) == intval(CO_Config::$god_mode_id);
     }
     
     /***********************/
