@@ -15,6 +15,8 @@
     $data_sql_file_path = dirname(__FILE__).'/sql/badger_test_data.sql';
     $security_sql_file_path = dirname(__FILE__).'/sql/badger_test_security.sql';
     
+    date_default_timezone_set ( 'UTC' );
+    
     if ( !defined('LGV_CONFIG_CATCHER') ) {
         define('LGV_CONFIG_CATCHER', 1);
     }
@@ -86,19 +88,6 @@
             echo("<p>Read: $in_record_object->read_security_id</p>");
             echo("<p>Write: $in_record_object->write_security_id</p>");
             
-            if (isset($in_record_object->ttl)) {
-                $color = "green";
-                $seconds = $in_record_object->seconds_remaining_to_live();
-                
-                if (0 > $seconds) {
-                    $color = "red";
-                } elseif ((60 * 60 * 24) > $seconds) {
-                    $color = "orange";
-                }
-                
-                echo("<p style=\"color:$color\">Seconds Remaining to Live: ".$seconds."</p>");
-            }
-            
             if (isset($in_record_object->last_access)) {
                 echo("<p>Last access: ".date('g:i:s A, F j, Y', $in_record_object->last_access)."</p>");
             }
@@ -135,7 +124,7 @@
 <html lang="en">
     <head>
         <meta charset="utf-8" />
-        <title>Honey Badger Don't Care</title>
+        <title>Honey Badger Don&rsquo;t Care</title>
         <style>
             *{margin:0;padding:0}
             body {
@@ -254,7 +243,7 @@
             <?php
                 if (!isset($_GET['run_tests'])) {
             ?>
-                <img src="../icon.png" style="display:block;margin:auto;width:80px" alt="Honey badger Don't Care" />
+                <img src="../icon.png" style="display:block;margin:auto;width:80px" alt="Honey badger Don&rsquo;t Care" />
                 <h1 class="header">MAIN ENVIRONMENT SETUP</h1>
                 <div style="text-align:left;margin:auto;display:table">
                     <div class="main_div container">
@@ -296,7 +285,9 @@
                     </div>
                     <div id="first_layer_tests" class="test-wrapper">
                         <h2>FIRST ABSTRACTION LAYER TESTS</h2>
-                        <?php include('first_layer_tests.php'); ?>
+                        <?php
+                        include('first_layer_tests.php');
+                        ?>
                     </div>
                     <div id="first_layer_tests" class="test-wrapper">
                         <h2>BIG-ASS STRESS TESTS</h2>

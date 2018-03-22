@@ -242,7 +242,7 @@
             echo("<h2>The access instance is valid!</h2>");
             $st1 = microtime(TRUE);
             $test_item = $access_instance->get_all_data_readable_records();
-            $fetchTime = microtime(TRUE) - $st1;
+            $fetchTime = sprintf('%01.3f', microtime(TRUE) - $st1);
         
             echo('<div class="inner_div">');
                 echo("<h4>Get All Readable Main Database Items</h4>");
@@ -285,7 +285,7 @@
             echo("<h2>The access instance is valid!</h2>");
             $st1 = microtime(TRUE);
             $test_item = $access_instance->get_all_data_writeable_records();
-            $fetchTime = microtime(TRUE) - $st1;
+            $fetchTime = sprintf('%01.3f', microtime(TRUE) - $st1);
         
             echo('<div class="inner_div">');
                 echo("<h4>Get All Writeable Main Database Items</h4>");

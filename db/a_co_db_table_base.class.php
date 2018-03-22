@@ -24,7 +24,6 @@ abstract class A_CO_DB_Table_Base {
     var $instance_description;
     
     var $last_access;
-    var $ttl;
     var $name;
     var $read_security_id;
     var $write_security_id;
@@ -37,8 +36,7 @@ abstract class A_CO_DB_Table_Base {
      */
     protected function _default_setup() {
         $default_setup = Array( 'id'                    => 0,
-                                'last_access'           => date('Y-m-d H:i:s'),
-                                'ttl'                   => 0,
+                                'last_access'           => 86400,   // Default is first UNIX day.
                                 'object_name'           => '',
                                 'read_security_id'      => 0,
                                 'write_security_id'     => 0,
@@ -53,13 +51,16 @@ abstract class A_CO_DB_Table_Base {
      */
     protected function _load_from_db($in_db_result) {
         $ret = FALSE;
+        $this->last_access = max(86400, time());    // Just in case of badly-set clocks in the server.
         
         if (isset($this->_db_object) && isset($in_db_result) && isset($in_db_result['id']) && intval($in_db_result['id'])) {
             $ret = TRUE;
             $this->_id = intval($in_db_result['id']);
             
             if (isset($in_db_result['last_access'])) {
-                $this->last_access = strtotime($in_db_result['last_access']);
+                $date_from_db = date_create_from_format('Y-m-d H:i:s', $in_db_result['last_access']);
+                $timestamp = date_timestamp_get($date_from_db);
+                $this->last_access = max(86400, $timestamp);
             }
         
             if (isset($in_db_result['read_security_id'])) {
@@ -70,10 +71,6 @@ abstract class A_CO_DB_Table_Base {
                 $this->write_security_id = intval($in_db_result['write_security_id']);
             } else {
                 $this->write_security_id = $this->read_security_id ? -1 : 0;  // Writing is completely blocked if we have read security, but no write security specified.
-            }
-            
-            if (isset($in_db_result['ttl'])) {
-                $this->ttl = intval($in_db_result['ttl']);
             }
             
             if (isset($in_db_result['object_name'])) {
@@ -139,7 +136,6 @@ abstract class A_CO_DB_Table_Base {
         $ret['last_access'] = date('Y-m-d H:i:s');
         $ret['read_security_id'] = $this->read_security_id;
         $ret['write_security_id'] = $this->write_security_id;
-        $ret['ttl'] = $this->ttl;
         $ret['object_name'] = $this->name;
         $ret['access_class_context'] = $this->context ? serialize($this->context) : NULL;
         
@@ -158,7 +154,6 @@ abstract class A_CO_DB_Table_Base {
         $this->last_access = time();
         $this->read_security_id = 0;
         $this->write_security_id = 0;
-        $this->ttl = NULL;
         $this->name = NULL;
         $this->context = NULL;
         $this->instance_description = NULL;
@@ -179,27 +174,6 @@ abstract class A_CO_DB_Table_Base {
      */
     public function id() {
         return $this->_id;
-    }
-    
-    /***********************/
-    /**
-     */
-    public function seconds_remaining_to_live() {
-        $interval = NULL;
-        
-        if (isset($this->last_access) && (NULL != $this->last_access) && (NULL != $this->ttl) && intval($this->ttl)) {
-            $time = time();
-            $interval = intval($this->ttl) - (intval($time) - intval($this->last_access));
-        }
-        
-        return $interval;
-    }
-    
-    /***********************/
-    /**
-     */
-    public function past_sell_by_date() {
-        return ((NULL != $this->seconds_remaining_to_live()) && (NULL != $this->ttl) && intval($this->ttl)) ? intval($this->seconds_remaining_to_live()) > intval($this->ttl) : FALSE;
     }
     
     /***********************/
@@ -226,21 +200,6 @@ abstract class A_CO_DB_Table_Base {
         
         if (isset($in_new_id)) {
             $this->write_security_id = intval($in_new_id);
-            $ret = $this->update_db();
-        }
-        
-        return $ret;
-    }
-    
-    /***********************/
-    /**
-     */
-    public function set_ttl($in_new_value
-                                        ) {
-        $ret = FALSE;
-        
-        if (isset($in_new_value)) {
-            $this->ttl = intval($in_new_value);
             $ret = $this->update_db();
         }
         
