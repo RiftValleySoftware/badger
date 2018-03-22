@@ -191,7 +191,7 @@
                                 foreach ( $test_item as $item ) {
                                     $id = $item->id();
                                     if ((1 < $id) && (9 < rand(0, 10))) {
-                                        echo("<h5>Congratulations, Item $id, You've been selected!</h5>");
+                                        echo("<h5 style=\"margin-top:1em\">Congratulations, Item $id, You've been selected!</h5>");
                                         echo('<div class="inner_div">');
                                         echo("<h6>BEFORE:</h6>");
                                             display_record($item);
