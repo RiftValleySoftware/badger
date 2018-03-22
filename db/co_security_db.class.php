@@ -102,7 +102,7 @@ class CO_Security_DB extends A_CO_DB {
         $params = Array();
         
         foreach ($in_login_id_array as $id) {
-            if (0 < $id) {
+            if (0 < $id) {                
                 if (0 < count($params)) {
                     $sql .= ') OR (';
                 }

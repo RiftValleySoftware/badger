@@ -29,7 +29,7 @@ require_once(CO_Config::shared_class_dir().'/error.class.php');
 /**
  */
 abstract class A_CO_DB {
-    var $pdo_object;
+    protected $_pdo_object;
     var $access_object;
     var $class_description;
     var $error;
@@ -134,7 +134,7 @@ abstract class A_CO_DB {
         $this->access_object = $in_access_object;
         $this->error = NULL;
         $this->table_name = NULL;
-        $this->pdo_object = $in_pdo_object;
+        $this->_pdo_object = $in_pdo_object;
     }
     
     /***********************/
@@ -149,9 +149,9 @@ abstract class A_CO_DB {
         
         try {
             if ($exec_only) {
-                $this->pdo_object->preparedExec($in_sql, $in_parameters);
+                $this->_pdo_object->preparedExec($in_sql, $in_parameters);
             } else {
-                $ret = $this->pdo_object->preparedQuery($in_sql, $in_parameters, FALSE);
+                $ret = $this->_pdo_object->preparedQuery($in_sql, $in_parameters, FALSE);
             }
         } catch (Exception $exception) {
             $this->error = new LGV_Error(   CO_Lang_Common::$pdo_error_code_failed_to_open_security_db,
@@ -400,7 +400,7 @@ abstract class A_CO_DB {
                         if (!$this->error) {
                             $sql = 'SELECT LAST_INSERT_ID() FROM `'.$this->table_name.'`';
                             $id_ar = $this->execute_query($sql, array_values($params_associative_array));
-
+                            
                             if (!$this->error && isset($id_ar) && is_array($id_ar) && count($id_ar)) {
                                 // Get the ID of the new row we just created.
                                 $ret = $id_ar[0]['last_insert_id()'];

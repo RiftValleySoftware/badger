@@ -121,15 +121,4 @@ class CO_PDO {
         
         return;
 	}
-
-    /***********************/
-	/**
-		\brief Wrapper for PDO::lastInsertId()
-		
-		\returns the ID of the last INSERT
-		\throws Exception	 thrown if internal PDO object not instantiated
-	*/
-	public function lastInsertId() {
-		return $this->pdo->lastInsertId();
-	}
 };

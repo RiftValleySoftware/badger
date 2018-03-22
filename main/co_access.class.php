@@ -59,11 +59,10 @@ class CO_Access {
     /***********************/
     /**
      */
-    protected function _bwuha_ha_ha() {
+    public function god_mode() {
         return $this->_login_id == CO_Config::$god_mode_id;
     }
     
-    /***********************************************************************************************************************/
     /***********************/
     /**
      */
@@ -159,7 +158,7 @@ class CO_Access {
     public function get_security_ids() {
         $ret = Array();
         
-        if ($this->_bwuha_ha_ha()) {
+        if ($this->god_mode()) {
             $ret = Array(-1);
         } else {
             if (isset($this->_login_id) && $this->_login_id && $this->_security_db_object) {
