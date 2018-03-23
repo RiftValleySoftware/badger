@@ -177,7 +177,7 @@
         if ($access_instance->valid) {
             echo("<h2>The access instance is valid!</h2>");
             $st1 = microtime(TRUE);
-            $test_item = $access_instance->get_all_data_readable_records();
+            $test_item = $access_instance->get_all_data_readable_records(TRUE);
             $fetchTime = sprintf('%01.3f', microtime(TRUE) - $st1);
             
             echo('<div class="inner_div">');
@@ -195,8 +195,19 @@
                                         echo('<div class="inner_div">');
                                         echo("<h6>BEFORE:</h6>");
                                             display_record($item);
-                                            $item->set_read_security_id(rand(2, 7));
-                                            $item->set_write_security_id(rand(2, 7));
+                                            $new_read = 0;
+                                            $new_write = 0;
+                                            
+                                            if ($access_instance->god_mode()) {
+                                                $new_read = rand(2, 7);
+                                                $new_write = rand(2, 7);
+                                            } else {
+                                                $ids = $access_instance->get_security_ids();
+                                                $new_read = $ids[rand(0, count($ids) - 1)];
+                                                $new_write = $ids[rand(0, count($ids) - 1)];
+                                            }
+                                            $item->set_read_security_id($new_read);
+                                            $item->set_write_security_id($new_write);
                                             
                                             if (!$item->error) {
                                                 $count++;

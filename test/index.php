@@ -125,6 +125,7 @@
     <head>
         <meta charset="utf-8" />
         <title>Honey Badger Don&rsquo;t Care</title>
+        <link rel="shortcut icon" href="../icon.png" type="image/png" />
         <style>
             *{margin:0;padding:0}
             body {

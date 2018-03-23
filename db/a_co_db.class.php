@@ -57,7 +57,6 @@ abstract class A_CO_DB {
                                         ) {
         $ret = NULL;
         $this->error = NULL;
-        
         try {
             if ($exec_only) {
                 $this->_pdo_object->preparedExec($in_sql, $in_parameters);
@@ -85,10 +84,10 @@ abstract class A_CO_DB {
     \returns a string, containing the SQL predicate
      */
     protected function _create_read_security_predicate() {
-        $access_ids = $this->access_object->get_security_ids();
-        if (1 == count($access_ids) && (-1 == intval($access_ids[0]))) {    // God can do everything...
-            return '1';
+        if ($this->access_object->god_mode()) {    // God can do everything...
+            return '';
         } else {
+            $access_ids = $this->access_object->get_security_ids();
             $ret = '((`read_security_id`=0) OR (`read_security_id` IS NULL)';
         
             if (isset($access_ids) && is_array($access_ids) && count($access_ids)) {
@@ -115,10 +114,10 @@ abstract class A_CO_DB {
     \returns a string, containing the SQL predicate
      */
     protected function _create_write_security_predicate() {
-        $access_ids = $this->access_object->get_security_ids();
-        if (1 == count($access_ids) && (-1 == intval($access_ids[0]))) {    // God can do everything...
-            return '1';
+        if ($this->access_object->god_mode()) {    // God can do everything...
+            return '';
         } else {
+            $access_ids = $this->access_object->get_security_ids();
             $ret = '0';
             
             if (isset($access_ids) && is_array($access_ids) && count($access_ids)) {
@@ -148,14 +147,7 @@ abstract class A_CO_DB {
      */
     protected function _create_security_predicate(  $write = FALSE  ///< This should be TRUE, if we need a write predicate. Default is FALSE.
                                                     ) {
-        $access_ids = $this->access_object->get_security_ids();
-        if (1 == count($access_ids) && (-1 == intval($access_ids[0]))) {    // God can do everything...
-            return '1';
-        }
-        
-        $ret = $write ? $this->_create_write_security_predicate($access_ids) : $this->_create_read_security_predicate($access_ids);
-        
-        return $ret;
+        return $write ? $this->_create_write_security_predicate() : $this->_create_read_security_predicate();
     }
     
     /***********************/
@@ -226,7 +218,11 @@ abstract class A_CO_DB {
         
         $predicate = $this->_create_security_predicate($and_write);
         
-        $sql = 'SELECT * FROM `'.$this->table_name.'` WHERE '.$predicate. ' AND `id`='.intval($in_id);
+        if ($predicate) {
+            $predicate .= 'AND ';
+        }
+        
+        $sql = 'SELECT * FROM `'.$this->table_name.'` WHERE '.$predicate.'`id`='.intval($in_id);
 
         $ret = $this->execute_query($sql, Array());
         
@@ -263,7 +259,11 @@ abstract class A_CO_DB {
         
         $predicate = $this->_create_security_predicate($and_write);
         
-        $sql = 'SELECT * FROM `'.$this->table_name.'` WHERE '.$predicate. ' AND (';
+        if ($predicate) {
+            $predicate .= 'AND ';
+        }
+        
+        $sql = 'SELECT * FROM `'.$this->table_name.'` WHERE '.$predicate.'(';
         $params = Array();
         $id_array = array_map(function($in){ return intval($in); }, $in_id_array);
         foreach ($id_array as $id) {
@@ -293,10 +293,11 @@ abstract class A_CO_DB {
     /***********************/
     /**
      */
-    public function get_all_readable_records() {
+    public function get_all_readable_records(   $open_only = FALSE  ///< If TRUE, then we will look for ONLY records with a NULL or 0 read_security_id
+                                            ) {
         $ret = NULL;
         
-        $predicate = $this->_create_security_predicate();
+        $predicate = $open_only ? '((`read_security_id`=0) OR (`read_security_id` IS NULL))' : $this->_create_security_predicate();
         
         $sql = 'SELECT * FROM `'.$this->table_name.'` WHERE '.$predicate;
 
@@ -349,12 +350,16 @@ abstract class A_CO_DB {
             $params_associative_array['last_access'] = date('Y-m-d H:i:s');
             if (isset($access_ids) && is_array($access_ids) && count($access_ids)) {
                 $predicate = $this->_create_security_predicate(TRUE);
+        
+                if ($predicate) {
+                    $predicate .= 'AND ';
+                }
             
                 $id = isset($params_associative_array['id']) ? intval($params_associative_array['id']) : 0;  // We extract  the ID from the fields, or assume a new record.
                 
                 if (0 < $id) {
                     // First, we look for a record with our ID, and for which we have write permission.
-                    $sql = 'SELECT * FROM `'.$this->table_name.'` WHERE '.$predicate.' AND `id`='.$id;
+                    $sql = 'SELECT * FROM `'.$this->table_name.'` WHERE '.$predicate.'`id`='.$id;
 
                     $temp = $this->execute_query($sql, Array());
                 
@@ -362,27 +367,11 @@ abstract class A_CO_DB {
                         $sql = 'UPDATE `'.$this->table_name.'`';
                         unset($params_associative_array['id']); // We remove the ID parameter. That can't be changed.
                         
-                        // Make sure that we aren't changing the security ID to one we can't read.
-                        if (isset($params_associative_array['read_security_id'])) {
-                            $new_read_id = intval($params_associative_array['read_security_id']);
-                            if ($new_read_id && !in_array($new_read_id, $access_ids)) {
-                                unset($params_associative_array['read_security_id']);
-                            }
-                        }
-                        
-                        // Make sure that we aren't changing the security ID to one we can't write.
-                        if (isset($params_associative_array['write_security_id'])) {
-                            $new_write_id = intval($params_associative_array['write_security_id']);
-                            if ($new_write_id && !in_array($new_write_id, $access_ids)) {
-                                unset($params_associative_array['write_security_id']);
-                            }
-                        }
-                        
                         $params = array_values($params_associative_array);
                         $keys = array_keys($params_associative_array);
                         $set_sql = '`'.implode('`=?,`', $keys).'`=?';
                     
-                        $sql .= ' SET '.$set_sql.' WHERE ('.$predicate.' AND `id`='.$id.')';
+                        $sql .= ' SET '.$set_sql.' WHERE ('.$predicate.'`id`='.$id.')';
                         $this->execute_query($sql, $params, TRUE);
                         
                         if (!$this->error) {
@@ -407,22 +396,6 @@ abstract class A_CO_DB {
                     if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
                         $sql = 'INSERT INTO `'.$this->table_name.'`';
                         unset($params_associative_array['id']);
-                        
-                        // Make sure that we aren't setting the security ID to one we can't read.
-                        if (isset($params_associative_array['read_security_id'])) {
-                            $new_read_id = intval($params_associative_array['read_security_id']);
-                            if ($new_read_id && !in_array($new_read_id, $access_ids)) {
-                                unset($params_associative_array['read_security_id']);
-                            }
-                        }
-                        
-                        // Make sure that we aren't setting the security ID to one we can't write.
-                        if (isset($params_associative_array['write_security_id'])) {
-                            $new_write_id = intval($params_associative_array['write_security_id']);
-                            if ($new_write_id && !in_array($new_write_id, $access_ids)) {
-                                unset($params_associative_array['write_security_id']);
-                            }
-                        }
                         
                         // If there is no read ID specified, it becomes public.
                         if (!isset($params_associative_array['read_security_id'])) {
@@ -476,8 +449,13 @@ abstract class A_CO_DB {
                                 ) {
         $id = intval($id);
         $predicate = $this->_create_security_predicate(TRUE);
+        
+        if ($predicate) {
+            $predicate .= 'AND ';
+        }
+
         // First, make sure we have write permission for this record, and that the record exists.
-        $sql = 'SELECT id FROM `'.$this->table_name.'` WHERE ('.$predicate.' AND `id`='.$id.')';
+        $sql = 'SELECT id FROM `'.$this->table_name.'` WHERE ('.$predicate.'`id`='.$id.')';
         $temp = $this->execute_query($sql);
         
         if (!$this->error && isset($temp) && $temp && is_array($temp) && (1 == count($temp))) {
@@ -489,7 +467,7 @@ abstract class A_CO_DB {
                                                 CO_Lang::$pdo_error_desc_failed_delete_attempt);
             } else {
                 // Make sure she's dead, Jim.
-                $sql = 'SELECT id FROM `'.$this->table_name.'` WHERE ('.$predicate.' AND `id`='.$id.')';
+                $sql = 'SELECT id FROM `'.$this->table_name.'` WHERE ('.$predicate.'`id`='.$id.')';
                 $temp = $this->execute_query($sql);
         
                 if (!$this->error && isset($temp) && $temp && is_array($temp) && (0 == count($temp))) {

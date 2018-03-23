@@ -59,13 +59,6 @@ class CO_Access {
     /***********************/
     /**
      */
-    public function god_mode() {
-        return intval($this->_login_id) == intval(CO_Config::$god_mode_id);
-    }
-    
-    /***********************/
-    /**
-     */
 	public function __construct(    $in_login_id = NULL,
 	                                $in_hashed_password = NULL,
 	                                $in_raw_password = NULL
@@ -199,6 +192,13 @@ class CO_Access {
     /***********************/
     /**
      */
+    public function god_mode() {
+        return intval($this->_login_id) == intval(CO_Config::$god_mode_id);
+    }
+        
+    /***********************/
+    /**
+     */
     public function get_multiple_data_records_by_id(    $in_id_array
                                                     ) {
         $ret = NULL;
@@ -267,11 +267,12 @@ class CO_Access {
     /***********************/
     /**
      */
-    public function get_all_data_readable_records() {
+    public function get_all_data_readable_records(  $open_only = FALSE  ///< If TRUE, then we will look for ONLY records with a NULL or 0 read_security_id
+                                                ) {
         $ret = NULL;
         
         if (isset($this->_data_db_object) && $this->_data_db_object) {
-            $ret = $this->_data_db_object->get_all_readable_records();
+            $ret = $this->_data_db_object->get_all_readable_records($open_only);
         }
         
         return $ret;

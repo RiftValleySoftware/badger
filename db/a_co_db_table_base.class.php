@@ -91,7 +91,7 @@ abstract class A_CO_DB_Table_Base {
             if (isset($in_db_result['write_security_id'])) {
                 $this->write_security_id = intval($in_db_result['write_security_id']);
             } else {
-                $this->write_security_id = $this->read_security_id ? -1 : 0;  // Writing is completely blocked if we have read security, but no write security specified.
+                $this->write_security_id = $this->read_security_id ? -1 : intval($this->write_security_id);  // Writing is completely blocked if we have read security, but no write security specified.
             }
             
             if (isset($in_db_result['object_name'])) {
@@ -227,16 +227,10 @@ abstract class A_CO_DB_Table_Base {
         $my_write_item = intval($this->write_security_id);
         
         if (isset($login_item) && $login_item instanceof CO_Security_Login) {
-            if ((0 == $my_write_item) || ($login_item->id() == CO_Config::$god_mode_id)) {
+            if ((0 == $my_write_item) || $this->_db_object->access_object->god_mode()) {
                 $ret = TRUE;
             } else {
-                $ids = $login_item->ids;
-                foreach ($ids as $id) { 
-                    if (intval($id) == $my_write_item) {
-                        $ret = TRUE;
-                        break;
-                    }
-                }
+                $ret = in_array($my_write_item, $login_item->ids);
             }
         }
         
@@ -340,6 +334,10 @@ abstract class A_CO_DB_Table_Base {
     public function reload_from_db() {
         $db_result = $this->_db_object->get_single_raw_row_by_id($this->id());
         $this->error = $this->_db_object->access_object->error;
-        return $this->_load_from_db($db_result);
+        if (!isset($this->error) || !$this->error) {
+            return $this->_load_from_db($db_result);
+        }
+        
+        return FALSE;
     }
 };
