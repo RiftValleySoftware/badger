@@ -1,10 +1,9 @@
 CREATE TABLE `co_data_nodes` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `access_class` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
-  `last_access` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `last_access` datetime NOT NULL,
   `read_security_id` bigint(20) DEFAULT NULL,
   `write_security_id` bigint(20) DEFAULT NULL,
-  `ttl` bigint(20) UNSIGNED DEFAULT NULL,
   `object_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
   `access_class_context` blob,
   `owner` bigint(20) UNSIGNED DEFAULT NULL,
@@ -29,7 +28,6 @@ ALTER TABLE `co_data_nodes`
   ADD KEY `last_access` (`last_access`),
   ADD KEY `write_security_id` (`write_security_id`),
   ADD KEY `read_security_id` (`read_security_id`),
-  ADD KEY `ttl` (`ttl`),
   ADD KEY `object_name` (`object_name`),
   ADD KEY `owner` (`owner`),
   ADD KEY `longitude` (`longitude`),
@@ -45,8 +43,8 @@ ALTER TABLE `co_data_nodes`
   ADD KEY `tag8` (`tag8`),
   ADD KEY `tag9` (`tag9`);
   
-INSERT INTO `co_data_nodes` (`id`, `access_class`, `last_access`, `read_security_id`, `write_security_id`, `ttl`, `object_name`, `access_class_context`, `owner`, `longitude`, `latitude`, `tag0`, `tag1`, `tag2`, `tag3`, `tag4`, `tag5`, `tag6`, `tag7`, `tag8`, `tag9`, `payload`) VALUES
-(1, 'CO_Main_DB_Record', '1970-01-01 00:00:00', -1, -1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `co_data_nodes` (`id`, `access_class`, `last_access`, `read_security_id`, `write_security_id`, `object_name`, `access_class_context`, `owner`, `longitude`, `latitude`, `tag0`, `tag1`, `tag2`, `tag3`, `tag4`, `tag5`, `tag6`, `tag7`, `tag8`, `tag9`, `payload`) VALUES
+(1, 'CO_Main_DB_Record', '1970-01-01 00:00:00', -1, -1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
 ALTER TABLE `co_data_nodes`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;

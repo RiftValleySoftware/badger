@@ -12,6 +12,12 @@
     Little Green Viper Software Development: https://littlegreenviper.com
 */
 defined( 'LGV_ADBTB_CATCHER' ) or die ( 'Cannot Execute Directly' );	// Makes sure that this file is in the correct context.
+        
+if ( !defined('LGV_DBF_CATCHER') ) {
+    define('LGV_DBF_CATCHER', 1);
+}
+
+require_once(CO_Config::db_classes_class_dir().'/co_security_login.class.php');
 
 /***************************************************************************************************************************/
 /**
@@ -211,7 +217,37 @@ abstract class A_CO_DB_Table_Base {
     
     /***********************/
     /**
+    \returns TRUE, if the current logged-in user has write permission on this record.
+     */
+    public function user_can_write() {
+        $ret = FALSE;
+        
+        $login_item = $this->_db_object->access_object->get_login_item();
+        
+        $my_write_item = intval($this->write_security_id);
+        
+        if (isset($login_item) && $login_item instanceof CO_Security_Login) {
+            if ((0 == $my_write_item) || ($login_item->id() == CO_Config::$god_mode_id)) {
+                $ret = TRUE;
+            } else {
+                $ids = $login_item->ids;
+                foreach ($ids as $id) { 
+                    if (intval($id) == $my_write_item) {
+                        $ret = TRUE;
+                        break;
+                    }
+                }
+            }
+        }
+        
+        return $ret;
+    }
+    
+    /***********************/
+    /**
     Setter Accessor for the Read Security ID. Also updates the DB.
+    
+    This checks to make sure the user has write permission before changing the ID.
     
     \returns TRUE, if a DB update was successful.
      */
@@ -219,7 +255,7 @@ abstract class A_CO_DB_Table_Base {
                                         ) {
         $ret = FALSE;
         
-        if (isset($in_new_id)) {
+        if ($this->user_can_write() && isset($in_new_id)) {
             $this->read_security_id = intval($in_new_id);
             $ret = $this->update_db();
         }
@@ -231,13 +267,14 @@ abstract class A_CO_DB_Table_Base {
     /**
     Setter Accessor for the Write Security ID. Also updates the DB.
     
+    This checks to make sure the user has write permission before changing the ID.
+    
     \returns TRUE, if a DB update was successful.
      */
     public function set_write_security_id($in_new_id    ///< The new value
                                         ) {
         $ret = FALSE;
-        
-        if (isset($in_new_id)) {
+        if ($this->user_can_write() && isset($in_new_id)) {
             $this->write_security_id = intval($in_new_id);
             $ret = $this->update_db();
         }
@@ -266,26 +303,43 @@ abstract class A_CO_DB_Table_Base {
     /***********************/
     /**
     This is the public database record deleter.
+    
+    This checks to make sure the user has write permission before deleting.
+    
+    \returns TRUE, if the deletion was successful.
      */
     public function delete_from_db() {
-        return $this->_seppuku();
+        if ($this->user_can_write()) {
+            return $this->_seppuku();
+        } else {
+            return FALSE;
+        }
     }
     
     /***********************/
     /**
     This is a "trigger" to update the database with the current instance state.
+    
+    This checks to make sure the user has write permission before saving.
+    
+    \returns TRUE, if a DB update was successful.
      */
     public function update_db() {
-        return $this->_write_to_db();
+        if ($this->user_can_write()) {
+            if ( $this->_write_to_db() ) {
+                return $this->reload_from_db(); // Make sure that we get exactly what we wrote.
+            }
+        } else {
+            return FALSE;
+        }
     }
     
     /***********************/
     /**
-    This is meant to be overloaded.
-    
-    Calling this forces the instance to be re-established from the database (wiping out any existing state).
      */
     public function reload_from_db() {
-        return FALSE;
+        $db_result = $this->_db_object->get_single_raw_row_by_id($this->id());
+        $this->error = $this->_db_object->access_object->error;
+        return $this->_load_from_db($db_result);
     }
 };

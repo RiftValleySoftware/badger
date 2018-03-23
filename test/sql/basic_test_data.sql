@@ -2,7 +2,7 @@ DROP TABLE IF EXISTS `co_data_nodes`;
 CREATE TABLE `co_data_nodes` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `access_class` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
-  `last_access` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `last_access` datetime NOT NULL,
   `read_security_id` bigint(20) DEFAULT NULL,
   `write_security_id` bigint(20) DEFAULT NULL,
   `object_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,

@@ -122,15 +122,16 @@ class CO_Main_DB_Record extends A_CO_DB_Table_Base {
     /***********************/
     /**
      */
-    protected function _get_decrypted_payload() {
+    protected function _get_decrypted_payload(  $in_key = NULL
+                                            ) {
         $ret = NULL;
 
         $login_item = $this->_db_object->access_object->get_login_item();
 
-        if (isset($login_item) && $login_item) {
+        if (isset($in_key) && $in_key && isset($login_item) && $login_item) {
             $private_key = $login_item->get_private_key();
         
-            if ($private_key) {
+            if (isset($private_key) && ($private_key == $in_key)) {
                 $ret = $this->_decrypt_payload_with_private_key($private_key);
             }
         }
@@ -255,10 +256,13 @@ class CO_Main_DB_Record extends A_CO_DB_Table_Base {
     /***********************/
     /**
      */
-    public function get_payload() {
-        $ret = $this->_get_decrypted_payload();
+    public function get_payload(    $in_key = NULL
+                                ) {
+        $ret = NULL;
         
-        if (!$ret) {
+        if ($in_key) {
+            $ret = $this->_get_decrypted_payload($in_key);
+        } else {
             $ret = $this->_raw_payload;
         }
         
@@ -290,14 +294,5 @@ class CO_Main_DB_Record extends A_CO_DB_Table_Base {
         }
         
         return $ret;
-    }
-    
-    /***********************/
-    /**
-     */
-    public function reload_from_db() {
-        $db_result = $this->_db_object->get_single_raw_row_by_id($this->id());
-        $this->error = $this->_db_object->access_object->error;
-        return $this->_load_from_db($db_result);
     }
 };

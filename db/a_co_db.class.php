@@ -45,117 +45,16 @@ abstract class A_CO_DB {
     /***********************************************************************************************************************/
     /***********************/
     /**
-     */
-    protected function _create_read_security_predicate() {
-        $access_ids = $this->access_object->get_security_ids();
-        if (1 == count($access_ids) && (-1 == intval($access_ids[0]))) {
-            return '1';
-        }
-        
-        $ret = '((`read_security_id`=0) OR (`read_security_id` IS NULL)';
-        
-        if (isset($access_ids) && is_array($access_ids) && count($access_ids)) {
-            foreach ($access_ids as $access_id) {
-                $ret .= ' OR (`read_security_id`='.intval($access_id).')';
-            }
-        }
-        
-        $ret .= ')';
-        
-        // Only God can access God...
-        if (($this instanceof CO_Security_DB) && !$this->access_object->god_mode()) {
-            $ret .= ' AND (`id`<>'.intval(CO_Config::$god_mode_id).')';
-        }
-
-        return $ret;
-    }
+    This executes an SQL query, using the PDO instance. It uses PDO prepared statements to apply the query.
     
-    /***********************/
-    /**
-     */
-    protected function _create_write_security_predicate() {
-        $access_ids = $this->access_object->get_security_ids();
-        if (1 == count($access_ids) && (-1 == intval($access_ids[0]))) {
-            return '1';
-        }
-        
-        $ret = '((`write_security_id`=0) OR (`write_security_id` IS NULL)';
-        
-        if (isset($access_ids) && is_array($access_ids) && count($access_ids)) {
-            foreach ($access_ids as $access_id) {
-                $ret .= ' OR (`write_security_id`='.intval($access_id).')';
-            }
-        }
-        
-        $ret .= ')';
-        
-        return $ret;
-    }
+    This is a "bottleneck" method. All access to the database needs to go through here.
     
-    /***********************/
-    /**
+    \returns any response from the database.
      */
-    protected function _create_security_predicate(  $and_write = FALSE
-                                                    ) {
-        $access_ids = $this->access_object->get_security_ids();
-        if (1 == count($access_ids) && (-1 == intval($access_ids[0]))) {
-            return '1';
-        }
-        
-        $ret = $this->_create_read_security_predicate($access_ids);
-        
-        if ($and_write) {
-            $ret .= ' AND '.$this->_create_write_security_predicate($access_ids);
-        }
-        
-        return $ret;
-    }
-    
-    /***********************/
-    /**
-     */
-    public function _instantiate_record(    $in_db_result
+    private function _execute_query(    $in_sql,                ///< This is the SQL portion of the prepared statement.
+                                        $in_parameters = NULL,  ///< This is an array of values to be used in the prepared statement.
+                                        $exec_only = FALSE      ///< If TRUE, then this means we do not expect a response. Default is FALSE.
                                         ) {
-        $ret = NULL;
-        
-        $classname = trim($in_db_result['access_class']);
-        
-        if ($classname) {
-            if (!class_exists($classname)) {
-                $filename = CO_Config::db_classes_class_dir().'/'.strtolower($classname).'.class.php';
-                require_once($filename);
-            }
-            
-            if (class_exists($classname)) {
-                $ret = new $classname($this, $in_db_result);
-            }
-        }
-        
-        return $ret;
-    }
-
-    /***********************************************************************************************************************/
-    /***********************/
-    /**
-     */
-	public function __construct(    $in_pdo_object,
-	                                $in_access_object = NULL
-                                ) {
-        $this->class_description = 'Abstract Base Class for Database -Should never be instantiated.';
-        
-        $this->access_object = $in_access_object;
-        $this->error = NULL;
-        $this->table_name = NULL;
-        $this->_pdo_object = $in_pdo_object;
-    }
-    
-    /***********************/
-    /**
-     */
-    public function execute_query(  $in_sql,
-                                    $in_parameters = NULL,
-                                    $exec_only = FALSE
-                                    ) {
         $ret = NULL;
         $this->error = NULL;
         
@@ -178,25 +77,147 @@ abstract class A_CO_DB {
         return $ret;
     }
     
+    /***********************************************************************************************************************/
     /***********************/
     /**
+    This function creates an SQL predicate that limits the query to only those records to which the current logged-in user has read rights.
+    
+    \returns a string, containing the SQL predicate
      */
-    public function get_single_record_by_id(    $in_id,
-                                                $and_write = FALSE
-                                            ) {
-        $ret = NULL;
+    protected function _create_read_security_predicate() {
+        $access_ids = $this->access_object->get_security_ids();
+        if (1 == count($access_ids) && (-1 == intval($access_ids[0]))) {    // God can do everything...
+            return '1';
+        } else {
+            $ret = '((`read_security_id`=0) OR (`read_security_id` IS NULL)';
         
-        $temp = $this->get_multiple_records_by_id(Array($in_id), $and_write);
+            if (isset($access_ids) && is_array($access_ids) && count($access_ids)) {
+                foreach ($access_ids as $access_id) {
+                    $ret .= ' OR (`read_security_id`='.intval($access_id).')';
+                }
+            }
         
-        if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
-            $ret = $temp[0];
+            $ret .= ')';
+        
+            // Only God can access God...
+            if (($this instanceof CO_Security_DB) && !$this->access_object->god_mode()) {
+                $ret .= ' AND (`id`<>'.intval(CO_Config::$god_mode_id).')';
+            }
+
+            return $ret;
         }
+    }
+    
+    /***********************/
+    /**
+    This function creates an SQL predicate that limits the query to only those records to which the current logged-in user has modification rights.
+    
+    \returns a string, containing the SQL predicate
+     */
+    protected function _create_write_security_predicate() {
+        $access_ids = $this->access_object->get_security_ids();
+        if (1 == count($access_ids) && (-1 == intval($access_ids[0]))) {    // God can do everything...
+            return '1';
+        } else {
+            $ret = '0';
+            
+            if (isset($access_ids) && is_array($access_ids) && count($access_ids)) {
+                $ret = '((`write_security_id`=0) OR (`write_security_id` IS NULL)';
+                
+                foreach ($access_ids as $access_id) {
+                    $ret .= ' OR (`write_security_id`='.intval($access_id).')';
+                }
+        
+                $ret .= ')';
+        
+                // Only God can access God...
+                if (($this instanceof CO_Security_DB) && !$this->access_object->god_mode()) {
+                    $ret .= ' AND (`id`<>'.intval(CO_Config::$god_mode_id).')';
+                }
+            }
+        
+            return $ret;
+        }
+    }
+    
+    /***********************/
+    /**
+    This creates the appropriate security predicate.
+    
+    \returns a string, containing the SQL predicate
+     */
+    protected function _create_security_predicate(  $write = FALSE  ///< This should be TRUE, if we need a write predicate. Default is FALSE.
+                                                    ) {
+        $access_ids = $this->access_object->get_security_ids();
+        if (1 == count($access_ids) && (-1 == intval($access_ids[0]))) {    // God can do everything...
+            return '1';
+        }
+        
+        $ret = $write ? $this->_create_write_security_predicate($access_ids) : $this->_create_read_security_predicate($access_ids);
         
         return $ret;
     }
     
     /***********************/
     /**
+    This creates a new record, based upon the class stored in the database.
+    
+    \returns a new instance of a subclass of A_CO_DB_Table_Base, loaded with its state.
+     */
+    public function _instantiate_record(    $in_db_result   ///< This is an associative array, with the results of the row, read from the database.
+                                        ) {
+        $ret = NULL;
+        
+        $classname = trim($in_db_result['access_class']);
+        
+        if ($classname) {
+            if (!class_exists($classname)) {
+                $filename = CO_Config::db_classes_class_dir().'/'.strtolower($classname).'.class.php';
+                require_once($filename);
+            }
+            
+            if (class_exists($classname)) {
+                $ret = new $classname($this, $in_db_result);
+            }
+        }
+        
+        return $ret;
+    }
+
+    /***********************************************************************************************************************/
+    /***********************/
+    /**
+    The initializer
+     */
+	public function __construct(    $in_pdo_object,     ///< This is the PDO object used to access the database. It should be initialized and connected at the time this method is called.
+	                                $in_access_object   ///< This is the access instance used to handle the login.
+                                ) {
+        $this->class_description = 'Abstract Base Class for Database -Should never be instantiated.';
+        
+        $this->access_object = $in_access_object;
+        $this->error = NULL;
+        $this->table_name = NULL;
+        $this->_pdo_object = $in_pdo_object;
+    }
+    
+    /***********************/
+    /**
+    This is an accessor for the query execution method.
+    
+    \returns any response from the database.
+     */
+    public function execute_query(  $in_sql,                ///< This is the SQL portion of the prepared statement.
+                                    $in_parameters = NULL,  ///< This is an array of values to be used in the prepared statement.
+                                    $exec_only = FALSE      ///< If TRUE, then this means we do not expect a response. Default is FALSE.
+                                    ) {
+        return $this->_execute_query($in_sql, $in_parameters, $exec_only);
+    }
+    
+    /***********************/
+    /**
+    This is a special method that does not apply a security predicate. It is used to force-reload record instances.
+    
+    This should ONLY be called from the database reloader functions.
      */
     public function get_single_raw_row_by_id(   $in_id,
                                                 $and_write = FALSE
@@ -212,6 +233,23 @@ abstract class A_CO_DB {
         if (isset($ret) && is_array($ret) && count($ret)) {
             $ret = $ret[0];
         }
+        return $ret;
+    }
+    
+    /***********************/
+    /**
+     */
+    public function get_single_record_by_id(    $in_id,
+                                                $and_write = FALSE
+                                            ) {
+        $ret = NULL;
+        
+        $temp = $this->get_multiple_records_by_id(Array($in_id), $and_write);
+        
+        if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
+            $ret = $temp[0];
+        }
+        
         return $ret;
     }
     
@@ -308,6 +346,7 @@ abstract class A_CO_DB {
         $ret = FALSE;
         if (isset($params_associative_array) && is_array($params_associative_array) && count($params_associative_array)) {
             $access_ids = $this->access_object->get_security_ids();
+            $params_associative_array['last_access'] = date('Y-m-d H:i:s');
             if (isset($access_ids) && is_array($access_ids) && count($access_ids)) {
                 $predicate = $this->_create_security_predicate(TRUE);
             

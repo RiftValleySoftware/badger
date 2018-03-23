@@ -120,13 +120,4 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
         
         return $ret;
     }
-    
-    /***********************/
-    /**
-     */
-    public function reload_from_db() {
-        $db_result = $this->_db_object->get_single_raw_row_by_id($this->id());
-        $this->error = $this->_db_object->access_object->error;
-        return $this->_load_from_db($db_result);
-    }
 };
