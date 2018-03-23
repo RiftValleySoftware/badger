@@ -21,6 +21,7 @@ require_once(CO_Config::db_class_dir().'/a_co_db_table_base.class.php');
 
 /***************************************************************************************************************************/
 /**
+This is the main instance base class for records in the main "data" database.
  */
 class CO_Main_DB_Record extends A_CO_DB_Table_Base {
     static  $s_table_name = 'co_data_nodes';
@@ -33,6 +34,9 @@ class CO_Main_DB_Record extends A_CO_DB_Table_Base {
     /***********************************************************************************************************************/
     /***********************/
     /**
+    This prepares an associative array of database values for the object.
+    
+    \returns an associative array of default values, using the database keys.
      */
     protected function _default_setup() {
         $default_setup = parent::_default_setup();
