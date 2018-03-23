@@ -27,6 +27,13 @@ require_once(CO_Config::shared_class_dir().'/error.class.php');
 
 /***************************************************************************************************************************/
 /**
+This is the abstract base class for both Badger databases. The bulk of database access, and most of the security, appears in
+this class.
+
+The key to security is in the two protected _predicate methods (one for read, and one for write). These analyze the logged-in
+user's list of IDs (using the access class' get_security_ids() method, which reloads the security item), and construct an SQL 
+predicate for calls that prevent records from being considered that do not match the security profile. This means the records
+are never even read into the object from the database. They are excluded by SQL.
  */
 abstract class A_CO_DB {
     protected $_pdo_object;
@@ -107,8 +114,8 @@ abstract class A_CO_DB {
     /***********************/
     /**
      */
-    public function instantiate_record(  $in_db_result
-                                            ) {
+    public function _instantiate_record(    $in_db_result
+                                        ) {
         $ret = NULL;
         
         $classname = trim($in_db_result['access_class']);
@@ -237,7 +244,7 @@ abstract class A_CO_DB {
         if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
             $ret = Array();
             foreach ($temp as $result) {
-                array_push($ret, $this->instantiate_record($result));
+                array_push($ret, $this->_instantiate_record($result));
             }
             usort($ret, function($a, $b){return ($a->id() > $b->id());});
         }
@@ -259,7 +266,7 @@ abstract class A_CO_DB {
         if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
             $ret = Array();
             foreach ($temp as $result) {
-                array_push($ret, $this->instantiate_record($result));
+                array_push($ret, $this->_instantiate_record($result));
             }
             usort($ret, function($a, $b){return ($a->id() > $b->id());});
         }
@@ -284,7 +291,7 @@ abstract class A_CO_DB {
             if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
                 $ret = Array();
                 foreach ($temp as $result) {
-                    array_push($ret, $this->instantiate_record($result));
+                    array_push($ret, $this->_instantiate_record($result));
                 }
                 usort($ret, function($a, $b){return ($a->id() > $b->id());});
             }
