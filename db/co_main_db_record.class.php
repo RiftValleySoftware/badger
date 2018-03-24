@@ -109,7 +109,11 @@ class CO_Main_DB_Record extends A_CO_DB_Table_Base {
         $ret['owner'] = $this->owner_id;
         for ($tag_no = 0; $tag_no < 10; $tag_no++) {
             $key = "tag$tag_no";
-            $ret[$key] = $this->tags[$tag_no];
+            if (isset($this->tags[$tag_no])) {
+                $ret[$key] = $this->tags[$tag_no];
+            } else {
+                $ret[$key] = '';
+            }
         }
         
         $ret['payload'] = $this->_get_storage_payload();
@@ -139,6 +143,8 @@ class CO_Main_DB_Record extends A_CO_DB_Table_Base {
     /***********************/
     /**
     This is called to decrypt the payload with the provided private key.
+    
+    \returns the decrypted payload (NULL if failed).
      */
     protected function _decrypt_payload_with_private_key(   $in_private_key ///< The private key to use for decryption.
                                                     ) {
@@ -224,7 +230,7 @@ class CO_Main_DB_Record extends A_CO_DB_Table_Base {
 	                                $in_tags_array = NULL   ///< An array of strings, up to ten elements long, for the tags.      
                                 ) {
         $this->owner_id = intval($in_owner_id);
-        $this->tags = array_map(function($in) { return strval($in); }, $in_tags_array);
+        $this->tags = (isset($in_tags_array) && is_array($in_tags_array) && count($in_tags_array)) ? array_map(function($in) { return strval($in); }, $in_tags_array) : Array();
         parent::__construct($in_db_object, $in_db_result);
     }
     

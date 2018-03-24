@@ -222,15 +222,15 @@ abstract class A_CO_DB_Table_Base {
     public function user_can_write() {
         $ret = FALSE;
         
-        $login_item = $this->_db_object->access_object->get_login_item();
+        $ids = $this->_db_object->access_object->get_security_ids();
         
         $my_write_item = intval($this->write_security_id);
         
-        if (isset($login_item) && $login_item instanceof CO_Security_Login) {
-            if ((0 == $my_write_item) || $this->_db_object->access_object->god_mode()) {
-                $ret = TRUE;
-            } else {
-                $ret = in_array($my_write_item, $login_item->ids);
+        if ((0 == $my_write_item) || $this->_db_object->access_object->god_mode()) {
+            $ret = TRUE;
+        } else {
+            if (isset($ids) && is_array($ids) && count($ids)) {
+                $ret = in_array($my_write_item, $ids);
             }
         }
         
@@ -319,8 +319,9 @@ abstract class A_CO_DB_Table_Base {
     \returns TRUE, if a DB update was successful.
      */
     public function update_db() {
-        if ($this->user_can_write()) {
-            if ( $this->_write_to_db() ) {
+        if (!$this->id() || $this->user_can_write()) {
+            $result = $this->_write_to_db();
+            if ($result) {
                 return $this->reload_from_db(); // Make sure that we get exactly what we wrote.
             }
         } else {

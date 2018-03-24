@@ -21,6 +21,7 @@ require_once(CO_Config::db_class_dir().'/a_co_db_table_base.class.php');
 
 /***************************************************************************************************************************/
 /**
+This is the base class for records in the security database.
  */
 class CO_Security_Node extends A_CO_DB_Table_Base {
     var $ids;
@@ -28,6 +29,13 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
     /***********************************************************************************************************************/
     /***********************/
     /**
+    This is called to populate the object fields for this class with default values. These use the SQL table tags.
+    
+    This should be subclassed, and the parent should be called before applying specific instance properties.
+    
+    This method overloads (and calls) the base class method.
+    
+    \returns An associative array, simulating a database read.
      */
     protected function _default_setup() {
         $default_setup = parent::_default_setup();
@@ -37,13 +45,18 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
     
     /***********************/
     /**
+    This builds up the basic section of the instance database record. It should be overloaded, and the parent called before adding new fields.
+    
+    This method overloads (and calls) the base class method.
+    
+    \returns an associative array, in database record form.
      */
     protected function _build_parameter_array() {
         $ret = parent::_build_parameter_array();
         
         $ids_as_string_array = array_map(function($in) { return strval($in); }, $this->ids);
         
-        $id_list_string = implode(',', ids_as_string_array);
+        $id_list_string = implode(',', $ids_as_string_array);
         
         $ret['ids'] = $id_list_string;
         
@@ -53,10 +66,11 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
     /***********************************************************************************************************************/
     /***********************/
     /**
+    Initializer
      */
-	public function __construct(    $in_db_object = NULL,
-	                                $in_db_result = NULL,
-	                                $in_ids = NULL
+	public function __construct(    $in_db_object = NULL,   ///< This is the database instance that "owns" this record.
+	                                $in_db_result = NULL,   ///< This is a database-format associative array that is used to initialize this instance.
+	                                $in_ids = NULL          ///< This is a preset array of integers, containing security IDs for the row.
                                 ) {
                                 
         $this->ids = $in_ids;
@@ -74,7 +88,7 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
                     if (is_array($tempAr) && count($tempAr)) {
                         $tempAr = array_map(function($in) { return intval($in); }, $tempAr);
                         $tempAr = array_merge($this->ids, $tempAr);
-                        if ( isset($tempAr) && is_array($tempAr) && count($tempAr)) {
+                        if (isset($tempAr) && is_array($tempAr) && count($tempAr)) {
                             sort($tempAr);
                             $this->ids = $tempAr;
                         }
@@ -88,8 +102,11 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
     
     /***********************/
     /**
+    This is a setter for the ID array.
+    
+    \returns TRUE, if successful.
      */
-    public function set_ids($in_ids_array
+    public function set_ids(    $in_ids_array   ///< This is a preset array of integers, containing security IDs for the row.
                             ) {
         $ret = FALSE;
         
@@ -103,20 +120,46 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
     
     /***********************/
     /**
+    This is a setter, allowing you to add an ID.
+    
+    \returns TRUE, if successful.
      */
-    public function add_id( $in_id
+    public function add_id( $in_id  ///< A single integer. The new ID to add.
                             ) {
         $ret = FALSE;
+        
+        if (!isset($this->ids) || !is_array($this->ids)) {
+            $this->ids = Array(intval($in_id));
+        } else {
+            $this->ids[] = $in_id;
+            $this->ids = array_unique($this->ids);
+            $ret = $this->update_db();
+        }
         
         return $ret;
     }
     
     /***********************/
     /**
+    This allows you to remove a single ID.
+    
+    \returns TRUE, if successful.
      */
-    public function remove_id( $in_id
+    public function remove_id(  $in_id  ///< A single integer. The ID to remove.
                             ) {
         $ret = FALSE;
+        
+        if (isset($this->ids) && is_array($this->ids) && count($this->ids)) {
+            $new_array = Array();
+            
+            foreach($this->ids as $id) {
+                if ($id != $in_id) {
+                    array_push($new_array, $id);
+                }
+                
+                $ret = $this->set_ids($new_array);
+            }
+        }
         
         return $ret;
     }

@@ -155,19 +155,12 @@ class CO_Access {
             $ret = Array(-1);
         } else {
             if (isset($this->_login_id) && $this->_login_id && $this->_security_db_object) {
-                $temp = $this->_security_db_object->get_initial_record_by_id($this->_login_id);
+                $ret = $this->_security_db_object->get_security_ids_for_id($this->_login_id);
             
                 if ($this->_security_db_object->error) {
                     $this->error = $this->_security_db_object->error;
                     
-                    return NULL;
-                }
-
-                if (isset($temp) && ($temp instanceof CO_Security_Login)) {
-                    $ret = $temp->ids;
-                    array_unshift($ret, $temp->id()); // We unshift, so the login ID will always be first.
-                    $ret = array_unique($ret);      // This makes sure we don't duplicate IDs (no harm, if so, but I definitely, positively, without a doubt, conclusively, adamantly hate repetitive redundancy).
-                    sort($ret);
+                    $ret = Array();
                 }
             }
         }
@@ -245,7 +238,6 @@ class CO_Access {
                 }
             }
         }
-        
         return $ret;
     }
 
@@ -346,7 +338,7 @@ class CO_Access {
         $ret = NULL;
         
         if (isset($this->_security_db_object) && $this->_security_db_object) {
-            $ret = $this->_security_db_object->get_all_readable_records($this->get_security_ids());
+            $ret = $this->_security_db_object->get_all_readable_records();
         
             if ($this->_security_db_object->error) {
                 $this->error = $this->_security_db_object->error;
@@ -365,7 +357,7 @@ class CO_Access {
         $ret = NULL;
         
         if (isset($this->_security_db_object) && $this->_security_db_object) {
-            $ret = $this->_security_db_object->get_all_writeable_records($this->get_security_ids());
+            $ret = $this->_security_db_object->get_all_writeable_records();
         
             if ($this->_security_db_object->error) {
                 $this->error = $this->_security_db_object->error;

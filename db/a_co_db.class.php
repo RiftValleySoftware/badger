@@ -354,6 +354,10 @@ abstract class A_CO_DB {
         if (isset($access_ids) && is_array($access_ids) && count($access_ids)) {
             $predicate = $this->_create_security_predicate(TRUE);
         
+            if (!$predicate) {
+                $predicate = '1'; // If we are in "God Mode," we could get no predicate, so we just go with "1".
+            }
+        
             $sql = 'SELECT * FROM `'.$this->table_name.'` WHERE '.$predicate;
             $temp = $this->execute_query($sql, Array());
             if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
