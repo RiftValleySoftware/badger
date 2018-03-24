@@ -21,6 +21,7 @@ require_once(CO_Config::db_class_dir().'/co_security_node.class.php');
 
 /***************************************************************************************************************************/
 /**
+This is the specializing class for the login ID record type.
  */
 class CO_Security_Login extends CO_Security_Node {
     var $login_id;
@@ -28,6 +29,13 @@ class CO_Security_Login extends CO_Security_Node {
     /***********************************************************************************************************************/
     /***********************/
     /**
+    This is called to populate the object fields for this class with default values. These use the SQL table tags.
+    
+    This should be subclassed, and the parent should be called before applying specific instance properties.
+    
+    This method overloads (and calls) the base class method.
+    
+    \returns An associative array, simulating a database read.
      */
     protected function _default_setup() {
         $default_setup = parent::_default_setup();
@@ -38,6 +46,11 @@ class CO_Security_Login extends CO_Security_Node {
 
     /***********************/
     /**
+    This builds up the basic section of the instance database record. It should be overloaded, and the parent called before adding new fields.
+    
+    This method overloads (and calls) the base class method.
+    
+    \returns an associative array, in database record form.
      */
     protected function _build_parameter_array() {
         $ret = parent::_build_parameter_array();
@@ -49,6 +62,9 @@ class CO_Security_Login extends CO_Security_Node {
 
     /***********************/
     /**
+    This function sets up this instance, according to the DB-formatted associative array passed in.
+    
+    \returns TRUE, if the instance was able to set itself up to the provided array.
      */
     protected function _load_from_db($in_db_result) {
         $ret = parent::_load_from_db($in_db_result);
@@ -65,11 +81,12 @@ class CO_Security_Login extends CO_Security_Node {
     /***********************************************************************************************************************/
     /***********************/
     /**
+    Constructor
      */
-	public function __construct(    $in_db_object = NULL,
-	                                $in_db_result = NULL,
-	                                $in_login_id = NULL,
-	                                $in_ids = NULL
+	public function __construct(    $in_db_object = NULL,   ///< This is the database instance that "owns" this record.
+	                                $in_db_result = NULL,   ///< This is a database-format associative array that is used to initialize this instance.
+	                                $in_login_id = NULL,    ///< The login ID
+	                                $in_ids = NULL          ///< An array of integers, representing the permissions this ID has.
                                 ) {
         $this->login_id = $in_login_id;
         parent::__construct($in_db_object, $in_db_result, $in_ids);
@@ -86,6 +103,9 @@ class CO_Security_Login extends CO_Security_Node {
     
     /***********************/
     /**
+    This returns a saved private key
+    
+    \returns a string (the private key) or NULL
      */
     public function get_private_key() {
         $this->reload_from_db();
@@ -97,20 +117,25 @@ class CO_Security_Login extends CO_Security_Node {
     
     /***********************/
     /**
+    Sets the private key.
+    
+    \returns TRUE, if the operation was successful.
      */
     public function set_private_key($in_private_key
                                     ) {
         $this->context['p_key'] = (isset($in_private_key) && $in_private_key) ? $in_private_key : NULL;
         
-        $this->_write_to_db();
+        return $this->update_db();
     }
     
     /***********************/
     /**
+    \returns TRUE, if the presented credentials are good.
      */
-    public function is_login_valid( $in_login_id,
-                                    $in_hashed_password = NULL,
-                                    $in_raw_password = NULL) {
+    public function is_login_valid( $in_login_id,               ///< The login ID
+                                    $in_hashed_password = NULL, ///< The password, crypt-hashed
+                                    $in_raw_password = NULL     ///< The password, cleartext.
+                                    ) {
         $ret = FALSE;
         if (isset($this->login_id) && $this->login_id && ($this->login_id == $in_login_id)) {
             if ($this->id() == CO_Config::$god_mode_id) { // God mode always reads directly from the config file, and does not encrypt.

@@ -21,27 +21,19 @@ require_once(CO_Config::db_class_dir().'/co_security_node.class.php');
 
 /***************************************************************************************************************************/
 /**
+This is the specialized class for the generic security ID.
  */
 class CO_Security_ID extends CO_Security_Node {
     /***********************************************************************************************************************/
     /***********************/
     /**
+    Constructor.
      */
-    protected function _default_setup() {
-        $default_setup = parent::_default_setup();
-        
-        return $default_setup;
-    }
-    
-    /***********************************************************************************************************************/
-    /***********************/
-    /**
-     */
-	public function __construct(    $in_db_object = NULL,
-	                                $in_db_result = NULL
+	public function __construct(    $in_db_object = NULL,   ///< This is the database instance that "owns" this record.
+	                                $in_db_result = NULL    ///< This is a database-format associative array that is used to initialize this instance.
                                 ) {
         parent::__construct($in_db_object, $in_db_result);
-            $this->class_description = 'This is a security class for IDs.';
-            $this->instance_description = isset($this->name) && $this->name ? "$this->name ($this->_id)" : "Unnamed ID Node ($this->_id)";
+        $this->class_description = 'This is a security class for IDs.';
+        $this->instance_description = isset($this->name) && $this->name ? "$this->name ($this->_id)" : "Unnamed ID Node ($this->_id)";
     }
 };
