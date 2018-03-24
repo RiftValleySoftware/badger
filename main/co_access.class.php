@@ -45,23 +45,57 @@ require_once($lang_common_file);
 
 /***************************************************************************************************************************/
 /**
+This is the principal interface class for Badger. To use Badger, you instantiate this class with a login (or no login), and
+the instance handles all the database setup and permission-setting in the background.
+
+You then use this class as your database interface. No SQL or DB commands. It's all functions, and it should all go through this
+class or instances of records that it supplies. You do not interface with the databases. This is a functional interface.
+
+This class is designed to be specialized and subclassed. In it's "pure" form, it is extremely generic.
+
+Badger consists of two databases: The "data" database, and the "security" database. These do not have any database-level relations.
+They can both be set up on different servers, and could even be different SQL databases, as the schemas are very simple, and we use
+PDO to access them.
+
+The databases are crazy simple. Each consists of one table, with only a single schema table. Much of the specialization is done
+through subclasses.
+
+Each database record has a classname stored. This is used to instantiate the appropriate class to interpret that record.
+
+Security is tinfoil. Not only are there two databases, with the ability to encapsulate the security database in a hardened server,
+but each login is given an ACL, and that ACL determines what it can see or modify.
+
+Each record has one code for reading, and one code for writing. If the code is not available in the logged-in user's ACL, then that
+user can't see the data, or modify it. This is enforced at the SQL level. The system will not even read in records that don't match
+the security key.
+
+You can also encrypt data payloads. The built-in encryption is OpenSSL, but you can subclass to create more stringent encryption.
+
+Each login can have a private key stored to decrypt and encrypt the payloads.
+
+You set up Badger with a config file, which implements a static class with some basic parameters for use in the system. For security,
+it's a good idea to locate the config file outside the HTTP tree.
+
+You include the config file in whatever context is your main context, and include this file after that.
+You should define the "LGV_ACCESS_CATCHER" define to "1", so this file will run. This file will take care of other access tokens as
+necessary.
  */
 class CO_Access {    
-    protected $_data_db_object;
-    protected $_security_db_object;
-    protected $_login_id;
+    protected $_data_db_object;     ///< This is the instance of the class representing the "data" database. This will always be instantiated.
+    protected $_security_db_object; ///< This is the instance of the class representing the "scurity" database. This may not be instantiated, if there is no login.
+    protected $_login_id;           ///< This is an integer, containing the security DB ID of the logged-in user. It will be NULL for no login.
 
-    public $valid;
-    public $error;
-    public $class_description;
+    public $valid;                  ///< This will be TRUE, if the instance is "valid" (has at least an initialized "data" database).
+    public $error;                  ///< If there was an error, it will be held here.
+    public $class_description;      ///< This is a brief textual description of the class.
     
     /***********************************************************************************************************************/
     /***********************/
     /**
      */
-	public function __construct(    $in_login_id = NULL,
-	                                $in_hashed_password = NULL,
-	                                $in_raw_password = NULL
+	public function __construct(    $in_login_id = NULL,        ///< The login ID
+                                    $in_hashed_password = NULL, ///< The password, crypt-hashed
+                                    $in_raw_password = NULL     ///< The password, cleartext.
 	                            ) {
         $this->class_description = 'The main data access class.';
         
