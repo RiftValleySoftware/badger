@@ -160,9 +160,243 @@
                 echo('</div>');
             echo('</div>');
         echo('</div>');
+        echo('<div id="stress-item-generic-tests" class="closed">');
+            echo('<h1 class="header"><a href="javascript:toggle_main_state(\'stress-item-generic-tests\')">GENERIC SEARCH TEST</a></h1>');
+            echo('<div class="container">');
+                echo('<div id="test-031" class="inner_closed">');
+                    echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-031\')">TEST 31: Try a simple generic search, looking for all long/lat objects, and no login.</a></h2>');
+
+                    echo('<div class="main_div inner_container">');
+                        ?>
+                        <div class="main_div" style="margin-right:2em">
+                        <p class="explain"></p>
+                        </div>
+                        <?php
+                        $start = microtime(TRUE);
+                        try_custom_query_1();
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                    echo('</div>');
+                echo('</div>');
+                echo('<div id="test-032" class="inner_closed">');
+                    echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-032\')">TEST 32: Try a simple generic search looking for locations tagged as "HI" (Hawaii).</a></h2>');
+
+                    echo('<div class="main_div inner_container">');
+                        ?>
+                        <div class="main_div" style="margin-right:2em">
+                        <p class="explain">This test asks for the second tag to be returned as "HI".</p>
+                        <p class="explain">We expect this test to succeed with about 70 elements.</p>
+                        </div>
+                        <?php
+                        $start = microtime(TRUE);
+                        try_custom_query_2();
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                    echo('</div>');
+                echo('</div>');
+                echo('<div id="test-033" class="inner_closed">');
+                    echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-033\')">TEST 33: Try a simple generic search looking for locations tagged as "HI" (Hawaii), but this time, logged in as BillyBob.</a></h2>');
+
+                    echo('<div class="main_div inner_container">');
+                        ?>
+                        <div class="main_div" style="margin-right:2em">
+                        <p class="explain">This test asks for the second tag to be returned as "HI".</p>
+                        <p class="explain">We expect this test to succeed with about 90 elements.</p>
+                        </div>
+                        <?php
+                        $start = microtime(TRUE);
+                        try_custom_query_2('billybob', '', 'CoreysGoryStory');
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                    echo('</div>');
+                echo('</div>');
+                echo('<div id="test-034" class="inner_closed">');
+                    echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-034\')">TEST 34: Try a simple generic search looking for meetings named "Back to Basics", logged in as BillyBob.</a></h2>');
+
+                    echo('<div class="main_div inner_container">');
+                        ?>
+                        <div class="main_div" style="margin-right:2em">
+                        <p class="explain">This test asks for the object name to be "Back to Basics" (Case-insensitive).</p>
+                        <p class="explain">We expect this test to succeed with results from all over. "Back to Basics" is a very common NA meeting name.</p>
+                        </div>
+                        <?php
+                        $start = microtime(TRUE);
+                        try_custom_query_3('billybob', '', 'CoreysGoryStory');
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                    echo('</div>');
+                echo('</div>');
+                echo('<div id="test-035" class="inner_closed">');
+                    echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-035\')">TEST 35: Look for meetings in a 100KM radius of the center of Houston, with no login.</a></h2>');
+
+                    echo('<div class="main_div inner_container">');
+                        ?>
+                        <div class="main_div" style="margin-right:2em">
+                        <p class="explain">This test looks for records that report themselves to be within a 100KM circle from the center of Houston.</p>
+                        <p class="explain">We expect this test to succeed.</p>
+                        </div>
+                        <?php
+                        $start = microtime(TRUE);
+                        try_custom_query_4();
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                    echo('</div>');
+                echo('</div>');
+                echo('<div id="test-036" class="inner_closed">');
+                    echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-036\')">TEST 36: Look for meetings in a 100KM radius of the center of Houston, logged in as BillyBob.</a></h2>');
+
+                    echo('<div class="main_div inner_container">');
+                        ?>
+                        <div class="main_div" style="margin-right:2em">
+                        <p class="explain">This test looks for records that report themselves to be within a 100KM circle from the center of Houston.</p>
+                        <p class="explain">We expect this test to succeed.</p>
+                        </div>
+                        <?php
+                        $start = microtime(TRUE);
+                        try_custom_query_4('billybob', '', 'CoreysGoryStory');
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                    echo('</div>');
+                echo('</div>');
+            echo('</div>');
+        echo('</div>');
     ?>
 </div>
 <?php
+    function try_custom_query_1($in_login = NULL, $in_hashed_password = NULL, $in_password = NULL) {
+        $access_instance = NULL;
+        
+        if ( !defined('LGV_ACCESS_CATCHER') ) {
+            define('LGV_ACCESS_CATCHER', 1);
+        }
+        
+        require_once(CO_Config::main_class_dir().'/co_access.class.php');
+        
+        $access_instance = new CO_Access($in_login, $in_hashed_password, $in_password);
+        
+        if ($access_instance->valid) {
+            echo("<h2>The access instance is valid!</h2>");
+            $st1 = microtime(TRUE);
+            $test_item = $access_instance->generic_search(Array('access_class' => 'CO_LL_Location'));
+            $fetchTime = sprintf('%01.3f', microtime(TRUE) - $st1);
+            echo('<div class="inner_div">');
+                if ( isset($test_item) ) {
+                    if (is_array($test_item)) {
+                        if (count($test_item)) {
+                            echo("<h4>We got ".count($test_item)." records in $fetchTime seconds.</h4>");
+                            $count = 0;
+                            foreach ( $test_item as $item ) {
+                                display_record($item);
+                            }
+                        }
+                    }
+                }
+            echo('</div>');
+        } else {
+            echo("<h2 style=\"color:red;font-weight:bold\">The access instance is not valid!</h2>");
+            echo('<p style="margin-left:1em;color:red;font-weight:bold">Error: ('.$access_instance->error->error_code.') '.$access_instance->error->error_name.' ('.$access_instance->error->error_description.')</p>');
+        }
+    }
+    
+    function try_custom_query_2($in_login = NULL, $in_hashed_password = NULL, $in_password = NULL) {
+        $access_instance = NULL;
+        
+        if ( !defined('LGV_ACCESS_CATCHER') ) {
+            define('LGV_ACCESS_CATCHER', 1);
+        }
+        
+        require_once(CO_Config::main_class_dir().'/co_access.class.php');
+        
+        $access_instance = new CO_Access($in_login, $in_hashed_password, $in_password);
+        
+        if ($access_instance->valid) {
+            echo("<h2>The access instance is valid!</h2>");
+            $st1 = microtime(TRUE);
+            $test_item = $access_instance->generic_search(Array('tags' => Array('', 'HI')));
+            $fetchTime = sprintf('%01.3f', microtime(TRUE) - $st1);
+            echo('<div class="inner_div">');
+                if ( isset($test_item) ) {
+                    if (is_array($test_item)) {
+                        if (count($test_item)) {
+                            echo("<h4>We got ".count($test_item)." records in $fetchTime seconds.</h4>");
+                            $count = 0;
+                            foreach ( $test_item as $item ) {
+                                display_record($item);
+                            }
+                        }
+                    }
+                }
+            echo('</div>');
+        } else {
+            echo("<h2 style=\"color:red;font-weight:bold\">The access instance is not valid!</h2>");
+            echo('<p style="margin-left:1em;color:red;font-weight:bold">Error: ('.$access_instance->error->error_code.') '.$access_instance->error->error_name.' ('.$access_instance->error->error_description.')</p>');
+        }
+    }
+    
+    function try_custom_query_3($in_login = NULL, $in_hashed_password = NULL, $in_password = NULL) {
+        $access_instance = NULL;
+        
+        if ( !defined('LGV_ACCESS_CATCHER') ) {
+            define('LGV_ACCESS_CATCHER', 1);
+        }
+        
+        require_once(CO_Config::main_class_dir().'/co_access.class.php');
+        
+        $access_instance = new CO_Access($in_login, $in_hashed_password, $in_password);
+        
+        if ($access_instance->valid) {
+            echo("<h2>The access instance is valid!</h2>");
+            $st1 = microtime(TRUE);
+            $test_item = $access_instance->generic_search(Array('name' => 'Back to Basics'));
+            $fetchTime = sprintf('%01.3f', microtime(TRUE) - $st1);
+            echo('<div class="inner_div">');
+                if ( isset($test_item) ) {
+                    if (is_array($test_item)) {
+                        if (count($test_item)) {
+                            echo("<h4>We got ".count($test_item)." records in $fetchTime seconds.</h4>");
+                            $count = 0;
+                            foreach ( $test_item as $item ) {
+                                display_record($item);
+                            }
+                        }
+                    }
+                }
+            echo('</div>');
+        } else {
+            echo("<h2 style=\"color:red;font-weight:bold\">The access instance is not valid!</h2>");
+            echo('<p style="margin-left:1em;color:red;font-weight:bold">Error: ('.$access_instance->error->error_code.') '.$access_instance->error->error_name.' ('.$access_instance->error->error_description.')</p>');
+        }
+    }
+    
+    function try_custom_query_4($in_login = NULL, $in_hashed_password = NULL, $in_password = NULL) {
+        $access_instance = NULL;
+        
+        if ( !defined('LGV_ACCESS_CATCHER') ) {
+            define('LGV_ACCESS_CATCHER', 1);
+        }
+        
+        require_once(CO_Config::main_class_dir().'/co_access.class.php');
+        
+        $access_instance = new CO_Access($in_login, $in_hashed_password, $in_password);
+        
+        if ($access_instance->valid) {
+            echo("<h2>The access instance is valid!</h2>");
+            $st1 = microtime(TRUE);
+            $test_item = $access_instance->generic_search(Array('location' => Array('longitude' => -95.3698, 'latitude' => 29.7604, 'radius' => 100.0)));
+            $fetchTime = sprintf('%01.3f', microtime(TRUE) - $st1);
+            echo('<div class="inner_div">');
+                if ( isset($test_item) ) {
+                    if (is_array($test_item)) {
+                        if (count($test_item)) {
+                            echo("<h4>We got ".count($test_item)." records in $fetchTime seconds.</h4>");
+                            $count = 0;
+                            foreach ( $test_item as $item ) {
+                                display_record($item);
+                            }
+                        }
+                    }
+                }
+            echo('</div>');
+        } else {
+            echo("<h2 style=\"color:red;font-weight:bold\">The access instance is not valid!</h2>");
+            echo('<p style="margin-left:1em;color:red;font-weight:bold">Error: ('.$access_instance->error->error_code.') '.$access_instance->error->error_name.' ('.$access_instance->error->error_description.')</p>');
+        }
+    }
+    
     function just_randomize_writes($in_login = NULL, $in_hashed_password = NULL, $in_password = NULL) {
         $access_instance = NULL;
         

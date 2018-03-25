@@ -69,10 +69,6 @@ Each record has one code for reading, and one code for writing. If the code is n
 user can't see the data, or modify it. This is enforced at the SQL level. The system will not even read in records that don't match
 the security key.
 
-You can also encrypt data payloads. The built-in encryption is OpenSSL, but you can subclass to create more stringent encryption.
-
-Each login can have a private key stored to decrypt and encrypt the payloads.
-
 You set up Badger with a config file, which implements a static class with some basic parameters for use in the system. For security,
 it's a good idea to locate the config file outside the HTTP tree.
 
@@ -92,6 +88,7 @@ class CO_Access {
     /***********************************************************************************************************************/
     /***********************/
     /**
+    The constructor.
      */
 	public function __construct(    $in_login_id = NULL,        ///< The login ID
                                     $in_hashed_password = NULL, ///< The password, crypt-hashed
@@ -421,7 +418,43 @@ class CO_Access {
     public function delete_data_record( $id
                                         ) {
         if (isset($this->_data_db_object) && $this->_data_db_object) {
-            $this->_data_db_object->delete_record($id);
+            return $this->_data_db_object->delete_record($id);
         }
+        
+        return FALSE;
     }
+    
+    /***********************/
+    /**
+     */
+    public function generic_search( $in_search_parameters = NULL,   /**< This is an associative array of terms to define the search. The keys should be:
+                                                                        - 'id'
+                                                                            This should be accompanied by an array of one or more integers, representing specific item IDs.
+                                                                        - 'access_class'
+                                                                            This should be accompanied by an array, containing one or more PHP class names.
+                                                                        - 'name'
+                                                                            This will contain a case-insensitive array of strings to check against the object_name column.
+                                                                        - 'owner'
+                                                                            This should be accompanied by an array of one or more integers, representing specific item IDs for "owner" objects.
+                                                                        - 'tags'
+                                                                            This should be accompanied by an array (up to 10 elements) of one or more case-insensitive strings, representing specific tag values.
+                                                                        - 'location'
+                                                                            This requires that the parameter be a 3-element associative array of floating-point numbers:
+                                                                                - 'longtude'
+                                                                                    This is the search center location longitude, in degrees.
+                                                                                - 'latitude'
+                                                                                    This is the search center location latitude, in degrees.
+                                                                                - 'radius'
+                                                                                    This is the search radius, in Kilometers.
+                                                                    */
+                                    $or_search = FALSE,             ///< If TRUE, then the search is very wide (OR), as opposed to narrow (AND), by default. If you specify a location, then that will always be AND, but the other fields can be OR.
+                                    $and_writeable = FALSE          ///< If TRUE, then we only want records we can modify.
+                                    ) {
+        $ret = NULL;
+        if (isset($this->_data_db_object) && $this->_data_db_object) {
+            return $this->_data_db_object->generic_search($in_search_parameters, $or_search, $and_writeable);
+        }
+        
+        return $ret;
+    } 
 };

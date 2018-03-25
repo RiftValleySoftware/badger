@@ -92,6 +92,11 @@
                 echo("<p>Last access: ".date('g:i:s A, F j, Y', $in_record_object->last_access)."</p>");
             }
             
+            if (isset($in_record_object->distance)) {
+                $distance = sprintf('%01.3f', $in_record_object->distance);
+                echo("<p>Distance: $distance"."Km</p>");
+            }
+            
             for ($tagid = 0; $tagid < 10; $tagid++ ) {
                 $tag = NULL;
                 if (isset($in_record_object->tags[$tagid])) {

@@ -130,8 +130,8 @@
                 echo('</div>');
             echo('</div>');
         echo('</div>');
-        echo('<div id="encryption-tests" class="closed">');
-            echo('<h1 class="header"><a href="javascript:toggle_main_state(\'encryption-tests\')">PAYLOAD TEST</a></h1>');
+        echo('<div id="payload-tests" class="closed">');
+            echo('<h1 class="header"><a href="javascript:toggle_main_state(\'payload-tests\')">PAYLOAD TEST</a></h1>');
             echo('<div class="container">');
                 echo('<div id="test-020" class="inner_closed">');
                     echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-020\')">TEST 20: Save and retrieve a text payload.</a></h2>');
@@ -144,21 +144,22 @@
                         </div>
                         <?php
                         $start = microtime(TRUE);
-                        try_payload('tertiary', 'CodYOzPtwxb4A', '');
+                        try_text_payload('tertiary', 'CodYOzPtwxb4A', '');
                         echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
                 echo('<div id="test-021" class="inner_closed">');
-                    echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-021\')">TEST 21: Fail to access a payload.</a></h2>');
+                    echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-021\')">TEST 21: Save and retrieve an image payload.</a></h2>');
 
                     echo('<div class="main_div inner_container">');
                         ?>
                         <div class="main_div" style="margin-right:2em">
-                        <p class="explain"></p>
+                        <p class="explain">This test will read in an image from a file, save it as a payload, then retrieve the data from the record.</p>
+                        <p class="explain">We expect this to succeed.</p>
                         </div>
                         <?php
                         $start = microtime(TRUE);
-                        try_not_payload('tertiary', 'CodYOzPtwxb4A', '');
+                        try_image_payload('tertiary', 'CodYOzPtwxb4A', '');
                         echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
@@ -167,7 +168,7 @@
     ?>
 </div>
 <?php
-    function try_payload($in_login = NULL, $in_hashed_password = NULL, $in_password = NULL, $in_record_id = 10) {
+    function try_text_payload($in_login = NULL, $in_hashed_password = NULL, $in_password = NULL, $in_record_id = 10) {
         $access_instance = NULL;
         
         if ( !defined('LGV_ACCESS_CATCHER') ) {
@@ -181,6 +182,8 @@
         if ($access_instance->valid) {
             echo("<h2>The access instance is valid!</h2>");
             $honest_abe_said = file_get_contents('config/gettysburg.txt');
+            echo("<h4>BEFORE:</h4>");
+            echo("<p>$honest_abe_said</p>");
             $data_record = $access_instance->get_single_data_record_by_id($in_record_id, TRUE);
             if ($data_record) {
                 $data_record->set_payload($honest_abe_said);
@@ -190,6 +193,7 @@
                     
                     if ($retrieved_payload == $honest_abe_said) {
                         echo("<h2>The test passes!</h2>");
+                        echo("<h5>AFTER:</h5>");
                         echo("<p>$retrieved_payload</p>");
                     } else {
                         echo("<h2 style=\"color:red;font-weight:bold\">The payloads don't match!</h2>");
@@ -209,7 +213,7 @@
         }
     }
     
-    function try_not_payload($in_login = NULL, $in_hashed_password = NULL, $in_password = NULL, $in_record_id = 10) {
+    function try_image_payload($in_login = NULL, $in_hashed_password = NULL, $in_password = NULL, $in_record_id = 10) {
         $access_instance = NULL;
         
         if ( !defined('LGV_ACCESS_CATCHER') ) {
@@ -222,6 +226,30 @@
         
         if ($access_instance->valid) {
             echo("<h2>The access instance is valid!</h2>");
+            $file = fopen('config/honey_badger_dont_care.gif','r');
+            $icon_data = fread($file, 4096);
+            fclose($file);
+            $icon_base64_data = base64_encode ($icon_data);
+            echo('<h4>BEFORE:</h4>');
+            echo('<img src="data:image/gif;base64,'.$icon_base64_data.'" alt="Honey Badger Don\'t Care" />');
+            $data_record = $access_instance->get_single_data_record_by_id($in_record_id, TRUE);
+            if ($data_record) {
+                $data_record->set_payload($icon_data);
+                $data_record2 = $access_instance->get_single_data_record_by_id($in_record_id, TRUE);
+                if ($data_record2) {
+                    $retrieved_payload = $data_record2->get_payload();
+                    
+                    if ($retrieved_payload == $icon_data) {
+                        echo("<h2>The test passes!</h2>");
+                        $icon_base64_data = base64_encode ($retrieved_payload);
+                        echo('<h4>AFTER:</h4>');
+                        echo('<img src="data:image/gif;base64,'.$icon_base64_data.'" alt="Honey Badger Don\'t Care" />');
+                    } else {
+                        echo("<h2 style=\"color:red;font-weight:bold\">The payloads don't match!</h2>");
+                        echo('<p style="margin-left:1em;color:red;font-weight:bold">Error: ('.$access_instance->error->error_code.') '.$access_instance->error->error_name.' ('.$access_instance->error->error_description.')</p>');
+                    }
+                }
+            }
         } else {
             echo("<h2 style=\"color:red;font-weight:bold\">The access instance is not valid!</h2>");
             echo('<p style="margin-left:1em;color:red;font-weight:bold">Error: ('.$access_instance->error->error_code.') '.$access_instance->error->error_name.' ('.$access_instance->error->error_description.')</p>');
