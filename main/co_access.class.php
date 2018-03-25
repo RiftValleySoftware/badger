@@ -178,6 +178,11 @@ class CO_Access {
     
     /***********************/
     /**
+    This fetches the list of security tokens the currently logged-in user has available.
+    This will reload any non-God Mode IDs before fetching the IDs, in order to spike privilege escalation.
+    If they have God Mode, then you're pretty much screwed, anyway.
+    
+    \returns an array of integers, with each one representing a security token. The first element will always be the ID of the user.
      */
     public function get_security_ids() {
         $ret = Array();
@@ -201,6 +206,7 @@ class CO_Access {
     
     /***********************/
     /**
+    \returns TRUE, if the main "data" database is ready for use.
      */
     public function main_db_available() {
         return NULL != $this->_data_db_object;
@@ -208,6 +214,7 @@ class CO_Access {
     
     /***********************/
     /**
+    \returns the instance for the logged-in user.
      */
     public function get_login_item() {
         return $this->get_single_security_record_by_id($this->_login_id);
@@ -215,35 +222,21 @@ class CO_Access {
 
     /***********************/
     /**
+    \returns TRUE, if the current logged-in user is "God."
      */
     public function god_mode() {
         return intval($this->_login_id) == intval(CO_Config::$god_mode_id);
     }
-        
-    /***********************/
-    /**
-     */
-    public function get_multiple_data_records_by_id(    $in_id_array
-                                                    ) {
-        $ret = NULL;
-        
-        if (isset($this->_data_db_object) && $this->_data_db_object) {
-            $ret = $this->_data_db_object->get_multiple_records_by_id($in_id_array);
-        
-            if ($this->_data_db_object->error) {
-                $this->error = $this->_data_db_object->error;
-                
-                return NULL;
-            }
-        }
-        
-        return $ret;
-    }
     
     /***********************/
     /**
+    This method instantiates a new, default instance of a class.
+    
+    The instance does not reflect a database entity until it has had its update_db() method called.
+    
+    \returns a new, uninitialized instance of the requested class.
      */
-    public function make_new_blank_record(  $in_classname
+    public function make_new_blank_record(  $in_classname   ///< This is the name of the class to instantiate.
                                         ) {
         $ret = NULL;
         
@@ -271,11 +264,39 @@ class CO_Access {
         }
         return $ret;
     }
+        
+    /***********************/
+    /**
+    This method queries the "data" databse for multiple records, given a list of IDs.
+    
+    The records will not be returned if the user does not have read permission for them.
+    
+    \returns an array of instances, fetched an initialized from the database.
+     */
+    public function get_multiple_data_records_by_id(    $in_id_array    ///< An array of integers, with the item IDs.
+                                                    ) {
+        $ret = NULL;
+        
+        if (isset($this->_data_db_object) && $this->_data_db_object) {
+            $ret = $this->_data_db_object->get_multiple_records_by_id($in_id_array);
+        
+            if ($this->_data_db_object->error) {
+                $this->error = $this->_data_db_object->error;
+                
+                return NULL;
+            }
+        }
+        
+        return $ret;
+    }
 
     /***********************/
     /**
+    This is a "security-safe" method for fetching a single record from the "data" database, by its ID.
+    
+    \returns a single new instance, initialized from the database.
      */
-    public function get_single_data_record_by_id(   $in_id
+    public function get_single_data_record_by_id(   $in_id  ///< The ID of the record to fetch.
                                                 ) {
         $ret = NULL;
         
@@ -289,6 +310,9 @@ class CO_Access {
 
     /***********************/
     /**
+    This returns every readable (by this user) item from the "data" database.
+    
+    \returns an array of instances.
      */
     public function get_all_data_readable_records(  $open_only = FALSE  ///< If TRUE, then we will look for ONLY records with a NULL or 0 read_security_id
                                                 ) {
@@ -303,6 +327,9 @@ class CO_Access {
 
     /***********************/
     /**
+    This returns every writeable (by this user) item from the "data" database.
+    
+    \returns an array of instances.
      */
     public function get_all_data_writeable_records() {
         $ret = NULL;
@@ -322,6 +349,7 @@ class CO_Access {
     
     /***********************/
     /**
+    \returns TRUE if the security database is available and ready for use.
      */
     public function security_db_available() {
         return NULL != $this->_security_db_object;
@@ -329,6 +357,11 @@ class CO_Access {
 
     /***********************/
     /**
+    This method queries the "security" databse for multiple records, given a list of IDs.
+    
+    The records will not be returned if the user does not have read permission for them.
+    
+    \returns an array of instances, fetched an initialized from the database.
      */
     public function get_multiple_security_records_by_id(    $in_id_array
                                                         ) {
@@ -349,6 +382,9 @@ class CO_Access {
 
     /***********************/
     /**
+    This is a "security-safe" method for fetching a single record from the "security" database, by its ID.
+    
+    \returns a single new instance, initialized from the database.
      */
     public function get_single_security_record_by_id(   $in_id
                                                     ) {
@@ -364,6 +400,9 @@ class CO_Access {
 
     /***********************/
     /**
+    This returns every readable (by this user) item from the "security" database.
+    
+    \returns an array of instances.
      */
     public function get_all_security_readable_records() {
         $ret = NULL;
@@ -383,6 +422,9 @@ class CO_Access {
 
     /***********************/
     /**
+    This returns every writeable (by this user) item from the "security" database.
+    
+    \returns an array of instances.
      */
     public function get_all_security_writeable_records() {
         $ret = NULL;
@@ -402,8 +444,15 @@ class CO_Access {
     
     /***********************/
     /**
+    This writes a data record to the "data" database, based on an associative array of elements.
+    
+    This is security-safe.
+    
+    This should generally not be called by user contexts.
+    
+    \returns TRUE, or the ID of a new record.
      */
-    public function write_data_record(  $params_associative_array
+    public function write_data_record(  $params_associative_array   ///< This is an associative array that has the values, keyed by the database column IDs.
                                     ) {
         if (isset($this->_data_db_object) && $this->_data_db_object) {
             return $this->_data_db_object->write_record($params_associative_array);
@@ -414,8 +463,11 @@ class CO_Access {
     
     /***********************/
     /**
+    This is a "security-safe" method for deleting a record by its ID.
+    
+    \returns TRUE, if the deletion succeeded.
      */
-    public function delete_data_record( $id
+    public function delete_data_record( $id ///< The integer ID of the record to be deleted.
                                         ) {
         if (isset($this->_data_db_object) && $this->_data_db_object) {
             return $this->_data_db_object->delete_record($id);
@@ -426,6 +478,11 @@ class CO_Access {
     
     /***********************/
     /**
+    This is a "generic" data database search. It can be called from external user contexts, and allows a fairly generalized search of the "data" database.
+    
+    It is "security-safe."
+    
+    \returns an array of instances that match the search parameters.
      */
     public function generic_search( $in_search_parameters = NULL,   /**< This is an associative array of terms to define the search. The keys should be:
                                                                         - 'id'

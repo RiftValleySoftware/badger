@@ -318,6 +318,9 @@ class CO_Main_Data_DB extends A_CO_DB {
     
     /***********************/
     /**
+    This builds up an SQL query, based on the input from the user.
+    
+    \returns an array of instances that match the search parameters.
      */
     protected function _build_sql_query(    $in_search_parameters = NULL,   /**< This is an associative array of terms to define the search. The keys should be:
                                                                                 - 'id'
@@ -402,6 +405,9 @@ class CO_Main_Data_DB extends A_CO_DB {
     
     /***********************/
     /**
+    This is a "generic" data database search. It can be called from external user contexts, and allows a fairly generalized search of the "data" database.
+    
+    \returns an array of instances that match the search parameters.
      */
     public function generic_search( $in_search_parameters = NULL,   /**< This is an associative array of terms to define the search. The keys should be:
                                                                         - 'id'
