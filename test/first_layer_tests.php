@@ -130,9 +130,104 @@
                 echo('</div>');
             echo('</div>');
         echo('</div>');
+        echo('<div id="encryption-tests" class="closed">');
+            echo('<h1 class="header"><a href="javascript:toggle_main_state(\'encryption-tests\')">PAYLOAD TEST</a></h1>');
+            echo('<div class="container">');
+                echo('<div id="test-020" class="inner_closed">');
+                    echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-020\')">TEST 20: Save and retrieve a text payload.</a></h2>');
+
+                    echo('<div class="main_div inner_container">');
+                        ?>
+                        <div class="main_div" style="margin-right:2em">
+                        <p class="explain">This test will read in a file, save it as a payload, then retrieve the file from the record.</p>
+                        <p class="explain">We expect this to succeed.</p>
+                        </div>
+                        <?php
+                        $start = microtime(TRUE);
+                        try_payload('tertiary', 'CodYOzPtwxb4A', '');
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                    echo('</div>');
+                echo('</div>');
+                echo('<div id="test-021" class="inner_closed">');
+                    echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-021\')">TEST 21: Fail to access a payload.</a></h2>');
+
+                    echo('<div class="main_div inner_container">');
+                        ?>
+                        <div class="main_div" style="margin-right:2em">
+                        <p class="explain"></p>
+                        </div>
+                        <?php
+                        $start = microtime(TRUE);
+                        try_not_payload('tertiary', 'CodYOzPtwxb4A', '');
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                    echo('</div>');
+                echo('</div>');
+            echo('</div>');
+        echo('</div>');
     ?>
 </div>
 <?php
+    function try_payload($in_login = NULL, $in_hashed_password = NULL, $in_password = NULL, $in_record_id = 10) {
+        $access_instance = NULL;
+        
+        if ( !defined('LGV_ACCESS_CATCHER') ) {
+            define('LGV_ACCESS_CATCHER', 1);
+        }
+        
+        require_once(CO_Config::main_class_dir().'/co_access.class.php');
+        
+        $access_instance = new CO_Access($in_login, $in_hashed_password, $in_password);
+        
+        if ($access_instance->valid) {
+            echo("<h2>The access instance is valid!</h2>");
+            $honest_abe_said = file_get_contents('config/gettysburg.txt');
+            $data_record = $access_instance->get_single_data_record_by_id($in_record_id, TRUE);
+            if ($data_record) {
+                $data_record->set_payload($honest_abe_said);
+                $data_record2 = $access_instance->get_single_data_record_by_id($in_record_id, TRUE);
+                if ($data_record2) {
+                    $retrieved_payload = $data_record2->get_payload();
+                    
+                    if ($retrieved_payload == $honest_abe_said) {
+                        echo("<h2>The test passes!</h2>");
+                        echo("<p>$retrieved_payload</p>");
+                    } else {
+                        echo("<h2 style=\"color:red;font-weight:bold\">The payloads don't match!</h2>");
+                        echo('<p style="margin-left:1em;color:red;font-weight:bold">Error: ('.$access_instance->error->error_code.') '.$access_instance->error->error_name.' ('.$access_instance->error->error_description.')</p>');
+                    }
+                } else {
+                    echo("<h2 style=\"color:red;font-weight:bold\">Failed to get the record (again)!</h2>");
+                    echo('<p style="margin-left:1em;color:red;font-weight:bold">Error: ('.$access_instance->error->error_code.') '.$access_instance->error->error_name.' ('.$access_instance->error->error_description.')</p>');
+                }
+            } else {
+                echo("<h2 style=\"color:red;font-weight:bold\">Failed to get the record!</h2>");
+                echo('<p style="margin-left:1em;color:red;font-weight:bold">Error: ('.$access_instance->error->error_code.') '.$access_instance->error->error_name.' ('.$access_instance->error->error_description.')</p>');
+            }
+        } else {
+            echo("<h2 style=\"color:red;font-weight:bold\">The access instance is not valid!</h2>");
+            echo('<p style="margin-left:1em;color:red;font-weight:bold">Error: ('.$access_instance->error->error_code.') '.$access_instance->error->error_name.' ('.$access_instance->error->error_description.')</p>');
+        }
+    }
+    
+    function try_not_payload($in_login = NULL, $in_hashed_password = NULL, $in_password = NULL, $in_record_id = 10) {
+        $access_instance = NULL;
+        
+        if ( !defined('LGV_ACCESS_CATCHER') ) {
+            define('LGV_ACCESS_CATCHER', 1);
+        }
+        
+        require_once(CO_Config::main_class_dir().'/co_access.class.php');
+        
+        $access_instance = new CO_Access($in_login, $in_hashed_password, $in_password);
+        
+        if ($access_instance->valid) {
+            echo("<h2>The access instance is valid!</h2>");
+        } else {
+            echo("<h2 style=\"color:red;font-weight:bold\">The access instance is not valid!</h2>");
+            echo('<p style="margin-left:1em;color:red;font-weight:bold">Error: ('.$access_instance->error->error_code.') '.$access_instance->error->error_name.' ('.$access_instance->error->error_description.')</p>');
+        }
+    }
+    
     function try_delete_old_data_record($in_login = NULL, $in_hashed_password = NULL, $in_password = NULL, $in_record_id = 2) {
         $access_instance = NULL;
         
@@ -181,7 +276,7 @@
             echo("<h2>The access instance is valid!</h2>");
             $test_item = $access_instance->make_new_blank_record('CO_LL_Location');
             if ($test_item) {
-                if (10 == $test_item->id()) {
+                if (11 == $test_item->id()) {
                     echo("<h4>BEFORE:</h4>");
                     echo('<div class="main_div">');
                         display_record($test_item);

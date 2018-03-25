@@ -116,109 +116,11 @@ class CO_Main_DB_Record extends A_CO_DB_Table_Base {
             }
         }
         
-        $ret['payload'] = $this->_get_storage_payload();
+        $ret['payload'] = $this->_raw_payload;
         
         return $ret;
     }
-    
-    /***********************/
-    /**
-    This gets the payload for storage, encrypting it, if necessary.
-    
-    This is meant for saving the payload into the database.
-    
-    \returns the payload, in whatever form it takes.
-     */
-    protected function _get_storage_payload(    $in_key = NULL  ///< This is an optional private key. If provided, the returned payload will be encrypted.
-                                            ) {
-        $ret = $this->_get_encrypted_payload();
-        
-        if (!$ret) {
-            $ret = $this->_raw_payload;
-        }
-        
-        return $ret;
-    }
-    
-    /***********************/
-    /**
-    This is called to decrypt the payload with the provided private key.
-    
-    \returns the decrypted payload (NULL if failed).
-     */
-    protected function _decrypt_payload_with_private_key(   $in_private_key ///< The private key to use for decryption.
-                                                    ) {
-        $ret = NULL;
-        
-        if (!openssl_private_decrypt($this->_raw_payload, $ret, $in_private_key)) {
-            $ret = NULL;
-        }
-        
-        return $ret;
-    }
-    
-    /***********************/
-    /**
-    This is called to decrypt the payload from the database.
-    
-    \returns the decrypted payload.
-     */
-    protected function _get_decrypted_payload(  $in_key ///< This is the private key to be used for decrypting. It should be the same one stored for the login.
-                                            ) {
-        $ret = NULL;
 
-        $login_item = $this->_db_object->access_object->get_login_item();
-
-        if (isset($in_key) && $in_key && isset($login_item) && $login_item) {
-            $private_key = $login_item->get_private_key();
-        
-            if (isset($private_key) && ($private_key == $in_key)) {
-                $ret = $this->_decrypt_payload_with_private_key($private_key);
-            }
-        }
-        
-        return $ret;
-    }
-    
-    /***********************/
-    /**
-    This is called to encrypt the payload (for storage in the DB). It uses a provided private key.
-    
-    \returns the encrypted payload.
-     */
-    protected function _encrypt_payload_with_private_key(   $in_private_key ///< The key to use for encryption.
-                                                    ) {
-        $ret = NULL;
-        
-        if (!openssl_private_encrypt($this->_raw_payload, $ret, $in_private_key)) {
-            $ret = NULL;
-        }
-        
-        return $ret;
-    }
-    
-    /***********************/
-    /**
-    This is called to encrypt the payload (for storage in the DB). It uses the stored private key.
-    
-    \returns the encrypted payload.
-     */
-    protected function _get_encrypted_payload() {
-        $ret = NULL;
-
-        $login_item = $this->_db_object->access_object->get_login_item();
-
-        if (isset($login_item) && $login_item) {
-            $private_key = $login_item->get_private_key();
-        
-            if ($private_key) {
-                $ret = $this->_encrypt_payload_with_private_key($private_key);
-            }
-        }
-        
-        return $ret;
-    }
-    
     /***********************************************************************************************************************/
     /***********************/
     /**
@@ -297,50 +199,24 @@ class CO_Main_DB_Record extends A_CO_DB_Table_Base {
     
     /***********************/
     /**
-    Returns the payload, decrypted, if requested.
+    Returns the payload.
     
     \returns the payload, in whatever form it takes.
      */
-    public function get_payload(    $in_key = NULL  ///< This is an optional private key. If provided, the returned payload will be decrypted.
-                                ) {
-        $ret = NULL;
-        
-        if ($in_key) {
-            $ret = $this->_get_decrypted_payload($in_key);
-        } else {
-            $ret = $this->_raw_payload;
-        }
-        
-        return $ret;
+    public function get_payload() {
+        return $this->_raw_payload;
     }
     
     /***********************/
     /**
-    Sets the payload, encrypting with the login key, if requested.
+    Sets the payload.
     
     \returns TRUE, if successful.
      */
-    public function set_payload(    $in_payload,        ///< The raw, unencrypted payload to be stored.
-                                    $encrypted = FALSE  ///< TRUE if we want the payload encrypted.
+    public function set_payload(    $in_payload ///< The raw payload to be stored.
                                 ) {
-        $ret = FALSE;
+        $this->_raw_payload = $in_payload;
         
-        if ($encrypted && $in_payload) {
-            $private_key = $login_item->get_private_key();
-            
-            if ($private_key) {
-                $encrypted_payload = NULL;
-            
-                if (openssl_private_encrypt($in_payload, $encrypted_payload, $in_private_key)) {
-                    $this->_raw_payload = $encrypted_payload;
-                    $ret = $this->update_db();
-                }
-            }
-        } else {
-            $this->_raw_payload = $in_payload;
-            $ret = $this->update_db();
-        }
-        
-        return $ret;
+        return $this->update_db();
     }
 };
