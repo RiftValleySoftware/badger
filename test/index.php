@@ -293,7 +293,7 @@
                     <div id="first_layer_tests" class="test-wrapper">
                         <h2>BIG-ASS STRESS TESTS</h2>
                         <?php
-//                         include('stress_tests.php');
+                        include('stress_tests.php');
                         $end_time = microtime(TRUE);
                         $seconds = $end_time - $start_time;
                         $minutes = intval($seconds / 60.0);
