@@ -43,7 +43,13 @@ The security database has two kinds of rows: logins and security token IDs. Each
 THERE IS NO GOD BUT GOD
 -----------------------
 
-Only one of the logins can be a "God" login; a login that has full permissions to everything. There are no "security levels." All security is done through tokens. The "God" ID is set as an integer ID in the config file, and the password is also stored in the config file.
+Only one of the logins can be a "God" login; a login that has full permissions to everything. There are no "security levels." All security is done through tokens. The "God" ID is set as an integer ID in the config file, and the password is also stored (as cleartext) in the config file.
+
+CONFIG FILE
+-----------
+
+The config file can (and should) be kept out of the HTTP path, making it harder for outside entities to access.
+The config file consists of a static class, with "hardcoded" constants. The class exists mainly as a namespace.
 
 KEEPING IT SIMPLE
 -----------------
@@ -69,3 +75,15 @@ PAYLOAD
 -------
 
 The "data" database schema also specifies a 4096-character "BLOB" column, called "payload". This is used to store larger data with a data item. It is not indexed, and can store binary data.
+
+EXTENDING AND SPECIALIZING BADGER
+---------------------------------
+
+Badger is a baseline system. It provides a generic interface to a simple database, and is not designed to be used "as is." It should be extended via subclasses of the row classes and the access class.
+
+In order to extend the row classes, you should create a directory at the same level as the badger main directory, and call it "badger_extension_classes". Put your classes that extend the class in "db/a_co_db_table_base.class.php" there (actually, you should be extending subclasses of this base class).
+
+The files containing classes should be named after the class, all lower case, with '.class.php' appended.
+
+It's probably not a bad idea to add any access class extension there, as well.
+

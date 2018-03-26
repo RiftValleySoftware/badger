@@ -165,7 +165,13 @@ abstract class A_CO_DB {
         if ($classname) {
             if (!class_exists($classname)) {
                 $filename = CO_Config::db_classes_class_dir().'/'.strtolower($classname).'.class.php';
-                require_once($filename);
+                if (!file_exists($filename)) {
+                    $filename = CO_Config::db_classes_extension_class_dir().'/'.strtolower($classname).'.class.php';
+                }
+                
+                if (file_exists($filename)) {
+                    require_once($filename);
+                }
             }
             
             if (class_exists($classname)) {

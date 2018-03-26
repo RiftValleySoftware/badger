@@ -41,6 +41,13 @@ class CO_Config {
     /***********************/
     /**
      */
+    static function db_classes_extension_class_dir() {
+        return self::base_dir().'../badger_extension_classes';
+    }
+    
+    /***********************/
+    /**
+     */
     static function main_class_dir() {
         return self::base_dir().'/main';
     }
