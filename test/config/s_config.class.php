@@ -17,61 +17,9 @@ defined( 'LGV_CONFIG_CATCHER' ) or die ( 'Cannot Execute Directly' );	// Makes s
 /**
  */
 class CO_Config {
-    /***********************/
-    /**
-     */
-    static function base_dir() {
-        return dirname(dirname(dirname(__FILE__)));
-    }
-    
-    /***********************/
-    /**
-     */
-    static function db_class_dir() {
-        return self::base_dir().'/db';
-    }
-    
-    /***********************/
-    /**
-     */
-    static function db_classes_class_dir() {
-        return self::base_dir().'/db_classes';
-    }
-    
-    /***********************/
-    /**
-     */
-    static function db_classes_extension_class_dir() {
-        return self::base_dir().'../badger_extension_classes';
-    }
-    
-    /***********************/
-    /**
-     */
-    static function main_class_dir() {
-        return self::base_dir().'/main';
-    }
-    
-    /***********************/
-    /**
-     */
-    static function shared_class_dir() {
-        return self::base_dir().'/shared';
-    }
-    
-    /***********************/
-    /**
-     */
-    static function lang_class_dir() {
-        return self::base_dir().'/lang';
-    }
-    
-    /***********************/
-    /**
-     */
-    static function test_class_dir() {
-        return self::base_dir().'/test';
-    }
+    /***********************************************************************************************************************/
+    /*                                                     CHANGE THIS                                                     */
+    /***********************************************************************************************************************/
     
     static $lang = 'en';
     
@@ -89,4 +37,71 @@ class CO_Config {
     static $sec_db_type = 'mysql';
     static $sec_db_login = 'littlegr_badg';
     static $sec_db_password = 'pnpbxI1aU0L(';
+    
+    /***********************/
+    /**
+    \returns the POSIX path to the main badger directory.
+     */
+    static function base_dir() {
+        return dirname(dirname(dirname(__FILE__)));
+    }
+    
+    /***********************************************************************************************************************/
+    /*                                                  DON'T CHANGE THIS                                                  */
+    /***********************************************************************************************************************/
+    /***********************/
+    /**
+    \returns the POSIX path to the main database base classes.
+     */
+    static function db_class_dir() {
+        return self::base_dir().'/db';
+    }
+    
+    /***********************/
+    /**
+    \returns the POSIX path to the extended database row classes.
+     */
+    static function db_classes_class_dir() {
+        return self::base_dir().'/db_classes';
+    }
+    
+    /***********************/
+    /**
+    \returns the POSIX path to the user-defined extended database row classes.
+     */
+    static function db_classes_extension_class_dir() {
+        return self::base_dir().'../badger_extension_classes';
+    }
+    
+    /***********************/
+    /**
+    \returns the POSIX path to the main access class directory.
+     */
+    static function main_class_dir() {
+        return self::base_dir().'/main';
+    }
+    
+    /***********************/
+    /**
+    \returns the POSIX path to the main access class directory.
+     */
+    static function shared_class_dir() {
+        return self::base_dir().'/shared';
+    }
+    
+    /***********************/
+    /**
+    \returns the POSIX path to the localization directory.
+     */
+    static function lang_class_dir() {
+        return self::base_dir().'/lang';
+    }
+    
+    /***********************/
+    /**
+    \returns the POSIX path to the testing directory.
+     */
+    static function test_class_dir() {
+        return self::base_dir().'/test';
+    }
 }
