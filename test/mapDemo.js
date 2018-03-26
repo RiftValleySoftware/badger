@@ -30,7 +30,6 @@ loadTestMap = function() {
     
             google.maps.event.addListener(this.m_main_map, 'click', this.mapClicked);
             google.maps.event.addListener(this.m_main_map, 'zoom_changed', this.mapZoomChanged);
-            google.maps.event.addListener(this.m_main_map, 'center_changed', this.mapZoomChanged);
             google.maps.event.addListenerOnce(this.m_main_map, 'tilesloaded', this.mapLoaded);
         };
     };
