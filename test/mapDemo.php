@@ -87,6 +87,16 @@
         echo('<h1 style="color:red">UNABLE TO OPEN DATABASE!</h1>');
     }
     
+    if (isset($_GET['resolve_query']) && $_GET['resolve_query']) {
+        $access_instance = new CO_Access();
+
+        if ($access_instance->valid) {
+            list($long, $lat, $radius) = array_map(function($in){ return floatval($in); }, explode(',', trim($_GET['resolve_query'])));
+            $test_item = $access_instance->generic_search(Array('location' => Array('longitude' => $long, 'latitude' => $lat, 'radius' => $radius)));
+            $test = array_map(function($item){return '{"name":'.json_encode($item->name).',"longitude":'.floatval($item->longitude).',"latitude":'.floatval($item->latitude).',"distance":'.floatval($item->distance).'}';}, $test_item);
+            echo('['.implode(',',$test).']');
+        }
+    } else {
 ?><!DOCTYPE html>
 <html lang="en">
     <head>
@@ -121,3 +131,6 @@
         </div>
     </body>
 </html>
+<?php
+}
+?>
