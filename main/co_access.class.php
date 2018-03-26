@@ -13,6 +13,8 @@
 */
 defined( 'LGV_ACCESS_CATCHER' ) or die ( 'Cannot Execute Directly' );	// Makes sure that this file is in the correct context.
 
+define('__BADGER_VERSION__', '1.0.0.1000');
+
 if ( !defined('LGV_MD_CATCHER') ) {
     define('LGV_MD_CATCHER', 1);
 }
@@ -85,6 +87,8 @@ class CO_Access {
     public $error;                  ///< If there was an error, it will be held here.
     public $class_description;      ///< This is a brief textual description of the class.
     
+    public $version;                ///< This will contain the Badger Version.
+    
     /***********************************************************************************************************************/
     /***********************/
     /**
@@ -103,6 +107,7 @@ class CO_Access {
 	    $this->_security_db_object = NULL;
 	    $this->error = NULL;
 	    $this->valid = FALSE;
+	    $this->version = __BADGER_VERSION__;
 	    
 	    if ( !defined('LGV_ERROR_CATCHER') ) {
             define('LGV_ERROR_CATCHER', 1);

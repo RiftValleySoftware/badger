@@ -248,6 +248,11 @@
         <div style="text-align:center;padding:1em;">
             <?php
                 if (!isset($_GET['run_tests'])) {
+                    if ( !defined('LGV_ACCESS_CATCHER') ) {
+                        define('LGV_ACCESS_CATCHER', 1);
+                    }
+        
+                    require_once(CO_Config::main_class_dir().'/co_access.class.php');
             ?>
                 <img src="../icon.png" style="display:block;margin:auto;width:80px" alt="Honey badger Don&rsquo;t Care" />
                 <h1 class="header">MAIN ENVIRONMENT SETUP</h1>
@@ -257,6 +262,7 @@
                             echo("<div style=\"margin:auto;text-align:center;display:table\">");
                             echo("<h2>File/Folder Locations</h2>");
                             echo("<pre style=\"margin:auto;text-align:left;display:table\">");
+                            echo("<strong>Badger Version</strong>.......".__BADGER_VERSION__."\n");
                             echo("<strong>Base dir</strong>.............".CO_Config::base_dir()."\n");
                             echo("<strong>Main class dir</strong>.......".CO_Config::main_class_dir()."\n");
                             echo("<strong>Database class dir</strong>...".CO_Config::db_class_dir()."\n");
