@@ -38,7 +38,7 @@ Access to read and write data entities is determined by "security tokens." Secur
 Logins in the security database are assigned a series of integer tokens in a CSV list, in addition to their own ID. If the login item has the token for reading or writing assigned to a particular row, then that login has permission to read (and maybe write) that row.
 Badger is designed to mask rows that don't meet the login security token list at the database query level, so they never even make it into the system.
 Tokens are checked after reloading the logged in user, so it is not possible for a logged-in user to escalate their permissions.
-The security database has two kinds of rows: logins and security token IDs. Each login is also a security token ID, but has a hashed password and login ID associated.
+The security database has two kinds of rows: logins and security token IDs (Whose entire reason for existence is to hold a security token). Each login is also a security token ID, but has a hashed password and login ID associated.
 
 THERE IS NO GOD BUT GOD
 -----------------------
@@ -58,6 +58,7 @@ The database schema is incredibly simple. There are no relations at the database
 Each database has but one single row, and the data format (the columns) are the same for all rows of that database. Differentiation is done through the "access_class" column, which contains the name of a PHP class that can handle that row. There is also an "access_class_context" column, which contains serialized data, storing a persistent state for the class instance.
 Both the "data" database and the "security" database tables have the same basic root structure, and are handled by a common abstract base class.
 Hierarchy and organization are meant to be applied outside the database, using classes and instances. The database is really just supposed to be a "locked cabinet."
+The first row of each table (ID 1) is a "template" of values to be used when instantiating new table rows.
 
 LONGITUDE AND LATITUDE
 ----------------------
@@ -74,16 +75,13 @@ Each "data" database row has ten "tags." These are 255-character "VARCHAR" field
 PAYLOAD
 -------
 
-The "data" database schema also specifies a 4096-character "BLOB" column, called "payload". This is used to store larger data with a data item. It is not indexed, and can store binary data.
+The "data" database schema also specifies a 4096-character "BLOB" column, called "payload". This is used to store larger data with a data item. It is not indexed, and can store binary (and encrypted) data.
 
 EXTENDING AND SPECIALIZING BADGER
 ---------------------------------
 
 Badger is a baseline system. It provides a generic interface to a simple database, and is not designed to be used "as is." It should be extended via subclasses of the row classes and the access class.
-
-In order to extend the row classes, you should create a directory at the same level as the badger main directory, and call it "badger_extension_classes". Put your classes that extend the class in "db/a_co_db_table_base.class.php" there (actually, you should be extending subclasses of this base class).
-
+In order to extend the row classes, you should create a directory at the same level as the badger main directory, and call it "badger_extension_classes". Put your classes that extend the class in "db/a_co_db_table_base.class.php" there (actually, you should be extending subclasses of this base class). It does not need to be in the HTTP path.
 The files containing classes should be named after the class, all lower case, with '.class.php' appended.
-
-It's probably not a bad idea to add any access class extension there, as well.
+It's probably not a bad idea to add any access class extension there, as well; just to keep all the badger stuff together.
 
