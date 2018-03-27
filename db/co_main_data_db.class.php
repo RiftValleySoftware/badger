@@ -142,15 +142,27 @@ class CO_Main_Data_DB extends A_CO_DB {
         
         if (isset($in_value) && is_array($in_value) && count($in_value)) {
             for ($i = 0; $i < count($in_value); $i++) {
-                $value = strval($in_value[$i]);
+                $value = $in_value[$i];
                 
                 if ($value) {
-                    if ($ret['sql']) {
-                        $ret['sql'] .= ') OR ';
-                    }
+                    if (isset($in_value) && is_array($in_value) && count($in_value)) {
+                        for ($i2 = 0; $i2 < count($value); $i2++) {
+                            $val = strval($value[$i2]);
+                            if ($ret['sql']) {
+                                $ret['sql'] .= ') OR ';
+                            }
                     
-                    $ret['sql'] .= '(LOWER(`tag'.intval($i).'`)=LOWER(?)';
-                    array_push($ret['params'], $value);
+                            $ret['sql'] .= '(LOWER(`tag'.intval($i).'`)=LOWER(?)';
+                            array_push($ret['params'], $val);
+                        }
+                    } else {
+                        if ($ret['sql']) {
+                            $ret['sql'] .= ') OR ';
+                        }
+                    
+                        $ret['sql'] .= '(LOWER(`tag'.intval($i).'`)=LOWER(?)';
+                        array_push($ret['params'], strval($value));
+                    }
                 }
             }
             
@@ -173,7 +185,7 @@ class CO_Main_Data_DB extends A_CO_DB {
     /**
     This method will return an SQL statement and an empty set of parameters for an integer table column value.
     
-    \returns an SQL statement that acts as a WHERE clause for a integer. It does not return parameters, as integers are very secure, as long as you intval them.
+    \returns an SQL statement that acts as a WHERE clause for a integer.
      */
     protected function _parse_integer_parameter(    $in_db_key, ///< The table column name.
                                                     $in_value   ///< The value
@@ -181,15 +193,16 @@ class CO_Main_Data_DB extends A_CO_DB {
         $ret = Array('sql' => '', 'params' => Array());
         
         if (isset($in_value) && is_array($in_value) && count($in_value)) {
-            for ($i = 0; $i < count($in_value); $i++) {
-                $value = intval($in_value[$i]);
-                
+            $in_value = array_unique(array_map(function($in){return intval($in);}, $in_value));    // Make sure we don't have repeats.
+            
+            foreach ($in_value as $value) {                
                 if ($value) {
                     if ($ret['sql']) {
                         $ret['sql'] .= ') OR ';
                     }
                     
-                    $ret['sql'] .= '(`'.strval($in_db_key).'`='.$value;
+                    $ret['sql'] .= '(`'.strval($in_db_key).'`=?';
+                    array_push($ret['params'], $value);
                 }
             }
             
@@ -197,7 +210,8 @@ class CO_Main_Data_DB extends A_CO_DB {
                 $ret['sql'] .= ')';
             }
         } else {
-            $ret['sql'] = '`'.strval($in_db_key).'`='.intval($in_value);
+            $ret['sql'] = '`'.strval($in_db_key).'`=?';
+            array_push($ret['params'], $in_value);
         }
         
         if ($ret['sql']) {
@@ -219,15 +233,14 @@ class CO_Main_Data_DB extends A_CO_DB {
         $ret = Array('sql' => '', 'params' => Array());
         
         if (isset($in_value) && is_array($in_value) && count($in_value)) {
+            $in_value = array_unique(array_map(function($in){return trim(strtolower(strval($in)));}, $in_value));    // Make sure we don't have repeats.
             for ($i = 0; $i < count($in_value); $i++) {
-                $value = strval($in_value[$i]);
-                
                 if ($value) {
                     if ($ret['sql']) {
                         $ret['sql'] .= ') OR ';
                     }
                     
-                    $ret['sql'] .= '(LOWER(`'.strval($in_db_key).')`=LOWER(?)';
+                    $ret['sql'] .= '(LOWER(`'.strval($in_db_key).'`)=LOWER(?)';
                     array_push($ret['params'], $value);
                 }
             }
@@ -237,13 +250,12 @@ class CO_Main_Data_DB extends A_CO_DB {
             }
         } else {
             $ret['sql'] = '`'.strval($in_db_key).'`=?';
-            $ret['params'][0] = strval($in_value);
+            $ret['params'][0] = $in_value;
         }
         
         if ($ret['sql']) {
             $ret['sql'] = '('.$ret['sql'].')';
         }
-        
         return $ret;
     }
     
