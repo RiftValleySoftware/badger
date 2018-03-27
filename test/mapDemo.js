@@ -60,6 +60,7 @@ loadTestMap.prototype.mapLoaded = function() {
                             fillOpacity: 0.25,
                             map: this,
                             center: this.getCenter(),
+                            clickable: false,
                             draggable: false,
                             geodesic: true,
                             radius: mapHeightInMeters

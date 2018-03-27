@@ -282,7 +282,8 @@
                         </div>
                     </div>
                 </div>
-                <h3><a href="./?run_tests">RUN THE TESTS</a></h3>
+                <h3><a href="./?run_tests">RUN THE FUNCTIONAL TESTS</a></h3>
+                <h3 style="margin-top:1em"><a href="./mapDemo.php">RUN THE MAP DEMO TEST</a></h3>
             </div>
             <?php } else { ?>
                 <div id="throbber-container" style="text-align:center"><img src="images/throbber.gif" alt="throbber" style="position:absolute;width:190px;top:50%;left:50%;margin-top:-95px;margin-left:-95px" /></div>
