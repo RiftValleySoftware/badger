@@ -145,7 +145,7 @@ class CO_Main_Data_DB extends A_CO_DB {
                 $value = $in_value[$i];
                 
                 if ($value) {
-                    if (isset($in_value) && is_array($in_value) && count($in_value)) {
+                    if (isset($value) && is_array($value) && count($value)) {
                         for ($i2 = 0; $i2 < count($value); $i2++) {
                             $val = strval($value[$i2]);
                             if ($ret['sql']) {
@@ -170,7 +170,7 @@ class CO_Main_Data_DB extends A_CO_DB {
                 $ret['sql'] .= ')';
             }
         } else {
-            $ret['sql'] = '`tag0`=?';
+            $ret['sql'] = 'LOWER(`tag0`)=LOWER(?)';
             $ret['params'][0] = strval($in_value);
         }
         
@@ -249,7 +249,7 @@ class CO_Main_Data_DB extends A_CO_DB {
                 $ret['sql'] .= ')';
             }
         } else {
-            $ret['sql'] = '`'.strval($in_db_key).'`=?';
+            $ret['sql'] = 'LOWER(`'.strval($in_db_key).'`)=LOWER(?)';
             $ret['params'][0] = $in_value;
         }
         
@@ -396,7 +396,7 @@ class CO_Main_Data_DB extends A_CO_DB {
         }
         
         $ret['sql'] = $sql;
-        
+
         return $ret;
     }
     

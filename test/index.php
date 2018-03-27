@@ -286,14 +286,15 @@
                 <h3><a href="./?run_tests">RUN THE FUNCTIONAL TESTS</a></h3>
                 <h3 style="margin-top:1em"><a href="./mapDemo.php">RUN THE MAP DEMO TEST</a></h3>
             </div>
-            <?php } else { ?>
+            <?php } else {
+                $start_time = microtime(TRUE);
+            ?>
                 <div id="throbber-container" style="text-align:center"><img src="images/throbber.gif" alt="throbber" style="position:absolute;width:190px;top:50%;left:50%;margin-top:-95px;margin-left:-95px" /></div>
                 <div id="tests-wrapped-up" style="display:none">
                     <img src="../icon.png" style="display:block;margin:auto;width:80px" alt="Honey badger Don't Care" />
                     <div id="basic_tests" class="test-wrapper">
                         <h2>BASIC TESTS</h2>
                         <?php
-                        $start_time = microtime(TRUE);
                         include('basic_tests.php');
                         ?>
                     </div>
@@ -307,13 +308,21 @@
                         <h2>BIG-ASS STRESS TESTS</h2>
                         <?php
                         include('stress_tests.php');
+                        ?>
+                    </div>
+                    <div id="first_layer_tests" class="test-wrapper">
+                        <h2>ADVANCED TESTS</h2>
+                        <?php
+                        include('advanced_tests.php');
+                        ?>
+                    </div>
+                    <?php
                         $end_time = microtime(TRUE);
                         $seconds = $end_time - $start_time;
                         $minutes = intval($seconds / 60.0);
                         $seconds -= floatval($minutes * 60);
-                        ?>
-                    </div>
-                    <?php echo("<h3 style=\"margin-top:1em\">The entire test suite took ".(((0 < $minutes) ? "$minutes minute".((1 < $minutes) ? 's' : ''). ' and ' : '')).sprintf('%01.3f', $seconds)." seconds to run.</h3>"); ?>
+                        echo("<h3 style=\"margin-top:1em\">The entire test suite took ".(((0 < $minutes) ? "$minutes minute".((1 < $minutes) ? 's' : ''). ' and ' : '')).sprintf('%01.3f', $seconds)." seconds to run.</h3>");
+                    ?>
                     <h3 style="margin-top:1em"><a href="./">RETURN TO MAIN ENVIRONMENT SETUP</a></h3>
                 </div>
             <?php } ?>
