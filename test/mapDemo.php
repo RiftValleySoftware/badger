@@ -107,6 +107,7 @@
 <html lang="en">
     <head>
         <meta charset="utf-8" />
+        <link rel="shortcut icon" href="../icon.png" type="image/png" />
         <title>Badger Map Demo</title>
         <script type="text/javascript" src="https://maps.google.com/maps/api/js?key=AIzaSyC5meofXldluts0UPGp6Zg234-U989u1pY&libraries=geometry"></script>
         <script type="text/javascript" src="mapDemo.js"></script>
