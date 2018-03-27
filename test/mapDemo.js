@@ -22,8 +22,6 @@ loadTestMap = function() {
             this.m_main_map.context = this;
     
             google.maps.event.addListener(this.m_main_map, 'click', this.mapClicked);
-            google.maps.event.addListener(this.m_main_map, 'double_click', this.mapDoubleClicked);
-            google.maps.event.addListener(this.m_main_map, 'zoom_changed', this.mapZoomChanged);
             google.maps.event.addListenerOnce(this.m_main_map, 'tilesloaded', this.mapLoaded);
         };
     };
@@ -31,13 +29,38 @@ loadTestMap = function() {
 
 loadTestMap.prototype.m_main_map = null;
 
+/********************************************************************************************//**
+*   \brief                                                                                      *
+************************************************************************************************/
+loadTestMap.prototype.setUpMapControls = function() {
+    if ( this.m_main_map ) {
+        var centerControlDiv = document.createElement ( 'div' );
+        centerControlDiv.id = "centerControlDiv";
+        centerControlDiv.className = "centerControlDiv";
+
+        var reportText = document.createElement ( 'p' );
+        reportText.id = "reportText";
+        reportText.className = "reportText";
+        centerControlDiv.appendChild ( reportText );
+
+        var toggleButton = document.createElement ( 'input' );
+        toggleButton.type = 'button';
+        toggleButton.value = "Show Markers";
+        toggleButton.className = "showTableButton";
+        toggleButton.addEventListener ( 'click', this.showTable );
+        centerControlDiv.appendChild ( toggleButton );
+
+        this.m_main_map.controls[google.maps.ControlPosition.TOP_CENTER].push ( centerControlDiv );
+    };
+};
+
 loadTestMap.prototype.mapLoaded = function() {
     var myBounds = this.getBounds();
     
     if (myBounds) {
         var northCentral = new google.maps.LatLng(myBounds.getNorthEast().lat(), 0);
         var southCentral = new google.maps.LatLng(myBounds.getSouthWest().lat(), 0);
-        var mapHeightInMeters = google.maps.geometry.spherical.computeDistanceBetween(northCentral, southCentral);
+        var mapHeightInMeters = google.maps.geometry.spherical.computeDistanceBetween(northCentral, southCentral) / 10.0;
         
         var circleOptions = {
                             strokeColor: '#FF0000',
@@ -49,29 +72,37 @@ loadTestMap.prototype.mapLoaded = function() {
                             center: this.getCenter(),
                             draggable: true,
                             geodesic: true,
-                            radius: Math.max(1000, mapHeightInMeters / 20.0)
+                            radius: mapHeightInMeters
                             };
                             
         this.circle_overlay = new google.maps.Circle(circleOptions);
-        google.maps.event.addListener(this.circle_overlay, 'dragend', circleDragged);        
+        google.maps.event.addListener(this.circle_overlay, 'dragend', circleDragged);   
+             
+        this.context.setUpMapControls();
+        this.context.makeRequest(this.getCenter().lng(), this.getCenter().lat(), this.circle_overlay.radius);
+        
+        google.maps.event.addListener(this, 'bounds_changed', this.context.mapBoundsChanged);
+        google.maps.event.addListener(this, 'click', this.context.mapClicked);
+        this.context.makeRequest(this.circle_overlay.center.lng(), this.circle_overlay.center.lat(), this.circle_overlay.radius);
 
         function circleDragged(dragEvent) {
             var myMap = this.map;
             var position = this.center;
             myMap.panTo(position);
+            myMap.context.makeRequest(this.center.lng(), this.center.lat(), this.radius);
         };
     };
 };
 
-loadTestMap.prototype.mapZoomChanged = function(in_event) {
+loadTestMap.prototype.mapBoundsChanged = function(in_event) {
     var myBounds = this.getBounds();
     
     if (myBounds) {
         var northCentral = new google.maps.LatLng(myBounds.getNorthEast().lat(), 0);
         var southCentral = new google.maps.LatLng(myBounds.getSouthWest().lat(), 0);
-        var mapHeightInMeters = google.maps.geometry.spherical.computeDistanceBetween(northCentral, southCentral);
-        this.circle_overlay.setOptions({radius: mapHeightInMeters / 10.0});
-        this.panTo(this.circle_overlay.position);
+        var mapHeightInMeters = google.maps.geometry.spherical.computeDistanceBetween(northCentral, southCentral) / 10.0;
+        this.circle_overlay.setOptions({radius: mapHeightInMeters});
+        this.context.makeRequest(this.circle_overlay.center.lng(), this.circle_overlay.center.lat(), this.circle_overlay.radius);
     };
 };
 
@@ -79,15 +110,31 @@ loadTestMap.prototype.mapClicked = function(clickEvent) {
     var position = new google.maps.LatLng(clickEvent.latLng.lat(), clickEvent.latLng.lng());
     this.circle_overlay.setOptions({center: position});
     this.panTo(position);
-    var uri = 'mapDemo.php?resolve_query=' + clickEvent.latLng.lng().toString() + ',' + clickEvent.latLng.lat().toString() + ',' + (this.circle_overlay.radius / 1000.0);
-    this.context.ajaxRequest(uri, this.context.requestCallback, 'GET', this.context);
+    this.context.makeRequest(clickEvent.latLng.lng(), clickEvent.latLng.lat(), this.circle_overlay.radius);
+};
+
+loadTestMap.prototype.makeRequest = function(in_long, in_lat, in_radius_in_m) {
+    var uri = 'mapDemo.php?resolve_query=' + in_long.toString() + ',' + in_lat.toString() + ',' + (in_radius_in_m / 1000.0);
+    var reportTextItem = document.getElementById('reportText');
+    if (reportTextItem) {
+        reportTextItem.innerHTML = '';
+    }
+    this.ajaxRequest(uri, this.requestCallback, 'GET', this);
 };
 
 loadTestMap.prototype.requestCallback = function (  in_response_object, ///< The HTTPRequest response object.
                                                     in_context
                                                 ) {
-    if ( in_response_object.responseText ) {
+    if (in_response_object.responseText) {
         eval("var new_object = " + in_response_object.responseText + ";");
+        var reportTextItem = document.getElementById('reportText');
+        var innerHTML = new_object.length.toString() + ' Meeting';
+        
+        if (1 != new_object.length) {
+            innerHTML += 's';
+        };
+        
+        reportTextItem.innerHTML = innerHTML;
     };
 };
 

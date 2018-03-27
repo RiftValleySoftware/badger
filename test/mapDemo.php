@@ -96,6 +96,7 @@
             $test = array_map(function($item){return '{"name":'.json_encode($item->name).',"longitude":'.floatval($item->longitude).',"latitude":'.floatval($item->latitude).',"distance":'.floatval($item->distance).'}';}, $test_item);
             echo('['.implode(',',$test).']');
         }
+        exit();
     } else {
 ?><!DOCTYPE html>
 <html lang="en">
@@ -112,7 +113,11 @@
             }
             body {
                 font-family: Arial, San-serif;
-                }
+            }
+            div.centerControlDiv {
+                background-color: white;
+                padding: 0.25em;
+            }
         </style>
     </head>
     <body>
