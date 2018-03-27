@@ -233,8 +233,8 @@ class CO_Main_Data_DB extends A_CO_DB {
         $ret = Array('sql' => '', 'params' => Array());
         
         if (isset($in_value) && is_array($in_value) && count($in_value)) {
-            $in_value = array_unique(array_map(function($in){return trim(strtolower(strval($in)));}, $in_value));    // Make sure we don't have repeats.
-            for ($i = 0; $i < count($in_value); $i++) {
+            $in_value = array_unique(array_map(function($in){return strtolower(trim(strval($in)));}, $in_value));    // Make sure we don't have repeats.
+            foreach ($in_value as $value) {                
                 if ($value) {
                     if ($ret['sql']) {
                         $ret['sql'] .= ') OR ';
