@@ -16,11 +16,11 @@
         set_time_limit ( 120 );
         prepare_databases('advanced_test');
         echo('<div id="advanced-item-access-tests" class="closed">');
-            echo('<h1 class="header"><a href="javascript:toggle_main_state(\'advanced-item-access-tests\')">COMPLEX GENERIC SEARCH TESTS</a></h1>');
+            echo('<h1 class="header"><a href="javascript:toggle_main_state(\'advanced-item-access-tests\')">MORE GENERIC SEARCH TESTS</a></h1>');
             echo('<div class="container">');
                 ?>
                 <div class="main_div" style="margin-right:2em">
-                    <p class="explain"></p>
+                    <p class="explain">These tests apply different combinations of parameters to the access class generic search test.</p>
                 </div>
                 <?php
                 echo('<div id="test-041" class="inner_closed">');
