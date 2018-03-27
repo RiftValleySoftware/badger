@@ -124,8 +124,7 @@ class CO_Main_Data_DB extends A_CO_DB {
                          BETWEEN p.longpoint - (p.radius / (p.distance_unit * COS(RADIANS(p.latpoint))))
                              AND p.longpoint + (p.radius / (p.distance_unit * COS(RADIANS(p.latpoint))))
                         ) AS d
-                        WHERE ($predicate) AND (distance <= radius)
-                        ORDER BY distance";
+                        WHERE (($predicate) AND (distance <= radius)";
         
         return $ret;
     }
@@ -147,21 +146,27 @@ class CO_Main_Data_DB extends A_CO_DB {
                 if ($value) {
                     if (isset($value) && is_array($value) && count($value)) {
                         for ($i2 = 0; $i2 < count($value); $i2++) {
-                            $val = strval($value[$i2]);
+                            $val = trim(strval($value[$i2]));
+                            if ($val) {
+                                if ($ret['sql']) {
+                                    $ret['sql'] .= ') OR ';
+                                }
+                    
+                                $ret['sql'] .= '(LOWER(`tag'.intval($i).'`)=LOWER(?)';
+                                array_push($ret['params'], $val);
+                            }
+                        }
+                    } else {
+                        $value = trim(strval($value));
+                        
+                        if ($value) {
                             if ($ret['sql']) {
                                 $ret['sql'] .= ') OR ';
                             }
                     
                             $ret['sql'] .= '(LOWER(`tag'.intval($i).'`)=LOWER(?)';
-                            array_push($ret['params'], $val);
+                            array_push($ret['params'], strval($value));
                         }
-                    } else {
-                        if ($ret['sql']) {
-                            $ret['sql'] .= ') OR ';
-                        }
-                    
-                        $ret['sql'] .= '(LOWER(`tag'.intval($i).'`)=LOWER(?)';
-                        array_push($ret['params'], strval($value));
                     }
                 }
             }
@@ -359,12 +364,15 @@ class CO_Main_Data_DB extends A_CO_DB {
                                         ) {
         $ret = Array('sql' => '', 'params' => Array());
         
+        $closure = '';
+        
         // If we are doing a location/radius search, the predicate is a lot more complicated.
         if (isset($in_search_parameters['location']) && isset($in_search_parameters['location']['longitude']) && isset($in_search_parameters['location']['latitude']) && isset($in_search_parameters['location']['radius'])) {
             // We expand the radius by 5%, because we'll be triaging the results with the more accurate Vincenty calculation afterwards.
             $predicate_temp = $this->_location_predicate($in_search_parameters['location']['longitude'], $in_search_parameters['location']['latitude'], floatval($in_search_parameters['location']['radius']) * 1.05, $and_writeable);
             $sql = $predicate_temp['sql'];
             $ret['params'] = $predicate_temp['params'];
+            $closure = ') ORDER BY distance';
         } else {
             $predicate = $this->_create_security_predicate($and_writeable);
         
@@ -394,8 +402,7 @@ class CO_Main_Data_DB extends A_CO_DB {
                 $ret['params'] = array_merge($ret['params'], $temp_params);
             }
         }
-        
-        $ret['sql'] = $sql;
+        $ret['sql'] = $sql.$closure;
 
         return $ret;
     }
