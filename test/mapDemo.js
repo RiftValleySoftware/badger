@@ -23,6 +23,7 @@ loadTestMap.prototype.loadMap = function() {
                         'mapTypeControlOptions': { 'style': google.maps.MapTypeControlStyle.DROPDOWN_MENU },
                         'zoomControl': true,
                         'mapTypeControl': true,
+                        'clickableIcons': false,
                         'draggableCursor': "crosshair",
                         'scaleControl' : true
                         };
