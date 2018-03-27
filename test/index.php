@@ -262,14 +262,15 @@
                             echo("<div style=\"margin:auto;text-align:center;display:table\">");
                             echo("<h2>File/Folder Locations</h2>");
                             echo("<pre style=\"margin:auto;text-align:left;display:table\">");
-                            echo("<strong>Badger Version</strong>.......".__BADGER_VERSION__."\n");
-                            echo("<strong>Base dir</strong>.............".CO_Config::base_dir()."\n");
-                            echo("<strong>Main class dir</strong>.......".CO_Config::main_class_dir()."\n");
-                            echo("<strong>Database class dir</strong>...".CO_Config::db_class_dir()."\n");
-                            echo("<strong>Database classes dir</strong>.".CO_Config::db_classes_class_dir()."\n");
-                            echo("<strong>Shared class dir</strong>.....".CO_Config::shared_class_dir()."\n");
-                            echo("<strong>Localization dir</strong>.....".CO_Config::lang_class_dir()."\n");
-                            echo("<strong>Test class dir</strong>.......".CO_Config::test_class_dir()."\n");
+                            echo("<strong>Badger Version</strong>........".__BADGER_VERSION__."\n");
+                            echo("<strong>Base dir</strong>..............".CO_Config::base_dir()."\n");
+                            echo("<strong>Main class dir</strong>........".CO_Config::main_class_dir()."\n");
+                            echo("<strong>Database class dir</strong>....".CO_Config::db_class_dir()."\n");
+                            echo("<strong>Database classes dir</strong>..".CO_Config::db_classes_class_dir()."\n");
+                            echo("<strong>Shared class dir</strong>......".CO_Config::shared_class_dir()."\n");
+                            echo("<strong>Localization dir</strong>......".CO_Config::lang_class_dir()."\n");
+                            echo("<strong>Test class dir</strong>........".CO_Config::test_class_dir()."\n");
+                            echo("<strong>Extension classes dir</strong>.".CO_Config::db_classes_extension_class_dir()."\n");
                             echo("</pre></div>");
                         ?>
                         <div class="main_div">
@@ -277,7 +278,7 @@
                             <p class="explain">In order to run these tests, you should set up two (2) blank databases. They can both be the same DB, but that is not the advised configuration for Badger.</p>
                             <p class="explain">The first (main) database should be called "<?php echo(CO_Config::$data_db_name) ?>", and the second (security) database should be called "<?php echo(CO_Config::$sec_db_name) ?>".</p>
                             <p class="explain">The main database should be have a full rights login named "<?php echo(CO_Config::$data_db_login) ?>", with a password of "<?php echo(CO_Config::$data_db_password) ?>".</p>
-                            <p class="explain">The security database should be have a full rights login named "<?php echo(CO_Config::$sec_db_login) ?>", with a password of "<?php echo(CO_Config::$sec_db_password) ?>".</p>
+                            <p class="explain">The security database should have a full rights login named "<?php echo(CO_Config::$sec_db_login) ?>", with a password of "<?php echo(CO_Config::$sec_db_password) ?>".</p>
                             <p class="explain" style="font-weight:bold;color:red;font-style:italic">This test will wipe out the tables, and set up pre-initialized tables, so it goes without saying that these should be databases (and users) reserved for testing only.</p>
                         </div>
                     </div>

@@ -70,7 +70,7 @@ class CO_Config {
     \returns the POSIX path to the user-defined extended database row classes.
      */
     static function db_classes_extension_class_dir() {
-        return self::base_dir().'../badger_extension_classes';
+        return dirname(self::base_dir()).'/badger_extension_classes';
     }
     
     /***********************/
