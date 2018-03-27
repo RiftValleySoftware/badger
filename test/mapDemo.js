@@ -1,4 +1,14 @@
 loadTestMap = function() {
+    this.loadDatabase();
+};
+
+loadTestMap.prototype.m_icon_image_single = null;
+loadTestMap.prototype.m_icon_image_multi = null;
+loadTestMap.prototype.m_icon_shadow = null;
+loadTestMap.prototype.m_main_map = null;
+loadTestMap.prototype.m_meeting_array = null;
+
+loadTestMap.prototype.loadMap = function() {
 	this.m_icon_image_single = new google.maps.MarkerImage ( "images/MarkerB.png", new google.maps.Size(22, 32), new google.maps.Point(0,0), new google.maps.Point(12, 32) );
 	this.m_icon_image_multi = new google.maps.MarkerImage ( "images/MarkerR.png", new google.maps.Size(22, 32), new google.maps.Point(0,0), new google.maps.Point(12, 32) );
 	this.m_icon_shadow = new google.maps.MarkerImage( "images/MarkerS.png", new google.maps.Size(43, 32), new google.maps.Point(0,0), new google.maps.Point(12, 32) );
@@ -33,12 +43,6 @@ loadTestMap = function() {
         };
     };
 };
-
-loadTestMap.prototype.m_icon_image_single = null;
-loadTestMap.prototype.m_icon_image_multi = null;
-loadTestMap.prototype.m_icon_shadow = null;
-loadTestMap.prototype.m_main_map = null;
-loadTestMap.prototype.m_meeting_array = null;
 
 loadTestMap.prototype.mapLoaded = function() {
     var myBounds = this.getBounds();
@@ -295,10 +299,27 @@ loadTestMap.prototype.displayMeetingMarkerInResults = function(   in_mtg_obj_arr
 loadTestMap.prototype.makeRequest = function(in_long, in_lat, in_radius_in_m) {
     var uri = 'mapDemo.php?resolve_query=' + in_long.toString() + ',' + in_lat.toString() + ',' + (in_radius_in_m / 1000.0);
     this.removeMeetingMarkers();
-    this.ajaxRequest(uri, this.requestCallback, 'GET', this);
+    this.ajaxRequest(uri, this.meetingCallback, 'GET', this);
 };
 
-loadTestMap.prototype.requestCallback = function (  in_response_object, ///< The HTTPRequest response object.
+loadTestMap.prototype.loadDatabase = function() {
+    var uri = 'mapDemo.php?loadDB';
+    this.removeMeetingMarkers();
+    this.ajaxRequest(uri, this.loadDBCallback, 'GET', this);
+};
+
+loadTestMap.prototype.loadDBCallback = function (   in_response_object, ///< The HTTPRequest response object.
+                                                    in_context
+                                                ) {
+    var throbberContainer = document.getElementById('throbber-container');
+    var mapContainer = document.getElementById('map-container');
+    
+    throbberContainer.style.display = 'none';
+    mapContainer.style.display = 'block';
+    in_context.loadMap();
+};
+
+loadTestMap.prototype.meetingCallback = function (  in_response_object, ///< The HTTPRequest response object.
                                                     in_context
                                                 ) {
     if (in_response_object.responseText) {

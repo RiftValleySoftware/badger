@@ -99,6 +99,9 @@
         }
         echo(']');
         exit();
+    } elseif (isset($_GET['loadDB'])) {
+        prepare_databases('stress_test');    
+        exit();
     } else {
 ?><!DOCTYPE html>
 <html lang="en">
@@ -123,10 +126,10 @@
         </style>
     </head>
     <body>
-        <div id="map-container" style="text-align:center;width:100%;height:100%">
+        <div id="throbber-container" style="text-align:center;width:100%;height:100%"><img src="images/throbber.gif" alt="throbber" style="position:absolute;width:190px;top:50%;left:50%;margin-top:-95px;margin-left:-95px" /></div>
+        <div id="map-container" style="text-align:center;width:100%;height:100%;display:none">
             <div id="map_div" class="map_div"></div>
             <?php
-            prepare_databases('stress_test');    
             $access_instance = NULL;
     
             $access_instance = new CO_Access();
