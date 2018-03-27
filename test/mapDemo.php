@@ -87,15 +87,17 @@
         echo('<h1 style="color:red">UNABLE TO OPEN DATABASE!</h1>');
     }
     
-    if (isset($_GET['resolve_query']) && $_GET['resolve_query']) {
+    if (isset($_GET['resolve_query'])) {
         $access_instance = new CO_Access();
 
+        echo('[');
         if ($access_instance->valid) {
             list($long, $lat, $radius) = array_map(function($in){ return floatval($in); }, explode(',', trim($_GET['resolve_query'])));
             $test_item = $access_instance->generic_search(Array('location' => Array('longitude' => $long, 'latitude' => $lat, 'radius' => $radius)));
-            $test = array_map(function($item){return '{"name":'.json_encode($item->name).',"longitude":'.floatval($item->longitude).',"latitude":'.floatval($item->latitude).',"distance":'.floatval($item->distance).'}';}, $test_item);
-            echo('['.implode(',',$test).']');
+            $test = array_map(function($item){return '{"id":'.intval($item->id()).',"name":'.json_encode($item->name).',"longitude":'.floatval($item->longitude).',"latitude":'.floatval($item->latitude).',"distance":'.floatval($item->distance).',"weekday":'.intval($item->tags[7]).'}';}, $test_item);
+            echo(implode(',',$test));
         }
+        echo(']');
         exit();
     } else {
 ?><!DOCTYPE html>
