@@ -105,7 +105,7 @@
                         ?>
                         <div class="main_div" style="margin-right:2em">
                         <p class="explain">In this test, we have the same location and radius, but we are also looking for meetings with the name of "Boys 2 Men", located anywhere in the found data set, and with a Tag0 value of "Summerlin" or "Loma Linda" or "Trona".</p>
-                        <p class="explain">We expect this to return 0 records, as the meeting "Boys 2 Men" is in Pharump, NV.</p>
+                        <p class="explain">We expect this to return 0 records, as the meeting "Boys 2 Men" is in Pahrump, NV, which is not in the search set.</p>
                         </div>
                         <?php
                         $start = microtime(TRUE);
@@ -134,7 +134,8 @@
                     echo('<div class="main_div inner_container">');
                         ?>
                         <div class="main_div" style="margin-right:2em">
-                        <p class="explain">This test will look for records with specific owners as part of the distance set.</p>
+                        <p class="explain">This test will look for records with one specific owner (ID 9) as part of the distance set.</p>
+                        <p class="explain">This time, we will get 6 records.</p>
                         </div>
                         <?php
                         $start = microtime(TRUE);
@@ -148,7 +149,8 @@
                     echo('<div class="main_div inner_container">');
                         ?>
                         <div class="main_div" style="margin-right:2em">
-                        <p class="explain">This test will look for records with multiple specific owners as part of the distance set.</p>
+                        <p class="explain">This test will look for records with multiple specific owners (ID 9 and ID 242) as part of the distance set.</p>
+                        <p class="explain">This time, we will get 22 records.</p>
                         </div>
                         <?php
                         $start = microtime(TRUE);
