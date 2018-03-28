@@ -1,3 +1,7 @@
+**1.0.0.2000** *(March 28, 2018)*
+
+- I'm calling this in as beta.
+
 **1.0.0.1002** *(March 28, 2018)*
 
 - Added more tests for the generic search.
