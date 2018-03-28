@@ -2,6 +2,7 @@
 
 - Added more tests for the generic search.
 - Fixed a bug in the general data class, where the "owner_id" field was not being set.
+- Now make sure the map test properly cancels in-progress AJAX calls.
 
 **1.0.0.1001** *(March 27, 2018)*
 

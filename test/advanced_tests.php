@@ -158,6 +158,66 @@
                         echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
+                echo('<div id="test-050" class="inner_closed">');
+                    echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-050\')">TEST 50: Mixed Bag 6</a></h2>');
+
+                    echo('<div class="main_div inner_container">');
+                        ?>
+                        <div class="main_div" style="margin-right:2em">
+                        <p class="explain">This test will look for records with multiple specific owners (ID 9 and ID 242), and the meeting name "Trona 12 Traditions" as part of the distance set.</p>
+                        <p class="explain">We will get 1 record.</p>
+                        </div>
+                        <?php
+                        $start = microtime(TRUE);
+                        advanced_test_10();
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                    echo('</div>');
+                echo('</div>');
+                echo('<div id="test-051" class="inner_closed">');
+                    echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-051\')">TEST 51: Mixed Bag 7</a></h2>');
+
+                    echo('<div class="main_div inner_container">');
+                        ?>
+                        <div class="main_div" style="margin-right:2em">
+                        <p class="explain">This will be same as test 50, but with an "OR" search.</p>
+                        <p class="explain">We will get 22 records this time.</p>
+                        </div>
+                        <?php
+                        $start = microtime(TRUE);
+                        advanced_test_11();
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                    echo('</div>');
+                echo('</div>');
+                echo('<div id="test-052" class="inner_closed">');
+                    echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-052\')">TEST 52: Mixed Bag 8</a></h2>');
+
+                    echo('<div class="main_div inner_container">');
+                        ?>
+                        <div class="main_div" style="margin-right:2em">
+                        <p class="explain">This will be same as test 50, but with no location specified.</p>
+                        <p class="explain">We will still get just one record.</p>
+                        </div>
+                        <?php
+                        $start = microtime(TRUE);
+                        advanced_test_12();
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                    echo('</div>');
+                echo('</div>');
+                echo('<div id="test-053" class="inner_closed">');
+                    echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-053\')">TEST 53: Mixed Bag 9</a></h2>');
+
+                    echo('<div class="main_div inner_container">');
+                        ?>
+                        <div class="main_div" style="margin-right:2em">
+                        <p class="explain">Now, we try it as an "OR" search.</p>
+                        <p class="explain">Now we get 82 records.</p>
+                        </div>
+                        <?php
+                        $start = microtime(TRUE);
+                        advanced_test_13();
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                    echo('</div>');
+                echo('</div>');
             echo('</div>');
         echo('</div>');
     ?>
@@ -451,7 +511,147 @@
         if ($access_instance->valid) {
             echo("<h2>The access instance is valid!</h2>");
             $st1 = microtime(TRUE);
-            $test_item = $access_instance->generic_search(Array('owner' => Array(9,242), 'location' => Array('longitude' => -115.2435726, 'latitude' => 36.1356661, 'radius' => 300.0)));
+            $test_item = $access_instance->generic_search(Array('owner' => Array(9, 242), 'location' => Array('longitude' => -115.2435726, 'latitude' => 36.1356661, 'radius' => 300.0)));
+            $fetchTime = sprintf('%01.3f', microtime(TRUE) - $st1);
+            echo('<div class="inner_div">');
+                if ( isset($test_item) ) {
+                    if (is_array($test_item)) {
+                        if (count($test_item)) {
+                            echo("<h4>We got ".count($test_item)." records in $fetchTime seconds.</h4>");
+                            $count = 0;
+                            foreach ( $test_item as $item ) {
+                                display_record($item);
+                            }
+                        }
+                    }
+                }
+            echo('</div>');
+        } else {
+            echo("<h2 style=\"color:red;font-weight:bold\">The access instance is not valid!</h2>");
+            echo('<p style="margin-left:1em;color:red;font-weight:bold">Error: ('.$access_instance->error->error_code.') '.$access_instance->error->error_name.' ('.$access_instance->error->error_description.')</p>');
+        }
+    }
+    
+    function advanced_test_10($in_login = NULL, $in_hashed_password = NULL, $in_password = NULL) {
+        $access_instance = NULL;
+        
+        if ( !defined('LGV_ACCESS_CATCHER') ) {
+            define('LGV_ACCESS_CATCHER', 1);
+        }
+        
+        require_once(CO_Config::main_class_dir().'/co_access.class.php');
+        
+        $access_instance = new CO_Access($in_login, $in_hashed_password, $in_password);
+        
+        if ($access_instance->valid) {
+            echo("<h2>The access instance is valid!</h2>");
+            $st1 = microtime(TRUE);
+            $test_item = $access_instance->generic_search(Array('owner' => Array(9, 242), 'name' => 'Trona 12 Traditions', 'location' => Array('longitude' => -115.2435726, 'latitude' => 36.1356661, 'radius' => 300.0)));
+            $fetchTime = sprintf('%01.3f', microtime(TRUE) - $st1);
+            echo('<div class="inner_div">');
+                if ( isset($test_item) ) {
+                    if (is_array($test_item)) {
+                        if (count($test_item)) {
+                            echo("<h4>We got ".count($test_item)." records in $fetchTime seconds.</h4>");
+                            $count = 0;
+                            foreach ( $test_item as $item ) {
+                                display_record($item);
+                            }
+                        }
+                    }
+                }
+            echo('</div>');
+        } else {
+            echo("<h2 style=\"color:red;font-weight:bold\">The access instance is not valid!</h2>");
+            echo('<p style="margin-left:1em;color:red;font-weight:bold">Error: ('.$access_instance->error->error_code.') '.$access_instance->error->error_name.' ('.$access_instance->error->error_description.')</p>');
+        }
+    }
+    
+    function advanced_test_11($in_login = NULL, $in_hashed_password = NULL, $in_password = NULL) {
+        $access_instance = NULL;
+        
+        if ( !defined('LGV_ACCESS_CATCHER') ) {
+            define('LGV_ACCESS_CATCHER', 1);
+        }
+        
+        require_once(CO_Config::main_class_dir().'/co_access.class.php');
+        
+        $access_instance = new CO_Access($in_login, $in_hashed_password, $in_password);
+        
+        if ($access_instance->valid) {
+            echo("<h2>The access instance is valid!</h2>");
+            $st1 = microtime(TRUE);
+            $test_item = $access_instance->generic_search(Array('owner' => Array(9, 242), 'name' => 'Trona 12 Traditions', 'location' => Array('longitude' => -115.2435726, 'latitude' => 36.1356661, 'radius' => 300.0)), TRUE);
+            $fetchTime = sprintf('%01.3f', microtime(TRUE) - $st1);
+            echo('<div class="inner_div">');
+                if ( isset($test_item) ) {
+                    if (is_array($test_item)) {
+                        if (count($test_item)) {
+                            echo("<h4>We got ".count($test_item)." records in $fetchTime seconds.</h4>");
+                            $count = 0;
+                            foreach ( $test_item as $item ) {
+                                display_record($item);
+                            }
+                        }
+                    }
+                }
+            echo('</div>');
+        } else {
+            echo("<h2 style=\"color:red;font-weight:bold\">The access instance is not valid!</h2>");
+            echo('<p style="margin-left:1em;color:red;font-weight:bold">Error: ('.$access_instance->error->error_code.') '.$access_instance->error->error_name.' ('.$access_instance->error->error_description.')</p>');
+        }
+    }
+    
+    function advanced_test_12($in_login = NULL, $in_hashed_password = NULL, $in_password = NULL) {
+        $access_instance = NULL;
+        
+        if ( !defined('LGV_ACCESS_CATCHER') ) {
+            define('LGV_ACCESS_CATCHER', 1);
+        }
+        
+        require_once(CO_Config::main_class_dir().'/co_access.class.php');
+        
+        $access_instance = new CO_Access($in_login, $in_hashed_password, $in_password);
+        
+        if ($access_instance->valid) {
+            echo("<h2>The access instance is valid!</h2>");
+            $st1 = microtime(TRUE);
+            $test_item = $access_instance->generic_search(Array('owner' => Array(9, 242), 'name' => 'Trona 12 Traditions'));
+            $fetchTime = sprintf('%01.3f', microtime(TRUE) - $st1);
+            echo('<div class="inner_div">');
+                if ( isset($test_item) ) {
+                    if (is_array($test_item)) {
+                        if (count($test_item)) {
+                            echo("<h4>We got ".count($test_item)." records in $fetchTime seconds.</h4>");
+                            $count = 0;
+                            foreach ( $test_item as $item ) {
+                                display_record($item);
+                            }
+                        }
+                    }
+                }
+            echo('</div>');
+        } else {
+            echo("<h2 style=\"color:red;font-weight:bold\">The access instance is not valid!</h2>");
+            echo('<p style="margin-left:1em;color:red;font-weight:bold">Error: ('.$access_instance->error->error_code.') '.$access_instance->error->error_name.' ('.$access_instance->error->error_description.')</p>');
+        }
+    }
+    
+    function advanced_test_13($in_login = NULL, $in_hashed_password = NULL, $in_password = NULL) {
+        $access_instance = NULL;
+        
+        if ( !defined('LGV_ACCESS_CATCHER') ) {
+            define('LGV_ACCESS_CATCHER', 1);
+        }
+        
+        require_once(CO_Config::main_class_dir().'/co_access.class.php');
+        
+        $access_instance = new CO_Access($in_login, $in_hashed_password, $in_password);
+        
+        if ($access_instance->valid) {
+            echo("<h2>The access instance is valid!</h2>");
+            $st1 = microtime(TRUE);
+            $test_item = $access_instance->generic_search(Array('owner' => Array(9, 242), 'name' => 'Trona 12 Traditions'), TRUE);
             $fetchTime = sprintf('%01.3f', microtime(TRUE) - $st1);
             echo('<div class="inner_div">');
                 if ( isset($test_item) ) {
