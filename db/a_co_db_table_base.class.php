@@ -122,11 +122,11 @@ abstract class A_CO_DB_Table_Base {
         $ret = Array();
         
         $ret['id'] = $this->id();
-        $ret['access_class'] = get_class($this);
-        $ret['last_access'] = date('Y-m-d H:i:s');
-        $ret['read_security_id'] = $this->read_security_id;
-        $ret['write_security_id'] = $this->write_security_id;
-        $ret['object_name'] = $this->name;
+        $ret['access_class'] = strval(get_class($this));
+        $ret['last_access'] = strval(date('Y-m-d H:i:s'));
+        $ret['read_security_id'] = intval($this->read_security_id);
+        $ret['write_security_id'] = intval($this->write_security_id);
+        $ret['object_name'] = strval($this->name);
         $ret['access_class_context'] = $this->context ? serialize($this->context) : NULL;   // If we have a context, then we serialize it for the DB.
         
         return $ret;
