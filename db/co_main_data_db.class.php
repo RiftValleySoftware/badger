@@ -372,7 +372,7 @@ class CO_Main_Data_DB extends A_CO_DB {
             $predicate_temp = $this->_location_predicate($in_search_parameters['location']['longitude'], $in_search_parameters['location']['latitude'], floatval($in_search_parameters['location']['radius']) * 1.05, $and_writeable);
             $sql = $predicate_temp['sql'];
             $ret['params'] = $predicate_temp['params'];
-            $closure = ') ORDER BY distance';
+            $closure = ') ORDER BY d.distance';
         } else {
             $predicate = $this->_create_security_predicate($and_writeable);
         

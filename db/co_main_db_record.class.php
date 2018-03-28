@@ -70,8 +70,8 @@ class CO_Main_DB_Record extends A_CO_DB_Table_Base {
                 $this->tags = array();
                 $this->_raw_payload = NULL;
         
-                if (isset($in_db_result['owner_id'])) {
-                    $this->owner_id = $in_db_result['owner_id'];
+                if (isset($in_db_result['owner'])) {
+                    $this->owner_id = $in_db_result['owner'];
                 }
 
                 if (isset($in_db_result['payload']) ) {

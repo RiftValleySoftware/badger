@@ -88,6 +88,10 @@
             echo("<p>Read: $in_record_object->read_security_id</p>");
             echo("<p>Write: $in_record_object->write_security_id</p>");
             
+            if (intval($in_record_object->owner_id)) {
+                echo("<p>Owner: ".intval($in_record_object->owner_id)."</p>");
+            }
+            
             if (isset($in_record_object->last_access)) {
                 echo("<p>Last access: ".date('g:i:s A, F j, Y', $in_record_object->last_access)."</p>");
             }
