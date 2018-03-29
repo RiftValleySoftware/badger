@@ -311,7 +311,7 @@
                     <div id="first_layer_tests" class="test-wrapper">
                         <h2>BIG-ASS STRESS TESTS</h2>
                         <?php
-//                         include('stress_tests.php');
+                        include('stress_tests.php');
                         ?>
                     </div>
                     <div id="first_layer_tests" class="test-wrapper">
