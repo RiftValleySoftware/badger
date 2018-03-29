@@ -218,6 +218,126 @@
                         echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
+                echo('<div id="test-054" class="inner_closed">');
+                    echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-054\')">TEST 54: Mixed Bag 10</a></h2>');
+
+                    echo('<div class="main_div inner_container">');
+                        ?>
+                        <div class="main_div" style="margin-right:2em">
+                        <p class="explain">Do a simple name search for "Just for Today".</p>
+                        <p class="explain">We expect to get 48 records.</p>
+                        </div>
+                        <?php
+                        $start = microtime(TRUE);
+                        advanced_test_14();
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                    echo('</div>');
+                echo('</div>');
+                echo('<div id="test-055" class="inner_closed">');
+                    echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-055\')">TEST 55: Mixed Bag 11</a></h2>');
+
+                    echo('<div class="main_div inner_container">');
+                        ?>
+                        <div class="main_div" style="margin-right:2em">
+                        <p class="explain">Do a simple name search for "Just for Today", but this time, we "use like".</p>
+                        <p class="explain">This time, we get 69 records, as a number of new meetings are added that start with "Just for Today".</p>
+                        </div>
+                        <?php
+                        $start = microtime(TRUE);
+                        advanced_test_15();
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                    echo('</div>');
+                echo('</div>');
+                echo('<div id="test-056" class="inner_closed">');
+                    echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-056\')">TEST 56: Mixed Bag 12</a></h2>');
+
+                    echo('<div class="main_div inner_container">');
+                        ?>
+                        <div class="main_div" style="margin-right:2em">
+                        <p class="explain">Do a tag1 search for "nev".</p>
+                        <p class="explain">We expect to get 0 records.</p>
+                        </div>
+                        <?php
+                        $start = microtime(TRUE);
+                        advanced_test_16();
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                    echo('</div>');
+                echo('</div>');
+                echo('<div id="test-057" class="inner_closed">');
+                    echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-057\')">TEST 57: Mixed Bag 13</a></h2>');
+
+                    echo('<div class="main_div inner_container">');
+                        ?>
+                        <div class="main_div" style="margin-right:2em">
+                        <p class="explain">Same thing, but this time, use "like".</p>
+                        <p class="explain">We expect to get 103 records.</p>
+                        </div>
+                        <?php
+                        $start = microtime(TRUE);
+                        advanced_test_17();
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                    echo('</div>');
+                echo('</div>');
+                echo('<div id="test-058" class="inner_closed">');
+                    echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-058\')">TEST 58: Mixed Bag 14</a></h2>');
+
+                    echo('<div class="main_div inner_container">');
+                        ?>
+                        <div class="main_div" style="margin-right:2em">
+                        <p class="explain">Same thing, but this time, use "like", but applied to the query in general, not just the specific tag.</p>
+                        <p class="explain">We expect to get 103 records.</p>
+                        </div>
+                        <?php
+                        $start = microtime(TRUE);
+                        advanced_test_18();
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                    echo('</div>');
+                echo('</div>');
+                echo('<div id="test-059" class="inner_closed">');
+                    echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-059\')">TEST 59: Mixed Bag 15</a></h2>');
+
+                    echo('<div class="main_div inner_container">');
+                        ?>
+                        <div class="main_div" style="margin-right:2em">
+                        <p class="explain">We use "like", but only applied to tag1. "name" has "topic meet%" in it, but no "like", which cannot do any good.</p>
+                        <p class="explain">We expect to get no records.</p>
+                        </div>
+                        <?php
+                        $start = microtime(TRUE);
+                        advanced_test_19();
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                    echo('</div>');
+                echo('</div>');
+                echo('<div id="test-060" class="inner_closed">');
+                    echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-060\')">TEST 60: Mixed Bag 16</a></h2>');
+
+                    echo('<div class="main_div inner_container">');
+                        ?>
+                        <div class="main_div" style="margin-right:2em">
+                        <p class="explain">We use "like", but only applied to the "name", which has "topic meet%", and "like" in it, which will work, but the tag one will not.</p>
+                        <p class="explain">We expect to get no records.</p>
+                        </div>
+                        <?php
+                        $start = microtime(TRUE);
+                        advanced_test_20();
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                    echo('</div>');
+                echo('</div>');
+                echo('<div id="test-061" class="inner_closed">');
+                    echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-061\')">TEST 61: Mixed Bag 17</a></h2>');
+
+                    echo('<div class="main_div inner_container">');
+                        ?>
+                        <div class="main_div" style="margin-right:2em">
+                        <p class="explain">We use "like", on both of them.</p>
+                        <p class="explain">We expect to get 2 records.</p>
+                        </div>
+                        <?php
+                        $start = microtime(TRUE);
+                        advanced_test_22();
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                    echo('</div>');
+                echo('</div>');
             echo('</div>');
         echo('</div>');
     ?>
@@ -427,6 +547,7 @@
             echo('<p style="margin-left:1em;color:red;font-weight:bold">Error: ('.$access_instance->error->error_code.') '.$access_instance->error->error_name.' ('.$access_instance->error->error_description.')</p>');
         }
     }
+    
     function advanced_test_7($in_login = NULL, $in_hashed_password = NULL, $in_password = NULL) {
         $access_instance = NULL;
         
@@ -652,6 +773,321 @@
             echo("<h2>The access instance is valid!</h2>");
             $st1 = microtime(TRUE);
             $test_item = $access_instance->generic_search(Array('owner' => Array(9, 242), 'name' => 'Trona 12 Traditions'), TRUE);
+            $fetchTime = sprintf('%01.3f', microtime(TRUE) - $st1);
+            echo('<div class="inner_div">');
+                if ( isset($test_item) ) {
+                    if (is_array($test_item)) {
+                        if (count($test_item)) {
+                            echo("<h4>We got ".count($test_item)." records in $fetchTime seconds.</h4>");
+                            $count = 0;
+                            foreach ( $test_item as $item ) {
+                                display_record($item);
+                            }
+                        }
+                    }
+                }
+            echo('</div>');
+        } else {
+            echo("<h2 style=\"color:red;font-weight:bold\">The access instance is not valid!</h2>");
+            echo('<p style="margin-left:1em;color:red;font-weight:bold">Error: ('.$access_instance->error->error_code.') '.$access_instance->error->error_name.' ('.$access_instance->error->error_description.')</p>');
+        }
+    }
+    
+    function advanced_test_14($in_login = NULL, $in_hashed_password = NULL, $in_password = NULL) {
+        $access_instance = NULL;
+        
+        if ( !defined('LGV_ACCESS_CATCHER') ) {
+            define('LGV_ACCESS_CATCHER', 1);
+        }
+        
+        require_once(CO_Config::main_class_dir().'/co_access.class.php');
+        
+        $access_instance = new CO_Access($in_login, $in_hashed_password, $in_password);
+        
+        if ($access_instance->valid) {
+            echo("<h2>The access instance is valid!</h2>");
+            $st1 = microtime(TRUE);
+            $test_item = $access_instance->generic_search(Array('name' => 'Just for Today'));
+            $fetchTime = sprintf('%01.3f', microtime(TRUE) - $st1);
+            echo('<div class="inner_div">');
+                if ( isset($test_item) ) {
+                    if (is_array($test_item)) {
+                        if (count($test_item)) {
+                            echo("<h4>We got ".count($test_item)." records in $fetchTime seconds.</h4>");
+                            $count = 0;
+                            foreach ( $test_item as $item ) {
+                                display_record($item);
+                            }
+                        }
+                    }
+                }
+            echo('</div>');
+        } else {
+            echo("<h2 style=\"color:red;font-weight:bold\">The access instance is not valid!</h2>");
+            echo('<p style="margin-left:1em;color:red;font-weight:bold">Error: ('.$access_instance->error->error_code.') '.$access_instance->error->error_name.' ('.$access_instance->error->error_description.')</p>');
+        }
+    }
+    
+    function advanced_test_15($in_login = NULL, $in_hashed_password = NULL, $in_password = NULL) {
+        $access_instance = NULL;
+        
+        if ( !defined('LGV_ACCESS_CATCHER') ) {
+            define('LGV_ACCESS_CATCHER', 1);
+        }
+        
+        require_once(CO_Config::main_class_dir().'/co_access.class.php');
+        
+        $access_instance = new CO_Access($in_login, $in_hashed_password, $in_password);
+        
+        if ($access_instance->valid) {
+            echo("<h2>The access instance is valid!</h2>");
+            $st1 = microtime(TRUE);
+            $test_item = $access_instance->generic_search(Array('name' => Array('Just for Today%', 'use_like' => TRUE)));
+            $fetchTime = sprintf('%01.3f', microtime(TRUE) - $st1);
+            echo('<div class="inner_div">');
+                if ( isset($test_item) ) {
+                    if (is_array($test_item)) {
+                        if (count($test_item)) {
+                            echo("<h4>We got ".count($test_item)." records in $fetchTime seconds.</h4>");
+                            $count = 0;
+                            foreach ( $test_item as $item ) {
+                                display_record($item);
+                            }
+                        }
+                    }
+                }
+            echo('</div>');
+        } else {
+            echo("<h2 style=\"color:red;font-weight:bold\">The access instance is not valid!</h2>");
+            echo('<p style="margin-left:1em;color:red;font-weight:bold">Error: ('.$access_instance->error->error_code.') '.$access_instance->error->error_name.' ('.$access_instance->error->error_description.')</p>');
+        }
+    }
+    
+    function advanced_test_16($in_login = NULL, $in_hashed_password = NULL, $in_password = NULL) {
+        $access_instance = NULL;
+        
+        if ( !defined('LGV_ACCESS_CATCHER') ) {
+            define('LGV_ACCESS_CATCHER', 1);
+        }
+        
+        require_once(CO_Config::main_class_dir().'/co_access.class.php');
+        
+        $access_instance = new CO_Access($in_login, $in_hashed_password, $in_password);
+        
+        if ($access_instance->valid) {
+            echo("<h2>The access instance is valid!</h2>");
+            $st1 = microtime(TRUE);
+            $test_item = $access_instance->generic_search(Array('tags' => Array('', 'nev')));
+            $fetchTime = sprintf('%01.3f', microtime(TRUE) - $st1);
+            echo('<div class="inner_div">');
+                if ( isset($test_item) ) {
+                    if (is_array($test_item)) {
+                        if (count($test_item)) {
+                            echo("<h4>We got ".count($test_item)." records in $fetchTime seconds.</h4>");
+                            $count = 0;
+                            foreach ( $test_item as $item ) {
+                                display_record($item);
+                            }
+                        }
+                    }
+                }
+            echo('</div>');
+        } else {
+            echo("<h2 style=\"color:red;font-weight:bold\">The access instance is not valid!</h2>");
+            echo('<p style="margin-left:1em;color:red;font-weight:bold">Error: ('.$access_instance->error->error_code.') '.$access_instance->error->error_name.' ('.$access_instance->error->error_description.')</p>');
+        }
+    }
+    
+    function advanced_test_17($in_login = NULL, $in_hashed_password = NULL, $in_password = NULL) {
+        $access_instance = NULL;
+        
+        if ( !defined('LGV_ACCESS_CATCHER') ) {
+            define('LGV_ACCESS_CATCHER', 1);
+        }
+        
+        require_once(CO_Config::main_class_dir().'/co_access.class.php');
+        
+        $access_instance = new CO_Access($in_login, $in_hashed_password, $in_password);
+        
+        if ($access_instance->valid) {
+            echo("<h2>The access instance is valid!</h2>");
+            $st1 = microtime(TRUE);
+            $test_item = $access_instance->generic_search(Array('tags' => Array('', Array('nev%', 'use_like' => TRUE))));
+            $fetchTime = sprintf('%01.3f', microtime(TRUE) - $st1);
+            echo('<div class="inner_div">');
+                if ( isset($test_item) ) {
+                    if (is_array($test_item)) {
+                        if (count($test_item)) {
+                            echo("<h4>We got ".count($test_item)." records in $fetchTime seconds.</h4>");
+                            $count = 0;
+                            foreach ( $test_item as $item ) {
+                                display_record($item);
+                            }
+                        }
+                    }
+                }
+            echo('</div>');
+        } else {
+            echo("<h2 style=\"color:red;font-weight:bold\">The access instance is not valid!</h2>");
+            echo('<p style="margin-left:1em;color:red;font-weight:bold">Error: ('.$access_instance->error->error_code.') '.$access_instance->error->error_name.' ('.$access_instance->error->error_description.')</p>');
+        }
+    }
+    
+    function advanced_test_18($in_login = NULL, $in_hashed_password = NULL, $in_password = NULL) {
+        $access_instance = NULL;
+        
+        if ( !defined('LGV_ACCESS_CATCHER') ) {
+            define('LGV_ACCESS_CATCHER', 1);
+        }
+        
+        require_once(CO_Config::main_class_dir().'/co_access.class.php');
+        
+        $access_instance = new CO_Access($in_login, $in_hashed_password, $in_password);
+        
+        if ($access_instance->valid) {
+            echo("<h2>The access instance is valid!</h2>");
+            $st1 = microtime(TRUE);
+            $test_item = $access_instance->generic_search(Array('tags' => Array('', 'nev%', 'use_like' => TRUE)));
+            $fetchTime = sprintf('%01.3f', microtime(TRUE) - $st1);
+            echo('<div class="inner_div">');
+                if ( isset($test_item) ) {
+                    if (is_array($test_item)) {
+                        if (count($test_item)) {
+                            echo("<h4>We got ".count($test_item)." records in $fetchTime seconds.</h4>");
+                            $count = 0;
+                            foreach ( $test_item as $item ) {
+                                display_record($item);
+                            }
+                        }
+                    }
+                }
+            echo('</div>');
+        } else {
+            echo("<h2 style=\"color:red;font-weight:bold\">The access instance is not valid!</h2>");
+            echo('<p style="margin-left:1em;color:red;font-weight:bold">Error: ('.$access_instance->error->error_code.') '.$access_instance->error->error_name.' ('.$access_instance->error->error_description.')</p>');
+        }
+    }
+    
+    function advanced_test_19($in_login = NULL, $in_hashed_password = NULL, $in_password = NULL) {
+        $access_instance = NULL;
+        
+        if ( !defined('LGV_ACCESS_CATCHER') ) {
+            define('LGV_ACCESS_CATCHER', 1);
+        }
+        
+        require_once(CO_Config::main_class_dir().'/co_access.class.php');
+        
+        $access_instance = new CO_Access($in_login, $in_hashed_password, $in_password);
+        
+        if ($access_instance->valid) {
+            echo("<h2>The access instance is valid!</h2>");
+            $st1 = microtime(TRUE);
+            $test_item = $access_instance->generic_search(Array('name' => 'topic meet%', 'tags' => Array('', Array('nev%', 'use_like' => TRUE))));
+            $fetchTime = sprintf('%01.3f', microtime(TRUE) - $st1);
+            echo('<div class="inner_div">');
+                if ( isset($test_item) ) {
+                    if (is_array($test_item)) {
+                        if (count($test_item)) {
+                            echo("<h4>We got ".count($test_item)." records in $fetchTime seconds.</h4>");
+                            $count = 0;
+                            foreach ( $test_item as $item ) {
+                                display_record($item);
+                            }
+                        }
+                    }
+                }
+            echo('</div>');
+        } else {
+            echo("<h2 style=\"color:red;font-weight:bold\">The access instance is not valid!</h2>");
+            echo('<p style="margin-left:1em;color:red;font-weight:bold">Error: ('.$access_instance->error->error_code.') '.$access_instance->error->error_name.' ('.$access_instance->error->error_description.')</p>');
+        }
+    }
+    
+    function advanced_test_20($in_login = NULL, $in_hashed_password = NULL, $in_password = NULL) {
+        $access_instance = NULL;
+        
+        if ( !defined('LGV_ACCESS_CATCHER') ) {
+            define('LGV_ACCESS_CATCHER', 1);
+        }
+        
+        require_once(CO_Config::main_class_dir().'/co_access.class.php');
+        
+        $access_instance = new CO_Access($in_login, $in_hashed_password, $in_password);
+        
+        if ($access_instance->valid) {
+            echo("<h2>The access instance is valid!</h2>");
+            $st1 = microtime(TRUE);
+            $test_item = $access_instance->generic_search(Array('name' => 'topic meet%', 'tags' => Array('', 'nev%', 'use_like' => TRUE)));
+            $fetchTime = sprintf('%01.3f', microtime(TRUE) - $st1);
+            echo('<div class="inner_div">');
+                if ( isset($test_item) ) {
+                    if (is_array($test_item)) {
+                        if (count($test_item)) {
+                            echo("<h4>We got ".count($test_item)." records in $fetchTime seconds.</h4>");
+                            $count = 0;
+                            foreach ( $test_item as $item ) {
+                                display_record($item);
+                            }
+                        }
+                    }
+                }
+            echo('</div>');
+        } else {
+            echo("<h2 style=\"color:red;font-weight:bold\">The access instance is not valid!</h2>");
+            echo('<p style="margin-left:1em;color:red;font-weight:bold">Error: ('.$access_instance->error->error_code.') '.$access_instance->error->error_name.' ('.$access_instance->error->error_description.')</p>');
+        }
+    }
+    
+    function advanced_test_21($in_login = NULL, $in_hashed_password = NULL, $in_password = NULL) {
+        $access_instance = NULL;
+        
+        if ( !defined('LGV_ACCESS_CATCHER') ) {
+            define('LGV_ACCESS_CATCHER', 1);
+        }
+        
+        require_once(CO_Config::main_class_dir().'/co_access.class.php');
+        
+        $access_instance = new CO_Access($in_login, $in_hashed_password, $in_password);
+        
+        if ($access_instance->valid) {
+            echo("<h2>The access instance is valid!</h2>");
+            $st1 = microtime(TRUE);
+            $test_item = $access_instance->generic_search(Array('name' => Array('topic meet%', 'use_like' => TRUE), 'tags' => Array('', 'nev%')));
+            $fetchTime = sprintf('%01.3f', microtime(TRUE) - $st1);
+            echo('<div class="inner_div">');
+                if ( isset($test_item) ) {
+                    if (is_array($test_item)) {
+                        if (count($test_item)) {
+                            echo("<h4>We got ".count($test_item)." records in $fetchTime seconds.</h4>");
+                            $count = 0;
+                            foreach ( $test_item as $item ) {
+                                display_record($item);
+                            }
+                        }
+                    }
+                }
+            echo('</div>');
+        } else {
+            echo("<h2 style=\"color:red;font-weight:bold\">The access instance is not valid!</h2>");
+            echo('<p style="margin-left:1em;color:red;font-weight:bold">Error: ('.$access_instance->error->error_code.') '.$access_instance->error->error_name.' ('.$access_instance->error->error_description.')</p>');
+        }
+    }
+    
+    function advanced_test_22($in_login = NULL, $in_hashed_password = NULL, $in_password = NULL) {
+        $access_instance = NULL;
+        
+        if ( !defined('LGV_ACCESS_CATCHER') ) {
+            define('LGV_ACCESS_CATCHER', 1);
+        }
+        
+        require_once(CO_Config::main_class_dir().'/co_access.class.php');
+        
+        $access_instance = new CO_Access($in_login, $in_hashed_password, $in_password);
+        
+        if ($access_instance->valid) {
+            echo("<h2>The access instance is valid!</h2>");
+            $st1 = microtime(TRUE);
+            $test_item = $access_instance->generic_search(Array('name' => Array('topic meet%', 'use_like' => TRUE), 'tags' => Array('', Array('nev%', 'use_like' => TRUE))));
             $fetchTime = sprintf('%01.3f', microtime(TRUE) - $st1);
             echo('<div class="inner_div">');
                 if ( isset($test_item) ) {

@@ -152,17 +152,28 @@ class CO_Main_Data_DB extends A_CO_DB {
                 
                 if ($value) {
                     if (isset($value) && is_array($value) && count($value)) {
-                        for ($i2 = 0; $i2 < count($value); $i2++) {
-                            $val = trim(strval($value[$i2]));
+                        $use_like_old = $use_like;
+                        
+                        if (isset($value['use_like'])) {
+                            $use_like = TRUE;
+                            unset($value['use_like']);
+                        }
+
+                        $i2 = 0;
+                        foreach ($value as $val) {                
+                            $val = trim(strval($val));
                             if ($val) {
                                 if ($ret['sql']) {
                                     $ret['sql'] .= ') OR ';
                                 }
                     
-                                $ret['sql'] .= '(LOWER(`tag'.intval($i).'`)'.($use_like ? ' LIKE' : '=').'LOWER(?)';
+                                $ret['sql'] .= '(LOWER(`tag'.intval($i).'`)'.($use_like ? ' LIKE ' : '=').'LOWER(?)';
                                 array_push($ret['params'], $val);
                             }
+                            
+                            $i2++;
                         }
+                        $use_like = $use_like_old;
                     } else {
                         $value = trim(strval($value));
                         
@@ -171,7 +182,7 @@ class CO_Main_Data_DB extends A_CO_DB {
                                 $ret['sql'] .= ') OR ';
                             }
                     
-                            $ret['sql'] .= '(LOWER(`tag'.intval($i).'`)'.($use_like ? ' LIKE' : '=').'LOWER(?)';
+                            $ret['sql'] .= '(LOWER(`tag'.intval($i).'`)'.($use_like ? ' LIKE ' : '=').'LOWER(?)';
                             array_push($ret['params'], strval($value));
                         }
                     }
@@ -192,7 +203,6 @@ class CO_Main_Data_DB extends A_CO_DB {
         if ($ret['sql']) {
             $ret['sql'] = '('.$ret['sql'].')';
         }
-        
         return $ret;
     }
     
@@ -262,7 +272,7 @@ class CO_Main_Data_DB extends A_CO_DB {
                         $ret['sql'] .= ') OR ';
                     }
                     
-                    $ret['sql'] .= '(LOWER(`'.strval($in_db_key).'`)'.($use_like ? ' LIKE' : '=').'LOWER(?)';
+                    $ret['sql'] .= '(LOWER(`'.strval($in_db_key).'`)'.($use_like ? ' LIKE ' : '=').'LOWER(?)';
                     array_push($ret['params'], $value);
                 }
             }
