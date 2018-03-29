@@ -1,6 +1,7 @@
-**1.0.0.2000** *(March 28, 2018)*
+**1.0.0.1003** *(March 29, 2018)*
 
-- I'm calling this in as beta.
+- Added pagination options (MySQL only).
+- Added the ability to have "LIKE" string searches.
 
 **1.0.0.1002** *(March 28, 2018)*
 

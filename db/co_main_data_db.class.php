@@ -140,6 +140,13 @@ class CO_Main_Data_DB extends A_CO_DB {
         $ret = Array('sql' => '', 'params' => Array());
         
         if (isset($in_value) && is_array($in_value) && count($in_value)) {
+            $use_like = FALSE;
+            
+            if (isset($in_value['use_like'])) {
+                $use_like = TRUE;
+                unset($in_value['use_like']);
+            }
+
             for ($i = 0; $i < count($in_value); $i++) {
                 $value = $in_value[$i];
                 
@@ -152,7 +159,7 @@ class CO_Main_Data_DB extends A_CO_DB {
                                     $ret['sql'] .= ') OR ';
                                 }
                     
-                                $ret['sql'] .= '(LOWER(`tag'.intval($i).'`)=LOWER(?)';
+                                $ret['sql'] .= '(LOWER(`tag'.intval($i).'`)'.($use_like ? ' LIKE' : '=').'LOWER(?)';
                                 array_push($ret['params'], $val);
                             }
                         }
@@ -164,7 +171,7 @@ class CO_Main_Data_DB extends A_CO_DB {
                                 $ret['sql'] .= ') OR ';
                             }
                     
-                            $ret['sql'] .= '(LOWER(`tag'.intval($i).'`)=LOWER(?)';
+                            $ret['sql'] .= '(LOWER(`tag'.intval($i).'`)'.($use_like ? ' LIKE' : '=').'LOWER(?)';
                             array_push($ret['params'], strval($value));
                         }
                     }
@@ -175,8 +182,11 @@ class CO_Main_Data_DB extends A_CO_DB {
                 $ret['sql'] .= ')';
             }
         } else {
-            $ret['sql'] = 'LOWER(`tag0`)=LOWER(?)';
-            $ret['params'][0] = strval($in_value);
+            $in_value = trim(strval($in_value));
+            if ($in_value) {
+                $ret['sql'] = 'LOWER(`tag0`)=LOWER(?)';
+                $ret['params'][0] = $in_value;
+            }
         }
         
         if ($ret['sql']) {
@@ -238,6 +248,13 @@ class CO_Main_Data_DB extends A_CO_DB {
         $ret = Array('sql' => '', 'params' => Array());
         
         if (isset($in_value) && is_array($in_value) && count($in_value)) {
+            $use_like = FALSE;
+            
+            if (isset($in_value['use_like'])) {
+                $use_like = TRUE;
+                unset($in_value['use_like']);
+            }
+            
             $in_value = array_unique(array_map(function($in){return strtolower(trim(strval($in)));}, $in_value));    // Make sure we don't have repeats.
             foreach ($in_value as $value) {                
                 if ($value) {
@@ -245,7 +262,7 @@ class CO_Main_Data_DB extends A_CO_DB {
                         $ret['sql'] .= ') OR ';
                     }
                     
-                    $ret['sql'] .= '(LOWER(`'.strval($in_db_key).'`)=LOWER(?)';
+                    $ret['sql'] .= '(LOWER(`'.strval($in_db_key).'`)'.($use_like ? ' LIKE' : '=').'LOWER(?)';
                     array_push($ret['params'], $value);
                 }
             }
@@ -360,6 +377,8 @@ class CO_Main_Data_DB extends A_CO_DB {
                                                                                             This is the search radius, in Kilometers.
                                                                             */
                                             $or_search = FALSE,             ///< If TRUE, then the search is very wide (OR), as opposed to narrow (AND), by default. If you specify a location, then that will always be AND, but the other fields can be OR.
+                                            $page_size = 0,                 ///< If specified with a 1-based integer, this denotes the size of a "page" of results. NOTE: This is only applicable to MySQL, and will be ignored if the DB is not MySQL.
+                                            $initial_page = 0,              ///< This is ignored unless $page_size is greater than 0. If so, then this 0-based index will specify which page of results to return.
                                             $and_writeable = FALSE          ///< If TRUE, then we only want records we can modify.
                                         ) {
         $ret = Array('sql' => '', 'params' => Array());
@@ -402,6 +421,15 @@ class CO_Main_Data_DB extends A_CO_DB {
                 $ret['params'] = array_merge($ret['params'], $temp_params);
             }
         }
+        
+        $page_size = intval($page_size);
+        // This only applies for MySQL.
+        if ((0 < $page_size) && (('mysql' == $this->_pdo_object->driver_type) || ('mysqli' == $this->_pdo_object->driver_type))) {
+            $initial_page = intval($initial_page);
+            $start = $initial_page * $page_size;
+            $closure = ' LIMIT '.$start.', $page_size';
+        }
+        
         $ret['sql'] = $sql.$closure;
 
         return $ret;

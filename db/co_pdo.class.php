@@ -20,6 +20,7 @@ defined( 'LGV_DB_CATCHER' ) or die ( 'Cannot Execute Directly' );	// Makes sure 
 class CO_PDO {
 	/// \brief Internal PDO object
 	private $pdo = NULL;
+	var $driver_type = NULL;
 	
 	var $class_description;
 
@@ -47,6 +48,7 @@ class CO_PDO {
         $this->class_description = 'A class for managing PDO access to the databases.';
 
 		$this->pdo = NULL;
+		$this->driver_type = $driver;
 		
         $dsn = $driver . ':host=' . $host . ';dbname=' . $database;
 		try {

@@ -13,7 +13,7 @@
 */
 defined( 'LGV_ACCESS_CATCHER' ) or die ( 'Cannot Execute Directly' );	// Makes sure that this file is in the correct context.
 
-define('__BADGER_VERSION__', '1.0.0.1002');
+define('__BADGER_VERSION__', '1.0.0.1003');
 
 if ( !defined('LGV_MD_CATCHER') ) {
     define('LGV_MD_CATCHER', 1);
@@ -510,6 +510,8 @@ class CO_Access {
                                                                                     This is the search radius, in Kilometers.
                                                                     */
                                     $or_search = FALSE,             ///< If TRUE, then the search is very wide (OR), as opposed to narrow (AND), by default. If you specify a location, then that will always be AND, but the other fields can be OR.
+                                    $page_size = 0,                 ///< If specified with a 1-based integer, this denotes the size of a "page" of results. NOTE: This is only applicable to MySQL, and will be ignored if the DB is not MySQL.
+                                    $initial_page = 0,              ///< This is ignored unless $page_size is greater than 0. If so, then this 0-based index will specify which page of results to return.
                                     $and_writeable = FALSE          ///< If TRUE, then we only want records we can modify.
                                     ) {
         $ret = NULL;
