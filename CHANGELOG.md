@@ -1,3 +1,10 @@
+**1.0.0.2000** *(March 30, 2018)*
+
+- Improved the map demo.
+- Fixed a couple of pagination issues.
+- Added more testing.
+- Beta release.
+
 **1.0.0.1003** *(March 29, 2018)*
 
 - Added pagination options (MySQL only).
