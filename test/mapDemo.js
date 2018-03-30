@@ -165,7 +165,7 @@ loadTestMap.prototype.displayMeetingMarkers = function() {
 ************************************************************************************************/
 loadTestMap.prototype.sMapOverlappingMarkers = function ( in_meeting_array
 									                    ) {
-    var tolerance = 10;	/* This is how many pixels we allow. */
+    var tolerance = 16;	/* This is how many pixels we allow. */
     var tmp = new Array;
 
     for ( var c = 0; c < in_meeting_array.length; c++ ) {
@@ -330,8 +330,6 @@ loadTestMap.prototype.loadDBCallback = function (   in_response_object, ///< The
                                                     in_context
                                                 ) {
     this.m_current_task = null;
-    var throbberContainer = document.getElementById('throbber-container');
-    throbberContainer.style.display = 'none';
     in_context.loadMap();
 };
 
