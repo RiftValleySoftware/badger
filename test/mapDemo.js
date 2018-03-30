@@ -71,13 +71,27 @@ loadTestMap.prototype.mapLoaded = function() {
         this.m_previous_zoom = this.getZoom();
         this.m_previous_center = this.circle_overlay.center;
         google.maps.event.addListener(this, 'bounds_changed', this.context.mapBoundsChanged);
+        google.maps.event.addListener(this, 'dragend', this.context.mapDragEnd);
         google.maps.event.addListener(this, 'click', this.context.mapClicked);
         this.context.getNewMarkers();
     };
 };
 
+loadTestMap.prototype.mapDragEnd = function() {
+    var myBounds = this.getBounds();
+
+    if (myBounds) {
+        var mapHeightInMeters = Math.abs(google.maps.geometry.spherical.computeDistanceBetween(myBounds.getNorthEast(), myBounds.getSouthWest()) / 2.0);
+        this.circle_overlay.setOptions({center: this.getCenter()});
+        this.circle_overlay.setOptions({radius: mapHeightInMeters});
+        this.m_previous_zoom = this.getZoom();
+        this.m_previous_center = this.circle_overlay.center;
+        this.context.getNewMarkers();
+    };
+};
+
 loadTestMap.prototype.mapBoundsChanged = function() {
-    if (true || (this.m_previous_zoom != this.getZoom()) || (this.m_previous_center != this.circle_overlay.center)) {
+    if ((this.m_previous_zoom != this.getZoom()) || (this.m_previous_center != this.circle_overlay.center)) {
         var myBounds = this.getBounds();
     
         if (myBounds) {
