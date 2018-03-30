@@ -39,6 +39,7 @@ loadTestMap.prototype.loadMap = function() {
             this.m_main_map.context = this;
             this.m_main_map.m_markers_array = new Array();
             this.m_main_map.m_calculated_markers_array = new Array();
+            this.m_main_map.m_ru_paul = false;
     
             google.maps.event.addListener(this.m_main_map, 'click', this.mapClicked);
             google.maps.event.addListenerOnce(this.m_main_map, 'tilesloaded', this.mapLoaded);
@@ -55,6 +56,7 @@ loadTestMap.prototype.mapLoaded = function() {
         this.m_previous_zoom = this.getZoom();
         this.m_previous_center = this.getCenter();
         google.maps.event.addListener(this, 'bounds_changed', this.context.mapBoundsChanged);
+        google.maps.event.addListener(this, 'dragstart', this.context.mapDragStart);
         google.maps.event.addListener(this, 'dragend', this.context.mapDragEnd);
         this.context.setUpMarkers();
     };
@@ -72,12 +74,18 @@ loadTestMap.prototype.setUpMarkers = function() {
     };
 };
 
+loadTestMap.prototype.mapDragStart = function() {
+    this.m_ru_paul = true;
+    this.context.removeMeetingMarkers();
+};
+
 loadTestMap.prototype.mapDragEnd = function() {
+    this.m_ru_paul = false;
     this.context.setUpMarkers();
 };
 
 loadTestMap.prototype.mapBoundsChanged = function() {
-    if ((this.m_previous_zoom != this.getZoom()) || (this.m_previous_center != this.getCenter())) {
+    if (!this.m_ru_paul && (this.m_previous_zoom != this.getZoom()) || (this.m_previous_center != this.getCenter())) {
         this.context.setUpMarkers();
     };
 };
