@@ -510,13 +510,13 @@ class CO_Access {
                                                                                     This is the search radius, in Kilometers.
                                                                     */
                                     $or_search = FALSE,             ///< If TRUE, then the search is very wide (OR), as opposed to narrow (AND), by default. If you specify a location, then that will always be AND, but the other fields can be OR.
-                                    $page_size = 0,                 ///< If specified with a 1-based integer, this denotes the size of a "page" of results. NOTE: This is only applicable to MySQL, and will be ignored if the DB is not MySQL.
+                                    $page_size = 0,                 ///< If specified with a 1-based integer, this denotes the size of a "page" of results. NOTE: This is only applicable to MySQL or Postgres, and will be ignored if the DB is not MySQL or Postgres.
                                     $initial_page = 0,              ///< This is ignored unless $page_size is greater than 0. If so, then this 0-based index will specify which page of results to return.
                                     $and_writeable = FALSE          ///< If TRUE, then we only want records we can modify.
                                     ) {
         $ret = NULL;
         if (isset($this->_data_db_object) && $this->_data_db_object) {
-            return $this->_data_db_object->generic_search($in_search_parameters, $or_search, $and_writeable);
+            return $this->_data_db_object->generic_search($in_search_parameters, $or_search, $page_size, $initial_page, $and_writeable);
         }
         
         return $ret;

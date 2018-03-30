@@ -387,7 +387,7 @@ class CO_Main_Data_DB extends A_CO_DB {
                                                                                             This is the search radius, in Kilometers.
                                                                             */
                                             $or_search = FALSE,             ///< If TRUE, then the search is very wide (OR), as opposed to narrow (AND), by default. If you specify a location, then that will always be AND, but the other fields can be OR.
-                                            $page_size = 0,                 ///< If specified with a 1-based integer, this denotes the size of a "page" of results. NOTE: This is only applicable to MySQL, and will be ignored if the DB is not MySQL.
+                                            $page_size = 0,                 ///< If specified with a 1-based integer, this denotes the size of a "page" of results. NOTE: This is only applicable to MySQL or Postgres, and will be ignored if the DB is not MySQL or Postgres.
                                             $initial_page = 0,              ///< This is ignored unless $page_size is greater than 0. If so, then this 0-based index will specify which page of results to return.
                                             $and_writeable = FALSE          ///< If TRUE, then we only want records we can modify.
                                         ) {
@@ -433,11 +433,16 @@ class CO_Main_Data_DB extends A_CO_DB {
         }
         
         $page_size = intval($page_size);
-        // This only applies for MySQL.
-        if ((0 < $page_size) && (('mysql' == $this->_pdo_object->driver_type) || ('mysqli' == $this->_pdo_object->driver_type))) {
+        // This only applies for MySQL or Postgres.
+        if (0 < $page_size) {
             $initial_page = intval($initial_page);
             $start = $initial_page * $page_size;
-            $closure = ' LIMIT '.$start.', $page_size';
+            // Slightly different syntax for MySQL and Postgres.
+            if ( (('mysql' == $this->_pdo_object->driver_type) || ('mysqli' == $this->_pdo_object->driver_type))) {
+                $closure = ' LIMIT '.$start.', '.$page_size;
+            } elseif ('pgsql' == $this->_pdo_object->driver_type) {
+                $closure = ' LIMIT '.$page_size.' OFFSET '.$start;
+            }
         }
         
         $ret['sql'] = $sql.$closure;
@@ -487,11 +492,13 @@ class CO_Main_Data_DB extends A_CO_DB {
                                                                                     This is the search radius, in Kilometers.
                                                                     */
                                     $or_search = FALSE,             ///< If TRUE, then the search is very wide (OR), as opposed to narrow (AND), by default. If you specify a location, then that will always be AND, but the other fields can be OR.
+                                    $page_size = 0,                 ///< If specified with a 1-based integer, this denotes the size of a "page" of results. NOTE: This is only applicable to MySQL or Postgres, and will be ignored if the DB is not MySQL or Postgres.
+                                    $initial_page = 0,              ///< This is ignored unless $page_size is greater than 0. If so, then this 0-based index will specify which page of results to return.
                                     $and_writeable = FALSE          ///< If TRUE, then we only want records we can modify.
                                     ) {
         $ret = NULL;
         
-        $sql_and_params = $this->_build_sql_query($in_search_parameters, $or_search, $and_writeable);
+        $sql_and_params = $this->_build_sql_query($in_search_parameters, $or_search, $page_size, $initial_page, $and_writeable);
         $sql = $sql_and_params['sql'];
         $params = $sql_and_params['params'];
 
