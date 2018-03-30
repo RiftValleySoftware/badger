@@ -32,7 +32,7 @@ loadTestMap.prototype.loadMap = function() {
 
         myOptions.zoomControlOptions = { 'style': google.maps.ZoomControlStyle.LARGE };
 
-        this.m_main_map = new google.maps.Map(document.getElementById('map_div'), myOptions);
+        this.m_main_map = new google.maps.Map(document.getElementById('map-container'), myOptions);
 
         if ( this.m_main_map ) {
             this.m_main_map.map_marker = null;
@@ -51,16 +51,14 @@ loadTestMap.prototype.mapLoaded = function() {
     var myBounds = this.getBounds();
     
     if (myBounds) {
-        var northCentral = new google.maps.LatLng(myBounds.getNorthEast().lat(), 0);
-        var southCentral = new google.maps.LatLng(myBounds.getSouthWest().lat(), 0);
-        var mapHeightInMeters = google.maps.geometry.spherical.computeDistanceBetween(northCentral, southCentral) / 10.0;
+        var mapHeightInMeters = Math.abs(google.maps.geometry.spherical.computeDistanceBetween(myBounds.getNorthEast(), myBounds.getSouthWest()) / 2.0);
         
         var circleOptions = {
                             strokeColor: '#555',
                             strokeOpacity: 0.25,
-                            strokeWeight: 1,
-                            fillColor: '#555',
-                            fillOpacity: 0.25,
+                            strokeWeight: 0,
+                            fillColor: 'transparent',
+                            fillOpacity: 0,
                             map: this,
                             center: this.getCenter(),
                             clickable: false,
@@ -78,14 +76,13 @@ loadTestMap.prototype.mapLoaded = function() {
     };
 };
 
-loadTestMap.prototype.mapBoundsChanged = function(in_event) {
-    if ((this.m_previous_zoom != this.getZoom()) || (this.m_previous_center != this.circle_overlay.center)) {
+loadTestMap.prototype.mapBoundsChanged = function() {
+    if (true || (this.m_previous_zoom != this.getZoom()) || (this.m_previous_center != this.circle_overlay.center)) {
         var myBounds = this.getBounds();
     
         if (myBounds) {
-            var northCentral = new google.maps.LatLng(myBounds.getNorthEast().lat(), 0);
-            var southCentral = new google.maps.LatLng(myBounds.getSouthWest().lat(), 0);
-            var mapHeightInMeters = google.maps.geometry.spherical.computeDistanceBetween(northCentral, southCentral) / 10.0;
+            var mapHeightInMeters = Math.abs(google.maps.geometry.spherical.computeDistanceBetween(myBounds.getNorthEast(), myBounds.getSouthWest()) / 2.0);
+            this.circle_overlay.setOptions({center: this.getCenter()});
             this.circle_overlay.setOptions({radius: mapHeightInMeters});
             this.m_previous_zoom = this.getZoom();
             this.m_previous_center = this.circle_overlay.center;
@@ -102,6 +99,8 @@ loadTestMap.prototype.mapClicked = function(clickEvent) {
 };
 
 loadTestMap.prototype.getNewMarkers = function() {
+    var throbberContainer = document.getElementById('throbber-container');
+    throbberContainer.style.display = 'block';
     this.makeRequest(this.m_main_map.circle_overlay.center.lng(), this.m_main_map.circle_overlay.center.lat(), this.m_main_map.circle_overlay.radius);
 };
 
@@ -149,6 +148,9 @@ loadTestMap.prototype.displayMeetingMarkers = function() {
                 };
             };
         };
+        
+        var throbberContainer = document.getElementById('throbber-container');
+        throbberContainer.style.display = 'none';
     };
 };
 
@@ -323,10 +325,7 @@ loadTestMap.prototype.loadDBCallback = function (   in_response_object, ///< The
                                                 ) {
     this.m_current_task = null;
     var throbberContainer = document.getElementById('throbber-container');
-    var mapContainer = document.getElementById('map-container');
-
     throbberContainer.style.display = 'none';
-    mapContainer.style.display = 'block';
     in_context.loadMap();
 };
 

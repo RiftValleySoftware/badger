@@ -129,9 +129,9 @@
         </style>
     </head>
     <body>
-        <div id="throbber-container" style="text-align:center;width:100%;height:100%"><img src="images/throbber.gif" alt="throbber" style="position:absolute;width:190px;top:50%;left:50%;margin-top:-95px;margin-left:-95px" /></div>
-        <div id="map-container" style="text-align:center;width:100%;height:100%;display:none">
-            <div id="map_div" class="map_div"></div>
+        <div style="width:100%;height:100%">
+            <div id="map-container" class="map_div" style="position:absolute;width:100%;height:100%;top:0px;left:0px;z-axis:20000"></div>
+            <img id="throbber-container" src="images/throbber.gif" alt="throbber" style="z-axis:20001;position:absolute;width:190px;top:50%;left:50%;margin-top:-95px;margin-left:-95px" />
             <?php
             $access_instance = NULL;
     
