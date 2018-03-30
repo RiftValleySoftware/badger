@@ -36,7 +36,6 @@ loadTestMap.prototype.loadMap = function() {
 
         if ( this.m_main_map ) {
             this.m_main_map.map_marker = null;
-            this.m_main_map.circle_overlay = null;
             this.m_main_map.context = this;
             this.m_main_map.m_markers_array = new Array();
             this.m_main_map.m_calculated_markers_array = new Array();
@@ -53,61 +52,41 @@ loadTestMap.prototype.mapLoaded = function() {
     if (myBounds) {
         var mapHeightInMeters = Math.abs(google.maps.geometry.spherical.computeDistanceBetween(myBounds.getNorthEast(), myBounds.getSouthWest()) / 2.0);
         
-        var circleOptions = {
-                            strokeColor: '#555',
-                            strokeOpacity: 0.25,
-                            strokeWeight: 0,
-                            fillColor: 'transparent',
-                            fillOpacity: 0,
-                            map: this,
-                            center: this.getCenter(),
-                            clickable: false,
-                            draggable: false,
-                            geodesic: true,
-                            radius: mapHeightInMeters
-                            };
-                            
-        this.circle_overlay = new google.maps.Circle(circleOptions);
         this.m_previous_zoom = this.getZoom();
-        this.m_previous_center = this.circle_overlay.center;
+        this.m_previous_center = this.getCenter();
         google.maps.event.addListener(this, 'bounds_changed', this.context.mapBoundsChanged);
         google.maps.event.addListener(this, 'dragend', this.context.mapDragEnd);
-        this.context.getNewMarkers();
+        this.context.setUpMarkers();
+    };
+};
+
+loadTestMap.prototype.setUpMarkers = function() {
+    var myBounds = this.m_main_map.getBounds();
+
+    if (myBounds) {
+        var mapHeightInMeters = Math.abs(google.maps.geometry.spherical.computeDistanceBetween(myBounds.getNorthEast(), myBounds.getSouthWest()) / 2.0);
+        this.m_main_map.radius = mapHeightInMeters;
+        this.m_main_map.m_previous_zoom = this.m_main_map.getZoom();
+        this.m_main_map.m_previous_center = this.m_main_map.getCenter();
+        this.getNewMarkers();
     };
 };
 
 loadTestMap.prototype.mapDragEnd = function() {
-    var myBounds = this.getBounds();
-
-    if (myBounds) {
-        var mapHeightInMeters = Math.abs(google.maps.geometry.spherical.computeDistanceBetween(myBounds.getNorthEast(), myBounds.getSouthWest()) / 2.0);
-        this.circle_overlay.setOptions({center: this.getCenter()});
-        this.circle_overlay.setOptions({radius: mapHeightInMeters});
-        this.m_previous_zoom = this.getZoom();
-        this.m_previous_center = this.circle_overlay.center;
-        this.context.getNewMarkers();
-    };
+    this.context.setUpMarkers();
 };
 
 loadTestMap.prototype.mapBoundsChanged = function() {
-    if ((this.m_previous_zoom != this.getZoom()) || (this.m_previous_center != this.circle_overlay.center)) {
-        var myBounds = this.getBounds();
-    
-        if (myBounds) {
-            var mapHeightInMeters = Math.abs(google.maps.geometry.spherical.computeDistanceBetween(myBounds.getNorthEast(), myBounds.getSouthWest()) / 2.0);
-            this.circle_overlay.setOptions({center: this.getCenter()});
-            this.circle_overlay.setOptions({radius: mapHeightInMeters});
-            this.m_previous_zoom = this.getZoom();
-            this.m_previous_center = this.circle_overlay.center;
-            this.context.getNewMarkers();
-        };
+    if ((this.m_previous_zoom != this.getZoom()) || (this.m_previous_center != this.getCenter())) {
+        this.context.setUpMarkers();
     };
 };
 
 loadTestMap.prototype.getNewMarkers = function() {
     var throbberContainer = document.getElementById('throbber-container');
     throbberContainer.style.display = 'block';
-    this.makeRequest(this.m_main_map.circle_overlay.center.lng(), this.m_main_map.circle_overlay.center.lat(), this.m_main_map.circle_overlay.radius);
+    var position = this.m_main_map.getCenter();
+    this.makeRequest(position.lng(), position.lat(), this.m_main_map.radius);
 };
 
 /********************************************************************************************//**
