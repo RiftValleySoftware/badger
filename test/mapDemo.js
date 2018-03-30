@@ -72,7 +72,6 @@ loadTestMap.prototype.mapLoaded = function() {
         this.m_previous_center = this.circle_overlay.center;
         google.maps.event.addListener(this, 'bounds_changed', this.context.mapBoundsChanged);
         google.maps.event.addListener(this, 'dragend', this.context.mapDragEnd);
-        google.maps.event.addListener(this, 'click', this.context.mapClicked);
         this.context.getNewMarkers();
     };
 };
@@ -103,13 +102,6 @@ loadTestMap.prototype.mapBoundsChanged = function() {
             this.context.getNewMarkers();
         };
     };
-};
-
-loadTestMap.prototype.mapClicked = function(clickEvent) {
-    var position = new google.maps.LatLng(clickEvent.latLng.lat(), clickEvent.latLng.lng());
-    this.circle_overlay.setOptions({center: position});
-    this.context.getNewMarkers();
-    this.panTo(position);
 };
 
 loadTestMap.prototype.getNewMarkers = function() {
