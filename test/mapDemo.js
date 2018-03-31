@@ -76,6 +76,8 @@ loadTestMap.prototype.setUpMarkers = function() {
 
 loadTestMap.prototype.mapDragStart = function() {
     this.m_ru_paul = true;
+    this.m_previous_zoom = this.getZoom();
+    this.m_previous_center = this.getCenter();
     this.context.removeMeetingMarkers();
 };
 
@@ -85,7 +87,7 @@ loadTestMap.prototype.mapDragEnd = function() {
 };
 
 loadTestMap.prototype.mapBoundsChanged = function() {
-    if (!this.m_ru_paul && (this.m_previous_zoom != this.getZoom()) || (this.m_previous_center != this.getCenter())) {
+    if (!this.m_ru_paul && ((this.m_previous_zoom != this.getZoom()) || (this.m_previous_center != this.getCenter()))) {
         this.context.setUpMarkers();
     };
 };

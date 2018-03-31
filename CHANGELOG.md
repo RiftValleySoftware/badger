@@ -1,4 +1,4 @@
-**1.0.0.2000** *(March 30, 2018)*
+**1.0.0.2000** *(March 31, 2018)*
 
 - Improved the map demo.
 - Fixed a couple of pagination issues.
