@@ -40,6 +40,7 @@ loadTestMap.prototype.loadMap = function() {
             this.m_main_map.m_markers_array = new Array();
             this.m_main_map.m_calculated_markers_array = new Array();
             this.m_main_map.m_ru_paul = false;
+            this.m_main_map.m_info_window_opening = false;
     
             google.maps.event.addListener(this.m_main_map, 'click', this.mapClicked);
             google.maps.event.addListenerOnce(this.m_main_map, 'tilesloaded', this.mapLoaded);
@@ -70,6 +71,8 @@ loadTestMap.prototype.setUpMarkers = function() {
         this.m_main_map.radius = mapHeightInMeters;
         this.m_main_map.m_previous_zoom = this.m_main_map.getZoom();
         this.m_main_map.m_previous_center = this.m_main_map.getCenter();
+        this.m_main_map.m_info_window_opening = false;
+        this.m_main_map.m_ru_paul = false;
         this.getNewMarkers();
     };
 };
@@ -87,9 +90,11 @@ loadTestMap.prototype.mapDragEnd = function() {
 };
 
 loadTestMap.prototype.mapBoundsChanged = function() {
-    if (!this.m_ru_paul && ((this.m_previous_zoom != this.getZoom()) || (this.m_previous_center != this.getCenter()))) {
+    if (!this.m_info_window_opening && !this.m_ru_paul && ((this.m_previous_zoom != this.getZoom()) || (this.m_previous_center != this.getCenter()))) {
         this.context.setUpMarkers();
     };
+    
+    this.m_info_window_opening = false;
 };
 
 loadTestMap.prototype.getNewMarkers = function() {
@@ -287,7 +292,7 @@ loadTestMap.prototype.displayMeetingMarkerInResults = function(   in_mtg_obj_arr
                 var infowindow = new google.maps.InfoWindow ( { content: marker_html });
                 infowindow.context = this;
                 new_marker.infoWin = infowindow;
-                new_marker.addListener ( 'click', function() { infowindow.context.closeInfoWindows(); infowindow.open ( this.m_main_map, new_marker ); });
+                new_marker.addListener ( 'click', function() { infowindow.context.m_main_map.m_info_window_opening = true; infowindow.context.closeInfoWindows(); infowindow.open ( this.m_main_map, new_marker ); });
             };
                 
             return new_marker;
