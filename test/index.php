@@ -237,11 +237,15 @@
             function expose_tests() {
                 var item = document.getElementById('throbber-container');
                 
-                item.style="display:none";
+                if (item) {
+                    item.style="display:none";
+                };
                 
                 var item = document.getElementById('tests-wrapped-up');
                 
-                item.style="display:block";
+                if (item) {
+                    item.style="display:block";
+                };
             };
             
             window.onload = expose_tests;
