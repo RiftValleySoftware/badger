@@ -46,6 +46,14 @@ class CO_Config {
         return '<THE ABSOLUTE POSIX PATH TO THE MAIN BADGER DIRECTORY>';
     }
     
+    /***********************/
+    /**
+    \returns the POSIX path to the user-defined extended database row classes.
+     */
+    static function db_classes_extension_class_dir() {
+        return dirname(self::base_dir()).'/badger_extension_classes';
+    }
+    
     /***********************************************************************************************************************/
     /*                                                  DON'T CHANGE THIS                                                  */
     /***********************************************************************************************************************/
@@ -67,17 +75,9 @@ class CO_Config {
     
     /***********************/
     /**
-    \returns the POSIX path to the user-defined extended database row classes.
-     */
-    static function db_classes_extension_class_dir() {
-        return dirname(self::base_dir()).'/badger_extension_classes';
-    }
-    
-    /***********************/
-    /**
     \returns the POSIX path to the main access class directory.
      */
-    static function main_class_dir() {
+    static function badger_main_class_dir() {
         return self::base_dir().'/main';
     }
     

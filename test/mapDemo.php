@@ -28,7 +28,7 @@
         define('LGV_ACCESS_CATCHER', 1);
     }
 
-    require_once(CO_Config::main_class_dir().'/co_access.class.php');
+    require_once(CO_Config::badger_main_class_dir().'/co_access.class.php');
     
     function prepare_databases($in_file_prefix) {
         if ( !defined('LGV_DB_CATCHER') ) {

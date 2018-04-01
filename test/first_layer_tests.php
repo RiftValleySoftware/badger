@@ -175,7 +175,7 @@
             define('LGV_ACCESS_CATCHER', 1);
         }
         
-        require_once(CO_Config::main_class_dir().'/co_access.class.php');
+        require_once(CO_Config::badger_main_class_dir().'/co_access.class.php');
         
         $access_instance = new CO_Access($in_login, $in_hashed_password, $in_password);
         
@@ -220,7 +220,7 @@
             define('LGV_ACCESS_CATCHER', 1);
         }
         
-        require_once(CO_Config::main_class_dir().'/co_access.class.php');
+        require_once(CO_Config::badger_main_class_dir().'/co_access.class.php');
         
         $access_instance = new CO_Access($in_login, $in_hashed_password, $in_password);
         
@@ -263,7 +263,7 @@
             define('LGV_ACCESS_CATCHER', 1);
         }
         
-        require_once(CO_Config::main_class_dir().'/co_access.class.php');
+        require_once(CO_Config::badger_main_class_dir().'/co_access.class.php');
         
         $access_instance = new CO_Access($in_login, $in_hashed_password, $in_password);
         
@@ -296,7 +296,7 @@
             define('LGV_ACCESS_CATCHER', 1);
         }
         
-        require_once(CO_Config::main_class_dir().'/co_access.class.php');
+        require_once(CO_Config::badger_main_class_dir().'/co_access.class.php');
         
         $access_instance = new CO_Access($in_login, $in_hashed_password, $in_password);
         
@@ -362,7 +362,7 @@
             define('LGV_ACCESS_CATCHER', 1);
         }
         
-        require_once(CO_Config::main_class_dir().'/co_access.class.php');
+        require_once(CO_Config::badger_main_class_dir().'/co_access.class.php');
         
         $access_instance = new CO_Access($in_login, $in_hashed_password, $in_password);
         

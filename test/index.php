@@ -256,7 +256,7 @@
                         define('LGV_ACCESS_CATCHER', 1);
                     }
         
-                    require_once(CO_Config::main_class_dir().'/co_access.class.php');
+                    require_once(CO_Config::badger_main_class_dir().'/co_access.class.php');
             ?>
                 <img src="../icon.png" style="display:block;margin:auto;width:80px" alt="Honey badger Don&rsquo;t Care" />
                 <h1 class="header">MAIN ENVIRONMENT SETUP</h1>
@@ -268,7 +268,7 @@
                             echo("<pre style=\"margin:auto;text-align:left;display:table\">");
                             echo("<strong>Badger Version</strong>........".__BADGER_VERSION__."\n");
                             echo("<strong>Base dir</strong>..............".CO_Config::base_dir()."\n");
-                            echo("<strong>Main class dir</strong>........".CO_Config::main_class_dir()."\n");
+                            echo("<strong>Main class dir</strong>........".CO_Config::badger_main_class_dir()."\n");
                             echo("<strong>Database class dir</strong>....".CO_Config::db_class_dir()."\n");
                             echo("<strong>Database classes dir</strong>..".CO_Config::db_classes_class_dir()."\n");
                             echo("<strong>Shared class dir</strong>......".CO_Config::badger_shared_class_dir()."\n");
