@@ -93,7 +93,7 @@ class CO_Config {
     /**
     \returns the POSIX path to the localization directory.
      */
-    static function lang_class_dir() {
+    static function badger_lang_class_dir() {
         return self::base_dir().'/lang';
     }
     
@@ -101,7 +101,7 @@ class CO_Config {
     /**
     \returns the POSIX path to the testing directory.
      */
-    static function test_class_dir() {
+    static function badger_test_class_dir() {
         return self::base_dir().'/test';
     }
 }

@@ -54,8 +54,8 @@
             $pdo_security_db = new CO_PDO(CO_Config::$sec_db_type, CO_Config::$sec_db_host, CO_Config::$sec_db_name, CO_Config::$sec_db_login, CO_Config::$sec_db_password);
             
             if ($pdo_security_db) {
-                $data_db_sql = file_get_contents(CO_Config::test_class_dir().'/sql/'.$in_file_prefix.'_data.sql');
-                $security_db_sql = file_get_contents(CO_Config::test_class_dir().'/sql/'.$in_file_prefix.'_security.sql');
+                $data_db_sql = file_get_contents(CO_Config::badger_test_class_dir().'/sql/'.$in_file_prefix.'_data.sql');
+                $security_db_sql = file_get_contents(CO_Config::badger_test_class_dir().'/sql/'.$in_file_prefix.'_security.sql');
                 
                 $error = NULL;
         
@@ -272,8 +272,8 @@
                             echo("<strong>Database class dir</strong>....".CO_Config::db_class_dir()."\n");
                             echo("<strong>Database classes dir</strong>..".CO_Config::db_classes_class_dir()."\n");
                             echo("<strong>Shared class dir</strong>......".CO_Config::shared_class_dir()."\n");
-                            echo("<strong>Localization dir</strong>......".CO_Config::lang_class_dir()."\n");
-                            echo("<strong>Test class dir</strong>........".CO_Config::test_class_dir()."\n");
+                            echo("<strong>Localization dir</strong>......".CO_Config::badger_lang_class_dir()."\n");
+                            echo("<strong>Test class dir</strong>........".CO_Config::badger_test_class_dir()."\n");
                             echo("<strong>Extension classes dir</strong>.".CO_Config::db_classes_extension_class_dir()."\n");
                             echo("</pre></div>");
                         ?>
