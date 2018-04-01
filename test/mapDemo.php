@@ -41,7 +41,7 @@
             define('LGV_ERROR_CATCHER', 1);
         }
 
-        require_once(CO_Config::shared_class_dir().'/error.class.php');
+        require_once(CO_Config::badger_shared_class_dir().'/error.class.php');
         
         $pdo_data_db = NULL;
         try {

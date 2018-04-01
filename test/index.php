@@ -34,7 +34,7 @@
             define('LGV_ERROR_CATCHER', 1);
         }
 
-        require_once(CO_Config::shared_class_dir().'/error.class.php');
+        require_once(CO_Config::badger_shared_class_dir().'/error.class.php');
         
         $pdo_data_db = NULL;
         try {
@@ -271,7 +271,7 @@
                             echo("<strong>Main class dir</strong>........".CO_Config::main_class_dir()."\n");
                             echo("<strong>Database class dir</strong>....".CO_Config::db_class_dir()."\n");
                             echo("<strong>Database classes dir</strong>..".CO_Config::db_classes_class_dir()."\n");
-                            echo("<strong>Shared class dir</strong>......".CO_Config::shared_class_dir()."\n");
+                            echo("<strong>Shared class dir</strong>......".CO_Config::badger_shared_class_dir()."\n");
                             echo("<strong>Localization dir</strong>......".CO_Config::badger_lang_class_dir()."\n");
                             echo("<strong>Test class dir</strong>........".CO_Config::badger_test_class_dir()."\n");
                             echo("<strong>Extension classes dir</strong>.".CO_Config::db_classes_extension_class_dir()."\n");

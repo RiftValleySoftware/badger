@@ -113,7 +113,7 @@ class CO_Access {
             define('LGV_ERROR_CATCHER', 1);
         }
         
-        require_once(CO_Config::shared_class_dir().'/error.class.php');
+        require_once(CO_Config::badger_shared_class_dir().'/error.class.php');
         
 	    if ( !defined('LGV_DB_CATCHER') ) {
             define('LGV_DB_CATCHER', 1);

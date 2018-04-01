@@ -23,7 +23,7 @@ if ( !defined('LGV_ERROR_CATCHER') ) {
 
 require_once(CO_Config::db_class_dir().'/co_main_db_record.class.php');
 
-require_once(CO_Config::shared_class_dir().'/error.class.php');
+require_once(CO_Config::badger_shared_class_dir().'/error.class.php');
 
 /***************************************************************************************************************************/
 /**

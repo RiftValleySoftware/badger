@@ -85,7 +85,7 @@ class CO_Config {
     /**
     \returns the POSIX path to the main access class directory.
      */
-    static function shared_class_dir() {
+    static function badger_shared_class_dir() {
         return self::base_dir().'/shared';
     }
     
