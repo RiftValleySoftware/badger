@@ -1,8 +1,9 @@
-**1.0.0.2000** *(March 31, 2018)*
+**1.0.0.2000** *(April 1, 2018)*
 
 - Improved the map demo.
 - Fixed a couple of pagination issues.
 - Added more testing.
+- Changed the names of the config items to avoid collisions with user apps.
 - Beta release.
 
 **1.0.0.1003** *(March 29, 2018)*
