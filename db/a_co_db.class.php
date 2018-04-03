@@ -317,16 +317,22 @@ abstract class A_CO_DB {
     
     \returns an array, containing one or more instances of a subclass of A_CO_DB_Table_Base (Each instance may be a different class)
      */
-    public function get_all_readable_records(   $open_only = FALSE  ///< If TRUE, then we will look for ONLY records with a NULL or 0 read_security_id, even if we are logged in.
+    public function get_all_readable_records(   $open_only = FALSE, ///< If TRUE, then we will look for ONLY records with a NULL or 0 read_security_id, even if we are logged in.
+                                                $in_this_id = NULL  ///< If we are in "god mode," we can look for particular IDs.
                                             ) {
         $ret = NULL;
         
         $predicate = $open_only ? '((`read_security_id`=0) OR (`read_security_id` IS NULL))' : $this->_create_security_predicate();
         
         // No need for an AND, as the predicate is the only qualifier.
-        
         if (!$predicate) {
-            $predicate = '1'; // If we are in "God Mode," we could get no predicate, so we just go with "1".
+            $in_this_id = intval($in_this_id);
+            if ($in_this_id) {  // We can look for certain IDs in God Mode.
+                $predicate = "(`read_security_id`=$in_this_id)";
+                
+            } else {
+                $predicate = '1'; // If we are in "God Mode," we could get no predicate, so we just go with "1".
+            }
         }
         
         $sql = 'SELECT * FROM `'.$this->table_name.'` WHERE '.$predicate;
@@ -351,7 +357,8 @@ abstract class A_CO_DB {
     
     \returns an array, containing one or more instances of a subclass of A_CO_DB_Table_Base (Each instance may be a different class)
      */
-    public function get_all_writeable_records() {
+    public function get_all_writeable_records(  $in_this_id = NULL  ///< If we are in "god mode," we can look for particular IDs.
+                                            ) {
         $ret = NULL;
         
         $access_ids = $this->access_object->get_security_ids();
@@ -360,8 +367,15 @@ abstract class A_CO_DB {
         if (isset($access_ids) && is_array($access_ids) && count($access_ids)) {
             $predicate = $this->_create_security_predicate(TRUE);
         
+            // No need for an AND, as the predicate is the only qualifier.
             if (!$predicate) {
-                $predicate = '1'; // If we are in "God Mode," we could get no predicate, so we just go with "1".
+                $in_this_id = intval($in_this_id);
+                if ($in_this_id) {  // We can look for certain IDs in God Mode.
+                    $predicate = "(`write_security_id`=$in_this_id)";
+                
+                } else {
+                    $predicate = '1'; // If we are in "God Mode," we could get no predicate, so we just go with "1".
+                }
             }
         
             $sql = 'SELECT * FROM `'.$this->table_name.'` WHERE '.$predicate;

@@ -1,3 +1,7 @@
+**1.0.0.2001** *(April 3, 2018)*
+
+- Added a few powerful "God Mode" auditing functions for determining who has access to what.
+
 **1.0.0.2000** *(April 1, 2018)*
 
 - Improved the map demo.

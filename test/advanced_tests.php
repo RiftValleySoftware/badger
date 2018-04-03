@@ -420,6 +420,7 @@
             echo('<p style="margin-left:1em;color:red;font-weight:bold">Error: ('.$access_instance->error->error_code.') '.$access_instance->error->error_name.' ('.$access_instance->error->error_description.')</p>');
         }
     }
+    
     function advanced_test_2($in_login = NULL, $in_hashed_password = NULL, $in_password = NULL) {
         $access_instance = NULL;
         
@@ -454,6 +455,7 @@
             echo('<p style="margin-left:1em;color:red;font-weight:bold">Error: ('.$access_instance->error->error_code.') '.$access_instance->error->error_name.' ('.$access_instance->error->error_description.')</p>');
         }
     }
+    
     function advanced_test_3($in_login = NULL, $in_hashed_password = NULL, $in_password = NULL) {
         $access_instance = NULL;
         

@@ -13,7 +13,7 @@
 */
 defined( 'LGV_ACCESS_CATCHER' ) or die ( 'Cannot Execute Directly' );	// Makes sure that this file is in the correct context.
 
-define('__BADGER_VERSION__', '1.0.0.2000');
+define('__BADGER_VERSION__', '1.0.0.2001');
 
 if ( !defined('LGV_MD_CATCHER') ) {
     define('LGV_MD_CATCHER', 1);
@@ -319,12 +319,13 @@ class CO_Access {
     
     \returns an array of instances.
      */
-    public function get_all_data_readable_records(  $open_only = FALSE  ///< If TRUE, then we will look for ONLY records with a NULL or 0 read_security_id
+    public function get_all_data_readable_records(  $open_only = FALSE,  ///< If TRUE, then we will look for ONLY records with a NULL or 0 read_security_id
+                                                    $in_this_id = NULL  ///< If we are in "god mode," we can look for particular IDs.
                                                 ) {
         $ret = NULL;
         
         if (isset($this->_data_db_object) && $this->_data_db_object) {
-            $ret = $this->_data_db_object->get_all_readable_records($open_only);
+            $ret = $this->_data_db_object->get_all_readable_records($open_only, $in_this_id);
         }
         
         return $ret;
@@ -336,11 +337,12 @@ class CO_Access {
     
     \returns an array of instances.
      */
-    public function get_all_data_writeable_records() {
+    public function get_all_data_writeable_records( $in_this_id = NULL  ///< If we are in "god mode," we can look for particular IDs.
+                                                    ) {
         $ret = NULL;
         
         if (isset($this->_data_db_object) && $this->_data_db_object) {
-            $ret = $this->_data_db_object->get_all_writeable_records();
+            $ret = $this->_data_db_object->get_all_writeable_records($in_this_id);
         
             if ($this->_data_db_object->error) {
                 $this->error = $this->_data_db_object->error;
@@ -409,11 +411,12 @@ class CO_Access {
     
     \returns an array of instances.
      */
-    public function get_all_security_readable_records() {
+    public function get_all_security_readable_records( $in_this_id = NULL  ///< If we are in "god mode," we can look for particular IDs.
+                                                        ) {
         $ret = NULL;
         
         if (isset($this->_security_db_object) && $this->_security_db_object) {
-            $ret = $this->_security_db_object->get_all_readable_records();
+            $ret = $this->_security_db_object->get_all_readable_records($in_this_id);
         
             if ($this->_security_db_object->error) {
                 $this->error = $this->_security_db_object->error;
@@ -431,11 +434,12 @@ class CO_Access {
     
     \returns an array of instances.
      */
-    public function get_all_security_writeable_records() {
+    public function get_all_security_writeable_records( $in_this_id = NULL  ///< If we are in "god mode," we can look for particular IDs.
+                                                        ) {
         $ret = NULL;
         
         if (isset($this->_security_db_object) && $this->_security_db_object) {
-            $ret = $this->_security_db_object->get_all_writeable_records();
+            $ret = $this->_security_db_object->get_all_writeable_records($in_this_id);
         
             if ($this->_security_db_object->error) {
                 $this->error = $this->_security_db_object->error;
@@ -520,5 +524,24 @@ class CO_Access {
         }
         
         return $ret;
-    } 
+    }
+    
+    /***********************/
+    /**
+    This is only usable by the "god mode" admin.
+    
+    You give a security ID, and you will get all security DB IDs that have that token in their list (or are of that ID).
+    
+    If this is not the God admin, then an empty array is returned.
+    
+    \returns an array of int, with each element being the ID (in the security DB) of the logins that can see/modify the items with that token.
+     */
+    public function get_all_logins_with_access( $in_security_token  ///< An integer, with the requested security token.
+                                                ) {
+        if (!isset($this->_security_db_object) || !$this->_security_db_object) {
+            return Array();
+        }
+        
+        return $this->_security_db_object->get_all_logins_with_access($in_security_token);
+    }
 };

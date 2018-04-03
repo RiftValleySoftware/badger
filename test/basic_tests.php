@@ -159,6 +159,112 @@
                         echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
+                
+                echo('<div id="test-009B" class="inner_closed">');
+                    echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-009B\')">TEST 9B: Fetch IDs of logins that can access certain security tokens.</a></h2>');
+
+                    echo('<div class="main_div inner_container">');
+                        ?>
+                        <div class="main_div" style="margin-right:2em">
+                        <p class="explain">In this exercise, we log in as "God," and see who has access to various IDs.</p>
+                        </div>
+                        <?php
+                        $start = microtime(TRUE);
+                        for ($id = 2; $id < 8; $id++) {
+                            fetch_security_ids($id, 'admin', '', CO_Config::$god_mode_password);
+                        }
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                    echo('</div>');
+                echo('</div>');
+                
+                echo('<div id="test-009C" class="inner_closed">');
+                    echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-009C\')">TEST 9C: Fail to fetch IDs of logins that can access certain security tokens.</a></h2>');
+
+                    echo('<div class="main_div inner_container">');
+                        ?>
+                        <div class="main_div" style="margin-right:2em">
+                        <p class="explain">In this exercise, we log in as "secondary," and see who has access to various IDs.</p>
+                        <p class="explain">We expect to get a big bunch of nothing.</p>
+                        </div>
+                        <?php
+                        $start = microtime(TRUE);
+                        for ($id = 2; $id < 8; $id++) {
+                            fetch_security_ids($id, 'secondary', '', 'CoreysGoryStory');
+                        }
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                    echo('</div>');
+                echo('</div>');
+                
+                echo('<div id="test-009D" class="inner_closed">');
+                    echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-009D\')">TEST 9D: Fail to fetch IDs of logins that can access certain security tokens.</a></h2>');
+
+                    echo('<div class="main_div inner_container">');
+                        ?>
+                        <div class="main_div" style="margin-right:2em">
+                        <p class="explain">In this exercise, we do not log in at all, and see who has access to various IDs.</p>
+                        <p class="explain">We expect to get a big bunch of nothing.</p>
+                        </div>
+                        <?php
+                        $start = microtime(TRUE);
+                        for ($id = 2; $id < 8; $id++) {
+                            fetch_security_ids($id);
+                        }
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                    echo('</div>');
+                echo('</div>');
+                
+                echo('<div id="test-009E" class="inner_closed">');
+                    echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-009E\')">TEST 9E: In God Mode, look for readable and writeable items of a certain ID.</a></h2>');
+
+                    echo('<div class="main_div inner_container">');
+                        ?>
+                        <div class="main_div" style="margin-right:2em">
+                        <p class="explain">In this exercise, we log in as "God," and see what data items are readable or writeable via certain IDs.</p>
+                        </div>
+                        <?php
+                        $start = microtime(TRUE);
+                        for ($id = 2; $id < 8; $id++) {
+                            fetch_data_ids($id, 'admin', '', CO_Config::$god_mode_password);
+                        }
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                    echo('</div>');
+                echo('</div>');
+                
+                echo('<div id="test-009F" class="inner_closed">');
+                    echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-009F\')">TEST 9F: Try the same thing, but this time, logged in as "Secondary".</a></h2>');
+
+                    echo('<div class="main_div inner_container">');
+                        ?>
+                        <div class="main_div" style="margin-right:2em">
+                        <p class="explain">In this exercise, we log in as "Secondary," and see what data items are readable or writeable via certain IDs.</p>
+                        <p class="explain">We expect to get only the items readble by the secondary login. The ID is ignored.</p>
+                        </div>
+                        <?php
+                        $start = microtime(TRUE);
+                        for ($id = 2; $id < 8; $id++) {
+                            fetch_data_ids($id, 'secondary', '', 'CoreysGoryStory');
+                        }
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                    echo('</div>');
+                echo('</div>');
+                
+                echo('<div id="test-009G" class="inner_closed">');
+                    echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-009G\')">TEST 9G: Try the same thing, but this time, with no login.</a></h2>');
+
+                    echo('<div class="main_div inner_container">');
+                        ?>
+                        <div class="main_div" style="margin-right:2em">
+                        <p class="explain">In this exercise, we don't log in, and see what data items are readable or writeable via certain IDs.</p>
+                        <p class="explain">We expect to get only the items readble by the general public. The ID is ignored.</p>
+                        </div>
+                        <?php
+                        $start = microtime(TRUE);
+                        for ($id = 2; $id < 8; $id++) {
+                            fetch_data_ids($id);
+                        }
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                    echo('</div>');
+                echo('</div>');
             echo('</div>');
         echo('</div>');
         echo('<div id="write-tests" class="closed">');
@@ -219,6 +325,91 @@
     ?>
 </div>
 <?php
+    function fetch_security_ids($id, $in_login = NULL, $in_hashed_password = NULL, $in_password = NULL) {
+        $access_instance = NULL;
+        
+        if ( !defined('LGV_ACCESS_CATCHER') ) {
+            define('LGV_ACCESS_CATCHER', 1);
+        }
+        
+        require_once(CO_Config::badger_main_class_dir().'/co_access.class.php');
+        
+        $access_instance = new CO_Access($in_login, $in_hashed_password, $in_password);
+        
+        if ($access_instance->valid) {
+            $test_item = $access_instance->get_all_logins_with_access($id);
+            echo('<div class="inner_div">');
+                if ( isset($test_item) ) {
+                    if (is_array($test_item)) {
+                        if (count($test_item)) {
+                            echo("<p>These IDs can access $id: ".implode(', ', $test_item).'</p>');                            
+                        } else {
+                            echo("<p>No IDs can access $id</p>");                            
+                        }
+                    }
+                }
+            echo('</div>');
+        } else {
+            echo("<h2 style=\"color:red;font-weight:bold\">The access instance is not valid!</h2>");
+            echo('<p style="margin-left:1em;color:red;font-weight:bold">Error: ('.$access_instance->error->error_code.') '.$access_instance->error->error_name.' ('.$access_instance->error->error_description.')</p>');
+        }
+    }
+    
+    function fetch_data_ids($id, $in_login = NULL, $in_hashed_password = NULL, $in_password = NULL) {
+        $access_instance = NULL;
+        
+        if ( !defined('LGV_ACCESS_CATCHER') ) {
+            define('LGV_ACCESS_CATCHER', 1);
+        }
+        
+        require_once(CO_Config::badger_main_class_dir().'/co_access.class.php');
+        
+        $access_instance = new CO_Access($in_login, $in_hashed_password, $in_password);
+        
+        if ($access_instance->valid) {
+            $test_item = $access_instance->get_all_data_readable_records(FALSE, $id);
+            echo("<h4>Test ID $id:</h4>");
+            echo('<div class="inner_div">');
+                echo('<div class="inner_div">');
+                    if ( isset($test_item) ) {
+                        if (is_array($test_item)) {
+                            if (count($test_item)) {
+                                echo("<h4>These Items Are Explicitly Readable by $id:</h4>");
+                                foreach ( $test_item as $item ) {
+                                    display_record($item);
+                                }
+                            } else {
+                                echo("<h4>NO ITEMS!</h4>");
+                            }
+                        } else {
+                            echo("<h4 style=\"color:red;font-weight:bold\">NO ARRAY!</h4>");
+                        }
+                    }
+                echo('</div>');
+                $test_item = $access_instance->get_all_data_writeable_records($id);
+                echo('<div class="inner_div">');
+                    if ( isset($test_item) ) {
+                        if (is_array($test_item)) {
+                            if (count($test_item)) {
+                                echo("<h4>These Items Are Explicitly Writeable by $id:</h4>");
+                                foreach ( $test_item as $item ) {
+                                    display_record($item);
+                                }
+                            } else {
+                                echo("<h4>NO ITEMS!</h4>");
+                            }
+                        } else {
+                            echo("<h4 style=\"color:red;font-weight:bold\">NO ARRAY!</h4>");
+                        }
+                    }
+                echo('</div>');
+            echo('</div>');
+        } else {
+            echo("<h2 style=\"color:red;font-weight:bold\">The access instance is not valid!</h2>");
+            echo('<p style="margin-left:1em;color:red;font-weight:bold">Error: ('.$access_instance->error->error_code.') '.$access_instance->error->error_name.' ('.$access_instance->error->error_description.')</p>');
+        }
+    }
+    
     function try_dbs($in_login = NULL, $in_hashed_password = NULL, $in_password = NULL) {
         $access_instance = NULL;
         
