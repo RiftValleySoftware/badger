@@ -41,7 +41,8 @@ loadTestMap.prototype.loadMap = function() {
             this.m_main_map.m_calculated_markers_array = new Array();
             this.m_main_map.m_ru_paul = false;
             this.m_main_map.m_info_window_opening = false;
-    
+            this.setUpButtonBox();
+            
             google.maps.event.addListener(this.m_main_map, 'click', this.mapClicked);
             google.maps.event.addListenerOnce(this.m_main_map, 'tilesloaded', this.mapLoaded);
         };
@@ -335,6 +336,27 @@ loadTestMap.prototype.meetingCallback = function (  in_response_object, ///< The
         eval("in_context.m_meeting_array = " + in_response_object.responseText + ";");
         in_context.displayMeetingMarkers();
     };
+};
+
+loadTestMap.prototype.setUpButtonBox = function() {
+    var centerControlDiv = document.createElement ( 'div' );
+    if (centerControlDiv) {
+        centerControlDiv.id = "centerControlDiv";
+        centerControlDiv.className = "centerControlDiv";
+
+        var toggleButton = document.createElement ( 'input' );
+        toggleButton.type = 'button';
+        toggleButton.value = "Return to Main Test Page";
+        toggleButton.className = "returnTestPageButton";
+        toggleButton.addEventListener ( 'click', this.returnToTest );
+        centerControlDiv.appendChild ( toggleButton );
+
+        this.m_main_map.controls[google.maps.ControlPosition.TOP_CENTER].push ( centerControlDiv );
+    };
+};
+
+loadTestMap.prototype.returnToTest = function() {
+    window.location.href = './';
 };
 
 /****************************************************************************************//**
