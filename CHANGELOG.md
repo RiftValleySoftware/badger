@@ -1,3 +1,8 @@
+**1.0.0.2002** *(April 5, 2018)*
+
+- Removed the unused key storage routines.
+- Added a method to allow an instance to be queried for its access object.
+
 **1.0.0.2001** *(April 3, 2018)*
 
 - Added a few powerful "God Mode" auditing functions for determining who has access to what.
