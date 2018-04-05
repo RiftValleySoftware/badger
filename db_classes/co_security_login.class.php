@@ -103,33 +103,6 @@ class CO_Security_Login extends CO_Security_Node {
     
     /***********************/
     /**
-    This returns a saved private key
-    
-    \returns a string (the private key) or NULL
-     */
-    public function get_private_key() {
-        $this->reload_from_db();
-        
-        $ret = (isset($this->context['p_key']) && $this->context['p_key']) ? $this->context['p_key'] : NULL;
-        
-        return $ret;
-    }
-    
-    /***********************/
-    /**
-    Sets the private key.
-    
-    \returns TRUE, if the operation was successful.
-     */
-    public function set_private_key($in_private_key
-                                    ) {
-        $this->context['p_key'] = (isset($in_private_key) && $in_private_key) ? $in_private_key : NULL;
-        
-        return $this->update_db();
-    }
-    
-    /***********************/
-    /**
     \returns TRUE, if the presented credentials are good.
      */
     public function is_login_valid( $in_login_id,               ///< The login ID

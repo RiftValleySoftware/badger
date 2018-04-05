@@ -331,6 +331,10 @@ abstract class A_CO_DB_Table_Base {
     
     /***********************/
     /**
+    This gets the object data from the database, using the instance's ID, and reloads everything.
+    It throws out the current state, and replaces it with the one stored in the database.
+    
+    \returns TRUE, if successful
      */
     public function reload_from_db() {
         $db_result = $this->_db_object->get_single_raw_row_by_id($this->id());
@@ -340,5 +344,13 @@ abstract class A_CO_DB_Table_Base {
         }
         
         return FALSE;
+    }
+    
+    /***********************/
+    /**
+    \returns the access object for this instance.
+     */
+    public function get_access_object() {
+        return $this->_db_object->access_object;
     }
 };
