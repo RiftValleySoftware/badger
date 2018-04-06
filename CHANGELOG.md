@@ -1,3 +1,7 @@
+**1.0.0.2003** *(April 6, 2018)*
+
+- Added accessors that check user write access for a number of basic object properties.
+
 **1.0.0.2002** *(April 5, 2018)*
 
 - Removed the unused key storage routines.

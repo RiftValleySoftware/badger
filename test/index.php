@@ -88,8 +88,8 @@
             echo("<p>Read: $in_record_object->read_security_id</p>");
             echo("<p>Write: $in_record_object->write_security_id</p>");
             
-            if (intval($in_record_object->owner_id)) {
-                echo("<p>Owner: ".intval($in_record_object->owner_id)."</p>");
+            if (method_exists($in_record_object, 'owner_id')) {
+                echo("<p>Owner: ".intval($in_record_object->owner_id())."</p>");
             }
             
             if (isset($in_record_object->last_access)) {
@@ -101,19 +101,23 @@
                 echo("<p>Distance: $distance"."Km</p>");
             }
             
-            for ($tagid = 0; $tagid < 10; $tagid++ ) {
-                $tag = NULL;
-                if (isset($in_record_object->tags[$tagid])) {
-                    $tag = trim($in_record_object->tags[$tagid]);
-                    echo("<p>Tag $tagid: \"$tag\"</p>");
+            if (method_exists($in_record_object, 'tags')) {
+                for ($tagid = 0; $tagid < 10; $tagid++ ) {
+                    $tag = NULL;
+                    $tags = $in_record_object->tags();
+                    if (isset($tags[$tagid])) {
+                        $tag = trim($tags[$tagid]);
+                        echo("<p>Tag $tagid: \"$tag\"</p>");
+                    }
                 }
             }
             
             if ( $in_record_object instanceof CO_Security_Login) {
-                if ( isset($in_record_object->ids) && is_array($in_record_object->ids) && count($in_record_object->ids)) {
+                $ids = $in_record_object->ids();
+                if ( isset($ids) && is_array($ids) && count($ids)) {
                     echo("<p>IDs: ");
                         $first = TRUE;
-                        foreach ( $in_record_object->ids as $id ) {
+                        foreach ( $ids as $id ) {
                             if (!$first) {
                                 echo(", ");
                             } else {

@@ -26,8 +26,8 @@ This is the main instance base class for records in the main "data" database.
 class CO_Main_DB_Record extends A_CO_DB_Table_Base {
     static  $s_table_name = 'co_data_nodes';
 
-    var $owner_id;
-    var $tags;
+    protected $_owner_id;
+    protected $_tags;
     
     private $_raw_payload;
     
@@ -40,11 +40,11 @@ class CO_Main_DB_Record extends A_CO_DB_Table_Base {
      */
     protected function _default_setup() {
         $default_setup = parent::_default_setup();
-        $default_setup['owner_id'] = $this->owner_id;
+        $default_setup['owner_id'] = $this->_owner_id;
 
         for ($tag_no = 0; $tag_no < 10; $tag_no++) {
             $key = "tag$tag_no";
-            $tag_val = (isset($this->tags) && is_array($this->tags) && ($tag_no < count($this->tags))) ? $this->tags[$tag_no] : '';
+            $tag_val = (isset($this->_tags) && is_array($this->_tags) && ($tag_no < count($this->_tags))) ? $this->_tags[$tag_no] : '';
             $default_setup[$key] = $tag_val;
         }
         
@@ -66,12 +66,12 @@ class CO_Main_DB_Record extends A_CO_DB_Table_Base {
             $this->name = (isset($this->name) && trim($this->name)) ? trim($this->name) : "Base Class Instance ($this->_id)";
             
             if ($this->_db_object) {
-                $this->owner_id = NULL;
-                $this->tags = array();
+                $this->_owner_id = NULL;
+                $this->_tags = array();
                 $this->_raw_payload = NULL;
         
                 if (isset($in_db_result['owner'])) {
-                    $this->owner_id = $in_db_result['owner'];
+                    $this->_owner_id = $in_db_result['owner'];
                 }
 
                 if (isset($in_db_result['payload']) ) {
@@ -81,14 +81,14 @@ class CO_Main_DB_Record extends A_CO_DB_Table_Base {
                 for ($tag_no = 0; $tag_no < 10; $tag_no++) {
                     $key = "tag$tag_no";
                     $tag_val = (isset($in_db_result[$key])) && $in_db_result[$key] ? $in_db_result[$key] : '';
-                    $this->tags[$tag_no] = $tag_val;
+                    $this->_tags[$tag_no] = $tag_val;
                 }
         
                 for ($i = 0; $i < 10; $i++) {
                     $tagname = 'tag'.$i;
-                    $this->tags[$i] = '';
+                    $this->_tags[$i] = '';
                     if (isset($in_db_result[$tagname])) {
-                        $this->tags[$i] = $in_db_result[$tagname];
+                        $this->_tags[$i] = $in_db_result[$tagname];
                     }
                 }
             }
@@ -106,11 +106,11 @@ class CO_Main_DB_Record extends A_CO_DB_Table_Base {
     protected function _build_parameter_array() {
         $ret = parent::_build_parameter_array();    // Start with the base class.
         
-        $ret['owner'] = $this->owner_id;
+        $ret['owner'] = $this->_owner_id;
         for ($tag_no = 0; $tag_no < 10; $tag_no++) {
             $key = "tag$tag_no";
-            if (isset($this->tags[$tag_no])) {
-                $ret[$key] = $this->tags[$tag_no];
+            if (isset($this->_tags[$tag_no])) {
+                $ret[$key] = $this->_tags[$tag_no];
             } else {
                 $ret[$key] = '';
             }
@@ -131,8 +131,8 @@ class CO_Main_DB_Record extends A_CO_DB_Table_Base {
 	                                $in_owner_id = NULL,    ///< The ID of the object (in the database) that "owns" this instance.
 	                                $in_tags_array = NULL   ///< An array of strings, up to ten elements long, for the tags.      
                                 ) {
-        $this->owner_id = intval($in_owner_id);
-        $this->tags = (isset($in_tags_array) && is_array($in_tags_array) && count($in_tags_array)) ? array_map(function($in) { return strval($in); }, $in_tags_array) : Array();
+        $this->_owner_id = intval($in_owner_id);
+        $this->_tags = (isset($in_tags_array) && is_array($in_tags_array) && count($in_tags_array)) ? array_map(function($in) { return strval($in); }, $in_tags_array) : Array();
         parent::__construct($in_db_object, $in_db_result);
     }
     
@@ -146,8 +146,8 @@ class CO_Main_DB_Record extends A_CO_DB_Table_Base {
                                         ) {
         $ret = FALSE;
         
-        if (isset($in_new_id)) {
-            $this->owner_id = intval($in_new_id);
+        if (isset($in_new_id) && $this->user_can_write()) {
+            $this->_owner_id = intval($in_new_id);
             $ret = $this->update_db();
         }
         
@@ -164,8 +164,8 @@ class CO_Main_DB_Record extends A_CO_DB_Table_Base {
                             ) {
         $ret = FALSE;
         
-        if (isset($in_tags_array) && is_array($in_tags_array) && count($in_tags_array) && (11 > count($in_tags_array))) {
-            $this->tags = array_map(function($in) { return strval($in); }, $in_tags_array);
+        if (isset($in_tags_array) && is_array($in_tags_array) && count($in_tags_array) && (11 > count($in_tags_array)) && $this->user_can_write()) {
+            $this->_tags = array_map(function($in) { return strval($in); }, $in_tags_array);
             $ret = $this->update_db();
         }
         
@@ -185,12 +185,12 @@ class CO_Main_DB_Record extends A_CO_DB_Table_Base {
         
         $in_tag_index = intval($in_tag_index);
         
-        if (isset($in_tag_value) && (10 > $in_tag_index)) {
-            if (!isset($this->tags) || !$this->tags) {
-                $this->tags = Array();
+        if (isset($in_tag_value) && (10 > $in_tag_index) && $this->user_can_write()) {
+            if (!isset($this->_tags) || !$this->_tags) {
+                $this->_tags = Array();
             }
-            $this->tags[$in_tag_index] = strval($in_tag_value);
             
+            $this->_tags[$in_tag_index] = strval($in_tag_value);
             $ret = $this->update_db();
         }
         
@@ -215,8 +215,29 @@ class CO_Main_DB_Record extends A_CO_DB_Table_Base {
      */
     public function set_payload(    $in_payload ///< The raw payload to be stored.
                                 ) {
-        $this->_raw_payload = $in_payload;
+        $ret = FALSE;
         
-        return $this->update_db();
+        if ($this->user_can_write()) {
+            $this->_raw_payload = $in_payload;
+            $ret = $this->update_db();
+        }
+        
+        return $ret;
+    }
+    
+    /***********************/
+    /**
+    \returns the current owner ID.
+     */
+    public function owner_id() {
+        return $this->_owner_id;
+    }
+    
+    /***********************/
+    /**
+    \returns the current tags.
+     */
+    public function tags() {
+        return $this->_tags;
     }
 };

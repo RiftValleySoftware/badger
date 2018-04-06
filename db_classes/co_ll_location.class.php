@@ -20,8 +20,8 @@ require_once(CO_Config::db_class_dir().'/co_main_db_record.class.php');
 This is a specialization of the basic data class, implementing the long/lat fields (built into the table structure, but unused by base classes).
  */
 class CO_LL_Location extends CO_Main_DB_Record {
-    var $longitude;
-    var $latitude;
+    protected $_longitude;
+    protected $_latitude;
     
     /***********************************************************************************************************************/
     /***********************/
@@ -36,8 +36,8 @@ class CO_LL_Location extends CO_Main_DB_Record {
      */
     protected function _default_setup() {
         $default_setup = parent::_default_setup();
-        $default_setup['longitude'] = (NULL != $this->longitude) ? $this->longitude : 0;
-        $default_setup['latitude'] = (NULL != $this->latitude) ? $this->latitude : 0;
+        $default_setup['longitude'] = (NULL != $this->_longitude) ? $this->_longitude : 0;
+        $default_setup['latitude'] = (NULL != $this->_latitude) ? $this->_latitude : 0;
         
         return $default_setup;
     }
@@ -53,8 +53,8 @@ class CO_LL_Location extends CO_Main_DB_Record {
     protected function _build_parameter_array() {
         $ret = parent::_build_parameter_array();
         
-        $ret['longitude'] = $this->longitude;
-        $ret['latitude'] = $this->latitude;
+        $ret['longitude'] = $this->_longitude;
+        $ret['latitude'] = $this->_latitude;
         
         return $ret;
     }
@@ -74,17 +74,17 @@ class CO_LL_Location extends CO_Main_DB_Record {
         
             if ($this->_db_object) {
                 if (isset($in_db_result['longitude'])) {
-                    $this->longitude = doubleval($in_db_result['longitude']);
+                    $this->_longitude = doubleval($in_db_result['longitude']);
                 }
         
                 if (isset($in_db_result['latitude'])) {
-                    $this->latitude = doubleval($in_db_result['latitude']);
+                    $this->_latitude = doubleval($in_db_result['latitude']);
                 }
             }
         }
         
         $this->class_description = "Generic longitude/latitude Class.";
-        $this->instance_description = isset($this->name) && $this->name ? "$this->name ($this->longitude, $this->latitude)" : "($this->longitude, $this->latitude)";
+        $this->instance_description = isset($this->name) && $this->name ? "$this->name ($this->_longitude, $this->_latitude)" : "($this->_longitude, $this->_latitude)";
         
         return $ret;
     }
@@ -101,8 +101,8 @@ class CO_LL_Location extends CO_Main_DB_Record {
 	                                $in_longitude = NULL,   ///< An initial longitude value.
 	                                $in_latitude = NULL     //< An initial latitude value.
                                 ) {
-        $this->longitude = $in_longitude;
-        $this->latitude = $in_latitude;
+        $this->_longitude = $in_longitude;
+        $this->_latitude = $in_latitude;
         
         parent::__construct($in_db_object, $in_db_result, $in_owner_id, $in_tags_array);
     }
@@ -118,7 +118,7 @@ class CO_LL_Location extends CO_Main_DB_Record {
     public function update_db() {
         $ret = parent::update_db();
         if ($ret) {
-            $this->instance_description = isset($this->name) && $this->name ? "$this->name ($this->longitude, $this->latitude)" : "($this->longitude, $this->latitude)";
+            $this->instance_description = isset($this->name) && $this->name ? "$this->name ($this->_longitude, $this->_latitude)" : "($this->_longitude, $this->_latitude)";
         }
         
         return $ret;
@@ -134,8 +134,8 @@ class CO_LL_Location extends CO_Main_DB_Record {
                                     ) {
         $ret = FALSE;
         
-        if (isset($in_new_value)) {
-            $this->longitude = floatval($in_new_value);
+        if (isset($in_new_value) && $this->user_can_write()) {
+            $this->_longitude = floatval($in_new_value);
             $ret = $this->update_db();
         }
         
@@ -152,11 +152,27 @@ class CO_LL_Location extends CO_Main_DB_Record {
                                     ) {
         $ret = FALSE;
         
-        if (isset($in_new_value)) {
-            $this->latitude = floatval($in_new_value);
+        if (isset($in_new_value) && $this->user_can_write()) {
+            $this->_latitude = floatval($in_new_value);
             $ret = $this->update_db();
         }
         
         return $ret;
+    }
+    
+    /***********************/
+    /**
+    \returns The current longitude value.
+     */
+    public function longitude() {
+        return $this->_longitude;
+    }
+    
+    /***********************/
+    /**
+    \returns The current latitude value.
+     */
+    public function latitude() {
+        return $this->_latitude;
     }
 };

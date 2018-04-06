@@ -24,7 +24,7 @@ require_once(CO_Config::db_class_dir().'/a_co_db_table_base.class.php');
 This is the base class for records in the security database.
  */
 class CO_Security_Node extends A_CO_DB_Table_Base {
-    var $ids;
+    protected $_ids;
     
     /***********************************************************************************************************************/
     /***********************/
@@ -39,7 +39,7 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
      */
     protected function _default_setup() {
         $default_setup = parent::_default_setup();
-        $default_setup['ids'] = (NULL != $this->ids) ? $this->ids : '';
+        $default_setup['ids'] = (NULL != $this->_ids) ? $this->_ids : '';
         return $default_setup;
     }
     
@@ -54,7 +54,7 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
     protected function _build_parameter_array() {
         $ret = parent::_build_parameter_array();
         
-        $ids_as_string_array = array_map(function($in) { return strval($in); }, $this->ids);
+        $ids_as_string_array = array_map(function($in) { return strval($in); }, $this->_ids);
         
         $id_list_string = implode(',', $ids_as_string_array);
         
@@ -73,13 +73,13 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
 	                                $in_ids = NULL          ///< This is a preset array of integers, containing security IDs for the row.
                                 ) {
                                 
-        $this->ids = $in_ids;
+        $this->_ids = $in_ids;
         
         parent::__construct($in_db_object, $in_db_result);
         $this->class_description = 'The basic class for all security nodes. This should be specialized.';
                 
         if ($this->_db_object) {
-            $this->ids = Array($this->id());
+            $this->_ids = Array($this->id());
             if (isset($in_db_result['ids'])) {
                 $temp = $in_db_result['ids'];
                 
@@ -87,10 +87,10 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
                     $tempAr = explode(',', $temp);
                     if (is_array($tempAr) && count($tempAr)) {
                         $tempAr = array_map(function($in) { return intval($in); }, $tempAr);
-                        $tempAr = array_merge($this->ids, $tempAr);
+                        $tempAr = array_merge($this->_ids, $tempAr);
                         if (isset($tempAr) && is_array($tempAr) && count($tempAr)) {
                             sort($tempAr);
-                            $this->ids = $tempAr;
+                            $this->_ids = $tempAr;
                         }
                     }
                 }
@@ -110,8 +110,8 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
                             ) {
         $ret = FALSE;
         
-        if (isset($in_ids_array) && is_array($in_ids_array) && count($in_ids_array)) {
-            $this->ids = array_map(function($in) { return intval($in); }, $in_ids_array);
+        if (isset($in_ids_array) && is_array($in_ids_array) && count($in_ids_array) && $this->user_can_write()) {
+            $this->_ids = array_map(function($in) { return intval($in); }, $in_ids_array);
             $ret = $this->update_db();
         }
         
@@ -128,11 +128,11 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
                             ) {
         $ret = FALSE;
         
-        if (!isset($this->ids) || !is_array($this->ids)) {
-            $this->ids = Array(intval($in_id));
+        if (!isset($this->_ids) || !is_array($this->_ids) && $this->user_can_write()) {
+            $this->_ids = Array(intval($in_id));
         } else {
-            $this->ids[] = $in_id;
-            $this->ids = array_unique($this->ids);
+            $this->_ids[] = $in_id;
+            $this->_ids = array_unique($this->_ids);
             $ret = $this->update_db();
         }
         
@@ -149,10 +149,10 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
                             ) {
         $ret = FALSE;
         
-        if (isset($this->ids) && is_array($this->ids) && count($this->ids)) {
+        if (isset($this->_ids) && is_array($this->_ids) && count($this->_ids) && $this->user_can_write()) {
             $new_array = Array();
             
-            foreach($this->ids as $id) {
+            foreach($this->_ids as $id) {
                 if ($id != $in_id) {
                     array_push($new_array, $id);
                 }
@@ -162,5 +162,13 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
         }
         
         return $ret;
+    }
+    
+    /***********************/
+    /**
+    \returns The current IDs.
+     */
+    public function ids() {
+        return $this->_ids;
     }
 };

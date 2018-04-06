@@ -515,7 +515,7 @@ class CO_Main_Data_DB extends A_CO_DB {
                     $ret_temp = Array();
                     
                     foreach ($ret as $item) {
-                        $accurate_distance = self::_get_accurate_distance(floatval($in_search_parameters['location']['latitude']), floatval($in_search_parameters['location']['longitude']), floatval($item->latitude), floatval($item->longitude));
+                        $accurate_distance = self::_get_accurate_distance(floatval($in_search_parameters['location']['latitude']), floatval($in_search_parameters['location']['longitude']), floatval($item->latitude()), floatval($item->longitude()));
                         if ($accurate_distance <= floatval($in_search_parameters['location']['radius'])) {
                             $item->distance = $accurate_distance;
                             array_push($ret_temp, $item);
