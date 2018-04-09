@@ -165,7 +165,7 @@ class CO_Main_DB_Record extends A_CO_DB_Table_Base {
         $ret = FALSE;
         
         if (isset($in_tags_array) && is_array($in_tags_array) && count($in_tags_array) && (11 > count($in_tags_array)) && $this->user_can_write()) {
-            $this->_tags = array_map(function($in) { return strval($in); }, $in_tags_array);
+            $this->_tags = array_map('strval', $in_tags_array);
             $ret = $this->update_db();
         }
         

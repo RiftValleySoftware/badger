@@ -284,7 +284,7 @@ abstract class A_CO_DB {
         $sql = 'SELECT * FROM `'.$this->table_name.'` WHERE '.$predicate.'(';
         $params = Array();
         // Clean the array to make sure they are all integers.
-        $id_array = array_map(function($in){ return intval($in); }, $in_id_array);
+        $id_array = array_map('intval', $in_id_array);
         foreach ($id_array as $id) {
             if (0 < $id) {
                 if (0 < count($params)) {

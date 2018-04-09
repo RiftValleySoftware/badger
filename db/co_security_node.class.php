@@ -54,7 +54,7 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
     protected function _build_parameter_array() {
         $ret = parent::_build_parameter_array();
         
-        $ids_as_string_array = array_map(function($in) { return strval($in); }, $this->_ids);
+        $ids_as_string_array = array_map('strval', $this->_ids);
         
         $id_list_string = implode(',', $ids_as_string_array);
         
@@ -86,7 +86,7 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
                 if (isset ($temp) && $temp) {
                     $tempAr = explode(',', $temp);
                     if (is_array($tempAr) && count($tempAr)) {
-                        $tempAr = array_map(function($in) { return intval($in); }, $tempAr);
+                        $tempAr = array_map('intval', $tempAr);
                         $tempAr = array_merge($this->_ids, $tempAr);
                         if (isset($tempAr) && is_array($tempAr) && count($tempAr)) {
                             sort($tempAr);
@@ -111,7 +111,7 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
         $ret = FALSE;
         
         if (isset($in_ids_array) && is_array($in_ids_array) && count($in_ids_array) && $this->user_can_write()) {
-            $this->_ids = array_map(function($in) { return intval($in); }, $in_ids_array);
+            $this->_ids = array_map('intval', $in_ids_array);
             $ret = $this->update_db();
         }
         

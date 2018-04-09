@@ -320,10 +320,7 @@ abstract class A_CO_DB_Table_Base {
      */
     public function update_db() {
         if (!$this->id() || $this->user_can_write()) {
-            $result = $this->_write_to_db();
-            if ($result) {
-                return $this->reload_from_db(); // Make sure that we get exactly what we wrote.
-            }
+            return $this->_write_to_db();
         } else {
             return FALSE;
         }
@@ -337,13 +334,14 @@ abstract class A_CO_DB_Table_Base {
     \returns TRUE, if successful
      */
     public function reload_from_db() {
+        $ret = FALSE;
         $db_result = $this->_db_object->get_single_raw_row_by_id($this->id());
         $this->error = $this->_db_object->access_object->error;
         if (!isset($this->error) || !$this->error) {
-            return $this->_load_from_db($db_result);
+            $ret = $this->_load_from_db($db_result);
         }
         
-        return FALSE;
+        return $ret;
     }
     
     /***********************/

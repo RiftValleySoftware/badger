@@ -218,7 +218,7 @@ class CO_Main_Data_DB extends A_CO_DB {
         $ret = Array('sql' => '', 'params' => Array());
         
         if (isset($in_value) && is_array($in_value) && count($in_value)) {
-            $in_value = array_unique(array_map(function($in){return intval($in);}, $in_value));    // Make sure we don't have repeats.
+            $in_value = array_unique(array_map('intval', $in_value));    // Make sure we don't have repeats.
             
             foreach ($in_value as $value) {                
                 if ($value) {
