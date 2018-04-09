@@ -476,19 +476,14 @@ abstract class A_CO_DB {
                         $keys = array_keys($params_associative_array);
                     
                         $keys_sql = '(`'.implode('`,`', $keys).'`)';
-                        $values_sql = '('.implode(',', array_map(function($in){return '?';}, $keys)).')';
+                        $values_sql = '('.implode(',', array_map(function($in){return '?';}, $keys)).');';
                         
                         $sql .= " $keys_sql VALUES $values_sql";
                         $this->execute_query($sql, array_values($params_associative_array), TRUE);
                         
                         if (!$this->error) {
-                            $sql = 'SELECT LAST_INSERT_ID() FROM `'.$this->table_name.'`';
-                            $id_ar = $this->execute_query($sql, array_values($params_associative_array));
-                            
-                            if (!$this->error && isset($id_ar) && is_array($id_ar) && count($id_ar)) {
-                                // Get the ID of the new row we just created.
-                                $ret = $id_ar[0]['last_insert_id()'];
-                            }
+                            // Get the ID of the new row we just created.
+                            $ret = $this->_pdo_object->last_insert;
                         }
                     } else {
                         $this->error = new LGV_Error(   CO_Lang_Common::$pdo_error_code_illegal_write_attempt,

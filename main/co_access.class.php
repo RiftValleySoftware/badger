@@ -252,12 +252,12 @@ class CO_Access {
                 require_once($filename);
             }
             
-            if (class_exists($in_classname)) {
+            if (class_exists($in_classname) && $this->_data_db_object && $this->_security_db_object) {    // Quick test. Not allowed to do anything unless we are logged in.
                 $test_instance = new $in_classname();
 
-                if ($this->_security_db_object && ($test_instance instanceof CO_Main_DB_Record)) {
+                if ($test_instance instanceof CO_Main_DB_Record) {
                     $ret = new $in_classname($this->_data_db_object);
-                } elseif ($this->_data_db_object && ($test_instance instanceof CO_Security_Node)) {
+                } elseif ($test_instance instanceof CO_Security_Node) {
                     $ret = new $in_classname($this->_security_db_object);
                 }
         
