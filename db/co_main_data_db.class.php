@@ -398,7 +398,7 @@ class CO_Main_Data_DB extends A_CO_DB {
         // If we are doing a location/radius search, the predicate is a lot more complicated.
         if (isset($in_search_parameters['location']) && isset($in_search_parameters['location']['longitude']) && isset($in_search_parameters['location']['latitude']) && isset($in_search_parameters['location']['radius'])) {
             // We expand the radius by 5%, because we'll be triaging the results with the more accurate Vincenty calculation afterwards.
-            $predicate_temp = $this->_location_predicate($in_search_parameters['location']['longitude'], $in_search_parameters['location']['latitude'], floatval($in_search_parameters['location']['radius']) * 1.05, $and_writeable);
+            $predicate_temp = $this->_location_predicate($in_search_parameters['location']['longitude'], $in_search_parameters['location']['latitude'], floatval($in_search_parameters['location']['radius']) * 1.02, $and_writeable);
             $sql = $predicate_temp['sql'];
             $ret['params'] = $predicate_temp['params'];
             $closure = ') ORDER BY d.distance';

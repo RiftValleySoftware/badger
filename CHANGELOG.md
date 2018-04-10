@@ -1,3 +1,8 @@
+**1.0.0.2004** *(April 10, 2018)*
+
+- A number of minor tweaks and bug fixes.
+- Reduced the "overlap" in the Haversine formula.
+
 **1.0.0.2003** *(April 6, 2018)*
 
 - Added accessors that check user write access for a number of basic object properties.
