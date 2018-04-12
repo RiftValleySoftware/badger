@@ -58,6 +58,24 @@ class CO_LL_Location extends CO_Main_DB_Record {
         
         return $ret;
     }
+    
+    /***********************************************************************************************************************/
+    /***********************/
+    /**
+    Constructor (Initializer)
+     */
+	public function __construct(    $in_db_object = NULL,   ///< The database object for this instance.
+	                                $in_db_result = NULL,   ///< The database row for this instance (associative array, with database keys).
+	                                $in_owner_id = NULL,    ///< The ID of the object (in the database) that "owns" this instance.
+	                                $in_tags_array = NULL,  ///< An array of strings, up to ten elements long, for the tags.      
+	                                $in_longitude = NULL,   ///< An initial longitude value.
+	                                $in_latitude = NULL     //< An initial latitude value.
+                                ) {
+        $this->_longitude = $in_longitude;
+        $this->_latitude = $in_latitude;
+        
+        parent::__construct($in_db_object, $in_db_result, $in_owner_id, $in_tags_array);
+    }
 
     /***********************/
     /**
@@ -65,9 +83,9 @@ class CO_LL_Location extends CO_Main_DB_Record {
     
     \returns TRUE, if the instance was able to set itself up to the provided array.
      */
-    protected function _load_from_db(   $in_db_result   ///< This is an associative array, formatted as a database row response.
+    public function load_from_db(   $in_db_result   ///< This is an associative array, formatted as a database row response.
                                     ) {
-        $ret = parent::_load_from_db($in_db_result);
+        $ret = parent::load_from_db($in_db_result);
         
         if ($ret) {
             $this->class_description = 'A basic class for long/lat locations.';
@@ -87,24 +105,6 @@ class CO_LL_Location extends CO_Main_DB_Record {
         $this->instance_description = isset($this->name) && $this->name ? "$this->name ($this->_longitude, $this->_latitude)" : "($this->_longitude, $this->_latitude)";
         
         return $ret;
-    }
-    
-    /***********************************************************************************************************************/
-    /***********************/
-    /**
-    Constructor (Initializer)
-     */
-	public function __construct(    $in_db_object = NULL,   ///< The database object for this instance.
-	                                $in_db_result = NULL,   ///< The database row for this instance (associative array, with database keys).
-	                                $in_owner_id = NULL,    ///< The ID of the object (in the database) that "owns" this instance.
-	                                $in_tags_array = NULL,  ///< An array of strings, up to ten elements long, for the tags.      
-	                                $in_longitude = NULL,   ///< An initial longitude value.
-	                                $in_latitude = NULL     //< An initial latitude value.
-                                ) {
-        $this->_longitude = $in_longitude;
-        $this->_latitude = $in_latitude;
-        
-        parent::__construct($in_db_object, $in_db_result, $in_owner_id, $in_tags_array);
     }
     
     /***********************/

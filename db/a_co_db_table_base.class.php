@@ -63,57 +63,6 @@ abstract class A_CO_DB_Table_Base {
     
     /***********************/
     /**
-    This function sets up this instance, according to the DB-formatted associative array passed in.
-    
-    This should be subclassed, and the parent should be called before applying specific instance properties.
-    
-    \returns TRUE, if the instance was able to set itself up to the provided array.
-     */
-    protected function _load_from_db($in_db_result  ///< This is an associative array, formatted as a database row response.
-                                    ) {
-        $ret = FALSE;
-        $this->last_access = max(86400, time());    // Just in case of badly-set clocks in the server.
-        
-        if (isset($this->_db_object) && isset($in_db_result) && isset($in_db_result['id']) && intval($in_db_result['id'])) {
-            $ret = TRUE;
-            $this->_id = intval($in_db_result['id']);
-            
-            if (isset($in_db_result['last_access'])) {
-                $date_from_db = date_create_from_format('Y-m-d H:i:s', $in_db_result['last_access']);
-                $timestamp = date_timestamp_get($date_from_db);
-                $this->last_access = max(86400, $timestamp);
-            }
-        
-            if (isset($in_db_result['read_security_id'])) {
-                $this->read_security_id = intval($in_db_result['read_security_id']);
-            }
-        
-            if (isset($in_db_result['write_security_id'])) {
-                $this->write_security_id = intval($in_db_result['write_security_id']);
-            } else {
-                $this->write_security_id = $this->read_security_id ? -1 : intval($this->write_security_id);  // Writing is completely blocked if we have read security, but no write security specified.
-            }
-            
-            if (isset($in_db_result['object_name'])) {
-                $this->name = strval($in_db_result['object_name']);
-            }
-            
-            if (isset($in_db_result['access_class_context'])) {
-                $temp_context = unserialize($in_db_result['access_class_context']);
-    
-                if ($temp_context) {
-                    $this->context = $temp_context;
-                }
-            }
-        }
-        
-        $this->class_description = 'Abstract Base Class for Records -Should never be instantiated.';
-
-        return $ret;
-    }
-    
-    /***********************/
-    /**
     This builds up the basic section of the instance database record. It should be overloaded, and the parent called before adding new fields.
     
     \returns an associative array, in database record form.
@@ -201,8 +150,59 @@ abstract class A_CO_DB_Table_Base {
                 $in_db_result = $this->_default_setup();
             }
         
-            $this->_load_from_db($in_db_result);
+            $this->load_from_db($in_db_result);
         }
+    }
+    
+    /***********************/
+    /**
+    This function sets up this instance, according to the DB-formatted associative array passed in.
+    
+    This should be subclassed, and the parent should be called before applying specific instance properties.
+    
+    \returns TRUE, if the instance was able to set itself up to the provided array.
+     */
+    public function load_from_db(   $in_db_result   ///< This is an associative array, formatted as a database row response.
+                                ) {
+        $ret = FALSE;
+        $this->last_access = max(86400, time());    // Just in case of badly-set clocks in the server.
+        
+        if (isset($this->_db_object) && isset($in_db_result) && isset($in_db_result['id']) && intval($in_db_result['id'])) {
+            $ret = TRUE;
+            $this->_id = intval($in_db_result['id']);
+            
+            if (isset($in_db_result['last_access'])) {
+                $date_from_db = date_create_from_format('Y-m-d H:i:s', $in_db_result['last_access']);
+                $timestamp = date_timestamp_get($date_from_db);
+                $this->last_access = max(86400, $timestamp);
+            }
+        
+            if (isset($in_db_result['read_security_id'])) {
+                $this->read_security_id = intval($in_db_result['read_security_id']);
+            }
+        
+            if (isset($in_db_result['write_security_id'])) {
+                $this->write_security_id = intval($in_db_result['write_security_id']);
+            } else {
+                $this->write_security_id = $this->read_security_id ? -1 : intval($this->write_security_id);  // Writing is completely blocked if we have read security, but no write security specified.
+            }
+            
+            if (isset($in_db_result['object_name'])) {
+                $this->name = strval($in_db_result['object_name']);
+            }
+            
+            if (isset($in_db_result['access_class_context'])) {
+                $temp_context = unserialize($in_db_result['access_class_context']);
+    
+                if ($temp_context) {
+                    $this->context = $temp_context;
+                }
+            }
+        }
+        
+        $this->class_description = 'Abstract Base Class for Records -Should never be instantiated.';
+
+        return $ret;
     }
     
     /***********************/
@@ -213,6 +213,28 @@ abstract class A_CO_DB_Table_Base {
      */
     public function id() {
         return $this->_id;
+    }
+    
+    /***********************/
+    /**
+    \returns TRUE, if the current logged-in user has read permission on this record.
+     */
+    public function user_can_read() {
+        $ret = FALSE;
+        
+        $ids = $this->_db_object->access_object->get_security_ids();
+        
+        $my_read_item = intval($this->read_security_id);
+        
+        if ((0 == $my_read_item) || $this->_db_object->access_object->god_mode()) {
+            $ret = TRUE;
+        } else {
+            if (isset($ids) && is_array($ids) && count($ids)) {
+                $ret = in_array($my_read_item, $ids);
+            }
+        }
+        
+        return $ret;
     }
     
     /***********************/
@@ -338,7 +360,7 @@ abstract class A_CO_DB_Table_Base {
         $db_result = $this->_db_object->get_single_raw_row_by_id($this->id());
         $this->error = $this->_db_object->access_object->error;
         if (!isset($this->error) || !$this->error) {
-            $ret = $this->_load_from_db($db_result);
+            $ret = $this->load_from_db($db_result);
         }
         
         return $ret;

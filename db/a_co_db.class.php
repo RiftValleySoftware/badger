@@ -37,6 +37,7 @@ are never even read into the object from the database. They are excluded by SQL.
  */
 abstract class A_CO_DB {
     protected $_pdo_object;
+    protected $_existing_record_objects;
     var $access_object;
     var $class_description;
     var $error;
@@ -174,8 +175,19 @@ abstract class A_CO_DB {
                 }
             }
             
-            if (class_exists($classname)) {
-                $ret = new $classname($this, $in_db_result);
+            $id = intval($in_db_result['id']);
+            
+            if (class_exists($classname)) { // We make sure that we send references to the same object, if we instantiate it multiple times.
+                if (isset($this->_existing_record_objects[$id])) {
+                    $ret = $this->_existing_record_objects[$id];
+                    if (isset($ret)) {  // We make sure the object jives with what was given us from the DB.
+                        $ret->load_from_db($in_db_result);
+                    }
+                } else {
+                    $ret = new $classname($this, $in_db_result);
+                }
+                
+                $this->_existing_record_objects[$id] = $ret;
             }
         }
         
@@ -196,6 +208,7 @@ abstract class A_CO_DB {
         $this->error = NULL;
         $this->table_name = NULL;
         $this->_pdo_object = $in_pdo_object;
+        $this->_existing_record_objects = Array();
     }
     
     /***********************/
@@ -532,9 +545,14 @@ abstract class A_CO_DB {
             } else {
                 // Make sure she's dead, Jim. We do an open-ended check.
                 $sql = 'SELECT id FROM `'.$this->table_name.'` WHERE `id`='.$id;
+                
                 $temp = $this->execute_query($sql);
-        
                 if (!$this->error && isset($temp) && $temp && is_array($temp) && (0 == count($temp))) {
+                    // Make sure that we also remove it from our cache.
+                    if (isset($this->_existing_record_objects[$id])) {
+                        unset($this->_existing_record_objects[$id]);
+                    }
+                        
                     $ret = TRUE;
                 } else {
                     $this->error = new LGV_Error(   CO_Lang_Common::$pdo_error_code_failed_delete_attempt,

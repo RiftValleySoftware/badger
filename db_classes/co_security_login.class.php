@@ -59,24 +59,6 @@ class CO_Security_Login extends CO_Security_Node {
         
         return $ret;
     }
-
-    /***********************/
-    /**
-    This function sets up this instance, according to the DB-formatted associative array passed in.
-    
-    \returns TRUE, if the instance was able to set itself up to the provided array.
-     */
-    protected function _load_from_db($in_db_result) {
-        $ret = parent::_load_from_db($in_db_result);
-        
-        if ($ret) {
-            if (isset($in_db_result['login_id'])) {
-                $this->login_id = $in_db_result['login_id'];
-            }
-        }
-        
-        return $ret;
-    }
     
     /***********************************************************************************************************************/
     /***********************/
@@ -99,6 +81,24 @@ class CO_Security_Login extends CO_Security_Node {
         } else {
             $this->instance_description = isset($this->name) && $this->name ? "$this->name ($this->_id)" : "Unnamed Login Node ($this->_id)";
         }
+    }
+
+    /***********************/
+    /**
+    This function sets up this instance, according to the DB-formatted associative array passed in.
+    
+    \returns TRUE, if the instance was able to set itself up to the provided array.
+     */
+    public function load_from_db($in_db_result) {
+        $ret = parent::load_from_db($in_db_result);
+        
+        if ($ret) {
+            if (isset($in_db_result['login_id'])) {
+                $this->login_id = $in_db_result['login_id'];
+            }
+        }
+        
+        return $ret;
     }
     
     /***********************/

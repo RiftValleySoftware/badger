@@ -50,52 +50,6 @@ class CO_Main_DB_Record extends A_CO_DB_Table_Base {
         
         return $default_setup;
     }
-
-    /***********************/
-    /**
-    This sets up the instance, based on a supplied associative array of database values and keys.
-    
-    \returns TRUE, if sucessful.
-     */
-    protected function _load_from_db(   $in_db_result   ///< This is the associative array of database values.
-                                    ) {
-        $ret = parent::_load_from_db($in_db_result);    // Start by calling the base class version.
-        
-        if ($ret) { // If that went OK, we add our own two cents...
-            $this->class_description = 'Base Class for Main Database Records.';
-            $this->name = (isset($this->name) && trim($this->name)) ? trim($this->name) : "Base Class Instance ($this->_id)";
-            
-            if ($this->_db_object) {
-                $this->_owner_id = NULL;
-                $this->_tags = array();
-                $this->_raw_payload = NULL;
-        
-                if (isset($in_db_result['owner'])) {
-                    $this->_owner_id = $in_db_result['owner'];
-                }
-
-                if (isset($in_db_result['payload']) ) {
-                    $this->_raw_payload = $in_db_result['payload'];
-                }
-                
-                for ($tag_no = 0; $tag_no < 10; $tag_no++) {
-                    $key = "tag$tag_no";
-                    $tag_val = (isset($in_db_result[$key])) && $in_db_result[$key] ? $in_db_result[$key] : '';
-                    $this->_tags[$tag_no] = $tag_val;
-                }
-        
-                for ($i = 0; $i < 10; $i++) {
-                    $tagname = 'tag'.$i;
-                    $this->_tags[$i] = '';
-                    if (isset($in_db_result[$tagname])) {
-                        $this->_tags[$i] = $in_db_result[$tagname];
-                    }
-                }
-            }
-        }
-        
-        return $ret;
-    }
     
     /***********************/
     /**
@@ -134,6 +88,52 @@ class CO_Main_DB_Record extends A_CO_DB_Table_Base {
         $this->_owner_id = intval($in_owner_id);
         $this->_tags = (isset($in_tags_array) && is_array($in_tags_array) && count($in_tags_array)) ? array_map(function($in) { return strval($in); }, $in_tags_array) : Array();
         parent::__construct($in_db_object, $in_db_result);
+    }
+
+    /***********************/
+    /**
+    This sets up the instance, based on a supplied associative array of database values and keys.
+    
+    \returns TRUE, if sucessful.
+     */
+    public function load_from_db(   $in_db_result   ///< This is the associative array of database values.
+                                    ) {
+        $ret = parent::load_from_db($in_db_result);    // Start by calling the base class version.
+        
+        if ($ret) { // If that went OK, we add our own two cents...
+            $this->class_description = 'Base Class for Main Database Records.';
+            $this->name = (isset($this->name) && trim($this->name)) ? trim($this->name) : "Base Class Instance ($this->_id)";
+            
+            if ($this->_db_object) {
+                $this->_owner_id = NULL;
+                $this->_tags = array();
+                $this->_raw_payload = NULL;
+        
+                if (isset($in_db_result['owner'])) {
+                    $this->_owner_id = $in_db_result['owner'];
+                }
+
+                if (isset($in_db_result['payload']) ) {
+                    $this->_raw_payload = $in_db_result['payload'];
+                }
+                
+                for ($tag_no = 0; $tag_no < 10; $tag_no++) {
+                    $key = "tag$tag_no";
+                    $tag_val = (isset($in_db_result[$key])) && $in_db_result[$key] ? $in_db_result[$key] : '';
+                    $this->_tags[$tag_no] = $tag_val;
+                }
+        
+                for ($i = 0; $i < 10; $i++) {
+                    $tagname = 'tag'.$i;
+                    $this->_tags[$i] = '';
+                    if (isset($in_db_result[$tagname])) {
+                        $this->_tags[$i] = $in_db_result[$tagname];
+                    }
+                }
+            }
+        }
+        
+        return $ret;
     }
     
     /***********************/

@@ -1,3 +1,7 @@
+**1.0.0.2005** *(April 12, 2018)*
+
+- Added an "object cache" to the database class. This allows us to make sure that there is never more than one object ever instantiated for a given record.
+
 **1.0.0.2004** *(April 10, 2018)*
 
 - A number of minor tweaks and bug fixes.
