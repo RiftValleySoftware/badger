@@ -1,3 +1,7 @@
+**1.0.0.2006** *(April 13, 2018)*
+
+- Made sure that getting an element's access object is bottlenecked properly.
+
 **1.0.0.2005** *(April 12, 2018)*
 
 - Added an "object cache" to the database class. This allows us to make sure that there is never more than one object ever instantiated for a given record.

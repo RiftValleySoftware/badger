@@ -97,7 +97,7 @@ abstract class A_CO_DB_Table_Base {
             
             if (isset($params) && is_array($params) && count($params)) {
                 $ret = $this->_db_object->write_record($params);
-                $this->error = $this->_db_object->access_object->error;
+                $this->error = $this->get_access_object()->error;
                 if ((1 < intval($ret)) && !$this->error) {
                     $this->_id = intval($ret);
                 }
@@ -222,11 +222,11 @@ abstract class A_CO_DB_Table_Base {
     public function user_can_read() {
         $ret = FALSE;
         
-        $ids = $this->_db_object->access_object->get_security_ids();
+        $ids = $this->get_access_object()->get_security_ids();
         
         $my_read_item = intval($this->read_security_id);
         
-        if ((0 == $my_read_item) || $this->_db_object->access_object->god_mode()) {
+        if ((0 == $my_read_item) || $this->get_access_object()->god_mode()) {
             $ret = TRUE;
         } else {
             if (isset($ids) && is_array($ids) && count($ids)) {
@@ -244,11 +244,11 @@ abstract class A_CO_DB_Table_Base {
     public function user_can_write() {
         $ret = FALSE;
         
-        $ids = $this->_db_object->access_object->get_security_ids();
+        $ids = $this->get_access_object()->get_security_ids();
         
         $my_write_item = intval($this->write_security_id);
         
-        if ((0 == $my_write_item) || $this->_db_object->access_object->god_mode()) {
+        if ((0 == $my_write_item) || $this->get_access_object()->god_mode()) {
             $ret = TRUE;
         } else {
             if (isset($ids) && is_array($ids) && count($ids)) {
@@ -358,7 +358,7 @@ abstract class A_CO_DB_Table_Base {
     public function reload_from_db() {
         $ret = FALSE;
         $db_result = $this->_db_object->get_single_raw_row_by_id($this->id());
-        $this->error = $this->_db_object->access_object->error;
+        $this->error = $this->get_access_object()->error;
         if (!isset($this->error) || !$this->error) {
             $ret = $this->load_from_db($db_result);
         }
