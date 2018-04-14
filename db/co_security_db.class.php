@@ -52,7 +52,7 @@ class CO_Security_DB extends A_CO_DB {
                                             ) {
         $ret = NULL;
         
-        $sql = 'SELECT ids FROM `'.$this->table_name.'` WHERE `id`='.intval($in_id);
+        $sql = 'SELECT ids FROM '.$this->table_name.' WHERE id='.intval($in_id);
 
         $temp = $this->execute_query($sql, Array());
         if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
@@ -80,7 +80,7 @@ class CO_Security_DB extends A_CO_DB {
                                                     ) {
         $ret = NULL;
         
-        $sql = 'SELECT * FROM `'.$this->table_name.'` WHERE `login_id`=?';
+        $sql = 'SELECT * FROM '.$this->table_name.' WHERE login_id=?';
 
         $temp = $this->execute_query($sql, Array($in_login_id));
         if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
@@ -121,7 +121,7 @@ class CO_Security_DB extends A_CO_DB {
                                                     ) {
         $ret = NULL;
         
-        $sql = 'SELECT * FROM `'.$this->table_name.'` WHERE '.$this->_create_security_predicate($and_write). ' AND (';
+        $sql = 'SELECT * FROM '.$this->table_name.' WHERE '.$this->_create_security_predicate($and_write). ' AND (';
         $params = Array();
         
         foreach ($in_login_id_array as $id) {
@@ -129,7 +129,7 @@ class CO_Security_DB extends A_CO_DB {
                 if (0 < count($params)) {
                     $sql .= ') OR (';
                 }
-                $sql.= '`login_id`=?';
+                $sql.= 'login_id=?';
                 array_push($params, $id);
             }
         }
@@ -165,7 +165,7 @@ class CO_Security_DB extends A_CO_DB {
         $in_security_token = intval($in_security_token);
         
         if ($this->access_object->god_mode() && $in_security_token) {
-            $sql = 'SELECT `id`,`ids` FROM `'.$this->table_name.'` WHERE `access_class`=\'CO_Security_Login\'';
+            $sql = 'SELECT id,ids FROM '.$this->table_name.' WHERE access_class=\'CO_Security_Login\'';
             $temp = $this->execute_query($sql, Array());    // We just get everything.
             if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
                 $ret = Array();

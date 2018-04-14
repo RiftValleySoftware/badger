@@ -89,11 +89,11 @@ abstract class A_CO_DB {
             return '';
         } else {
             $access_ids = $this->access_object->get_security_ids();
-            $ret = '((`read_security_id`=0) OR (`read_security_id` IS NULL)';
+            $ret = '((read_security_id=0) OR (read_security_id IS NULL)';
         
             if (isset($access_ids) && is_array($access_ids) && count($access_ids)) {
                 foreach ($access_ids as $access_id) {
-                    $ret .= ' OR (`read_security_id`='.intval($access_id).')';
+                    $ret .= ' OR (read_security_id='.intval($access_id).')';
                 }
             }
         
@@ -101,7 +101,7 @@ abstract class A_CO_DB {
         
             // Only God can access God...
             if (($this instanceof CO_Security_DB) && !$this->access_object->god_mode()) {
-                $ret .= ' AND (`id`<>'.intval(CO_Config::$god_mode_id).')';
+                $ret .= ' AND (id<>'.intval(CO_Config::$god_mode_id).')';
             }
 
             return $ret;
@@ -122,17 +122,17 @@ abstract class A_CO_DB {
             $ret = '0';
             
             if (isset($access_ids) && is_array($access_ids) && count($access_ids)) {
-                $ret = '((`write_security_id`=0) OR (`write_security_id` IS NULL)';
+                $ret = '((write_security_id=0) OR (write_security_id IS NULL)';
                 
                 foreach ($access_ids as $access_id) {
-                    $ret .= ' OR (`write_security_id`='.intval($access_id).')';
+                    $ret .= ' OR (write_security_id='.intval($access_id).')';
                 }
         
                 $ret .= ')';
         
                 // Only God can access God...
                 if (($this instanceof CO_Security_DB) && !$this->access_object->god_mode()) {
-                    $ret .= ' AND (`id`<>'.intval(CO_Config::$god_mode_id).')';
+                    $ret .= ' AND (id<>'.intval(CO_Config::$god_mode_id).')';
                 }
             }
         
@@ -243,7 +243,7 @@ abstract class A_CO_DB {
             $predicate .= 'AND ';
         }
         
-        $sql = 'SELECT * FROM `'.$this->table_name.'` WHERE '.$predicate.'`id`='.intval($in_id);
+        $sql = 'SELECT * FROM '.$this->table_name.' WHERE '.$predicate.'id='.intval($in_id);
 
         $ret = $this->execute_query($sql, Array());
         
@@ -294,7 +294,7 @@ abstract class A_CO_DB {
             $predicate .= 'AND ';
         }
         
-        $sql = 'SELECT * FROM `'.$this->table_name.'` WHERE '.$predicate.'(';
+        $sql = 'SELECT * FROM '.$this->table_name.' WHERE '.$predicate.'(';
         $params = Array();
         // Clean the array to make sure they are all integers.
         $id_array = array_map('intval', $in_id_array);
@@ -303,7 +303,7 @@ abstract class A_CO_DB {
                 if (0 < count($params)) {
                     $sql .= ' OR ';
                 }
-                $sql.= '(`id`=?)';
+                $sql.= '(id=?)';
                 array_push($params, $id);
             }
         }
@@ -335,20 +335,20 @@ abstract class A_CO_DB {
                                             ) {
         $ret = NULL;
         
-        $predicate = $open_only ? '((`read_security_id`=0) OR (`read_security_id` IS NULL))' : $this->_create_security_predicate();
+        $predicate = $open_only ? '((read_security_id=0) OR (read_security_id IS NULL))' : $this->_create_security_predicate();
         
         // No need for an AND, as the predicate is the only qualifier.
         if (!$predicate) {
             $in_this_id = intval($in_this_id);
             if ($in_this_id) {  // We can look for certain IDs in God Mode.
-                $predicate = "(`read_security_id`=$in_this_id)";
+                $predicate = "(read_security_id=$in_this_id)";
                 
             } else {
                 $predicate = '1'; // If we are in "God Mode," we could get no predicate, so we just go with "1".
             }
         }
         
-        $sql = 'SELECT * FROM `'.$this->table_name.'` WHERE '.$predicate;
+        $sql = 'SELECT * FROM '.$this->table_name.' WHERE '.$predicate;
 
         $temp = $this->execute_query($sql, Array());
         if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
@@ -384,14 +384,14 @@ abstract class A_CO_DB {
             if (!$predicate) {
                 $in_this_id = intval($in_this_id);
                 if ($in_this_id) {  // We can look for certain IDs in God Mode.
-                    $predicate = "(`write_security_id`=$in_this_id)";
+                    $predicate = "(write_security_id=$in_this_id)";
                 
                 } else {
                     $predicate = '1'; // If we are in "God Mode," we could get no predicate, so we just go with "1".
                 }
             }
         
-            $sql = 'SELECT * FROM `'.$this->table_name.'` WHERE '.$predicate;
+            $sql = 'SELECT * FROM '.$this->table_name.' WHERE '.$predicate;
             $temp = $this->execute_query($sql, Array());
             if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
                 $ret = Array();
@@ -432,26 +432,26 @@ abstract class A_CO_DB {
                 
                 if (0 < $id) {
                     // First, we look for a record with our ID, and for which we have write permission.
-                    $sql = 'SELECT * FROM `'.$this->table_name.'` WHERE '.$predicate.'`id`='.$id;
+                    $sql = 'SELECT * FROM '.$this->table_name.' WHERE '.$predicate.'id='.$id;
 
                     $temp = $this->execute_query($sql, Array());
                 
                     if (isset($temp) && $temp && is_array($temp) && (1 == count($temp)) ) { // If we  got a record, then we'll be updating it.
-                        $sql = 'UPDATE `'.$this->table_name.'`';
+                        $sql = 'UPDATE '.$this->table_name.'';
                         unset($params_associative_array['id']); // We remove the ID parameter. That can't be changed.
                         
                         $params = array_values($params_associative_array);
                         $keys = array_keys($params_associative_array);
-                        $set_sql = '`'.implode('`=?,`', $keys).'`=?';
+                        $set_sql = ''.implode('=?,', $keys).'=?';
                     
-                        $sql .= ' SET '.$set_sql.' WHERE ('.$predicate.'`id`='.$id.')';
+                        $sql .= ' SET '.$set_sql.' WHERE ('.$predicate.'id='.$id.')';
                         $this->execute_query($sql, $params, TRUE);
                         
                         if (!$this->error) {
                             $ret = TRUE;
                         }
                     } else {
-                        $sql = 'SELECT * FROM `'.$this->table_name.'` WHERE `id`='.$id; // Look for a record with the proposed ID (assume we don't have permission).
+                        $sql = 'SELECT * FROM '.$this->table_name.' WHERE id='.$id; // Look for a record with the proposed ID (assume we don't have permission).
 
                         $temp = $this->execute_query($sql, Array());
                         
@@ -462,12 +462,12 @@ abstract class A_CO_DB {
                         }
                     }
                 } else {
-                    $sql = 'SELECT * FROM `'.$this->table_name.'` WHERE `id`=1'; // We simply get the template.
+                    $sql = 'SELECT * FROM '.$this->table_name.' WHERE id=1'; // We simply get the template.
 
                     $temp = $this->execute_query($sql, Array());
                     
                     if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
-                        $sql = 'INSERT INTO `'.$this->table_name.'`';
+                        $sql = 'INSERT INTO '.$this->table_name.'';
                         unset($params_associative_array['id']);
                         
                         // If there is no read ID specified, it becomes public.
@@ -488,7 +488,7 @@ abstract class A_CO_DB {
                         
                         $keys = array_keys($params_associative_array);
                     
-                        $keys_sql = '(`'.implode('`,`', $keys).'`)';
+                        $keys_sql = '('.implode(',', $keys).')';
                         $values_sql = '('.implode(',', array_map(function($in){return '?';}, $keys)).');';
                         
                         $sql .= " $keys_sql VALUES $values_sql";
@@ -532,11 +532,11 @@ abstract class A_CO_DB {
         }
 
         // First, make sure we have write permission for this record, and that the record exists.
-        $sql = 'SELECT id FROM `'.$this->table_name.'` WHERE ('.$predicate.'`id`='.$id.')';
+        $sql = 'SELECT id FROM '.$this->table_name.' WHERE ('.$predicate.'id='.$id.')';
         $temp = $this->execute_query($sql);
         
         if (!$this->error && isset($temp) && $temp && is_array($temp) && (1 == count($temp))) {
-            $sql = 'DELETE FROM `'.$this->table_name.'` WHERE ('.$predicate.'`id`='.$id.')';
+            $sql = 'DELETE FROM '.$this->table_name.' WHERE ('.$predicate.'id='.$id.')';
             $temp = $this->execute_query($sql, Array(), TRUE);  // We call this as an "execute-only" query.
             if (!$temp || $this->error) {
                 $this->error = new LGV_Error(   CO_Lang_Common::$pdo_error_code_failed_delete_attempt,
@@ -544,7 +544,7 @@ abstract class A_CO_DB {
                                                 CO_Lang::$pdo_error_desc_failed_delete_attempt);
             } else {
                 // Make sure she's dead, Jim. We do an open-ended check.
-                $sql = 'SELECT id FROM `'.$this->table_name.'` WHERE `id`='.$id;
+                $sql = 'SELECT id FROM '.$this->table_name.' WHERE id='.$id;
                 
                 $temp = $this->execute_query($sql);
                 if (!$this->error && isset($temp) && $temp && is_array($temp) && (0 == count($temp))) {

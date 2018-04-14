@@ -112,7 +112,7 @@ class CO_Main_Data_DB extends A_CO_DB {
                                      * COS(RADIANS(p.longpoint - z.longitude))
                                      + SIN(RADIANS(p.latpoint))
                                      * SIN(RADIANS(z.latitude)))) AS distance
-                        FROM `".$this->table_name."` AS z
+                        FROM ".$this->table_name." AS z
                         JOIN (   /* these are the query parameters */
                             SELECT  ?  AS latpoint,  ? AS longpoint,
                                     ? AS radius,      111.045 AS distance_unit
@@ -167,7 +167,7 @@ class CO_Main_Data_DB extends A_CO_DB {
                                     $ret['sql'] .= ') OR ';
                                 }
                     
-                                $ret['sql'] .= '(LOWER(`tag'.intval($i).'`)'.($use_like ? ' LIKE ' : '=').'LOWER(?)';
+                                $ret['sql'] .= '(LOWER(tag'.intval($i).')'.($use_like ? ' LIKE ' : '=').'LOWER(?)';
                                 array_push($ret['params'], $val);
                             }
                             
@@ -182,7 +182,7 @@ class CO_Main_Data_DB extends A_CO_DB {
                                 $ret['sql'] .= ') OR ';
                             }
                     
-                            $ret['sql'] .= '(LOWER(`tag'.intval($i).'`)'.($use_like ? ' LIKE ' : '=').'LOWER(?)';
+                            $ret['sql'] .= '(LOWER(tag'.intval($i).')'.($use_like ? ' LIKE ' : '=').'LOWER(?)';
                             array_push($ret['params'], strval($value));
                         }
                     }
@@ -195,7 +195,7 @@ class CO_Main_Data_DB extends A_CO_DB {
         } else {
             $in_value = trim(strval($in_value));
             if ($in_value) {
-                $ret['sql'] = 'LOWER(`tag0`)=LOWER(?)';
+                $ret['sql'] = 'LOWER(tag0)=LOWER(?)';
                 $ret['params'][0] = $in_value;
             }
         }
@@ -226,7 +226,7 @@ class CO_Main_Data_DB extends A_CO_DB {
                         $ret['sql'] .= ') OR ';
                     }
                     
-                    $ret['sql'] .= '(`'.strval($in_db_key).'`=?';
+                    $ret['sql'] .= '('.strval($in_db_key).'=?';
                     array_push($ret['params'], $value);
                 }
             }
@@ -235,7 +235,7 @@ class CO_Main_Data_DB extends A_CO_DB {
                 $ret['sql'] .= ')';
             }
         } else {
-            $ret['sql'] = '`'.strval($in_db_key).'`=?';
+            $ret['sql'] = ''.strval($in_db_key).'=?';
             array_push($ret['params'], $in_value);
         }
         
@@ -272,7 +272,7 @@ class CO_Main_Data_DB extends A_CO_DB {
                         $ret['sql'] .= ') OR ';
                     }
                     
-                    $ret['sql'] .= '(LOWER(`'.strval($in_db_key).'`)'.($use_like ? ' LIKE ' : '=').'LOWER(?)';
+                    $ret['sql'] .= '(LOWER('.strval($in_db_key).')'.($use_like ? ' LIKE ' : '=').'LOWER(?)';
                     array_push($ret['params'], $value);
                 }
             }
@@ -281,7 +281,7 @@ class CO_Main_Data_DB extends A_CO_DB {
                 $ret['sql'] .= ')';
             }
         } else {
-            $ret['sql'] = 'LOWER(`'.strval($in_db_key).'`)=LOWER(?)';
+            $ret['sql'] = 'LOWER('.strval($in_db_key).')=LOWER(?)';
             $ret['params'][0] = $in_value;
         }
         
@@ -409,7 +409,7 @@ class CO_Main_Data_DB extends A_CO_DB {
                 $predicate = '1'; // If we are in "God Mode," we could get no predicate, so we just go with "1".
             }
         
-            $sql = 'SELECT * FROM `'.$this->table_name.'` WHERE '.$predicate;
+            $sql = 'SELECT * FROM '.$this->table_name.' WHERE '.$predicate;
         }
         
         if (isset($in_search_parameters) && is_array($in_search_parameters) && count($in_search_parameters)) {
