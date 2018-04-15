@@ -99,10 +99,9 @@ class CO_Main_Data_DB extends A_CO_DB {
         $predicate = $this->_create_security_predicate($and_writeable);
 
         if (!$predicate) {
-            $predicate = '1'; // If we are in "God Mode," we could get no predicate, so we just go with "1".
+            $predicate = 'true'; // If we are in "God Mode," we could get no predicate, so we just go with "1".
         }
     
-        $ret['params'] = Array(floatval($in_latitude), floatval($in_longitude), floatval($in_radius_in_km));
         $ret['sql'] = "SELECT * FROM (
                         SELECT z.*,
                             p.radius,
@@ -114,8 +113,8 @@ class CO_Main_Data_DB extends A_CO_DB {
                                      * SIN(RADIANS(z.latitude)))) AS distance
                         FROM ".$this->table_name." AS z
                         JOIN (   /* these are the query parameters */
-                            SELECT  ?  AS latpoint,  ? AS longpoint,
-                                    ? AS radius,      111.045 AS distance_unit
+                            SELECT  ".floatval($in_latitude)."  AS latpoint,  ".floatval($in_longitude)." AS longpoint,
+                                    ".floatval($in_radius_in_km)." AS radius,      111.045 AS distance_unit
                         ) AS p ON 1=1
                         WHERE z.latitude
                          BETWEEN p.latpoint  - (p.radius / p.distance_unit)
@@ -406,12 +405,11 @@ class CO_Main_Data_DB extends A_CO_DB {
             $predicate = $this->_create_security_predicate($and_writeable);
         
             if (!$predicate) {
-                $predicate = '1'; // If we are in "God Mode," we could get no predicate, so we just go with "1".
+                $predicate = 'true'; // If we are in "God Mode," we could get no predicate, so we just go with "1".
             }
         
             $sql = 'SELECT * FROM '.$this->table_name.' WHERE '.$predicate;
         }
-        
         if (isset($in_search_parameters) && is_array($in_search_parameters) && count($in_search_parameters)) {
             $temp_sql = '';
             $temp_params = Array();
@@ -504,7 +502,6 @@ class CO_Main_Data_DB extends A_CO_DB {
 
         if ($sql) {
             $temp = $this->execute_query($sql, $params);
-            
             if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
                 $ret = Array();
                 foreach ($temp as $result) {

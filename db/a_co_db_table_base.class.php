@@ -192,7 +192,7 @@ abstract class A_CO_DB_Table_Base {
             }
             
             if (isset($in_db_result['access_class_context'])) {
-                $temp_context = unserialize($in_db_result['access_class_context']);
+                $temp_context = unserialize(stripslashes($in_db_result['access_class_context']));
     
                 if ($temp_context) {
                     $this->context = $temp_context;

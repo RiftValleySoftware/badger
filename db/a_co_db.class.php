@@ -344,7 +344,7 @@ abstract class A_CO_DB {
                 $predicate = "(read_security_id=$in_this_id)";
                 
             } else {
-                $predicate = '1'; // If we are in "God Mode," we could get no predicate, so we just go with "1".
+                $predicate = 'true'; // If we are in "God Mode," we could get no predicate, so we just go with "1".
             }
         }
         
@@ -387,7 +387,7 @@ abstract class A_CO_DB {
                     $predicate = "(write_security_id=$in_this_id)";
                 
                 } else {
-                    $predicate = '1'; // If we are in "God Mode," we could get no predicate, so we just go with "1".
+                    $predicate = 'true'; // If we are in "God Mode," we could get no predicate, so we just go with "1".
                 }
             }
         
