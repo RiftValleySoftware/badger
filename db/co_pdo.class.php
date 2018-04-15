@@ -113,19 +113,23 @@ class CO_PDO {
 										$params = array(),		///< same as kind provided to PDO::prepare()
 										$fetchKeyPair = FALSE   ///< See description in method documentation
 										) {
-        $stmt = $this->_pdo->prepare($sql);
-        $stmt->setFetchMode($this->fetchMode);
-        $this->_pdo->beginTransaction(); 
-        $stmt->execute($params);
-        $this->last_insert = $this->_pdo->lastInsertId();
-        $this->_pdo->commit();
+		try {
+            $stmt = $this->_pdo->prepare($sql);
+            $stmt->setFetchMode($this->fetchMode);
+            $this->_pdo->beginTransaction(); 
+            $stmt->execute($params);
+            $this->last_insert = $this->_pdo->lastInsertId();
+            $this->_pdo->commit();
 
-        if ($fetchKeyPair) {
-            return $stmt->fetchAll(PDO::FETCH_KEY_PAIR);
-        } else {
-            return $stmt->fetchAll();
-        }
-        
+            if ($fetchKeyPair) {
+                return $stmt->fetchAll(PDO::FETCH_KEY_PAIR);
+            } else {
+                return $stmt->fetchAll();
+            }
+		} catch (PDOException $exception) {
+			throw new Exception(__METHOD__ . '() ' . $exception->getMessage());
+		}
+		
         return;
 	}
 };
