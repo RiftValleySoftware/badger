@@ -1,3 +1,7 @@
+**1.0.0.2007** *(April 15, 2018)*
+
+- A number of fixes to help the system work with Postgres.
+
 **1.0.0.2006** *(April 13, 2018)*
 
 - Made sure that getting an element's access object is bottlenecked properly.
