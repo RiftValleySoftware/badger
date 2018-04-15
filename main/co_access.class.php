@@ -197,7 +197,7 @@ class CO_Access {
         } else {
             if (isset($this->_login_id) && $this->_login_id && $this->_security_db_object) {
                 $ret = $this->_security_db_object->get_security_ids_for_id($this->_login_id);
-            
+                
                 if ($this->_security_db_object->error) {
                     $this->error = $this->_security_db_object->error;
                     
@@ -205,7 +205,6 @@ class CO_Access {
                 }
             }
         }
-        
         return $ret;
     }
     

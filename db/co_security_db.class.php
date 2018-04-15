@@ -57,10 +57,19 @@ class CO_Security_DB extends A_CO_DB {
         $temp = $this->execute_query($sql, Array());
         if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
             $ret = explode(',', $temp[0]['ids']);
-            if (isset($ret) && is_array($ret)) {
+            if (isset($ret) && is_array($ret) && count($ret)) {
                 array_unshift($ret, $in_id);
-                $ret = array_unique($ret);
+                $ret = array_unique(array_map('intval', $ret));
+                $ret_temp = Array();
+                foreach ( $ret as $i) {
+                    if (0 < $i) {
+                        array_push($ret_temp, $i);
+                    }
+                }
+                $ret = $ret_temp;
             }
+        } else {
+            $ret = Array($in_id);
         }
         
         return $ret;

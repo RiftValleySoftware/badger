@@ -192,10 +192,14 @@ abstract class A_CO_DB_Table_Base {
             }
             
             if (isset($in_db_result['access_class_context'])) {
-                $temp_context = unserialize(stripslashes($in_db_result['access_class_context']));
+                $serialized_context = trim(strval($in_db_result['access_class_context']));
+                if (isset($serialized_context) && $serialized_context) {
+                    $serialized_context = stripslashes($serialized_context);
+                    $temp_context = unserialize($serialized_context);
     
-                if ($temp_context) {
-                    $this->context = $temp_context;
+                    if ($temp_context) {
+                        $this->context = $temp_context;
+                    }
                 }
             }
         }
