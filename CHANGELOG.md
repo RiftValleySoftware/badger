@@ -1,6 +1,7 @@
 **1.0.0.2008** *(April 16, 2018)*
 
 - Fixed one more Postgres issue (ID of last insert failing).
+- Added Postgress datasets for true Postgres testing.
 
 **1.0.0.2007** *(April 15, 2018)*
 

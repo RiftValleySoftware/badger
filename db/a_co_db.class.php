@@ -314,7 +314,10 @@ abstract class A_CO_DB {
         if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
             $ret = Array();
             foreach ($temp as $result) {
-                array_push($ret, $this->_instantiate_record($result));
+                $result = $this->_instantiate_record($result);
+                if ($result) {
+                    array_push($ret, $result);
+                }
             }
             usort($ret, function($a, $b){return ($a->id() > $b->id());});
         }
@@ -353,7 +356,12 @@ abstract class A_CO_DB {
         if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
             $ret = Array();
             foreach ($temp as $result) {
-                array_push($ret, $this->_instantiate_record($result));
+                if (isset($result) && is_array($result) && count($result)) {
+                    $result = $this->_instantiate_record($result);
+                    if ($result) {
+                        array_push($ret, $result);
+                    }
+                }
             }
             usort($ret, function($a, $b){return ($a->id() > $b->id());});
         }
@@ -395,7 +403,10 @@ abstract class A_CO_DB {
             if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
                 $ret = Array();
                 foreach ($temp as $result) {
-                    array_push($ret, $this->_instantiate_record($result));
+                    $result = $this->_instantiate_record($result);
+                    if ($result) {
+                        array_push($ret, $result);
+                    }
                 }
                 usort($ret, function($a, $b){return ($a->id() > $b->id());});
             }

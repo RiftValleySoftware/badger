@@ -12,8 +12,6 @@
     Little Green Viper Software Development: https://littlegreenviper.com
 */
     $config_file_path = dirname(__FILE__).'/config/s_config.class.php';
-    $data_sql_file_path = dirname(__FILE__).'/sql/badger_test_data.sql';
-    $security_sql_file_path = dirname(__FILE__).'/sql/badger_test_security.sql';
     
     date_default_timezone_set ( 'UTC' );
     

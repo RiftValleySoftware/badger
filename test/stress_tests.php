@@ -14,7 +14,7 @@
 ?><div style="display:table;margin-left:auto;margin-right:auto;text-align:left">
     <?php
         set_time_limit ( 120 );
-        prepare_databases('stress_test');
+        prepare_databases('stress_tests');
         echo('<div id="stress-item-access-tests" class="closed">');
             echo('<h1 class="header"><a href="javascript:toggle_main_state(\'stress-item-access-tests\')">ACCESS ITEMS TEST</a></h1>');
             echo('<div class="container">');
@@ -687,6 +687,7 @@
             echo("<h2>The access instance is valid!</h2>");
             $st1 = microtime(TRUE);
             $test_item = $access_instance->get_all_data_readable_records();
+
             $fetchTime = sprintf('%01.3f', microtime(TRUE) - $st1);
         
             echo('<div class="inner_div">');
