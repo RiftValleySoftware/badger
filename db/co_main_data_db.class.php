@@ -505,8 +505,12 @@ class CO_Main_Data_DB extends A_CO_DB {
             if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
                 $ret = Array();
                 foreach ($temp as $result) {
-                    array_push($ret, $this->_instantiate_record($result));
+                    $result = $this->_instantiate_record($result);
+                    if ($result) {
+                        array_push($ret, $result);
+                    }
                 }
+
                 // If we do a distance search, then we filter and sort the results with the more accurate Vincenty algorithm, and we also give each record a "distance" parameter.
                 if (isset($in_search_parameters['location']) && isset($in_search_parameters['location']['longitude']) && isset($in_search_parameters['location']['latitude']) && isset($in_search_parameters['location']['radius'])) {
                     $ret_temp = Array();

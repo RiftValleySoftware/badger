@@ -93,7 +93,10 @@ class CO_Security_DB extends A_CO_DB {
 
         $temp = $this->execute_query($sql, Array($in_login_id));
         if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
-            $ret = $this->_instantiate_record($temp[0]);
+            $result = $this->_instantiate_record($temp[0]);
+            if ($result) {
+                $ret = $result;
+            }
         }
         
         return $ret;
@@ -149,7 +152,10 @@ class CO_Security_DB extends A_CO_DB {
         if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
             $ret = Array();
             foreach ($temp as $result) {
-                array_push($ret, $this->_instantiate_record($result));
+                $result = $this->_instantiate_record($result);
+                if ($result) {
+                    array_push($ret, $result);
+                }
             }
             usort($ret, function($a, $b){return ($a->id() > $b->id());});
         }
