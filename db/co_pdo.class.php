@@ -82,10 +82,21 @@ class CO_PDO {
 						        )
 	{
 		try {
-			$stmt = $this->_pdo->prepare($sql);
+			if ('pgsql' == $this->driver_type) {
+			    if (strpos($sql, 'RETURNING id;')) {
+			        $response = $this->preparedQuery($sql, $params);
+                    $this->last_insert = intval($response[0]['id']);
+			        return;
+			    }
+			}
+			
+			$sql = str_replace(' RETURNING id', '', $sql);
+            $stmt = $this->_pdo->prepare($sql);
             $this->_pdo->beginTransaction(); 
-			$stmt->execute($params);
-			$this->last_insert = $this->_pdo->lastInsertId();
+            $stmt->execute($params);
+			if ('pgsql' != $this->driver_type) {
+                $this->last_insert = $this->_pdo->lastInsertId();
+            }
             $this->_pdo->commit();
 		} catch (PDOException $exception) {
 			throw new Exception(__METHOD__ . '() ' . $exception->getMessage());
@@ -118,7 +129,6 @@ class CO_PDO {
             $stmt->setFetchMode($this->fetchMode);
             $this->_pdo->beginTransaction(); 
             $stmt->execute($params);
-            $this->last_insert = $this->_pdo->lastInsertId();
             $this->_pdo->commit();
 
             if ($fetchKeyPair) {

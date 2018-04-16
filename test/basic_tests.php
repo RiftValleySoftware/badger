@@ -254,7 +254,7 @@
                     echo('<div class="main_div inner_container">');
                         ?>
                         <div class="main_div" style="margin-right:2em">
-                        <p class="explain">In this exercise, we don't log in, and see what data items are readable or writeable via certain IDs.</p>
+                        <p class="explain">In this exercise, we do not log in, and see what data items are readable or writeable via certain IDs.</p>
                         <p class="explain">We expect to get only the items readble by the general public. The ID is ignored.</p>
                         </div>
                         <?php

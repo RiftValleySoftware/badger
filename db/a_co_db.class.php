@@ -349,7 +349,6 @@ abstract class A_CO_DB {
         }
         
         $sql = 'SELECT * FROM '.$this->table_name.' WHERE '.$predicate;
-
         $temp = $this->execute_query($sql, Array());
         if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
             $ret = Array();
@@ -489,7 +488,7 @@ abstract class A_CO_DB {
                         $keys = array_keys($params_associative_array);
                     
                         $keys_sql = '('.implode(',', $keys).')';
-                        $values_sql = '('.implode(',', array_map(function($in){return '?';}, $keys)).');';
+                        $values_sql = '('.implode(',', array_map(function($in){return '?';}, $keys)).') RETURNING id;';
                         
                         $sql .= " $keys_sql VALUES $values_sql";
                         $this->execute_query($sql, array_values($params_associative_array), TRUE);

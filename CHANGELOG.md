@@ -1,3 +1,7 @@
+**1.0.0.2008** *(April 16, 2018)*
+
+- Fixed one more Postgres issue (ID of last insert failing).
+
 **1.0.0.2007** *(April 15, 2018)*
 
 - A number of fixes to help the system work with Postgres.
