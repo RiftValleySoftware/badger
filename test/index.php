@@ -315,13 +315,13 @@
                         include('first_layer_tests.php');
                         ?>
                     </div>
-                    <div id="first_layer_tests" class="test-wrapper">
+                    <div id="stress_tests" class="test-wrapper">
                         <h2>BIG-ASS STRESS TESTS</h2>
                         <?php
                         include('stress_tests.php');
                         ?>
                     </div>
-                    <div id="first_layer_tests" class="test-wrapper">
+                    <div id="advanced_tests" class="test-wrapper">
                         <h2>ADVANCED TESTS</h2>
                         <?php
                         include('advanced_tests.php');

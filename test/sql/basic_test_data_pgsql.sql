@@ -22,7 +22,7 @@ CREATE TABLE co_data_nodes (
   tag7 VARCHAR(255) DEFAULT NULL,
   tag8 VARCHAR(255) DEFAULT NULL,
   tag9 VARCHAR(255) DEFAULT NULL,
-  payload BYTEA DEFAULT NULL
+  payload TEXT DEFAULT NULL
 );
   
 INSERT INTO co_data_nodes (access_class, last_access, read_security_id, write_security_id, object_name, access_class_context, owner, longitude, latitude, tag0, tag1, tag2, tag3, tag4, tag5, tag6, tag7, tag8, tag9, payload) VALUES

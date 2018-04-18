@@ -1,3 +1,8 @@
+**1.0.0.2009** *(April 17, 2018)*
+
+- The payload is now stored as Base64 text. In Postgres, this is a TEXT type.
+- Did some work to explicitly sort the items in the generic search by ID. There was no explicit sort before.
+
 **1.0.0.2008** *(April 16, 2018)*
 
 - Fixed one more Postgres issue (ID of last insert failing).

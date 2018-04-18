@@ -93,6 +93,7 @@ class CO_Security_Login extends CO_Security_Node {
         $ret = parent::load_from_db($in_db_result);
         
         if ($ret) {
+            $this->class_description = 'This is a security class for individual logins.';
             if (isset($in_db_result['login_id'])) {
                 $this->login_id = $in_db_result['login_id'];
             }

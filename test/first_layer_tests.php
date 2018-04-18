@@ -17,21 +17,17 @@
         echo('<div id="item-access-tests" class="closed">');
             echo('<h1 class="header"><a href="javascript:toggle_main_state(\'item-access-tests\')">ACCESS ITEMS TEST</a></h1>');
             echo('<div class="container">');
-                ?>
-                <div class="main_div" style="margin-right:2em">
-                    <p class="explain">These tests actually use the record instances, themselves, to access information, and make modifications, as opposed to using the access object.</p>
-                </div>
-                <?php
+                echo('<div class="main_div" style="margin-right:2em">');
+                echo('<p class="explain">These tests actually use the record instances, themselves, to access information, and make modifications, as opposed to using the access object.</p>');
+                echo('</div>');
                 echo('<div id="test-013" class="inner_closed">');
                     echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-013\')">TEST 13: Try attaching with no logins at all, and try to modify the Las Vegas record.</a></h2>');
 
                     echo('<div class="main_div inner_container">');
-                        ?>
-                        <div class="main_div" style="margin-right:2em">
-                        <p class="explain">This test accesses as a public anonymous member, and then tries to modify a record with a '0' mod level (can be modified by any logged-in member).</p>
-                        <p class="explain">We expect this to fail.</p>
-                        </div>
-                        <?php
+                        echo('<div class="main_div" style="margin-right:2em">');
+                        echo('<p class="explain">This test accesses as a public anonymous member, and then tries to modify a record with a \'0\' mod level (can be modified by any logged-in member).</p>');
+                        echo('<p class="explain">We expect this to fail.</p>');
+                        echo('</div>');
                         $start = microtime(TRUE);
                         try_change_record(NULL, NULL, NULL, 2);
                         echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
@@ -41,12 +37,10 @@
                     echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-014\')">TEST 14: Try attaching with the secondary login, and modify the Las Vegas record.</a></h2>');
 
                     echo('<div class="main_div inner_container">');
-                        ?>
-                        <div class="main_div" style="margin-right:2em">
-                        <p class="explain">This test accesses as a secondary member, and then tries to modify a record with a '0' mod level (can be modified by any logged-in member).</p>
-                        <p class="explain">We expect this to succeed.</p>
-                        </div>
-                        <?php
+                        echo('<div class="main_div" style="margin-right:2em">');
+                        echo('<p class="explain">This test accesses as a secondary member, and then tries to modify a record with a \'0\' mod level (can be modified by any logged-in member).</p>');
+                        echo('<p class="explain">We expect this to succeed.</p>');
+                        echo('</div>');
                         $start = microtime(TRUE);
                         try_change_record('secondary', '', 'CoreysGoryStory', 2);
                         echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
@@ -56,12 +50,10 @@
                     echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-015\')">TEST 15: Try attaching with the secondary login, and modify the NA World Services record.</a></h2>');
 
                     echo('<div class="main_div inner_container">');
-                        ?>
-                        <div class="main_div" style="margin-right:2em">
-                        <p class="explain">This test accesses as a secondary member, and then tries to modify a record that is not on the "guest list."</p>
-                        <p class="explain">We expect this to fail completely, as we do not even have read access.</p>
-                        </div>
-                        <?php
+                        echo('<div class="main_div" style="margin-right:2em">');
+                        echo('<p class="explain">This test accesses as a secondary member, and then tries to modify a record that is not on the "guest list."</p>');
+                        echo('<p class="explain">We expect this to fail completely, as we do not even have read access.</p>');
+                        echo('</div>');
                         $start = microtime(TRUE);
                         try_change_record('secondary', '', 'CoreysGoryStory', 4);
                         echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
@@ -71,12 +63,10 @@
                     echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-016\')">TEST 16: Try attaching with the tertiary login, and modify the San Jose (Costa Rica) record.</a></h2>');
 
                     echo('<div class="main_div inner_container">');
-                        ?>
-                        <div class="main_div" style="margin-right:2em">
-                        <p class="explain">This test accesses as a tertiary member, and then tries to modify a record that is readable, but not writeable.</p>
-                        <p class="explain">We expect this to fail, as we do not have write access.</p>
-                        </div>
-                        <?php
+                        echo('<div class="main_div" style="margin-right:2em">');
+                        echo('<p class="explain">This test accesses as a tertiary member, and then tries to modify a record that is readable, but not writeable.</p>');
+                        echo('<p class="explain">We expect this to fail, as we do not have write access.</p>');
+                        echo('</div>');
                         $start = microtime(TRUE);
                         try_change_record('tertiary', 'CodYOzPtwxb4A', '', 8);
                         echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
@@ -86,13 +76,11 @@
                     echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-017\')">TEST 17: Make a new, blank record, then modify it.</a></h2>');
 
                     echo('<div class="main_div inner_container">');
-                        ?>
-                        <div class="main_div" style="margin-right:2em">
-                        <p class="explain">This test accesses as a tertiary member, and then creates a new record. The ID of the record should be ten.</p>
-                        <p class="explain">After we create the new record, we use its accessors to set some new values.</p>
-                        <p class="explain">We expect this to succeed.</p>
-                        </div>
-                        <?php
+                        echo('<div class="main_div" style="margin-right:2em">');
+                        echo('<p class="explain">This test accesses as a tertiary member, and then creates a new record. The ID of the record should be ten.</p>');
+                        echo('<p class="explain">After we create the new record, we use its accessors to set some new values.</p>');
+                        echo('<p class="explain">We expect this to succeed.</p>');
+                        echo('</div>');
                         $start = microtime(TRUE);
                         try_make_new_data_record('tertiary', 'CodYOzPtwxb4A', '', 8);
                         echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
@@ -102,12 +90,10 @@
                     echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-018\')">TEST 18: Delete the Record Formerly Known as Las Vegas.</a></h2>');
 
                     echo('<div class="main_div inner_container">');
-                        ?>
-                        <div class="main_div" style="margin-right:2em">
-                        <p class="explain">This test accesses as a tertiary member, and then deletes the second record (the one that used to be "Las Vegas" before we abused it).</p>
-                        <p class="explain">We expect this to succeed.</p>
-                        </div>
-                        <?php
+                        echo('<div class="main_div" style="margin-right:2em">');
+                        echo('<p class="explain">This test accesses as a tertiary member, and then deletes the second record (the one that used to be "Las Vegas" before we abused it).</p>');
+                        echo('<p class="explain">We expect this to succeed.</p>');
+                        echo('</div>');
                         $start = microtime(TRUE);
                         try_delete_old_data_record('tertiary', 'CodYOzPtwxb4A', '', 2);
                         echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
@@ -117,12 +103,10 @@
                     echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-019\')">TEST 19: Try to delete a record we have no write privileges to.</a></h2>');
 
                     echo('<div class="main_div inner_container">');
-                        ?>
-                        <div class="main_div" style="margin-right:2em">
-                        <p class="explain">This test accesses as a tertiary member, and then deletes the eighth record (we have read, but no write).</p>
-                        <p class="explain">We expect this to fail.</p>
-                        </div>
-                        <?php
+                        echo('<div class="main_div" style="margin-right:2em">');
+                        echo('<p class="explain">This test accesses as a tertiary member, and then deletes the eighth record (we have read, but no write).</p>');
+                        echo('<p class="explain">We expect this to fail.</p>');
+                        echo('</div>');
                         $start = microtime(TRUE);
                         try_delete_old_data_record('tertiary', 'CodYOzPtwxb4A', '', 8);
                         echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');

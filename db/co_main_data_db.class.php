@@ -393,6 +393,7 @@ class CO_Main_Data_DB extends A_CO_DB {
         $ret = Array('sql' => '', 'params' => Array());
         
         $closure = '';
+        $location_search = FALSE;
         
         // If we are doing a location/radius search, the predicate is a lot more complicated.
         if (isset($in_search_parameters['location']) && isset($in_search_parameters['location']['longitude']) && isset($in_search_parameters['location']['latitude']) && isset($in_search_parameters['location']['radius'])) {
@@ -401,6 +402,7 @@ class CO_Main_Data_DB extends A_CO_DB {
             $sql = $predicate_temp['sql'];
             $ret['params'] = $predicate_temp['params'];
             $closure = ') ORDER BY d.distance';
+            $location_search = TRUE;
         } else {
             $predicate = $this->_create_security_predicate($and_writeable);
         
@@ -408,7 +410,8 @@ class CO_Main_Data_DB extends A_CO_DB {
                 $predicate = 'true'; // If we are in "God Mode," we could get no predicate, so we just go with "1".
             }
         
-            $sql = 'SELECT * FROM '.$this->table_name.' WHERE '.$predicate;
+            $sql = 'SELECT * FROM '.$this->table_name.' WHERE ('.$predicate;
+            $closure = ') ORDER BY id';
         }
         if (isset($in_search_parameters) && is_array($in_search_parameters) && count($in_search_parameters)) {
             $temp_sql = '';
@@ -437,9 +440,9 @@ class CO_Main_Data_DB extends A_CO_DB {
             $start = $initial_page * $page_size;
             // Slightly different syntax for MySQL and Postgres.
             if ( (('mysql' == $this->_pdo_object->driver_type) || ('mysqli' == $this->_pdo_object->driver_type))) {
-                $closure = ' LIMIT '.$start.', '.$page_size;
+                $closure .= ' LIMIT '.$start.', '.$page_size;
             } elseif ('pgsql' == $this->_pdo_object->driver_type) {
-                $closure = ' LIMIT '.$page_size.' OFFSET '.$start;
+                $closure .= ' LIMIT '.$page_size.' OFFSET '.$start;
             }
         }
         
@@ -466,6 +469,7 @@ class CO_Main_Data_DB extends A_CO_DB {
     /***********************/
     /**
     This is a "generic" data database search. It can be called from external user contexts, and allows a fairly generalized search of the "data" database.
+    Sorting will be done for the values by the ID of the searched objects. "location" will be by distance from the center.
     
     \returns an array of instances that match the search parameters.
      */

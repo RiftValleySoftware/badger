@@ -70,7 +70,7 @@ class CO_Main_DB_Record extends A_CO_DB_Table_Base {
             }
         }
         
-        $ret['payload'] = $this->_raw_payload;
+        $ret['payload'] = base64_encode($this->_raw_payload);
         
         return $ret;
     }
@@ -114,7 +114,7 @@ class CO_Main_DB_Record extends A_CO_DB_Table_Base {
                 }
 
                 if (isset($in_db_result['payload']) ) {
-                    $this->_raw_payload = $in_db_result['payload'];
+                    $this->_raw_payload = base64_decode($in_db_result['payload']);
                 }
                 
                 for ($tag_no = 0; $tag_no < 10; $tag_no++) {

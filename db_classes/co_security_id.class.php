@@ -36,4 +36,20 @@ class CO_Security_ID extends CO_Security_Node {
         $this->class_description = 'This is a security class for IDs.';
         $this->instance_description = isset($this->name) && $this->name ? "$this->name ($this->_id)" : "Unnamed ID Node ($this->_id)";
     }
+
+    /***********************/
+    /**
+    This function sets up this instance, according to the DB-formatted associative array passed in.
+    
+    \returns TRUE, if the instance was able to set itself up to the provided array.
+     */
+    public function load_from_db($in_db_result) {
+        $ret = parent::load_from_db($in_db_result);
+        
+        if ($ret) {
+            $this->class_description = 'This is a security class for IDs.';
+        }
+        
+        return $ret;
+    }
 };

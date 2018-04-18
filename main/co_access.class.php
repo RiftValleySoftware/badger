@@ -13,7 +13,7 @@
 */
 defined( 'LGV_ACCESS_CATCHER' ) or die ( 'Cannot Execute Directly' );	// Makes sure that this file is in the correct context.
 
-define('__BADGER_VERSION__', '1.0.0.2008');
+define('__BADGER_VERSION__', '1.0.0.2009');
 
 if ( !defined('LGV_MD_CATCHER') ) {
     define('LGV_MD_CATCHER', 1);
@@ -487,6 +487,7 @@ class CO_Access {
     /***********************/
     /**
     This is a "generic" data database search. It can be called from external user contexts, and allows a fairly generalized search of the "data" database.
+    Sorting will be done for the "owner" and "location" values. "owner" will be sorted by the ID of the returned records, and "location" will be by distance from the center.
     
     It is "security-safe."
     
