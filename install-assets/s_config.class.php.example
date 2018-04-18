@@ -28,13 +28,13 @@ class CO_Config {
     
     static $data_db_name = '<DATA DB NAME>';
     static $data_db_host = 'localhost';                         // Or other server URI
-    static $data_db_type = 'mysql';                             // Or other server PDO driver
+    static $data_db_type = 'mysql';                             // Or pgsql
     static $data_db_login = '<DB LOGIN>';
     static $data_db_password = '<DB PASSWORD>';
 
     static $sec_db_name = '<SECURITY DB NAME>';
     static $sec_db_host = 'localhost';                          // Or other server URI
-    static $sec_db_type = 'mysql';                              // Or other Server PDO driver
+    static $sec_db_type = 'mysql';                              // Or or pgsql
     static $sec_db_login = '<DB LOGIN>';
     static $sec_db_password = '<DB PASSWORD>';
     

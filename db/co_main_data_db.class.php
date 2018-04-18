@@ -28,9 +28,7 @@ class CO_Main_Data_DB extends A_CO_DB {
     /***********************************************************************************************************************/
 	/*******************************************************************/
 	/**
-		\brief Uses the Vincenty calculation to estimate a distance between
-		the two given lat/long pairs, then returns true or false as to whether
-		or not the distance between them falls within the given distance (in KM).
+		\brief Uses the Vincenty calculation to determine the distance (in KM) between the two given lat/long pairs (in Degrees).
 		
 		\returns a Float with the distance, in kilometers.
 	*/
@@ -92,7 +90,8 @@ class CO_Main_Data_DB extends A_CO_DB {
     protected function _location_predicate( $in_longitude,          ///< The search center longitude, in degrees.
                                             $in_latitude,           ///< The search center latitude, in degrees.
                                             $in_radius_in_km,       ///< The search radius, in Kilometers.
-                                            $and_writeable = FALSE  ///< If TRUE, then we only want records we can modify.
+                                            $and_writeable = FALSE, ///< If TRUE, then we only want records we can modify.
+                                            $count_only = FALSE     ///< If TRUE (default is FALSE), then only a single integer will be returned, with the count of items that fit the search.
                                             ) {
         $ret = Array('sql' => '', 'params' => Array());
         
@@ -102,7 +101,8 @@ class CO_Main_Data_DB extends A_CO_DB {
             $predicate = 'true'; // If we are in "God Mode," we could get no predicate, so we just go with "1".
         }
     
-        $ret['sql'] = "SELECT * FROM (
+        $ret['sql'] = $count_only ? 'SELECT COUNT(*) FROM (' : '';
+        $ret['sql'] .= "SELECT * FROM (
                         SELECT z.*,
                             p.radius,
                             p.distance_unit
@@ -388,7 +388,8 @@ class CO_Main_Data_DB extends A_CO_DB {
                                             $or_search = FALSE,             ///< If TRUE, then the search is very wide (OR), as opposed to narrow (AND), by default. If you specify a location, then that will always be AND, but the other fields can be OR.
                                             $page_size = 0,                 ///< If specified with a 1-based integer, this denotes the size of a "page" of results. NOTE: This is only applicable to MySQL or Postgres, and will be ignored if the DB is not MySQL or Postgres.
                                             $initial_page = 0,              ///< This is ignored unless $page_size is greater than 0. If so, then this 0-based index will specify which page of results to return.
-                                            $and_writeable = FALSE          ///< If TRUE, then we only want records we can modify.
+                                            $and_writeable = FALSE,         ///< If TRUE, then we only want records we can modify.
+                                            $count_only = FALSE             ///< If TRUE (default is FALSE), then only a single integer will be returned, with the count of items that fit the search.
                                         ) {
         $ret = Array('sql' => '', 'params' => Array());
         
@@ -398,10 +399,10 @@ class CO_Main_Data_DB extends A_CO_DB {
         // If we are doing a location/radius search, the predicate is a lot more complicated.
         if (isset($in_search_parameters['location']) && isset($in_search_parameters['location']['longitude']) && isset($in_search_parameters['location']['latitude']) && isset($in_search_parameters['location']['radius'])) {
             // We expand the radius by 5%, because we'll be triaging the results with the more accurate Vincenty calculation afterwards.
-            $predicate_temp = $this->_location_predicate($in_search_parameters['location']['longitude'], $in_search_parameters['location']['latitude'], floatval($in_search_parameters['location']['radius']) * 1.02, $and_writeable);
+            $predicate_temp = $this->_location_predicate($in_search_parameters['location']['longitude'], $in_search_parameters['location']['latitude'], floatval($in_search_parameters['location']['radius']) * 1.02, $and_writeable, $count_only);
             $sql = $predicate_temp['sql'];
             $ret['params'] = $predicate_temp['params'];
-            $closure = ') ORDER BY d.distance';
+            $closure = ') ORDER BY distance,id';
             $location_search = TRUE;
         } else {
             $predicate = $this->_create_security_predicate($and_writeable);
@@ -410,9 +411,11 @@ class CO_Main_Data_DB extends A_CO_DB {
                 $predicate = 'true'; // If we are in "God Mode," we could get no predicate, so we just go with "1".
             }
         
-            $sql = 'SELECT * FROM '.$this->table_name.' WHERE ('.$predicate;
+            $sql = $count_only ? 'SELECT COUNT(*) FROM (' : '';
+            $sql .= 'SELECT * FROM '.$this->table_name.' WHERE ('.$predicate;
             $closure = ') ORDER BY id';
         }
+        
         if (isset($in_search_parameters) && is_array($in_search_parameters) && count($in_search_parameters)) {
             $temp_sql = '';
             $temp_params = Array();
@@ -444,6 +447,10 @@ class CO_Main_Data_DB extends A_CO_DB {
             } elseif ('pgsql' == $this->_pdo_object->driver_type) {
                 $closure .= ' LIMIT '.$page_size.' OFFSET '.$start;
             }
+        }
+            
+        if ($count_only) {
+            $closure .= ') AS count';
         }
         
         $ret['sql'] = $sql.$closure;
@@ -496,41 +503,52 @@ class CO_Main_Data_DB extends A_CO_DB {
                                     $or_search = FALSE,             ///< If TRUE, then the search is very wide (OR), as opposed to narrow (AND), by default. If you specify a location, then that will always be AND, but the other fields can be OR.
                                     $page_size = 0,                 ///< If specified with a 1-based integer, this denotes the size of a "page" of results. NOTE: This is only applicable to MySQL or Postgres, and will be ignored if the DB is not MySQL or Postgres.
                                     $initial_page = 0,              ///< This is ignored unless $page_size is greater than 0. If so, then this 0-based index will specify which page of results to return.
-                                    $and_writeable = FALSE          ///< If TRUE, then we only want records we can modify.
+                                    $and_writeable = FALSE,         ///< If TRUE, then we only want records we can modify.
+                                    $count_only = FALSE             ///< If TRUE (default is FALSE), then only a single integer will be returned, with the count of items that fit the search.
                                     ) {
         $ret = NULL;
         
-        $sql_and_params = $this->_build_sql_query($in_search_parameters, $or_search, $page_size, $initial_page, $and_writeable);
+        $sql_and_params = $this->_build_sql_query($in_search_parameters, $or_search, $page_size, $initial_page, $and_writeable, $count_only);
         $sql = $sql_and_params['sql'];
         $params = $sql_and_params['params'];
 
         if ($sql) {
             $temp = $this->execute_query($sql, $params);
             if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
-                $ret = Array();
-                foreach ($temp as $result) {
-                    $result = $this->_instantiate_record($result);
-                    if ($result) {
-                        array_push($ret, $result);
-                    }
-                }
-
-                // If we do a distance search, then we filter and sort the results with the more accurate Vincenty algorithm, and we also give each record a "distance" parameter.
-                if (isset($in_search_parameters['location']) && isset($in_search_parameters['location']['longitude']) && isset($in_search_parameters['location']['latitude']) && isset($in_search_parameters['location']['radius'])) {
-                    $ret_temp = Array();
-                    
-                    foreach ($ret as $item) {
-                        $accurate_distance = self::_get_accurate_distance(floatval($in_search_parameters['location']['latitude']), floatval($in_search_parameters['location']['longitude']), floatval($item->latitude()), floatval($item->longitude()));
-                        if ($accurate_distance <= floatval($in_search_parameters['location']['radius'])) {
-                            $item->distance = $accurate_distance;
-                            array_push($ret_temp, $item);
+                if ($count_only) {  // Different syntax for MySQL and Postgres
+                    if (isset($temp[0]['count(*)'])) {
+                        $ret = intval($temp[0]['count(*)']);
+                    } else {
+                        if (isset($temp[0]['count'])) {
+                            $ret = intval($temp[0]['count']);
                         }
                     }
-                    
-                    usort($ret_temp, function($a, $b){return ($a->distance > $b->distance);});
-                    $ret = $ret_temp;
                 } else {
-                    usort($ret, function($a, $b){return ($a->id() > $b->id());});
+                    $ret = Array();
+                    foreach ($temp as $result) {
+                        $result = $this->_instantiate_record($result);
+                        if ($result) {
+                            array_push($ret, $result);
+                        }
+                    }
+
+                    // If we do a distance search, then we filter and sort the results with the more accurate Vincenty algorithm, and we also give each record a "distance" parameter.
+                    if (isset($in_search_parameters['location']) && isset($in_search_parameters['location']['longitude']) && isset($in_search_parameters['location']['latitude']) && isset($in_search_parameters['location']['radius'])) {
+                        $ret_temp = Array();
+                    
+                        foreach ($ret as $item) {
+                            $accurate_distance = self::_get_accurate_distance(floatval($in_search_parameters['location']['latitude']), floatval($in_search_parameters['location']['longitude']), floatval($item->latitude()), floatval($item->longitude()));
+                            if ($accurate_distance <= floatval($in_search_parameters['location']['radius'])) {
+                                $item->distance = $accurate_distance;
+                                array_push($ret_temp, $item);
+                            }
+                        }
+                    
+                        usort($ret_temp, function($a, $b){return ($a->distance > $b->distance);});
+                        $ret = $ret_temp;
+                    } else {
+                        usort($ret, function($a, $b){return ($a->id() > $b->id());});
+                    }
                 }
             }
         }

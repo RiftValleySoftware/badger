@@ -381,6 +381,20 @@
                         echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
+                echo('<div id="test-065" class="inner_closed">');
+                    echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-065\')">TEST 65: Count-Only Tests</a></h2>');
+
+                    echo('<div class="main_div inner_container">');
+                        ?>
+                        <div class="main_div" style="margin-right:2em">
+                        <p class="explain">In this test, we do a few generic tests, only asking for the count.</p>
+                        </div>
+                        <?php
+                        $start = microtime(TRUE);
+                        advanced_test_26();
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                    echo('</div>');
+                echo('</div>');
             echo('</div>');
         echo('</div>');
     ?>
@@ -1251,6 +1265,55 @@
                         }
                     }
                 }
+            echo('</div>');
+        } else {
+            echo("<h2 style=\"color:red;font-weight:bold\">The access instance is not valid!</h2>");
+            echo('<p style="margin-left:1em;color:red;font-weight:bold">Error: ('.$access_instance->error->error_code.') '.$access_instance->error->error_name.' ('.$access_instance->error->error_description.')</p>');
+        }
+    }
+
+    function advanced_test_26($in_login = NULL, $in_hashed_password = NULL, $in_password = NULL) {
+        $access_instance = NULL;
+        
+        if ( !defined('LGV_ACCESS_CATCHER') ) {
+            define('LGV_ACCESS_CATCHER', 1);
+        }
+        
+        require_once(CO_Config::badger_main_class_dir().'/co_access.class.php');
+        
+        $access_instance = new CO_Access($in_login, $in_hashed_password, $in_password);
+        
+        if ($access_instance->valid) {
+            echo("<h2>The access instance is valid!</h2>");
+            echo("<p class=\"explain\">First, do the exact same test as the last one we ran (Test 64).</p>");
+            echo("<p class=\"explain\">This time, we just count. We expect 999 meetings (the last page of the large page test).</p>");
+            $st1 = microtime(TRUE);
+            $test_item = $access_instance->generic_search(NULL, FALSE, 1000, 1, FALSE, TRUE);
+            $fetchTime = sprintf('%01.3f', microtime(TRUE) - $st1);
+            echo('<div class="inner_div">');
+                echo("<h4>RESULT: $test_item (This took $fetchTime seconds)</h4>");
+            echo('</div>');
+            echo("<p class=\"explain\">Now, do the exact same test, but this time for the first page (1000):</p>");
+            $st1 = microtime(TRUE);
+            $test_item = $access_instance->generic_search(NULL, FALSE, 1000, 0, FALSE, TRUE);
+            $fetchTime = sprintf('%01.3f', microtime(TRUE) - $st1);
+            echo('<div class="inner_div">');
+                echo("<h4>RESULT: $test_item (This took $fetchTime seconds)</h4>");
+            echo('</div>');
+            echo("<p class=\"explain\">Next, we look for records with an owner of \"45\". We expect 9 as a result:</p>");
+            $st1 = microtime(TRUE);
+            $test_item = $access_instance->generic_search(Array('owner' => 9), FALSE, 0, 0, FALSE, TRUE);
+            $fetchTime = sprintf('%01.3f', microtime(TRUE) - $st1);
+            echo('<div class="inner_div">');
+                echo("<h4>RESULT: $test_item (This took $fetchTime seconds)</h4>");
+            echo('</div>');
+            echo("<p class=\"explain\">Now we do a location-based search, starting in Las Vegas, and looking for meetings with owners of 9 or 242.</p>");
+            echo("<p class=\"explain\">We expect a result of 26:</p>");
+            $st1 = microtime(TRUE);
+            $test_item = $access_instance->generic_search(Array('owner' => Array(9, 242), 'location' => Array('longitude' => -115.2435726, 'latitude' => 36.1356661, 'radius' => 300.0)), TRUE, 0, 0, FALSE, TRUE);
+            $fetchTime = sprintf('%01.3f', microtime(TRUE) - $st1);
+            echo('<div class="inner_div">');
+                echo("<h4>RESULT: $test_item (This took $fetchTime seconds)</h4>");
             echo('</div>');
         } else {
             echo("<h2 style=\"color:red;font-weight:bold\">The access instance is not valid!</h2>");

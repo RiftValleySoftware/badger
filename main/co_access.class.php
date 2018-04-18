@@ -491,7 +491,7 @@ class CO_Access {
     
     It is "security-safe."
     
-    \returns an array of instances that match the search parameters.
+    \returns an array of instances that match the search parameters. If $count_only is TRUE, then it will be a single integer, with the count of responses to the search (if a page, then only the number of items on that page).
      */
     public function generic_search( $in_search_parameters = NULL,   /**< This is an associative array of terms to define the search. The keys should be:
                                                                         - 'id'
@@ -516,11 +516,12 @@ class CO_Access {
                                     $or_search = FALSE,             ///< If TRUE, then the search is very wide (OR), as opposed to narrow (AND), by default. If you specify a location, then that will always be AND, but the other fields can be OR.
                                     $page_size = 0,                 ///< If specified with a 1-based integer, this denotes the size of a "page" of results. NOTE: This is only applicable to MySQL or Postgres, and will be ignored if the DB is not MySQL or Postgres.
                                     $initial_page = 0,              ///< This is ignored unless $page_size is greater than 0. If so, then this 0-based index will specify which page of results to return.
-                                    $and_writeable = FALSE          ///< If TRUE, then we only want records we can modify.
+                                    $and_writeable = FALSE,         ///< If TRUE, then we only want records we can modify.
+                                    $count_only = FALSE             ///< If TRUE (default is FALSE), then only a single integer will be returned, with the count of items that fit the search.
                                     ) {
         $ret = NULL;
         if (isset($this->_data_db_object) && $this->_data_db_object) {
-            return $this->_data_db_object->generic_search($in_search_parameters, $or_search, $page_size, $initial_page, $and_writeable);
+            return $this->_data_db_object->generic_search($in_search_parameters, $or_search, $page_size, $initial_page, $and_writeable, $count_only);
         }
         
         return $ret;

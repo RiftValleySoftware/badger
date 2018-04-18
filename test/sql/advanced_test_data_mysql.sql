@@ -2047,4 +2047,4 @@ INSERT INTO `co_data_nodes` (`id`, `access_class`, `last_access`, `read_security
 (2000, 'CO_LL_Location', '1970-01-01 00:00:00', NULL, NULL, 'Saturday Morning Recovery', NULL, 133, -115.2270586, 36.2473112, 'Las Vegas', 'NV', NULL, '89130', '6200 N. Lone Mountain Rd', 'Canyon Ridge Christian Church', '9:00:00', '7', NULL, NULL, NULL);
 
 ALTER TABLE `co_data_nodes`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2001;

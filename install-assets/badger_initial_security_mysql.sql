@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS `co_security_nodes`;
 CREATE TABLE `co_security_nodes` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `login_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
@@ -11,8 +12,7 @@ CREATE TABLE `co_security_nodes` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 INSERT INTO `co_security_nodes` (`id`, `login_id`, `access_class`, `last_access`, `read_security_id`, `write_security_id`, `object_name`, `access_class_context`, `ids`) VALUES
-(1, NULL, 'CO_Security_Node', '1970-01-01 00:00:00', -1, -1, NULL, NULL, NULL),
-(2, 'admin', 'CO_Security_Login', '1970-01-01 00:00:00', 2, 2, 'Default Admin', 'a:1:{s:15:\"hashed_password\";s:4:\"JUNK\";}', NULL);
+(1, NULL, 'CO_Security_Node', '1970-01-01 00:00:00', -1, -1, NULL, NULL, NULL);
 
 ALTER TABLE `co_security_nodes`
   ADD PRIMARY KEY (`id`),
@@ -24,4 +24,4 @@ ALTER TABLE `co_security_nodes`
   ADD KEY `object_name` (`object_name`);
 
 ALTER TABLE `co_security_nodes`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
