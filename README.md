@@ -7,6 +7,12 @@ INTRODUCTION
 
 This is the baseline database system for the secure database toolbox.
 It's a low-level database storage system that implements a generic KVP database and a separate security database.
+BADGER will work equally well for both [MySQL](https://www.mysql.com) and [PostgreSQL](https://www.postgresql.org) databases.
+BADGER has two completely separate databases: One is the main "Data Bucket" database, and the other is a security database. They can be separate hosts and even database types (MySQL or Postgres).
+BADGER has an ultra-simple schema. Each database has only one table.
+Security is via a simple token arrangement.
+Each database table row (either database) has a read token and a write token. It has only one of each. If the read or write operation is attempted by a user without the token, then the record is automatically excluded from the results at the SQL level. Tokens are IDs for security database nodes. A login node (security database) has its own ID as a token, and can also have a list of IDs that are available to it as well.
+BADGER is extremely basic. No relating or data processing is done by BADGER, with one exception: it does have longitude and latitude (in degrees) built into its table schema, for the simple reason that being able to access these at the SQL level greatly improves performance. We  have a built-in [Haversine](https://en.wikipedia.org/wiki/Haversine_formula) search in SQL to act as a "rapid triage" for locations, which are then filtered using the more accurate (and computationally-intense) [Vincenty's Formulae](https://en.wikipedia.org/wiki/Vincenty%27s_formulae). This means that geographic location/radius searches are extremely accurate, and very fast.
 
 LICENSE
 =======
@@ -23,7 +29,7 @@ PDO
 
 At the lowest level, the system uses [PHP PDO](https://php.net/pdo) to access the data base through [PDO Prepared Statements](https://secure.php.net/manual/en/pdo.prepared-statements.php).
 This enhances security by ensuring that all database access is "scrubbed" by PDO, so the risk of [SQL injection attacks](https://www.w3schools.com/sql/sql_injection.asp) is greatly reduced.
-PDO also helps the system to be "database agnostic," as PDO has support for multiple SQL-based databases.
+PDO also helps the system to be "database agnostic," as PDO has equal support for both [MySQL](https://www.mysql.com) and [PostgreSQL](https://www.postgresql.org). It is designed to scale for large datasets.
 
 TWO INDEPENDENT DATABASES
 -------------------------
@@ -63,7 +69,7 @@ The first row of each table (ID 1) is a "template" of values to be used when ins
 LONGITUDE AND LATITUDE
 ----------------------
 
-The one built-in specialization is the inclusion of "longitude" and "latitude" columns in the "data" database table. This is because it is possible to do highly efficient, fast [Haversine](https://en.wikipedia.org/wiki/Haversine_formula) lookups in SQL. We have built these into the system.
+The one built-in specialization is the inclusion of "longitude" and "latitude" (in degrees) columns in the "data" database table. This is because it is possible to do highly efficient, fast [Haversine](https://en.wikipedia.org/wiki/Haversine_formula) lookups in SQL. We have built these into the system.
 Once a Haversine search has been made, the resulting data set is then subjected to the more accurate [Vincenty's Formula](https://en.wikipedia.org/wiki/Vincenty%27s_formulae) in order to "fine tune" the result.
 The result of this, is that Badger is an ideal vehicle to keep a database of locations for fast retrieval, based on longitude and latitude, and a radius.
 
@@ -75,13 +81,12 @@ Each "data" database row has ten "tags." These are 255-character "VARCHAR" field
 PAYLOAD
 -------
 
-The "data" database schema also specifies a 4096-character "BLOB" column, called "payload". This is used to store larger data with a data item. It is not indexed, and can store binary (and encrypted) data.
+The "data" database schema also specifies a 4096-character "TEXT" (Postgres) or "LONGBLOB" (MySQL) column, called "payload". This is used to store larger data with a data item. It is not indexed, and can store binary (and encrypted) data, but the data is stored as [Base64](https://en.wikipedia.org/wiki/Base64).
 
 EXTENDING AND SPECIALIZING BADGER
 ---------------------------------
 
 Badger is a baseline system. It provides a generic interface to a simple database, and is not designed to be used "as is." It should be extended via subclasses of the row classes and the access class.
-In order to extend the row classes, you should create a directory at the same level as the badger main directory, and call it "badger_extension_classes". Put your classes that extend the class in "db/a_co_db_table_base.class.php" there (actually, you should be extending subclasses of this base class). It does not need to be in the HTTP path.
+In order to extend the row classes, you should create a directory (path and name determined by the config class). Put your classes that extend the class in "db/a_co_db_table_base.class.php" there (actually, you should be extending subclasses of this base class). It does not need to be in the HTTP path.
 The files containing classes should be named after the class, all lower case, with '.class.php' appended.
-It's probably not a bad idea to add any access class extension there, as well; just to keep all the badger stuff together.
 
