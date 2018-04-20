@@ -389,7 +389,8 @@ class CO_Main_Data_DB extends A_CO_DB {
                                             $page_size = 0,                 ///< If specified with a 1-based integer, this denotes the size of a "page" of results. NOTE: This is only applicable to MySQL or Postgres, and will be ignored if the DB is not MySQL or Postgres.
                                             $initial_page = 0,              ///< This is ignored unless $page_size is greater than 0. If so, then this 0-based index will specify which page of results to return.
                                             $and_writeable = FALSE,         ///< If TRUE, then we only want records we can modify.
-                                            $count_only = FALSE             ///< If TRUE (default is FALSE), then only a single integer will be returned, with the count of items that fit the search.
+                                            $count_only = FALSE,            ///< If TRUE (default is FALSE), then only a single integer will be returned, with the count of items that fit the search.
+                                            $ids_only = FALSE               ///< If TRUE (default is FALSE), then the return array will consist only of integers (the object IDs). If $count_only is TRUE, this is ignored.
                                         ) {
         $ret = Array('sql' => '', 'params' => Array());
         
@@ -451,6 +452,9 @@ class CO_Main_Data_DB extends A_CO_DB {
             
         if ($count_only) {
             $closure .= ') AS count';
+        } elseif ($ids_only && !$location_search) {
+            $replacement = 'SELECT (id)';
+            $sql = preg_replace('|^SELECT \*|', $replacement, $sql);
         }
         
         $ret['sql'] = $sql.$closure;
@@ -504,13 +508,15 @@ class CO_Main_Data_DB extends A_CO_DB {
                                     $page_size = 0,                 ///< If specified with a 1-based integer, this denotes the size of a "page" of results. NOTE: This is only applicable to MySQL or Postgres, and will be ignored if the DB is not MySQL or Postgres.
                                     $initial_page = 0,              ///< This is ignored unless $page_size is greater than 0. If so, then this 0-based index will specify which page of results to return.
                                     $and_writeable = FALSE,         ///< If TRUE, then we only want records we can modify.
-                                    $count_only = FALSE             ///< If TRUE (default is FALSE), then only a single integer will be returned, with the count of items that fit the search.
+                                    $count_only = FALSE,            ///< If TRUE (default is FALSE), then only a single integer will be returned, with the count of items that fit the search.
+                                    $ids_only = FALSE               ///< If TRUE (default is FALSE), then the return array will consist only of integers (the object IDs). If $count_only is TRUE, this is ignored.
                                     ) {
         $ret = NULL;
         
-        $sql_and_params = $this->_build_sql_query($in_search_parameters, $or_search, $page_size, $initial_page, $and_writeable, $count_only);
+        $sql_and_params = $this->_build_sql_query($in_search_parameters, $or_search, $page_size, $initial_page, $and_writeable, $count_only, $ids_only);
         $sql = $sql_and_params['sql'];
         $params = $sql_and_params['params'];
+        $location_search = (isset($in_search_parameters['location']) && isset($in_search_parameters['location']['longitude']) && isset($in_search_parameters['location']['latitude']) && isset($in_search_parameters['location']['radius']));
 
         if ($sql) {
             $temp = $this->execute_query($sql, $params);
@@ -526,14 +532,14 @@ class CO_Main_Data_DB extends A_CO_DB {
                 } else {
                     $ret = Array();
                     foreach ($temp as $result) {
-                        $result = $this->_instantiate_record($result);
+                        $result = ($ids_only && !$location_search) ? intval($result['id']) : $this->_instantiate_record($result);
                         if ($result) {
                             array_push($ret, $result);
                         }
                     }
 
                     // If we do a distance search, then we filter and sort the results with the more accurate Vincenty algorithm, and we also give each record a "distance" parameter.
-                    if (isset($in_search_parameters['location']) && isset($in_search_parameters['location']['longitude']) && isset($in_search_parameters['location']['latitude']) && isset($in_search_parameters['location']['radius'])) {
+                    if ($location_search) {
                         $ret_temp = Array();
                     
                         foreach ($ret as $item) {
@@ -543,11 +549,14 @@ class CO_Main_Data_DB extends A_CO_DB {
                                 array_push($ret_temp, $item);
                             }
                         }
-                    
+                        
                         usort($ret_temp, function($a, $b){return ($a->distance > $b->distance);});
+                        
+                        if ($ids_only) {
+                            $ret_temp = array_map(function($in_item) { return $in_item->id(); }, $ret_temp);
+                        }
+
                         $ret = $ret_temp;
-                    } else {
-                        usort($ret, function($a, $b){return ($a->id() > $b->id());});
                     }
                 }
             }

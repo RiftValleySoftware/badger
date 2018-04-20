@@ -13,7 +13,7 @@
 */
 defined( 'LGV_ACCESS_CATCHER' ) or die ( 'Cannot Execute Directly' );	// Makes sure that this file is in the correct context.
 
-define('__BADGER_VERSION__', '1.0.0.2009');
+define('__BADGER_VERSION__', '1.0.0.2010');
 
 if ( !defined('LGV_MD_CATCHER') ) {
     define('LGV_MD_CATCHER', 1);
@@ -517,11 +517,12 @@ class CO_Access {
                                     $page_size = 0,                 ///< If specified with a 1-based integer, this denotes the size of a "page" of results. NOTE: This is only applicable to MySQL or Postgres, and will be ignored if the DB is not MySQL or Postgres.
                                     $initial_page = 0,              ///< This is ignored unless $page_size is greater than 0. If so, then this 0-based index will specify which page of results to return.
                                     $and_writeable = FALSE,         ///< If TRUE, then we only want records we can modify.
-                                    $count_only = FALSE             ///< If TRUE (default is FALSE), then only a single integer will be returned, with the count of items that fit the search.
+                                    $count_only = FALSE,            ///< If TRUE (default is FALSE), then only a single integer will be returned, with the count of items that fit the search.
+                                    $ids_only = FALSE               ///< If TRUE (default is FALSE), then the return array will consist only of integers (the object IDs). If $count_only is TRUE, this is ignored.
                                     ) {
         $ret = NULL;
         if (isset($this->_data_db_object) && $this->_data_db_object) {
-            return $this->_data_db_object->generic_search($in_search_parameters, $or_search, $page_size, $initial_page, $and_writeable, $count_only);
+            return $this->_data_db_object->generic_search($in_search_parameters, $or_search, $page_size, $initial_page, $and_writeable, $count_only, $ids_only);
         }
         
         return $ret;

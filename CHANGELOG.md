@@ -1,3 +1,7 @@
+**1.0.0.2010** *(April 20, 2018)*
+
+- Added support for the "IDs only" search, which is necesary for owners.
+
 **1.0.0.2009** *(April 18, 2018)*
 
 - The payload is now stored as Base64 text. In Postgres, this is a TEXT type.
