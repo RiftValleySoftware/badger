@@ -513,11 +513,19 @@ class CO_Main_Data_DB extends A_CO_DB {
                                     ) {
         $ret = NULL;
         
+        $location_count = $count_only;
+        $location_ids_only = $ids_only;
+        $location_search = (isset($in_search_parameters['location']) && isset($in_search_parameters['location']['longitude']) && isset($in_search_parameters['location']['latitude']) && isset($in_search_parameters['location']['radius']));
+        
+        if ($location_search) { // We're forced to use the regular search for count-only location, as we need that Vincenty filter.
+            $count_only = FALSE;
+            $ids_only = FALSE;
+        }
+        
         $sql_and_params = $this->_build_sql_query($in_search_parameters, $or_search, $page_size, $initial_page, $and_writeable, $count_only, $ids_only);
         $sql = $sql_and_params['sql'];
         $params = $sql_and_params['params'];
-        $location_search = (isset($in_search_parameters['location']) && isset($in_search_parameters['location']['longitude']) && isset($in_search_parameters['location']['latitude']) && isset($in_search_parameters['location']['radius']));
-
+        
         if ($sql) {
             $temp = $this->execute_query($sql, $params);
             if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
@@ -532,7 +540,7 @@ class CO_Main_Data_DB extends A_CO_DB {
                 } else {
                     $ret = Array();
                     foreach ($temp as $result) {
-                        $result = ($ids_only && !$location_search) ? intval($result['id']) : $this->_instantiate_record($result);
+                        $result = $ids_only ? intval($result['id']) : $this->_instantiate_record($result);
                         if ($result) {
                             array_push($ret, $result);
                         }
@@ -541,19 +549,25 @@ class CO_Main_Data_DB extends A_CO_DB {
                     // If we do a distance search, then we filter and sort the results with the more accurate Vincenty algorithm, and we also give each record a "distance" parameter.
                     if ($location_search) {
                         $ret_temp = Array();
-                    
+                        $count = 0;
+                        
                         foreach ($ret as $item) {
                             $accurate_distance = self::_get_accurate_distance(floatval($in_search_parameters['location']['latitude']), floatval($in_search_parameters['location']['longitude']), floatval($item->latitude()), floatval($item->longitude()));
                             if ($accurate_distance <= floatval($in_search_parameters['location']['radius'])) {
                                 $item->distance = $accurate_distance;
                                 array_push($ret_temp, $item);
+                                $count++;
                             }
                         }
                         
-                        usort($ret_temp, function($a, $b){return ($a->distance > $b->distance);});
+                        if ($location_count) {
+                            $ret_temp = $count;
+                        } else {
+                            usort($ret_temp, function($a, $b){return ($a->distance > $b->distance);});
                         
-                        if ($ids_only) {
-                            $ret_temp = array_map(function($in_item) { return $in_item->id(); }, $ret_temp);
+                            if ($location_ids_only) {
+                                $ret_temp = array_map(function($in_item) { return $in_item->id(); }, $ret_temp);
+                            }
                         }
 
                         $ret = $ret_temp;

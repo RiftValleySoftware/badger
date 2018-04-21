@@ -1,3 +1,7 @@
+**1.0.0.2011** *(April 21, 2018)*
+
+- The IDs Only generic search was inaccurate if we did a location search, as the Vincenty filter was skipped. That has been fixed.
+
 **1.0.0.2010** *(April 20, 2018)*
 
 - Added support for the "IDs only" search, which is necesary for owners.
