@@ -1,6 +1,7 @@
 **1.0.0.2012** *(April 22, 2018)*
 
 - Added the ability to have multiple extension directories.
+- Improved error reporting and handling.
 
 **1.0.0.2011** *(April 21, 2018)*
 

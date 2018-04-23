@@ -165,10 +165,11 @@ abstract class A_CO_DB {
         $id = intval($in_db_result['id']);
         
         if ($classname && $id) {
+            $filename = CO_Config::db_classes_class_dir().'/'.strtolower($classname).'.class.php';
+            
             if (!class_exists($classname)) {
-                $filename = CO_Config::db_classes_class_dir().'/'.strtolower($classname).'.class.php';
-                
                 if (!file_exists($filename)) {
+                    $filename = NULL;
                     $dir_array = CO_Config::db_classes_extension_class_dir();
                     
                     if (!is_array($dir_array)) {
@@ -180,6 +181,8 @@ abstract class A_CO_DB {
                         if (file_exists($filename)) {
                             require_once($filename);
                             break;
+                        } else {
+                            $filename = NULL;
                         }
                     }
                 } else {
@@ -187,6 +190,17 @@ abstract class A_CO_DB {
                 }
             }
             
+            if (!$filename) {
+                $this->error = new LGV_Error(   CO_Lang_Common::$db_error_code_class_file_not_found,
+                                                CO_Lang::$db_error_name_class_file_not_found,
+                                                CO_Lang::$db_error_desc_class_file_not_found,
+                                                $classname,
+                                                __LINE__,
+                                                __METHOD__
+                                            );
+                return NULL;
+            }
+
             if (class_exists($classname)) { // We make sure that we send references to the same object, if we instantiate it multiple times.
                 if (isset($this->_existing_record_objects[$id])) {
                     $ret = $this->_existing_record_objects[$id];
@@ -197,8 +211,27 @@ abstract class A_CO_DB {
                     $ret = new $classname($this, $in_db_result);
                 }
                 
+                if (!$ret) {
+                    $this->error = new LGV_Error(   CO_Lang_Common::$db_error_code_class_not_created,
+                                                    CO_Lang::$db_error_name_class_not_created,
+                                                    CO_Lang::$db_error_desc_class_not_created,
+                                                    $classname,
+                                                    __LINE__,
+                                                    __METHOD__
+                                                );
+                    return NULL;
+                }
+                
                 // Make sure we cache this for later.
                 $this->_existing_record_objects[$id] = $ret;
+            } else {
+                $this->error = new LGV_Error(   CO_Lang_Common::$db_error_code_class_not_created,
+                                                CO_Lang::$db_error_name_class_not_created,
+                                                CO_Lang::$db_error_desc_class_not_created,
+                                                $classname,
+                                                __LINE__,
+                                                __METHOD__
+                                            );
             }
         }
         

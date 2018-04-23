@@ -34,5 +34,17 @@ class CO_Lang {
     
     static  $pdo_error_name_failed_delete_attempt = 'Failed Database delete Attempt.';
     static  $pdo_error_desc_failed_delete_attempt = 'There was a failure during an attempt to delete a record.';
+
+    static  $db_error_name_class_file_not_found = 'Class file was not found.';
+    static  $db_error_desc_class_file_not_found = 'The file for the class being instantiated was not found.';
+    static  $db_error_name_class_not_created = 'Class was not created.';
+    static  $db_error_desc_class_not_created = 'The attempt to instantiate the class failed.';
+    
+    static  $access_error_name_user_not_authorized = 'User Not Authorized';
+    static  $access_error_desc_user_not_authorized = 'The user is not authorized to perform the requested operation.';
+    static  $access_error_name_class_file_not_found = 'Class file was not found.';
+    static  $access_error_desc_class_file_not_found = 'The file for the class being instantiated was not found.';
+    static  $access_error_name_class_not_created = 'Class was not created.';
+    static  $access_error_desc_class_not_created = 'The attempt to instantiate the class failed.';
 }
 ?>

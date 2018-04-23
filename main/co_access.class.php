@@ -246,11 +246,42 @@ class CO_Access {
         
         // We create an empty instance to test which database gets assigned.
         if ($in_classname) {
+            $filename = CO_Config::db_classes_class_dir().'/'.strtolower($in_classname).'.class.php';
             if (!class_exists($in_classname)) {
-                $filename = CO_Config::db_classes_class_dir().'/'.strtolower($in_classname).'.class.php';
-                require_once($filename);
+                if (!file_exists($filename)) {
+                    $filename = NULL;
+                    
+                    $dir_array = CO_Config::db_classes_extension_class_dir();
+                    
+                    if (!is_array($dir_array)) {
+                        $dir_array = Array($dir_array);
+                    }
+                
+                    foreach ($dir_array as $dir) {
+                        $filename = $dir.'/'.strtolower($in_classname).'.class.php';                
+                        if (file_exists($filename)) {
+                            require_once($filename);
+                            break;
+                        } else {
+                            $filename = NULL;
+                        }
+                    }
+                } else {
+                    require_once($filename);
+                }
+                
+                if (!$filename) {
+                    $this->error = new LGV_Error(   CO_Lang_Common::$access_error_code_class_file_not_found,
+                                                    CO_Lang::$access_error_name_class_file_not_found,
+                                                    CO_Lang::$access_error_desc_class_file_not_found,
+                                                    __FILE__,
+                                                    __LINE__,
+                                                    __METHOD__
+                                                );
+                    return NULL;
+                }
             }
-            
+
             if (class_exists($in_classname) && $this->_data_db_object && $this->_security_db_object) {    // Quick test. Not allowed to do anything unless we are logged in.
                 $test_instance = new $in_classname();
 
@@ -263,9 +294,34 @@ class CO_Access {
                 if ($ret) {
                     $ret->write_security_id = intval($this->_login_id);
                     $ret->update_db();   // Make sure it gets saved.
+                } else {
+                    $this->error = new LGV_Error(   CO_Lang_Common::$access_error_code_class_not_created,
+                                                    CO_Lang::$access_error_name_class_not_created,
+                                                    CO_Lang::$access_error_desc_class_not_created,
+                                                    __FILE__,
+                                                    __LINE__,
+                                                    __METHOD__
+                                                );
                 }
+            } elseif (!$this->_security_db_object) {
+                $this->error = new LGV_Error(   CO_Lang_Common::$access_error_code_user_not_authorized,
+                                                CO_Lang::$access_error_name_user_not_authorized,
+                                                CO_Lang::$access_error_desc_user_not_authorized,
+                                                __FILE__,
+                                                __LINE__,
+                                                __METHOD__
+                                            );
+            } else {
+                $this->error = new LGV_Error(   CO_Lang_Common::$access_error_code_class_not_created,
+                                                CO_Lang::$access_error_name_class_not_created,
+                                                CO_Lang::$access_error_desc_class_not_created,
+                                                __FILE__,
+                                                __LINE__,
+                                                __METHOD__
+                                            );
             }
         }
+        
         return $ret;
     }
         

@@ -23,5 +23,12 @@ class CO_Lang_Common {
     static  $pdo_error_code_illegal_write_attempt = 200;
     static  $pdo_error_code_illegal_delete_attempt = 201;
     static  $pdo_error_code_failed_delete_attempt = 202;
+
+    static  $db_error_code_class_file_not_found = 300;
+    static  $db_error_code_class_not_created = 301;
+
+    static  $access_error_code_user_not_authorized = 400;
+    static  $access_error_code_class_file_not_found = 401;
+    static  $access_error_code_class_not_created = 402;
 }
 ?>
