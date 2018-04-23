@@ -162,20 +162,30 @@ abstract class A_CO_DB {
         $ret = NULL;
         
         $classname = trim($in_db_result['access_class']);
+        $id = intval($in_db_result['id']);
         
-        if ($classname) {
+        if ($classname && $id) {
             if (!class_exists($classname)) {
                 $filename = CO_Config::db_classes_class_dir().'/'.strtolower($classname).'.class.php';
-                if (!file_exists($filename)) {
-                    $filename = CO_Config::db_classes_extension_class_dir().'/'.strtolower($classname).'.class.php';
-                }
                 
-                if (file_exists($filename)) {
+                if (!file_exists($filename)) {
+                    $dir_array = CO_Config::db_classes_extension_class_dir();
+                    
+                    if (!is_array($dir_array)) {
+                        $dir_array = Array($dir_array);
+                    }
+                
+                    foreach ($dir_array as $dir) {
+                        $filename = $dir.'/'.strtolower($classname).'.class.php';                
+                        if (file_exists($filename)) {
+                            require_once($filename);
+                            break;
+                        }
+                    }
+                } else {
                     require_once($filename);
                 }
             }
-            
-            $id = intval($in_db_result['id']);
             
             if (class_exists($classname)) { // We make sure that we send references to the same object, if we instantiate it multiple times.
                 if (isset($this->_existing_record_objects[$id])) {
@@ -187,6 +197,7 @@ abstract class A_CO_DB {
                     $ret = new $classname($this, $in_db_result);
                 }
                 
+                // Make sure we cache this for later.
                 $this->_existing_record_objects[$id] = $ret;
             }
         }

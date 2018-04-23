@@ -1,3 +1,7 @@
+**1.0.0.2012** *(April 22, 2018)*
+
+- Added the ability to have multiple extension directories.
+
 **1.0.0.2011** *(April 21, 2018)*
 
 - The IDs Only generic search was inaccurate if we did a location search, as the Vincenty filter was skipped. That has been fixed.
