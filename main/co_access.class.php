@@ -13,7 +13,7 @@
 */
 defined( 'LGV_ACCESS_CATCHER' ) or die ( 'Cannot Execute Directly' );	// Makes sure that this file is in the correct context.
 
-define('__BADGER_VERSION__', '1.0.0.2012');
+define('__BADGER_VERSION__', '1.0.0.2013');
 
 if ( !defined('LGV_MD_CATCHER') ) {
     define('LGV_MD_CATCHER', 1);

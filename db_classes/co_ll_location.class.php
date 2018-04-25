@@ -69,12 +69,25 @@ class CO_LL_Location extends CO_Main_DB_Record {
 	                                $in_owner_id = NULL,    ///< The ID of the object (in the database) that "owns" this instance.
 	                                $in_tags_array = NULL,  ///< An array of strings, up to ten elements long, for the tags.      
 	                                $in_longitude = NULL,   ///< An initial longitude value.
-	                                $in_latitude = NULL     //< An initial latitude value.
+	                                $in_latitude = NULL,    ///< An initial latitude value.
+	                                $in_fuzz_factor = NULL  ///< An initial "fuzz factor" value.
                                 ) {
-        $this->_longitude = $in_longitude;
-        $this->_latitude = $in_latitude;
-        
         parent::__construct($in_db_object, $in_db_result, $in_owner_id, $in_tags_array);
+        
+        if (NULL != $in_longitude) {
+            $this->_longitude = $in_longitude;
+        }
+        
+        if (NULL != $in_latitude) {
+            $this->_latitude = $in_latitude;
+        }
+        
+        if (NULL != $in_fuzz_factor) {
+            $this->context['fuzz_factor'] = $in_fuzz_factor;
+        } elseif (!isset($this->context['fuzz_factor']) || !$this->context['fuzz_factor']) {
+            $this->context['fuzz_factor'] = 0;
+        }
+            
     }
 
     /***********************/
@@ -162,17 +175,84 @@ class CO_LL_Location extends CO_Main_DB_Record {
     
     /***********************/
     /**
-    \returns The current longitude value.
+    Getter for fuzz factor.
+    
+    \returns the fuzz factor, as a float. If it is not set, then it is zero.
      */
-    public function longitude() {
-        return $this->_longitude;
+     public function fuzz_factor() {
+        return abs(isset($this->context['fuzz_factor']) ? floatval($this->context['fuzz_factor']) : 0);
     }
     
     /***********************/
     /**
+    Setter for fuzz factor.
+    
+    \returns TRUE, if the save was successful.
+     */
+    public function set_fuzz_factor(   $in_new_value    ///< The new value must be a positive floating-point value over (and including) 0. If zero, the factor is deleted.
+                                    ) {
+        $ret = FALSE;
+        
+        $in_new_value = abs(floatval($in_new_value));
+        
+        if ($this->user_can_write()) {
+            if (0 == $in_new_value) {
+                unset($this->context['fuzz_factor']);
+            } else {
+                $this->context['fuzz_factor'] = $in_new_value;
+            }
+            
+            $ret = $this->update_db();
+        }
+        
+        return $ret;
+    }
+    
+    /***********************/
+    /**
+    This returns the longitude. However, if the user is not logged in, or doesn't have read rights (which shouldn't happen, anyway), they will only get the "fuzzed" version.
+    
+    \returns The current longitude value.
+     */
+    public function raw_longitude() {
+        if ($this->get_access_object()->security_db_available() && $this->user_can_read()) {
+            return $this->_longitude;
+        } else {
+            return $this->longitude();
+        }
+    }
+    
+    /***********************/
+    /**
+    This returns the latitude. However, if the user is not logged in, or doesn't have read rights (which shouldn't happen, anyway), they will only get the "fuzzed" version.
+    
+    \returns The current longitude value.
+     */
+    public function raw_latitude() {
+        if ($this->get_access_object()->security_db_available() && $this->user_can_read()) {
+            return $this->_latitude;
+        } else {
+            return $this->latitude();
+        }
+    }
+    
+    /***********************/
+    /**
+    This returns the longitude, with any "fuzz factor" applied.
+    
+    \returns The current longitude value.
+     */
+    public function longitude() {
+        return $this->_longitude * (0 < $this->fuzz_factor()) ? (random_int(1, max(1, 100000 * ($this->fuzz_factor() + 1))) / 100000.0) : 1.0;
+    }
+    
+    /***********************/
+    /**
+    This returns the longitude, with any "fuzz factor" applied.
+    
     \returns The current latitude value.
      */
     public function latitude() {
-        return $this->_latitude;
+        return $this->_latitude * (0 < $this->fuzz_factor()) ? (random_int(1, max(1, 100000 * ($this->fuzz_factor() + 1))) / 100000.0) : 1.0;
     }
 };

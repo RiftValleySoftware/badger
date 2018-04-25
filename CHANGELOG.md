@@ -1,3 +1,7 @@
+**1.0.0.2013** *TBD*
+
+- Added support for "fuzzy locations" at a very low level.
+
 **1.0.0.2012** *(April 22, 2018)*
 
 - Added the ability to have multiple extension directories.

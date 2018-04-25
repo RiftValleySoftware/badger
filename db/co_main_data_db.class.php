@@ -32,11 +32,11 @@ class CO_Main_Data_DB extends A_CO_DB {
 		
 		\returns a Float with the distance, in kilometers.
 	*/
-	static protected function _get_accurate_distance (	$lat1,  ///< These four parameters are the given two points long/lat, in degrees.
-                                                        $lon1,
-                                                        $lat2,
-                                                        $lon2
-                                                    )
+	static function get_accurate_distance (	$lat1,  ///< These four parameters are the given two points long/lat, in degrees.
+                                            $lon1,
+                                            $lat2,
+                                            $lon2
+                                        )
 	{
 		$a = 6378137;
 		$b = 6356752.3142;
@@ -552,7 +552,7 @@ class CO_Main_Data_DB extends A_CO_DB {
                         $count = 0;
                         
                         foreach ($ret as $item) {
-                            $accurate_distance = self::_get_accurate_distance(floatval($in_search_parameters['location']['latitude']), floatval($in_search_parameters['location']['longitude']), floatval($item->latitude()), floatval($item->longitude()));
+                            $accurate_distance = self::get_accurate_distance(floatval($in_search_parameters['location']['latitude']), floatval($in_search_parameters['location']['longitude']), floatval($item->latitude()), floatval($item->longitude()));
                             if ($accurate_distance <= floatval($in_search_parameters['location']['radius'])) {
                                 $item->distance = $accurate_distance;
                                 array_push($ret_temp, $item);
