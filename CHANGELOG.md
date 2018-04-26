@@ -1,4 +1,4 @@
-**1.0.0.2013** *TBD*
+**1.0.0.2013** *(April 26, 2018)*
 
 - Added support for "fuzzy locations" at a very low level.
 
