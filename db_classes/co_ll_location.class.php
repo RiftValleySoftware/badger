@@ -89,11 +89,11 @@ class CO_LL_Location extends CO_Main_DB_Record {
     protected function _fuzz_me() {
         $ret = Array('longitude' => $this->_longitude, 'latitude' => $this->_latitude);
         
-        $fuzz_factor = abs($this->fuzz_factor());
-        if (0 != $fuzz_factor) {
+        $fuzz_factor = $this->fuzz_factor();
+        if (0 < $fuzz_factor) {
             // The big number gives it lots of fuzz.
-            $long_offset = function_exists('random_int') ? random_int(1, max(1, 100000 * ($fuzz_factor))) / 100000.0 : rand(1, max(1, 100000 * ($fuzz_factor))) / 100000.0;
-            $lat_offset = function_exists('random_int') ? random_int(1, max(1, 100000 * ($fuzz_factor))) / 100000.0 : rand(1, max(1, 100000 * ($fuzz_factor))) / 100000.0;
+            $long_offset = function_exists('random_int') ? random_int(0, 100000 * ($fuzz_factor)) / 100000.0 : rand(0, 100000 * ($fuzz_factor)) / 100000.0;
+            $lat_offset = function_exists('random_int') ? random_int(0, 100000 * ($fuzz_factor)) / 100000.0 : rand(0, 100000 * ($fuzz_factor)) / 100000.0;
             
             // Convert the fuziness to degrees.
             $km_per_degree = $this->_km_per_degree();
@@ -236,7 +236,7 @@ class CO_LL_Location extends CO_Main_DB_Record {
     \returns the fuzz factor, as a float. If it is not set, then it is zero.
      */
      public function fuzz_factor() {
-        return abs(isset($this->context['fuzz_factor']) ? floatval($this->context['fuzz_factor']) : 0);
+        return isset($this->context['fuzz_factor']) ? abs(floatval($this->context['fuzz_factor'])) : 0;
     }
 
     /***********************/
@@ -244,7 +244,7 @@ class CO_LL_Location extends CO_Main_DB_Record {
     \returns TRUE, if the instance has a "fuzz factor."
      */
     public function is_fuzzy() {
-        return 0.0 == $this->fuzz_factor();
+        return 0.0 < $this->fuzz_factor();
     }
     
     /***********************/
