@@ -18,6 +18,10 @@ require_once(CO_Config::db_class_dir().'/co_main_db_record.class.php');
 /***************************************************************************************************************************/
 /**
 This is a specialization of the basic data class, implementing the long/lat fields (built into the table structure, but unused by base classes).
+
+It has a "fuzz factor" built in. This is because some organizations, for reasons of privacy or law, don't want exact locations disclosed.
+
+You can define a "fuzz factor" of how many kilometers you want as a "fuzzy circle" around the point.
  */
 class CO_LL_Location extends CO_Main_DB_Record {
     protected $_longitude;
@@ -59,6 +63,54 @@ class CO_LL_Location extends CO_Main_DB_Record {
         return $ret;
     }
     
+    /***********************/
+    /**
+    \returns a floating-point number, with the Km per degree long/lat (Changes for different latitudes, and is only good for the immediate vicinity).
+     */
+    protected function _km_per_degree() {
+        // We do an average. Take four points in a "cross" around the center, then average them. We go out ten Km, so there's some distance.
+        $spot0 = Array('longitude' => $this->_longitude, 'latitude' => $this->_latitude);
+        $spot1 = Array('longitude' => $this->_longitude + 10.0, 'latitude' => $this->_latitude);
+        $spot2 = Array('longitude' => $this->_longitude - 10.0, 'latitude' => $this->_latitude);
+        $spot3 = Array('longitude' => $this->_longitude, 'latitude' => $this->_latitude + 10.0);
+        $spot4 = Array('longitude' => $this->_longitude, 'latitude' => $this->_latitude - 10.0);
+        $distance1 = abs(CO_Main_Data_DB::get_accurate_distance($spot0['latitude'], $spot0['longitude'], $spot1['latitude'], $spot1['longitude']));
+        $distance2 = abs(CO_Main_Data_DB::get_accurate_distance($spot0['latitude'], $spot0['longitude'], $spot2['latitude'], $spot2['longitude']));
+        $distance3 = abs(CO_Main_Data_DB::get_accurate_distance($spot0['latitude'], $spot0['longitude'], $spot3['latitude'], $spot3['longitude']));
+        $distance4 = abs(CO_Main_Data_DB::get_accurate_distance($spot0['latitude'], $spot0['longitude'], $spot4['latitude'], $spot4['longitude']));
+        
+        return ($distance1 + $distance2 + $distance3 + $distance4) / 40.0;
+    }
+    
+    /***********************/
+    /**
+    \returns an associative array, with a "fuzzed" long/lat (if there is no fuzz factor, it is the raw long/lat).
+     */
+    protected function _fuzz_me() {
+        $ret = Array('longitude' => $this->_longitude, 'latitude' => $this->_latitude);
+        
+        $fuzz_factor = abs($this->fuzz_factor());
+        if (0 != $fuzz_factor) {
+            // The big number gives it lots of fuzz.
+            $long_offset = function_exists('random_int') ? random_int(1, max(1, 100000 * ($fuzz_factor))) / 100000.0 : rand(1, max(1, 100000 * ($fuzz_factor))) / 100000.0;
+            $lat_offset = function_exists('random_int') ? random_int(1, max(1, 100000 * ($fuzz_factor))) / 100000.0 : rand(1, max(1, 100000 * ($fuzz_factor))) / 100000.0;
+            
+            // Convert the fuziness to degrees.
+            $km_per_degree = $this->_km_per_degree();
+            $long_offset /= $km_per_degree;
+            $lat_offset /= $km_per_degree;
+
+            // This determines the direction we go. We make each axis an independent rand().
+            $long_offset *= (rand(0, 9) < 5 ? -1.0 : 1.0);
+            $lat_offset *= (rand(0, 9) < 5 ? -1.0 : 1.0);
+            
+            $ret['longitude'] += $long_offset;
+            $ret['latitude'] += $lat_offset;
+        }
+        
+        return $ret;
+    }
+    
     /***********************************************************************************************************************/
     /***********************/
     /**
@@ -72,6 +124,8 @@ class CO_LL_Location extends CO_Main_DB_Record {
 	                                $in_latitude = NULL,    ///< An initial latitude value.
 	                                $in_fuzz_factor = NULL  ///< An initial "fuzz factor" value.
                                 ) {
+        unset($this->context['fuzz_factor']);
+        
         parent::__construct($in_db_object, $in_db_result, $in_owner_id, $in_tags_array);
         
         if (NULL != $in_longitude) {
@@ -82,7 +136,7 @@ class CO_LL_Location extends CO_Main_DB_Record {
             $this->_latitude = $in_latitude;
         }
         
-        if (NULL != $in_fuzz_factor) {
+        if ((NULL != $in_fuzz_factor) && (0 != $in_fuzz_factor)) {
             $this->context['fuzz_factor'] = $in_fuzz_factor;
         } elseif (!isset($this->context['fuzz_factor']) || !$this->context['fuzz_factor']) {
             $this->context['fuzz_factor'] = 0;
@@ -98,6 +152,8 @@ class CO_LL_Location extends CO_Main_DB_Record {
      */
     public function load_from_db(   $in_db_result   ///< This is an associative array, formatted as a database row response.
                                     ) {
+        $this->context['fuzz_factor'] = 0;
+        
         $ret = parent::load_from_db($in_db_result);
         
         if ($ret) {
@@ -182,6 +238,14 @@ class CO_LL_Location extends CO_Main_DB_Record {
      public function fuzz_factor() {
         return abs(isset($this->context['fuzz_factor']) ? floatval($this->context['fuzz_factor']) : 0);
     }
+
+    /***********************/
+    /**
+    \returns TRUE, if the instance has a "fuzz factor."
+     */
+    public function is_fuzzy() {
+        return 0.0 == $this->fuzz_factor();
+    }
     
     /***********************/
     /**
@@ -243,7 +307,7 @@ class CO_LL_Location extends CO_Main_DB_Record {
     \returns The current longitude value.
      */
     public function longitude() {
-        return $this->_longitude * (0 < $this->fuzz_factor()) ? (random_int(1, max(1, 100000 * ($this->fuzz_factor() + 1))) / 100000.0) : 1.0;
+        return $this->_fuzz_me()['longitude'];
     }
     
     /***********************/
@@ -253,6 +317,6 @@ class CO_LL_Location extends CO_Main_DB_Record {
     \returns The current latitude value.
      */
     public function latitude() {
-        return $this->_latitude * (0 < $this->fuzz_factor()) ? (random_int(1, max(1, 100000 * ($this->fuzz_factor() + 1))) / 100000.0) : 1.0;
+        return $this->_fuzz_me()['latitude'];
     }
 };

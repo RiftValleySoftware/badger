@@ -409,6 +409,20 @@
                         echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
+                echo('<div id="test-067" class="inner_closed">');
+                    echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-067\')">TEST 67: "Fuzzy Location" Tests</a></h2>');
+
+                    echo('<div class="main_div inner_container">');
+                        ?>
+                        <div class="main_div" style="margin-right:2em">
+                        <p class="explain">Now, we test the "Location Fuzzing" aspect of the database.</p>
+                        </div>
+                        <?php
+                        $start = microtime(TRUE);
+                        advanced_test_28('admin', '', CO_Config::$god_mode_password);
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                    echo('</div>');
+                echo('</div>');
             echo('</div>');
         echo('</div>');
     ?>
@@ -1419,6 +1433,88 @@
                         echo(intval($item));
                     });
                 echo('</div></div></div>');
+            }
+        } else {
+            echo("<h2 style=\"color:red;font-weight:bold\">The access instance is not valid!</h2>");
+            echo('<p style="margin-left:1em;color:red;font-weight:bold">Error: ('.$access_instance->error->error_code.') '.$access_instance->error->error_name.' ('.$access_instance->error->error_description.')</p>');
+        }
+    }
+
+    function advanced_test_28($in_login = NULL, $in_hashed_password = NULL, $in_password = NULL) {
+        $access_instance = NULL;
+        
+        if ( !defined('LGV_ACCESS_CATCHER') ) {
+            define('LGV_ACCESS_CATCHER', 1);
+        }
+        
+        require_once(CO_Config::badger_main_class_dir().'/co_access.class.php');
+        
+        $access_instance = new CO_Access($in_login, $in_hashed_password, $in_password);
+        
+        if ($access_instance->valid) {
+            echo("<h2>The access instance is valid!</h2>");
+            echo("<p class=\"explain\">The first thing that we do, is set up the first 100 records with a \"fuzz factor.\"</p>");
+            $st1 = microtime(TRUE);
+            $test_item = $access_instance->generic_search(NULL, FALSE, 100, 1);
+            $fetchTime = sprintf('%01.3f', microtime(TRUE) - $st1);
+            if (isset($test_item) && is_array($test_item) && count($test_item)) {
+                echo('<div class="inner_div">');
+                    echo("<h4>RESULT (This took $fetchTime seconds):</h4><div style=\"font-family: Courier, Monospace\"><h5>\"Fuzzing the dataset\":</h5><ol style=\"margin-left: 2em\">");
+                        array_walk($test_item, function($item, $index) {
+                            if (isset($item) && $item && ($item instanceof CO_LL_Location)) {
+                                echo('<li><strong>'.$item->name.'</strong><ul>');
+                                    $original_long = $item->raw_longitude();
+                                    $original_lat = $item->raw_latitude();
+                                    $fuzziness = floatval(abs(rand(1, 10000))) / 1000.0;
+                                    $success = $item->set_fuzz_factor($fuzziness);
+                                    if ($success) {
+                                        $fuzzed = Array('longitude' => $item->longitude(), 'latitude' => $item->latitude());
+                                        echo('<li>Original: ('.$original_long.', '.$original_lat.')</li>');
+                                        echo('<li>Raw: ('.$item->raw_longitude().', '.$item->raw_latitude().')</li>');
+                                        echo('<li>Fuzzed: ('.$fuzzed['longitude'].', '.$fuzzed['latitude'].')</li>');
+                                        $distance = sprintf('%01.3f', abs(CO_Main_Data_DB::get_accurate_distance($original_lat, $original_long, $fuzzed['latitude'], $fuzzed['longitude'])));
+                                        echo('<li>Fuzz Factor: '.$fuzziness.'Km</li>');
+                                        echo('<li>Distance: '.$distance.'Km</li>');
+                                    } else {
+                                        echo('<li><h4 style="color:red;font-weight:bold">ERROR</h4></li>');
+                                    }
+                                echo('</ul></li>');
+                            }
+                        });
+                echo('</ol></div></div>');
+        
+                $access_instance2 = new CO_Access();
+        
+                if ($access_instance->valid) {
+                    echo("<h2>The second access instance is valid!</h2>");
+                    echo("<p class=\"explain\">Now, we don't log in, and see what the system tells us. We'll do this a couple of times, and should get different results each time.</p>");
+                    $st1 = microtime(TRUE);
+                    $test_item = $access_instance->generic_search(NULL, FALSE, 100, 1);
+                    $fetchTime = sprintf('%01.3f', microtime(TRUE) - $st1);
+                    if (isset($test_item) && is_array($test_item) && count($test_item)) {
+                        echo('<div class="inner_div">');
+                            echo("<h4>RESULT (This took $fetchTime seconds):</h4><div style=\"font-family: Courier, Monospace\"><h5>\"Fuzzing the dataset\":</h5><ol style=\"margin-left: 2em\">");
+                                array_walk($test_item, function($item, $index) {
+                                    if (isset($item) && $item && ($item instanceof CO_LL_Location)) {
+                                        echo('<li><strong>'.$item->name.'</strong><ul>');
+                                            $fuzzed = Array('longitude' => $item->longitude(), 'latitude' => $item->latitude());
+                                            echo('<li>Location: ('.$fuzzed['longitude'].', '.$fuzzed['latitude'].')</li>');
+                                        echo('</ul></li>');
+                                    }
+                                });
+                            echo('</ol></div>');
+                            echo("<h4>Try again. We aren't even going to ask for new data. Just querying should give us different results</h4><div style=\"font-family: Courier, Monospace\"><h5>\"Fuzzing the dataset\":</h5><ol style=\"margin-left: 2em\">");
+                                array_walk($test_item, function($item, $index) {
+                                    if (isset($item) && $item && ($item instanceof CO_LL_Location)) {
+                                        echo('<li><strong>'.$item->name.'</strong><ul>');
+                                            $fuzzed = Array('longitude' => $item->longitude(), 'latitude' => $item->latitude());
+                                            echo('<li>Location: ('.$fuzzed['longitude'].', '.$fuzzed['latitude'].')</li>');
+                                        echo('</ul></li>');
+                                    }
+                                });
+                        echo('</ol></div></div>');
+                    }
+                }
             }
         } else {
             echo("<h2 style=\"color:red;font-weight:bold\">The access instance is not valid!</h2>");
