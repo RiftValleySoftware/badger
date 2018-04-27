@@ -1,3 +1,7 @@
+**1.0.0.2014** *(April 27, 2018)*
+
+- Improved support for "fuzzy locations" at a very low level.
+
 **1.0.0.2013** *(April 26, 2018)*
 
 - Added support for "fuzzy locations" at a very low level.

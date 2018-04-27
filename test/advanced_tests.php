@@ -1463,11 +1463,9 @@
                         $success = $item->set_fuzz_factor($fuzziness);
                         if ($success) {
                             global $result_table;
+                            $result_table[$index]['index'] = $index;
                             $result_table[$index]['name'] = $item->name;
-                            $result_table[$index]['fuzziness'] = $fuzziness;
                             $result_table[$index]['original'] = Array($original_long, $original_lat);
-                            $result_table[$index]['god-fuzzed-1'] = Array($item->longitude(), $item->latitude());
-                            $result_table[$index]['god-fuzzed-2'] = Array($item->longitude(), $item->latitude());
                         }
                     }
                 });
@@ -1481,8 +1479,24 @@
                     array_walk($check_list, function($item, $index) {
                         if (isset($item) && $item && ($item instanceof CO_LL_Location)) {
                             global $result_table;
-                            $result_table[$index]['mensch-fuzzed-1'] = Array($item->longitude(), $item->latitude());
-                            $result_table[$index]['mensch-fuzzed-2'] = Array($item->longitude(), $item->latitude());
+                            $result_table[$index]['CS1'] = $item->i_can_see_clearly_now() ? '√' : 'X';
+                            $result_table[$index]['fuzzed-1'] = Array($item->longitude(), $item->latitude());
+                            $result_table[$index]['fuzzed-2'] = Array($item->longitude(), $item->latitude());
+                        }
+                    });
+                }
+            }
+        
+            $mensch_access_instance2 = new CO_Access('tertiary', '', 'CoreysGoryStory');
+    
+            if ($mensch_access_instance2->valid) {
+                $check_list2 = $mensch_access_instance2->generic_search(Array('access_class' => 'CO_LL_Location'), FALSE, 50, 1);
+                if (isset($check_list2) && is_array($check_list2) && count($check_list2)) {
+                    array_walk($check_list2, function($item, $index) {
+                        if (isset($item) && $item && ($item instanceof CO_LL_Location)) {
+                            global $result_table;
+                            $result_table[$index]['CS2'] = $item->i_can_see_clearly_now() ? '√' : 'X';
+                            $result_table[$index]['fuzzed-3'] = Array($item->raw_longitude(), $item->raw_latitude());
                         }
                     });
                 }
@@ -1492,28 +1506,24 @@
             if (isset($setup_list2) && is_array($setup_list2) && count($setup_list2)) {
                 array_walk($setup_list2, function($item, $index) {
                     if (isset($item) && $item && ($item instanceof CO_LL_Location)) {
-                        $original_long = $item->raw_longitude();
-                        $original_lat = $item->raw_latitude();
-                        $fuzziness = 0;
-                        $success = $item->set_fuzz_factor($fuzziness);
-                        if ($success) {
-                            global $result_table;
-                            $result_table[$index]['god-un-fuzzed-1'] = Array($item->longitude(), $item->latitude());
-                            $result_table[$index]['god-un-fuzzed-2'] = Array($item->longitude(), $item->latitude());
+                        if ($index % 2) {
+                            $success = $item->set_fuzz_factor(0);
+                        } else {
+                            $success = $item->set_can_see_through_the_fuzz(7);
                         }
                     }
                 });
         
-                $mensch_access_instance2 = new CO_Access();
+                $mensch_access_instance3 = new CO_Access('tertiary', '', 'CoreysGoryStory');
         
-                if ($mensch_access_instance2->valid) {
-                    $check_list2 = $mensch_access_instance2->generic_search(Array('access_class' => 'CO_LL_Location'), FALSE, 50, 1);
-                    if (isset($check_list2) && is_array($check_list2) && count($check_list2)) {
-                        array_walk($check_list2, function($item, $index) {
+                if ($mensch_access_instance3->valid) {
+                    $check_list3 = $mensch_access_instance3->generic_search(Array('access_class' => 'CO_LL_Location'), FALSE, 50, 1);
+                    if (isset($check_list3) && is_array($check_list3) && count($check_list3)) {
+                        array_walk($check_list3, function($item, $index) {
                             if (isset($item) && $item && ($item instanceof CO_LL_Location)) {
                                 global $result_table;
-                                $result_table[$index]['mensch-un-fuzzed-1'] = Array($item->longitude(), $item->latitude());
-                                $result_table[$index]['mensch-un-fuzzed-2'] = Array($item->longitude(), $item->latitude());
+                                $result_table[$index]['CS3'] = $item->i_can_see_clearly_now() ? '√' : 'X';
+                                $result_table[$index]['un-fuzzed'] = Array($item->raw_longitude(), $item->raw_latitude());
                             }
                         });
                     }
@@ -1521,6 +1531,40 @@
             }
         }
         
-        echo('<pre>'.htmlspecialchars(print_r($result_table, true)).'</pre>');
+        echo('<table cellspacing="0" cellpadding="0" border="0" style="font-size:x-small">');
+            $keys = array_keys($result_table[0]);
+            
+            if ($keys) {
+                echo('<thead>');
+                    echo('<tr style="background-color:black; color:white; margin:0; padding:0.25em; font-weight:bold; text-align:center">');
+                        foreach($keys as $key) {
+                            echo('<td>'.htmlspecialchars($key).'</td>');
+                        }
+                    echo('</tr>');
+                echo('</thead>');
+            }
+            
+            echo('<tbody>');
+                $index = 0;
+                foreach($result_table as $row) {
+                    echo('<tr>');
+                        foreach($row as $col) {
+                            echo('<td style="padding:0.25em;border:1px solid black;');
+                                if ($index % 2) {
+                                    echo('background-color:yellow"');
+                                }
+                            echo('">');
+                            if (is_array($col)) {
+                                echo(htmlspecialchars($col[0]).', '.htmlspecialchars($col[1]));
+                            } else {
+                                echo(htmlspecialchars($col));
+                            }
+                            echo('</td>');
+                        }
+                        $index++;
+                    echo('</tr>');
+                }
+            echo('</tbody>');
+        echo('</table>');
     }
 ?>

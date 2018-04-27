@@ -107,7 +107,6 @@ class CO_LL_Location extends CO_Main_DB_Record {
             $ret['longitude'] += $long_offset;
             $ret['latitude'] += $lat_offset;
         }
-        
         return $ret;
     }
     
@@ -116,16 +115,15 @@ class CO_LL_Location extends CO_Main_DB_Record {
     /**
     Constructor (Initializer)
      */
-	public function __construct(    $in_db_object = NULL,   ///< The database object for this instance.
-	                                $in_db_result = NULL,   ///< The database row for this instance (associative array, with database keys).
-	                                $in_owner_id = NULL,    ///< The ID of the object (in the database) that "owns" this instance.
-	                                $in_tags_array = NULL,  ///< An array of strings, up to ten elements long, for the tags.      
-	                                $in_longitude = NULL,   ///< An initial longitude value.
-	                                $in_latitude = NULL,    ///< An initial latitude value.
-	                                $in_fuzz_factor = NULL  ///< An initial "fuzz factor" value.
+	public function __construct(    $in_db_object = NULL,               ///< The database object for this instance.
+	                                $in_db_result = NULL,               ///< The database row for this instance (associative array, with database keys).
+	                                $in_owner_id = NULL,                ///< The ID of the object (in the database) that "owns" this instance.
+	                                $in_tags_array = NULL,              ///< An array of strings, up to ten elements long, for the tags.      
+	                                $in_longitude = NULL,               ///< An initial longitude value.
+	                                $in_latitude = NULL,                ///< An initial latitude value.
+	                                $in_fuzz_factor = NULL,             ///< An initial "fuzz factor" value.
+	                                $in_can_see_through_the_fuzz = NULL ///< This is a security token for being able to see the value as a raw value (unfuzzed).
                                 ) {
-        unset($this->context['fuzz_factor']);
-        
         parent::__construct($in_db_object, $in_db_result, $in_owner_id, $in_tags_array);
         
         if (NULL != $in_longitude) {
@@ -141,7 +139,10 @@ class CO_LL_Location extends CO_Main_DB_Record {
         } elseif (!isset($this->context['fuzz_factor']) || !$this->context['fuzz_factor']) {
             $this->context['fuzz_factor'] = 0;
         }
-            
+        
+        if (NULL != $in_can_see_through_the_fuzz) {
+            $this->context['can_see_through_the_fuzz'] = $in_can_see_through_the_fuzz;
+        }
     }
 
     /***********************/
@@ -152,8 +153,6 @@ class CO_LL_Location extends CO_Main_DB_Record {
      */
     public function load_from_db(   $in_db_result   ///< This is an associative array, formatted as a database row response.
                                     ) {
-        $this->context['fuzz_factor'] = 0;
-        
         $ret = parent::load_from_db($in_db_result);
         
         if ($ret) {
@@ -236,7 +235,7 @@ class CO_LL_Location extends CO_Main_DB_Record {
     \returns the fuzz factor, as a float. If it is not set, then it is zero.
      */
      public function fuzz_factor() {
-        return isset($this->context['fuzz_factor']) ? abs(floatval($this->context['fuzz_factor'])) : 0;
+        return isset($this->context['fuzz_factor']) ? abs(floatval($this->context['fuzz_factor'])) : 0.0;
     }
 
     /***********************/
@@ -279,7 +278,7 @@ class CO_LL_Location extends CO_Main_DB_Record {
     \returns The current longitude value.
      */
     public function raw_longitude() {
-        if ($this->get_access_object()->security_db_available() && $this->user_can_read()) {
+        if ($this->i_can_see_clearly_now()) {
             return $this->_longitude;
         } else {
             return $this->longitude();
@@ -293,7 +292,7 @@ class CO_LL_Location extends CO_Main_DB_Record {
     \returns The current longitude value.
      */
     public function raw_latitude() {
-        if ($this->get_access_object()->security_db_available() && $this->user_can_read()) {
+        if ($this->i_can_see_clearly_now()) {
             return $this->_latitude;
         } else {
             return $this->latitude();
@@ -318,5 +317,59 @@ class CO_LL_Location extends CO_Main_DB_Record {
      */
     public function latitude() {
         return $this->_fuzz_me()['latitude'];
+    }
+    
+    /***********************/
+    /**
+    Setter for a security ID token that can see past the fuzz factor.
+    
+    \returns TRUE, if the save was successful.
+     */
+    public function set_can_see_through_the_fuzz(   $in_id  ///< The ID to set. If 0 or NULL, the value is removed.
+                                                ) {
+        $ret = FALSE;
+        
+        if ($this->user_can_write()) {
+            $in_id = intval($in_id);
+            if (0 == $in_id) {
+                unset($this->context['can_see_through_the_fuzz']);
+            } else {
+                $this->context['can_see_through_the_fuzz'] = $in_id;
+            }
+            
+            $ret = $this->update_db();
+        }
+        
+        return $ret;
+    }
+    
+    /***********************/
+    /**
+    \returns TRUE, if current user has the ability to see the raw values.
+     */
+    public function i_can_see_clearly_now() {
+        $ret = !$this->is_fuzzy();  // If we aren't fuzzed, then, no problem. Peep away.
+        
+        if (!$ret && $this->get_access_object()->security_db_available()) { // Only logged-in users get to see clearly.
+            if ($this->get_access_object()->god_mode()) {   // God is omnipresent.
+                $ret = TRUE;
+            } else {    // Otherwise, users with write privileges, or that are on the guest list, can see clearly.
+                $ids = $this->get_access_object()->get_security_ids();
+        
+                $my_see_item = intval($this->write_security_id);
+        
+                if (isset($ids) && is_array($ids) && count($ids)) {
+                    $ret = in_array($my_see_item, $ids);
+                }
+        
+                if (!$ret && isset($this->context['can_see_through_the_fuzz'])) {
+                    $my_see_item = intval($this->context['can_see_through_the_fuzz']);
+                    if (isset($ids) && is_array($ids) && count($ids)) {
+                        $ret = in_array($my_see_item, $ids);
+                    }
+                }
+            }
+        }
+        return $ret;
     }
 };
