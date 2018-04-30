@@ -179,10 +179,10 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
     \returns TRUE, if the current logged-in user can edit IDs for this login.
      */
     public function user_can_edit_ids() {
-        $ret - $this->get_access_object()->god_mode();
+        $ret = $this->get_access_object()->god_mode();
         
         if (!$ret && $this->user_can_write()) { // Can't write, then we don't even bother going further.
-            $ids = $this->get_access_object()->get_security_ids();
+            $ids = $this->get_access_object()->get_security_access_ids();
             
             $valid_ids = array_filter($ids, function($in_id){return intval($in_id) && (intval($in_id) != $this->id);});
             
