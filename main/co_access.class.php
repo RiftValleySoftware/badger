@@ -13,7 +13,7 @@
 */
 defined( 'LGV_ACCESS_CATCHER' ) or die ( 'Cannot Execute Directly' );	// Makes sure that this file is in the correct context.
 
-define('__BADGER_VERSION__', '1.0.0.2014');
+define('__BADGER_VERSION__', '1.0.0.2015');
 
 if ( !defined('LGV_MD_CATCHER') ) {
     define('LGV_MD_CATCHER', 1);
@@ -195,8 +195,9 @@ class CO_Access {
         if ($this->god_mode()) {
             $ret = Array(-1);
         } else {
-            if (isset($this->_login_id) && $this->_login_id && $this->_security_db_object) {
-                $ret = $this->_security_db_object->get_security_ids_for_id($this->_login_id);
+            $login_id = $this->get_login_id();
+            if (isset($login_id) && $login_id && $this->_security_db_object) {
+                $ret = $this->_security_db_object->get_security_ids_for_id($this->get_login_id());
                 
                 if ($this->_security_db_object->error) {
                     $this->error = $this->_security_db_object->error;
@@ -218,10 +219,18 @@ class CO_Access {
     
     /***********************/
     /**
+    \returns the ID for the logged-in user.
+     */
+    public function get_login_id() {
+        return $this->_login_id;
+    }
+    
+    /***********************/
+    /**
     \returns the instance for the logged-in user.
      */
     public function get_login_item() {
-        return $this->get_single_security_record_by_id($this->_login_id);
+        return $this->get_single_security_record_by_id($this->get_login_id());
     }
 
     /***********************/
@@ -229,6 +238,7 @@ class CO_Access {
     \returns TRUE, if the current logged-in user is "God."
      */
     public function god_mode() {
+        // We look at the hard property (as opposed to using the accessor) just to avoid subclasses messing with things.
         return intval($this->_login_id) == intval(CO_Config::$god_mode_id);
     }
     
@@ -292,7 +302,7 @@ class CO_Access {
                 }
         
                 if ($ret) {
-                    $ret->write_security_id = intval($this->_login_id);
+                    $ret->write_security_id = intval($this->get_login_id());
                     $ret->update_db();   // Make sure it gets saved.
                 } else {
                     $this->error = new LGV_Error(   CO_Lang_Common::$access_error_code_class_not_created,

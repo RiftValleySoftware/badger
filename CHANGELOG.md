@@ -1,3 +1,7 @@
+**1.0.0.2015** *(April 30, 2018)*
+
+- Added a check for being able to edit IDs for logins. Users can no longer edit their own ID lists.
+
 **1.0.0.2014** *(April 27, 2018)*
 
 - Improved support for "fuzzy locations."
