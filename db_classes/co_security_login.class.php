@@ -129,4 +129,12 @@ class CO_Security_Login extends CO_Security_Node {
         
         return $ret;
     }
+    
+    /***********************/
+    /**
+    \returns TRUE, if this object represents the database "God" object.
+     */
+    public function i_am_a_god() {
+        return intval(CO_Config::god_mode_id()) == intval($this->id());
+    }
 };
