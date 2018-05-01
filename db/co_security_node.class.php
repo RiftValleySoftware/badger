@@ -174,21 +174,11 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
     
     /***********************/
     /**
-    Users cannot edit their own IDs, no matter who they are (unless they are God).
+    This is designed to be overloaded. By default, only God can change IDs.
     
     \returns TRUE, if the current logged-in user can edit IDs for this login.
      */
     public function user_can_edit_ids() {
-        $ret = $this->get_access_object()->god_mode();
-        
-        if (!$ret && $this->user_can_write()) { // Can't write, then we don't even bother going further.
-            $ids = $this->get_access_object()->get_security_access_ids();
-            
-            $valid_ids = array_filter($ids, function($in_id){return intval($in_id) && (intval($in_id) != $this->id);});
-            
-            $ret = in_array($this->get_access_object()->get_login_id(), $valid_ids);
-        }
-        
-        return $ret;
+        return $this->get_access_object()->god_mode();
     }
 };
