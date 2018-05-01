@@ -249,7 +249,7 @@ class CO_Access {
      */
     public function god_mode() {
         // We look at the hard property (as opposed to using the accessor) just to avoid subclasses messing with things.
-        return intval($this->_login_id) == intval(CO_Config::$god_mode_id);
+        return intval($this->_login_id) == intval(CO_Config::god_mode_id());
     }
     
     /***********************/

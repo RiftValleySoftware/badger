@@ -25,7 +25,6 @@ class CO_Config {
     
     static $lang = 'en';
     
-    static $god_mode_id = 2;
     static $god_mode_password = 'BWU-HA-HAAAA-HA!';
     
     static $data_db_name = 'littlegr_badger_data';
@@ -39,6 +38,16 @@ class CO_Config {
     static $sec_db_type = _DB_TYPE_;
     static $sec_db_login = 'littlegr_badg';
     static $sec_db_password = 'pnpbxI1aU0L(';
+    
+    static private $_god_mode_id = 2;                           // Default is 2 (First security item created).
+
+    /***********************/
+    /**
+    \returns the God Mode user ID.
+     */
+    static function god_mode_id() {
+        return self::$_god_mode_id;
+    }
     
     /***********************/
     /**
