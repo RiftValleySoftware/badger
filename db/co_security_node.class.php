@@ -106,12 +106,17 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
     
     \returns TRUE, if successful.
      */
-    public function set_ids(    $in_ids_array   ///< This is a preset array of integers, containing security IDs for the row.
+    public function set_ids(    $in_ids_array   ///< This is a preset array of integers, containing security IDs for the row. NULL/Empty to delete all IDs.
                             ) {
         $ret = FALSE;
         
-        if (isset($in_ids_array) && is_array($in_ids_array) && count($in_ids_array) && $this->user_can_edit_ids()) {
-            $this->_ids = array_map('intval', $in_ids_array);
+        if ($this->user_can_edit_ids()) {
+            if (isset($in_ids_array) && is_array($in_ids_array) && count($in_ids_array)) {
+                $this->_ids = array_map('intval', $in_ids_array);
+            } else {
+                $this->_ids = Array();
+            }
+        
             $ret = $this->update_db();
         }
         
@@ -128,11 +133,14 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
                             ) {
         $ret = FALSE;
         
-        if (!isset($this->_ids) || !is_array($this->_ids) && $this->user_can_edit_ids()) {
-            $this->_ids = Array(intval($in_id));
-        } else {
-            $this->_ids[] = $in_id;
-            $this->_ids = array_unique($this->_ids);
+        if ($this->user_can_edit_ids()) {
+            if (!isset($this->_ids) || !is_array($this->_ids)) {
+                $this->_ids = Array(intval($in_id));
+            } else {
+                $this->_ids[] = $in_id;
+                $this->_ids = array_unique($this->_ids);
+            }
+        
             $ret = $this->update_db();
         }
         
@@ -155,9 +163,13 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
             foreach($this->_ids as $id) {
                 if ($id != $in_id) {
                     array_push($new_array, $id);
+                } else {
+                    $ret = TRUE;
                 }
                 
-                $ret = $this->set_ids($new_array);
+                if ($ret) {
+                    $ret = $this->set_ids($new_array);
+                }
             }
         }
         
