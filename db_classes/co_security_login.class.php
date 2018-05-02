@@ -137,4 +137,33 @@ class CO_Security_Login extends CO_Security_Node {
     public function i_am_a_god() {
         return intval(CO_Config::god_mode_id()) == intval($this->id());
     }
+    
+    /***********************/
+    /**
+    We override this, because the God login can only be modified by itself. No one else.
+    
+    \returns TRUE, if the current logged-in user has write permission on this record.
+     */
+    public function user_can_write() {
+        $ret = FALSE;
+        
+        // Only God can edit God.
+        if ($this->i_am_a_god() && !$this->get_access_object()->god_mode()) {
+            return FALSE;
+        } else {
+            $ids = $this->get_access_object()->get_security_ids();
+        
+            $my_write_item = intval($this->write_security_id);
+        
+            if ((0 == $my_write_item) || $this->get_access_object()->god_mode()) {
+                $ret = TRUE;
+            } else {
+                if (isset($ids) && is_array($ids) && count($ids)) {
+                    $ret = in_array($my_write_item, $ids);
+                }
+            }
+        
+        return $ret;
+        }
+    }
 };
