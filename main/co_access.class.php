@@ -227,10 +227,21 @@ class CO_Access {
     
     /***********************/
     /**
-    \returns the instance for the logged-in user.
+    This returns the actual security DB login item for the requested user (or the current logged-in user).
+    
+    The response is subject to standard security vetting, so there is a possibility that nothing will be returned, when there is an existing login at that ID.
+    
+    \returns the instance for the requested user.
      */
-    public function get_login_item() {
-        return $this->get_single_security_record_by_id($this->get_login_id());
+    public function get_login_item( $in_login_id = NULL ///< If not-NULL, then the ID of a login instance. It must be one that the current user can see.
+                                    ) {
+        $login_id = $this->get_login_id();
+        
+        if (isset($in_login_id) && (0 < intval($in_login_id))) {
+            $login_id = intval($in_login_id);
+        }
+        
+        return $this->get_single_security_record_by_id($login_id);
     }
 
     /***********************/
