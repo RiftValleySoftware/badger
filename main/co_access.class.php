@@ -211,16 +211,6 @@ class CO_Access {
     
     /***********************/
     /**
-    This is designed to be overloaded by COBRA. In that case, it will return a list of security DB access tokens.
-    
-    \returns an array of integers, with each one representing a security token.
-     */
-    public function get_security_access_ids() {
-        return Array();
-    }
-    
-    /***********************/
-    /**
     \returns TRUE, if the main "data" database is ready for use.
      */
     public function main_db_available() {
