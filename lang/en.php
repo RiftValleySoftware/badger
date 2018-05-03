@@ -40,6 +40,9 @@ class CO_Lang {
     static  $db_error_name_class_not_created = 'Class was not created.';
     static  $db_error_desc_class_not_created = 'The attempt to instantiate the class failed.';
     
+    static  $db_error_name_user_not_authorized = 'User Not Authorized';
+    static  $db_error_desc_user_not_authorized = 'The user is not authorized to perform the requested operation.';
+    
     static  $access_error_name_user_not_authorized = 'User Not Authorized';
     static  $access_error_desc_user_not_authorized = 'The user is not authorized to perform the requested operation.';
     static  $access_error_name_class_file_not_found = 'Class file was not found.';

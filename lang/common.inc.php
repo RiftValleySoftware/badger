@@ -26,6 +26,7 @@ class CO_Lang_Common {
 
     static  $db_error_code_class_file_not_found = 300;
     static  $db_error_code_class_not_created = 301;
+    static  $db_error_code_user_not_authorized = 302;
 
     static  $access_error_code_user_not_authorized = 400;
     static  $access_error_code_class_file_not_found = 401;
