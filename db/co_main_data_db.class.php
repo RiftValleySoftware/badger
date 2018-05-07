@@ -479,6 +479,33 @@ class CO_Main_Data_DB extends A_CO_DB {
     
     /***********************/
     /**
+    This is a very "raw" function that simply checks to see if a user collection exists for a given login ID.
+    
+    This deliberately does not pass security vetting, so we're careful.
+    
+    \returns TRUE, if a user exists for the given login ID.
+     */
+    public function see_if_user_exists( $in_login_id    ///< The login ID of the user.
+                                    ) {
+        $ret = NULL;
+        
+        // User collections work by having the login ID in tag 0, so we search for any collection records that have a tag 0 set to our login ID. Chances are good it's a user.
+        $sql = 'SELECT * FROM '.$this->table_name.' WHERE (access_class LIKE \'%_User_Collection\') AND (tag0=\''.intval($in_login_id).'\')';
+
+        $temp = $this->execute_query($sql, Array($in_login_id));
+        if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
+            // We instantiate, as opposed to check the access_class, because we want to give the implementation the option of subclassing.
+            $result = $this->_instantiate_record($temp[0]);
+            if ($result instanceof CO_User_Collection) {    // This will crash if we aren't looking at it from a CHAMELEON (at least) level. That's good.
+                $ret = TRUE;
+            }
+        }
+        
+        return $ret;
+    }
+    
+    /***********************/
+    /**
     This is a "generic" data database search. It can be called from external user contexts, and allows a fairly generalized search of the "data" database.
     Sorting will be done for the values by the ID of the searched objects. "location" will be by distance from the center.
     
@@ -527,6 +554,9 @@ class CO_Main_Data_DB extends A_CO_DB {
         $params = $sql_and_params['params'];
         
         if ($sql) {
+// // Commented out, but useful for debugging.
+// echo('SQL:<pre>'.htmlspecialchars(print_r($sql, true)).'</pre>');
+// echo('PARAMS:<pre>'.htmlspecialchars(print_r($params, true)).'</pre>');
             $temp = $this->execute_query($sql, $params);
             if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
                 if ($count_only) {  // Different syntax for MySQL and Postgres

@@ -77,7 +77,7 @@ class CO_Security_DB extends A_CO_DB {
     
     /***********************/
     /**
-    This is a very "raw" function that should ONLY be called from the access instance __construct() method.
+    This is a very "raw" function that should ONLY be called from the access instance __construct() method (or a special check from the access class).
     
     It is designed to fetch the current login object from its string login ID, so we can extract the id.
     
@@ -90,8 +90,34 @@ class CO_Security_DB extends A_CO_DB {
         $ret = NULL;
         
         $sql = 'SELECT * FROM '.$this->table_name.' WHERE login_id=?';
-
-        $temp = $this->execute_query($sql, Array($in_login_id));
+        $params = Array($in_login_id);
+        
+        $temp = $this->execute_query($sql, $params);
+        if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
+            $result = $this->_instantiate_record($temp[0]);
+            if ($result) {
+                $ret = $result;
+            }
+        }
+        
+        return $ret;
+    }
+    
+    /***********************/
+    /**
+    This is a very "raw" function that should ONLY be called from a special check from the access class.
+    
+    It has no security screening, as this is just for checking.
+    
+    \returns a newly-instantiated record.
+     */
+    public function get_initial_record_by_id( $in_id    ///< The ID of the element.
+                                            ) {
+        $ret = NULL;
+        
+        $sql = 'SELECT * FROM '.$this->table_name.' WHERE id='.intval($in_id);
+        
+        $temp = $this->execute_query($sql, Array());
         if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
             $result = $this->_instantiate_record($temp[0]);
             if ($result) {

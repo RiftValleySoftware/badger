@@ -1,3 +1,7 @@
+**1.0.0.2017** *(May 7, 2018)*
+
+- Added support for vetting the logins and users for COBRA.
+
 **1.0.0.2016** *(May 2, 2018)*
 
 - Did some extra tweaking for COBRA. Tightened security for "God" IDs.

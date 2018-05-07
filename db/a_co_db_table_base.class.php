@@ -274,7 +274,6 @@ abstract class A_CO_DB_Table_Base {
     public function set_read_security_id($in_new_id ///< The new value
                                         ) {
         $ret = FALSE;
-        
         if ($this->user_can_write() && isset($in_new_id)) {
             $this->read_security_id = intval($in_new_id);
             $ret = $this->update_db();

@@ -13,7 +13,7 @@
 */
 defined( 'LGV_ACCESS_CATCHER' ) or die ( 'Cannot Execute Directly' );	// Makes sure that this file is in the correct context.
 
-define('__BADGER_VERSION__', '1.0.0.2016');
+define('__BADGER_VERSION__', '1.0.0.2017');
 
 if ( !defined('LGV_MD_CATCHER') ) {
     define('LGV_MD_CATCHER', 1);
@@ -251,6 +251,43 @@ class CO_Access {
     public function god_mode() {
         // We look at the hard property (as opposed to using the accessor) just to avoid subclasses messing with things.
         return intval($this->_login_id) == intval(CO_Config::god_mode_id());
+    }
+
+    /***********************/
+    /**
+    \returns TRUE, if the given login exists, FALSE, if not, but NULL, if there is no security DB (we're not logged in). NOTE: This is not subject to security vetting.
+     */
+    public function check_login_exists( $in_login_id    ///< The login ID to check
+                                        ) {
+        $ret = NULL;
+        
+        if ($this->security_db_available()) {
+            $ret = FALSE;
+            
+            if ($this->_security_db_object->get_initial_record_by_id(intval($in_login_id))) {
+                $ret = TRUE;
+            }
+        }
+        
+        return $ret;
+    }
+
+    /***********************/
+    /**
+    \returns TRUE, if the given user exists for a login, FALSE, if not, but NULL, if there is no security DB (we're not logged in). NOTE: This is not subject to security vetting.
+     */
+    public function check_user_exists(  $in_login_id    ///< The login ID to check
+                                    ) {
+        // We first check for a login.
+        $ret = $this->check_login_exists($in_login_id);
+        
+        if (NULL == $ret) {
+            $ret = FALSE;
+        } elseif (TRUE == $ret) {   // If it exists, we check further, for a user with that login.
+            $ret = $this->_data_db_object->see_if_user_exists($in_login_id);
+        }
+        
+        return $ret;
     }
     
     /***********************/
