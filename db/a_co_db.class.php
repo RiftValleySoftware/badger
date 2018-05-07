@@ -500,7 +500,6 @@ abstract class A_CO_DB {
                     
                         $sql .= ' SET '.$set_sql.' WHERE ('.$predicate.'id='.$id.')';
                         $this->execute_query($sql, $params, TRUE);
-                        
                         if (!$this->error) {
                             $ret = TRUE;
                         }

@@ -257,7 +257,7 @@ class CO_Access {
     /**
     \returns TRUE, if the given login exists, FALSE, if not, but NULL, if there is no security DB (we're not logged in). NOTE: This is not subject to security vetting.
      */
-    public function check_login_exists( $in_login_id    ///< The login ID to check
+    public function check_login_exists( $in_login_id    ///< The integer login ID to check
                                         ) {
         $ret = NULL;
         
@@ -265,6 +265,25 @@ class CO_Access {
             $ret = FALSE;
             
             if ($this->_security_db_object->get_initial_record_by_id(intval($in_login_id))) {
+                $ret = TRUE;
+            }
+        }
+        
+        return $ret;
+    }
+
+    /***********************/
+    /**
+    \returns TRUE, if the given login exists, FALSE, if not, but NULL, if there is no security DB (we're not logged in). NOTE: This is not subject to security vetting.
+     */
+    public function check_login_exists_by_login_string( $in_login_id    ///< The string login ID to check
+                                                        ) {
+        $ret = NULL;
+        
+        if ($this->security_db_available()) {
+            $ret = FALSE;
+            
+            if ($this->_security_db_object->get_initial_record_by_login_id($in_login_id)) {
                 $ret = TRUE;
             }
         }

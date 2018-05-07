@@ -54,7 +54,15 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
     protected function _build_parameter_array() {
         $ret = parent::_build_parameter_array();
         
-        $ids_as_string_array = array_map('strval', $this->_ids);
+        $ids_as_string_array = Array();
+        $ids_as_int = array_map('intval', $this->_ids);
+        sort($ids_as_int);
+        
+        foreach ($this->_ids as $id) {
+            if ($id != $this->id()) {
+                array_push($ids_as_string_array, strval($id));
+            }
+        }
         
         $id_list_string = implode(',', $ids_as_string_array);
         
@@ -118,7 +126,7 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
                 // First thing we do, is ensure that EVERY SINGLE ID in the current user are ones we have in our own set.
                 // An empty set is fine.
                 foreach($this->_ids as $id) {
-                    if (!$this->get_access_object()->god_mode() && !in_array($id, $id_pool)) {
+                    if (!$this->get_access_object()->god_mode() && (isset($id) && (0 < $id) && !in_array($id, $id_pool))) {
                         // Even one failure scrags the operation.
                         $this->error = new LGV_Error(   CO_Lang_Common::$db_error_code_user_not_authorized,
                                                         CO_Lang::$db_error_name_user_not_authorized,
@@ -142,6 +150,7 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
                     }
                 
                     if (count($new_ids)) {
+                        $this->_ids = $new_ids;
                     }
                 // Otherwise, we are clearing the array.
                 } else {
