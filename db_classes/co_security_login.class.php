@@ -166,4 +166,26 @@ class CO_Security_Login extends CO_Security_Node {
         return $ret;
         }
     }
+    
+    /***********************/
+    /**
+    We override this, because logins never die. They just become security placeholders.
+    
+    \returns TRUE, if the conversion was successful.
+     */
+    public function delete_from_db() {
+        if ($this->user_can_write()) {
+            $this->read_security_id = -1;
+            $this->write_security_id = -1;
+            $this->context = NULL;
+            $this->name = 'The Artist Formerly Known As '.$this->login_id;
+            $this->login_id = NULL;
+            $this->class_description = 'Converted login';
+            $this->_ids = Array();
+            $ret = $this->_write_to_db();
+            return $ret;
+        } else {
+            return FALSE;
+        }
+    }
 };

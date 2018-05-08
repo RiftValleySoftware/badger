@@ -306,6 +306,21 @@ class CO_Access {
 
     /***********************/
     /**
+    \returns the requested login item. This is subject to security vetting, so no item does not mean the item doesn't exist. It just means we're in the dark about that.
+     */
+    public function get_login_item_by_login_string( $in_login_id    ///< The string login ID to check
+                                                    ) {
+        $ret = NULL;
+        
+        if ($this->security_db_available()) {
+            $ret = $this->_security_db_object->get_single_record_by_login_id($in_login_id);
+        }
+        
+        return $ret;
+    }
+
+    /***********************/
+    /**
     \returns TRUE, if the given user exists for a login, FALSE, if not, but NULL, if there is no security DB (we're not logged in). NOTE: This is not subject to security vetting.
      */
     public function check_user_exists(  $in_login_id    ///< The login ID to check

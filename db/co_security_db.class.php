@@ -52,7 +52,7 @@ class CO_Security_DB extends A_CO_DB {
                                             ) {
         $ret = NULL;
         
-        $sql = 'SELECT ids FROM '.$this->table_name.' WHERE id='.intval($in_id);
+        $sql = 'SELECT ids FROM '.$this->table_name.' WHERE (login_id IS NOT NULL) AND (id='.intval($in_id).')';
 
         $temp = $this->execute_query($sql, Array());
         if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
@@ -90,7 +90,7 @@ class CO_Security_DB extends A_CO_DB {
         $ret = NULL;
         
         $sql = 'SELECT * FROM '.$this->table_name.' WHERE login_id=?';
-        $params = Array($in_login_id);
+        $params = Array(trim($in_login_id));
         
         $temp = $this->execute_query($sql, $params);
         if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
@@ -163,7 +163,7 @@ class CO_Security_DB extends A_CO_DB {
         $params = Array();
         
         foreach ($in_login_id_array as $id) {
-            if (0 < $id) {                
+            if (trim($id)) {                
                 if (0 < count($params)) {
                     $sql .= ') OR (';
                 }
@@ -173,17 +173,19 @@ class CO_Security_DB extends A_CO_DB {
         }
         
         $sql  .= ')';
-
-        $temp = $this->execute_query($sql, $params);
-        if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
-            $ret = Array();
-            foreach ($temp as $result) {
-                $result = $this->_instantiate_record($result);
-                if ($result) {
-                    array_push($ret, $result);
+        
+        if (0 < count($params)) {
+            $temp = $this->execute_query($sql, $params);
+            if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
+                $ret = Array();
+                foreach ($temp as $result) {
+                    $result = $this->_instantiate_record($result);
+                    if ($result) {
+                        array_push($ret, $result);
+                    }
                 }
+                usort($ret, function($a, $b){return ($a->id() > $b->id());});
             }
-            usort($ret, function($a, $b){return ($a->id() > $b->id());});
         }
         
         return $ret;
@@ -206,7 +208,7 @@ class CO_Security_DB extends A_CO_DB {
         $in_security_token = intval($in_security_token);
         
         if ($this->access_object->god_mode() && $in_security_token) {
-            $sql = 'SELECT id,ids FROM '.$this->table_name.' WHERE access_class=\'CO_Security_Login\'';
+            $sql = 'SELECT id,ids FROM '.$this->table_name.' WHERE ((access_class=\'CO_Security_Login\') OR (access_class=\'CO_Cobra_Login\') OR (access_class=\'CO_Login_Manager\')) AND (login_id IS NOT NULL)';
             $temp = $this->execute_query($sql, Array());    // We just get everything.
             if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
                 $ret = Array();
