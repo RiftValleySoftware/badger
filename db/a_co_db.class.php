@@ -598,9 +598,8 @@ abstract class A_CO_DB {
             } else {
                 // Make sure she's dead, Jim. We do an open-ended check.
                 $sql = 'SELECT id FROM '.$this->table_name.' WHERE id='.$id;
-                
                 $temp = $this->execute_query($sql);
-                if (!$this->error && isset($temp) && $temp && is_array($temp) && (0 == count($temp))) {
+                if (!$this->error && isset($temp) && is_array($temp) && (0 == count($temp))) {
                     // Make sure that we also remove it from our cache.
                     if (isset($this->_existing_record_objects[$id])) {
                         unset($this->_existing_record_objects[$id]);

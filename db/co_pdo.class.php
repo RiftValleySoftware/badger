@@ -86,11 +86,13 @@ class CO_PDO {
 			    if (strpos($sql, 'RETURNING id;')) {
 			        $response = $this->preparedQuery($sql, $params);
                     $this->last_insert = intval($response[0]['id']);
-			        return;
+			        return TRUE;
 			    }
 			}
 			
 			$sql = str_replace(' RETURNING id', '', $sql);
+// echo('SQL:<pre>'.htmlspecialchars(print_r($sql, true)).'</pre>');
+// echo('PARAMS:<pre>'.htmlspecialchars(print_r($params, true)).'</pre>');
             $stmt = $this->_pdo->prepare($sql);
             $this->_pdo->beginTransaction(); 
             $stmt->execute($params);
@@ -98,9 +100,13 @@ class CO_PDO {
                 $this->last_insert = $this->_pdo->lastInsertId();
             }
             $this->_pdo->commit();
+		
+            return TRUE;
 		} catch (PDOException $exception) {
 			throw new Exception(__METHOD__ . '() ' . $exception->getMessage());
 		}
+		
+        return FALSE;
 	}
 
     /***********************/
@@ -125,21 +131,29 @@ class CO_PDO {
 										$fetchKeyPair = FALSE   ///< See description in method documentation
 										) {
 		try {
+// echo('SQL:<pre>'.htmlspecialchars(print_r($sql, true)).'</pre>');
+// echo('PARAMS:<pre>'.htmlspecialchars(print_r($params, true)).'</pre>');
             $stmt = $this->_pdo->prepare($sql);
             $stmt->setFetchMode($this->fetchMode);
             $this->_pdo->beginTransaction(); 
             $stmt->execute($params);
             $this->_pdo->commit();
-
+            
+            $ret = NULL;
+            
             if ($fetchKeyPair) {
-                return $stmt->fetchAll(PDO::FETCH_KEY_PAIR);
+                $ret = $stmt->fetchAll(PDO::FETCH_KEY_PAIR);
             } else {
-                return $stmt->fetchAll();
+                $ret = $stmt->fetchAll();
             }
+
+// echo('RESULT:<pre>'.htmlspecialchars(print_r($ret, true)).'</pre>');
+            
+            return $ret;
 		} catch (PDOException $exception) {
 			throw new Exception(__METHOD__ . '() ' . $exception->getMessage());
 		}
 		
-        return;
+        return FALSE;
 	}
 };
