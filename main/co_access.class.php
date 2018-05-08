@@ -183,6 +183,19 @@ class CO_Access {
     
     /***********************/
     /**
+    This is a very "raw" function that simply checks to see if any item exists for a given integer ID.
+    
+    This deliberately does not pass security vetting, so we're careful. It's meant to be used by collection classes for garbage collection.
+    
+    \returns TRUE, if an item exists for the given ID.
+     */
+    public function item_exists(    $in_id    ///< The ID of the item.
+                                ) {
+        return $this->_data_db_object->item_exists($in_id);
+    }
+    
+    /***********************/
+    /**
     This fetches the list of security tokens the currently logged-in user has available.
     This will reload any non-God Mode IDs before fetching the IDs, in order to spike privilege escalation.
     If they have God Mode, then you're pretty much screwed, anyway.

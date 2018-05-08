@@ -1,6 +1,7 @@
-**1.0.0.2017** *(May 7, 2018)*
+**1.0.0.2017** *(May 8, 2018)*
 
 - Added support for vetting the logins and users for COBRA.
+- Added support for determining the existence of items in the Data DB for collection cleanup.
 
 **1.0.0.2016** *(May 2, 2018)*
 

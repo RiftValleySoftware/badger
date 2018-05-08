@@ -479,6 +479,29 @@ class CO_Main_Data_DB extends A_CO_DB {
     
     /***********************/
     /**
+    This is a very "raw" function that simply checks to see if any item exists for a given integer ID.
+    
+    This deliberately does not pass security vetting, so we're careful. It's meant to be used by collection classes for garbage collection.
+    
+    \returns TRUE, if an item exists for the given ID.
+     */
+    public function item_exists(    $in_id    ///< The ID of the item.
+                                ) {
+        $ret = NULL;
+        
+        // User collections work by having the login ID in tag 0, so we search for any collection records that have a tag 0 set to our login ID. Chances are good it's a user.
+        $sql = 'SELECT id FROM '.$this->table_name.' WHERE id='.intval($in_id);
+
+        $temp = $this->execute_query($sql, Array());
+        if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
+            $ret = TRUE;
+        }
+        
+        return $ret;
+    }
+    
+    /***********************/
+    /**
     This is a very "raw" function that simply checks to see if a user collection exists for a given login ID.
     
     This deliberately does not pass security vetting, so we're careful.
