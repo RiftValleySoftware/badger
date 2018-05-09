@@ -691,6 +691,39 @@ class CO_Access {
     
     /***********************/
     /**
+    This is a security-vetted search for all login objects (visible to the current user).
+    
+    \returns an array of instances.
+     */
+    public function get_all_login_objects ( $and_write = FALSE  ///< If TRUE, then we only want ones we have write access to.
+                                            ) {
+        if (!isset($this->_security_db_object) || !$this->_security_db_object) {
+            return Array();
+        }
+        
+        return $this->_security_db_object->get_all_login_objects($and_write);
+    }
+    
+    /***********************/
+    /**
+    You give a security ID, and you will get all login objects that have that token in their list (or are of that ID).
+    
+    This is restricted to use security vetting, so only logins visible to the current login.
+       
+    \returns an array of instances.
+     */
+    public function get_all_login_objects_with_access(  $in_security_token, ///< An integer, with the requested security token.
+                                                        $and_write = FALSE  ///< If TRUE, then we only want ones we have write access to.
+                                                ) {
+        if (!isset($this->_security_db_object) || !$this->_security_db_object) {
+            return Array();
+        }
+        
+        return $this->_security_db_object->get_all_login_objects_with_access($in_security_token, $and_write);
+    }
+    
+    /***********************/
+    /**
     This is only usable by the "god mode" admin.
     
     You give a security ID, and you will get all security DB IDs that have that token in their list (or are of that ID).

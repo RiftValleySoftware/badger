@@ -159,7 +159,14 @@ class CO_Security_DB extends A_CO_DB {
                                                     ) {
         $ret = NULL;
         
-        $sql = 'SELECT * FROM '.$this->table_name.' WHERE '.$this->_create_security_predicate($and_write). ' AND (';
+        $predicate = $this->_create_security_predicate($and_write);
+        
+        if ($predicate) {   // If we got a predicate, then we AND it with the rest of the statement.
+            $predicate .= ' AND ';
+        }
+        
+        $sql = 'SELECT * FROM '.$this->table_name.' WHERE '.$predicate. '(';
+        
         $params = Array();
         
         foreach ($in_login_id_array as $id) {
@@ -185,6 +192,104 @@ class CO_Security_DB extends A_CO_DB {
                     }
                 }
                 usort($ret, function($a, $b){return ($a->id() > $b->id());});
+            }
+        }
+        
+        return $ret;
+    }
+    
+    /***********************/
+    /**
+    This is a security-vetted search for all login objects (visible to the current user).
+    
+    \returns an array of instances.
+     */
+    public function get_all_login_objects ( $and_write = FALSE  ///< If TRUE, then we only want ones we have write access to.
+                                            ) {
+        $ret = Array();
+        
+        // Can only look for tokens we can see.
+        
+        $predicate = $this->_create_security_predicate($and_write);
+        
+        if ($predicate) {   // If we got a predicate, then we AND it with the rest of the statement.
+            $predicate .= ' AND ';
+        }
+        
+        $sql = 'SELECT * FROM '.$this->table_name.' WHERE '.$predicate. '(login_id IS NOT NULL) AND (login_id<>\'\')';
+        $temp = $this->execute_query($sql, Array());    // We just get everything.
+        if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
+            $ret = Array();
+            
+            foreach ($temp as $result) {
+                $result = $this->_instantiate_record($result);
+                if ($result) {
+                    array_push($ret, $result);
+                }
+            }
+        }
+        
+        return $ret;
+    }
+    
+    /***********************/
+    /**
+    You give a security ID, and you will get all login objects that have that token in their list (or are of that ID).
+    
+    This is restricted to use security vetting, so only logins visible to the current login.
+       
+    \returns an array of instances.
+     */
+    public function get_all_login_objects_with_access(  $in_security_token, ///< An integer, with the requested security token.
+                                                        $and_write = FALSE  ///< If TRUE, then we only want ones we have write access to.
+                                                        ) {
+        $ret = Array();
+        
+        $in_security_token = intval($in_security_token);
+        
+        $access_ids = $this->access_object->get_security_ids();
+        
+        // Can only look for tokens we can see.
+        if (($this->access_object->god_mode() && $in_security_token) || in_array($in_security_token, $access_ids)) {
+            $predicate = $this->_create_security_predicate($and_write);
+        
+            if ($predicate) {   // If we got a predicate, then we AND it with the rest of the statement.
+                $predicate .= ' AND ';
+            }
+            
+            $sql = 'SELECT * FROM '.$this->table_name.' WHERE '.$predicate.'(login_id IS NOT NULL) AND (login_id<>\'\')';
+            $temp = $this->execute_query($sql, Array());    // We just get everything.
+            if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
+                $ret = Array();
+                
+                foreach ($temp as $result) {
+                    $id = intval($result['id']);
+                    $id_array = Array($id);
+                    $ids = explode(',', $result['ids']);
+                    if (isset($ids) && is_array($ids) && count($ids)) {
+                        $ids = array_map('trim', $ids);
+                        $ids = array_map('intval', $ids);
+                        
+                        foreach ($ids as $single_id) {
+                            array_push($id_array, $single_id);
+                        }
+                    }
+                    
+                    $found = FALSE;
+                    foreach ($id_array as $test_id) {
+                        if ($test_id == $in_security_token) {
+                            $found = TRUE;
+                            break;
+                        }
+                    }
+                    
+                    if ($found) {
+                        $result = $this->_instantiate_record($result);
+                        if ($result) {
+                            array_push($ret, $result);
+                        }
+                    }
+                }
             }
         }
         

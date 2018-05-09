@@ -148,7 +148,10 @@ abstract class A_CO_DB {
      */
     protected function _create_security_predicate(  $write = FALSE  ///< This should be TRUE, if we need a write predicate. Default is FALSE.
                                                     ) {
-        return $write ? $this->_create_write_security_predicate() : $this->_create_read_security_predicate();
+        
+        $ret = $write ? $this->_create_write_security_predicate() : $this->_create_read_security_predicate();
+        
+        return $ret;
     }
     
     /***********************/
@@ -335,7 +338,7 @@ abstract class A_CO_DB {
         $predicate = $this->_create_security_predicate($and_write);
         
         if ($predicate) {   // If we got a predicate, then we AND it with the rest of the statement.
-            $predicate .= 'AND ';
+            $predicate .= ' AND ';
         }
         
         $sql = 'SELECT * FROM '.$this->table_name.' WHERE '.$predicate.'(';
