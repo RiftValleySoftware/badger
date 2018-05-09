@@ -24,6 +24,7 @@ require_once(CO_Config::db_class_dir().'/co_security_node.class.php');
 This is the specializing class for the login ID record type.
  */
 class CO_Security_Login extends CO_Security_Node {
+    private $_override_access_class;    ///< This is a special "one-shot" semaphore telling the save to override the access class.
     var $login_id;
     
     /***********************************************************************************************************************/
@@ -40,6 +41,7 @@ class CO_Security_Login extends CO_Security_Node {
     protected function _default_setup() {
         $default_setup = parent::_default_setup();
         $default_setup['login_id'] = $this->login_id;
+        $default_setup['object_name'] = $this->login_id;
         
         return $default_setup;
     }
@@ -56,6 +58,12 @@ class CO_Security_Login extends CO_Security_Node {
         $ret = parent::_build_parameter_array();
         
         $ret['login_id'] = $this->login_id;
+        if ($this->_override_access_class) {
+            $ret['access_class'] = 'CO_Security_ID';
+            $ret['object_name'] = NULL;
+            $ret['ids'] = NULL;
+            $this->_override_access_class = FALSE;
+        }
         
         return $ret;
     }
@@ -71,6 +79,7 @@ class CO_Security_Login extends CO_Security_Node {
 	                                $in_ids = NULL          ///< An array of integers, representing the permissions this ID has.
                                 ) {
         $this->login_id = $in_login_id;
+        $this->_override_access_class = FALSE;
         parent::__construct($in_db_object, $in_db_result, $in_ids);
         $this->class_description = 'This is a security class for individual logins.';
         
@@ -178,10 +187,10 @@ class CO_Security_Login extends CO_Security_Node {
             $this->read_security_id = -1;
             $this->write_security_id = -1;
             $this->context = NULL;
-            $this->name = 'The Artist Formerly Known As '.$this->login_id;
+            $this->name = NULL;
             $this->login_id = NULL;
-            $this->class_description = 'Converted login';
             $this->_ids = Array();
+            $this->_override_access_class = TRUE;
             $ret = $this->_write_to_db();
             return $ret;
         } else {

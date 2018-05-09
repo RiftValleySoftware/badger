@@ -64,9 +64,10 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
             }
         }
         
-        $id_list_string = implode(',', $ids_as_string_array);
+        $id_list_string = trim(implode(',', $ids_as_string_array));
         
-        $ret['ids'] = $id_list_string;
+        $ret['ids'] = $id_list_string ? $id_list_string : NULL;
+        $ret['login_id'] = NULL;
         
         return $ret;
     }

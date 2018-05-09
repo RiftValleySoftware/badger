@@ -75,7 +75,8 @@ abstract class A_CO_DB_Table_Base {
         $ret['last_access'] = strval(date('Y-m-d H:i:s'));
         $ret['read_security_id'] = intval($this->read_security_id);
         $ret['write_security_id'] = intval($this->write_security_id);
-        $ret['object_name'] = strval($this->name);
+        $name = trim(strval($this->name));
+        $ret['object_name'] = $name ? $name : NULL;
         $ret['access_class_context'] = $this->context ? serialize($this->context) : NULL;   // If we have a context, then we serialize it for the DB.
         
         return $ret;
