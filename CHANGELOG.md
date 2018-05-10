@@ -1,3 +1,7 @@
+**1.0.0.2019** *(May 10, 2018)*
+
+- Added a bit more functionality to help COBRA in its auditing functions.
+
 **1.0.0.2018** *(May 9, 2018)*
 
 - This now supports the special "decomissioning" of login IDs. They never die, they just become security IDs.

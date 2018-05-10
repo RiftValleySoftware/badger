@@ -13,7 +13,7 @@
 */
 defined( 'LGV_ACCESS_CATCHER' ) or die ( 'Cannot Execute Directly' );	// Makes sure that this file is in the correct context.
 
-define('__BADGER_VERSION__', '1.0.0.2018');
+define('__BADGER_VERSION__', '1.0.0.2019');
 
 if ( !defined('LGV_MD_CATCHER') ) {
     define('LGV_MD_CATCHER', 1);
@@ -234,8 +234,24 @@ class CO_Access {
     /**
     \returns the ID for the logged-in user.
      */
-    public function get_login_id() {
-        return $this->_login_id;
+    public function get_login_id(   $in_login_id = NULL ///< The integer login ID to check. If not-NULL, then the ID of a login instance. It must be one that the current user can see.
+                                ) {
+        $ret = $this->_login_id;
+
+        $in_login_id = intval($in_login_id);
+        
+        // See if they are looking up an ID for another login.
+        if ($in_login_id) {
+            $ret = 0;   // If the lookup fails, we get back 0.
+            
+            $record = $this->get_single_security_record_by_id($login_id);
+            
+            if ($record) {
+                $ret = $record->id();
+            }
+        }
+        
+        return $ret;
     }
     
     /***********************/
@@ -246,7 +262,7 @@ class CO_Access {
     
     \returns the instance for the requested user.
      */
-    public function get_login_item( $in_login_id = NULL ///< If not-NULL, then the ID of a login instance. It must be one that the current user can see.
+    public function get_login_item( $in_login_id = NULL ///< The integer login ID to check. If not-NULL, then the ID of a login instance. It must be one that the current user can see.
                                     ) {
         $login_id = $this->get_login_id();
         
@@ -720,24 +736,5 @@ class CO_Access {
         }
         
         return $this->_security_db_object->get_all_login_objects_with_access($in_security_token, $and_write);
-    }
-    
-    /***********************/
-    /**
-    This is only usable by the "god mode" admin.
-    
-    You give a security ID, and you will get all security DB IDs that have that token in their list (or are of that ID).
-    
-    If this is not the God admin, then an empty array is returned.
-    
-    \returns an array of int, with each element being the ID (in the security DB) of the logins that can see/modify the items with that token.
-     */
-    public function get_all_logins_with_access( $in_security_token  ///< An integer, with the requested security token.
-                                                ) {
-        if (!isset($this->_security_db_object) || !$this->_security_db_object) {
-            return Array();
-        }
-        
-        return $this->_security_db_object->get_all_logins_with_access($in_security_token);
     }
 };
