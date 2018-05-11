@@ -1,3 +1,7 @@
+**1.0.0.2020** *(May 11, 2018)*
+
+- Added extra vetting for security IDs.
+
 **1.0.0.2019** *(May 10, 2018)*
 
 - Added a bit more functionality to help COBRA in its auditing functions.

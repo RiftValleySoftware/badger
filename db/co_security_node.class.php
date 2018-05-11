@@ -86,7 +86,7 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
         
         parent::__construct($in_db_object, $in_db_result);
         $this->class_description = 'The basic class for all security nodes. This should be specialized.';
-                
+        
         if ($this->_db_object) {
             $this->_ids = Array($this->id());
             if (isset($in_db_result['ids'])) {
@@ -99,7 +99,10 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
                         $tempAr = array_merge($this->_ids, $tempAr);
                         if (isset($tempAr) && is_array($tempAr) && count($tempAr)) {
                             sort($tempAr);
-                            $this->_ids = $tempAr;
+                            // What we are doing here, is removing any IDs that the current logged-in user cannot see. The idea is that they should not even know the ID exists.
+                            $this->_my_ids = $this->get_access_object()->god_mode() ? $tempAr : $this->get_access_object()->get_security_ids();
+                            $this->_ids = array_filter($tempAr, function($id) { return in_array($id, $this->_my_ids); });
+                            unset($this->_my_ids);
                         }
                     }
                 }
