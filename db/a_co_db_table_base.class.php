@@ -377,4 +377,34 @@ abstract class A_CO_DB_Table_Base {
     public function get_access_object() {
         return $this->_db_object->access_object;
     }
+    
+    /***********************/
+    /**
+    \returns a string, with the language ID for this login.
+     */
+    public function get_lang() {
+        $ret = CO_Config::$lang;
+        
+        if (isset($this->context['lang'])) {
+            $ret = $this->context['lang'];
+        }
+        
+        return $ret;
+    }
+    
+    /***********************/
+    /**
+    \returns TRUE, if the set was successful.
+     */
+    public function set_lang(   $in_lang_id = NULL  ///< The lang ID. This is not used for the low-level error handlers (which use the server setting). It is used to determine higher-level strings.
+                            ) {
+        $ret = FALSE;
+        
+        if ($this->user_can_write()) {
+            $this->context['lang'] = strtolower(trim(strval($in_lang_id)));
+            $ret = $this->update_db();
+        }
+        
+        return $ret;
+    }
 };
