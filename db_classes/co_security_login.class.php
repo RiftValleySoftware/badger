@@ -62,6 +62,7 @@ class CO_Security_Login extends CO_Security_Node {
             $ret['access_class'] = 'CO_Security_ID';
             $ret['object_name'] = NULL;
             $ret['ids'] = NULL;
+            $this->context = NULL;
             $this->_override_access_class = FALSE;
         }
         
@@ -83,6 +84,14 @@ class CO_Security_Login extends CO_Security_Node {
         parent::__construct($in_db_object, $in_db_result, $in_ids);
         $this->class_description = 'This is a security class for individual logins.';
         
+        if (!isset($this->context)) {
+            $this->context = Array();
+        }
+        
+        if (!isset($this->context['lang'])) {
+            $this->context['lang'] = CO_Config::$lang;
+        }
+        
         if (intval($this->id()) == intval(CO_Config::god_mode_id())) {
             // God Mode is always forced to use the config password.
             $this->context['hashed_password'] = bin2hex(openssl_random_pseudo_bytes(4));    // Just create a randomish junk password. It will never be used.
@@ -102,6 +111,14 @@ class CO_Security_Login extends CO_Security_Node {
         $ret = parent::load_from_db($in_db_result);
         
         if ($ret) {
+            if (!isset($this->context)) {
+                $this->context = Array();
+            }
+        
+            if (!isset($this->context['lang'])) {
+                $this->context['lang'] = CO_Config::$lang;
+            }
+
             $this->class_description = 'This is a security class for individual logins.';
             if (isset($in_db_result['login_id'])) {
                 $this->login_id = $in_db_result['login_id'];
@@ -145,6 +162,30 @@ class CO_Security_Login extends CO_Security_Node {
      */
     public function i_am_a_god() {
         return intval(CO_Config::god_mode_id()) == intval($this->id());
+    }
+    
+    /***********************/
+    /**
+    \returns a string, with the language ID for this login.
+     */
+    public function get_lang() {
+        return $this->context['lang'];
+    }
+    
+    /***********************/
+    /**
+    \returns TRUE, if the set was successful.
+     */
+    public function set_lang(   $in_lang_id = NULL  ///< The lang ID. This is not used for the low-level error handlers (which use the server setting). It is used to determine higher-level strings.
+                            ) {
+        $ret = FALSE;
+        
+        if ($this->user_can_write()) {
+            $this->context['lang'] = strtolower(trim(strval($in_lang_id)));
+            $ret = $this->update_db();
+        }
+        
+        return $ret;
     }
     
     /***********************/

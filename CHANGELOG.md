@@ -2,6 +2,8 @@
 
 - Added extra vetting for security IDs.
 - Made sure that only login managers can see logins other than themselves, even when they have the token.
+- Added a language assignment to logins.
+- Added the basics for a set of strings that can be associated with token IDs.
 
 **1.0.0.2019** *(May 10, 2018)*
 

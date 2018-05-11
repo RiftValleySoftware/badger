@@ -272,7 +272,24 @@ class CO_Access {
         
         return $this->get_single_security_record_by_id($login_id);
     }
-
+    
+    /***********************/
+    /**
+    \returns a string, with the language ID for the login. If none, the the server default is returned.
+     */
+    public function get_lang(   $in_login_id = NULL ///< The integer login ID to check. If not-NULL, then the ID of a login instance. It must be one that the current user can see.
+                            ) {
+        $ret = CO_Config::$lang;
+        
+        $login_item = $this->get_login_item($in_login_id);
+        
+        if ($login_item) {
+            $ret = $login_item->get_lang();
+        }
+        
+        return $ret;
+    }
+    
     /***********************/
     /**
     \returns TRUE, if the current logged-in user is "God."
