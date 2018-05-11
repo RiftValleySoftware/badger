@@ -81,11 +81,13 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
 	                                $in_db_result = NULL,   ///< This is a database-format associative array that is used to initialize this instance.
 	                                $in_ids = NULL          ///< This is a preset array of integers, containing security IDs for the row.
                                 ) {
-                                
-        $this->_ids = $in_ids;
-        
         parent::__construct($in_db_object, $in_db_result);
         $this->class_description = 'The basic class for all security nodes. This should be specialized.';
+        
+        // If explicit IDs are passed in, then that overrides the DB.
+        if (isset($in_ids) && is_array($in_ids)) {
+            $in_db_result['ids'] = implode(',', $in_ids);
+        }
         
         if ($this->_db_object) {
             $this->_ids = Array($this->id());
@@ -96,13 +98,10 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
                     $tempAr = explode(',', $temp);
                     if (is_array($tempAr) && count($tempAr)) {
                         $tempAr = array_map('intval', $tempAr);
-                        $tempAr = array_merge($this->_ids, $tempAr);
+                        sort($tempAr);
+                        $tempAr = array_unique(array_merge($this->_ids, $tempAr));
                         if (isset($tempAr) && is_array($tempAr) && count($tempAr)) {
-                            sort($tempAr);
-                            // What we are doing here, is removing any IDs that the current logged-in user cannot see. The idea is that they should not even know the ID exists.
-                            $this->_my_ids = $this->get_access_object()->god_mode() ? $tempAr : $this->get_access_object()->get_security_ids();
-                            $this->_ids = array_filter($tempAr, function($id) { return in_array($id, $this->_my_ids); });
-                            unset($this->_my_ids);
+                            $this->_ids = $tempAr;
                         }
                     }
                 }
@@ -285,10 +284,23 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
     
     /***********************/
     /**
+    This does a security vetting. If logged in as God, then all IDs are returned. Otherwise, only IDs that our login can see are returned, whether or not they are in the object.
+    
     \returns The current IDs.
      */
     public function ids() {
-        return $this->_ids;
+        if ($this->get_access_object()->god_mode()) {
+            return $this->_ids;
+        } else {
+            $my_ids = $this->get_access_object()->get_security_ids();
+            $ret = Array();
+            foreach ($this->_ids as $id) {
+                if (in_array($id, $my_ids)) {
+                    array_push($ret, $id);
+                }
+            }
+            return $ret;
+        }
     }
     
     /***********************/

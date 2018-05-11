@@ -195,7 +195,18 @@ class CO_Security_DB extends A_CO_DB {
             }
         }
         
-        return $ret;
+        // At this point, only managers (or the login object, itself) can see logins. God, too, of course.
+        $my_id = $this->access_object->get_login_id();
+        $my_login_instance_is_manager = $this->access_object->god_mode() || ($this->access_object->get_login_item() instanceof CO_Login_Manager);
+        $temp_ret = Array();
+        
+        foreach ($ret as $instance) {
+            if (($instance->id() == $my_id) || $my_login_instance_is_manager) {
+                array_push($temp_ret, $instance);
+            }
+        }
+        
+        return $temp_ret;
     }
     
     /***********************/
@@ -229,7 +240,18 @@ class CO_Security_DB extends A_CO_DB {
             }
         }
         
-        return $ret;
+        // At this point, only managers (or the login object, itself) can see logins. God, too, of course.
+        $my_id = $this->access_object->get_login_id();
+        $my_login_instance_is_manager = $this->access_object->god_mode() || ($this->access_object->get_login_item() instanceof CO_Login_Manager);
+        $temp_ret = Array();
+        
+        foreach ($ret as $instance) {
+            if (($instance->id() == $my_id) || $my_login_instance_is_manager) {
+                array_push($temp_ret, $instance);
+            }
+        }
+        
+        return $temp_ret;
     }
     
     /***********************/
@@ -293,6 +315,17 @@ class CO_Security_DB extends A_CO_DB {
             }
         }
         
-        return $ret;
+        // At this point, only managers (or the login object, itself) can see logins. God, too, of course.
+        $my_id = $this->access_object->get_login_id();
+        $my_login_instance_is_manager = $this->access_object->god_mode() || ($this->access_object->get_login_item() instanceof CO_Login_Manager);
+        $temp_ret = Array();
+        
+        foreach ($ret as $instance) {
+            if (($instance->id() == $my_id) || $my_login_instance_is_manager) {
+                array_push($temp_ret, $instance);
+            }
+        }
+        
+        return $temp_ret;
     }
 };
