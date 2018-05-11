@@ -151,6 +151,7 @@ class CO_Access {
                 }
                 
                 $this->_login_id = $login_record->id();
+                $login_record->update_db(); // This forces the login to update its last_access field. We use this to track logins.
             } catch (Exception $exception) {
                 $this->error = new LGV_Error(   CO_Lang_Common::$pdo_error_code_failed_to_open_security_db,
                                                 CO_Lang::$pdo_error_name_failed_to_open_security_db,
