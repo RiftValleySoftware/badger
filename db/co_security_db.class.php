@@ -232,8 +232,6 @@ class CO_Security_DB extends A_CO_DB {
         $sql = 'SELECT * FROM '.$this->table_name.' WHERE '.$predicate. '(login_id IS NOT NULL) AND (login_id<>\'\')';
         $temp = $this->execute_query($sql, Array());    // We just get everything.
         if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
-            $ret = Array();
-            
             foreach ($temp as $result) {
                 $result = $this->_instantiate_record($result);
                 if ($result) {
@@ -254,6 +252,40 @@ class CO_Security_DB extends A_CO_DB {
         }
         
         return $temp_ret;
+    }
+    
+    /***********************/
+    /**
+    This is a security-vetted fetcher of all the token label objects the current login can see.
+    
+    \returns an array, with the found objects. In most cases, it will probably only be one object.
+     */
+    public function get_all_security_token_label_objects() {
+        $ret = Array();
+        // Can only look for tokens we can see.
+        
+        $predicate = $this->_create_security_predicate();
+        
+        if ($predicate) {   // If we got a predicate, then we AND it with the rest of the statement.
+            $predicate .= ' AND ';
+        }
+        
+        $sql = 'SELECT * FROM '.$this->table_name.' WHERE '.$predicate. '(access_class=\'CO_Token_Labels\')';
+        $temp = $this->execute_query($sql, Array());    // We just get everything.
+        if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
+            $my_id = $this->access_object->get_login_id();
+            foreach ($temp as $result) {
+                $result = $this->_instantiate_record($result);
+                if ($result) {
+                    // It doesn't matter if we test the current item for a manager, because it will be vetted at the time any changes are attempted, and this is faster.
+                    if (in_array($my_id, $result->ids()) || ($result->get_manager_id() == $my_id)) {
+                        array_push($ret, $result);
+                    }
+                }
+            }
+        }
+        
+        return $ret;
     }
     
     /***********************/
