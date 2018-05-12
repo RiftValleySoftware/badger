@@ -79,10 +79,9 @@ You should define the "LGV_ACCESS_CATCHER" define to "1", so this file will run.
 necessary.
  */
 class CO_Access {    
-    protected $_data_db_object;         ///< This is the instance of the class representing the "data" database. This will always be instantiated.
-    protected $_security_db_object;     ///< This is the instance of the class representing the "scurity" database. This may not be instantiated, if there is no login.
-    protected $_login_id;               ///< This is an integer, containing the security DB ID of the logged-in user. It will be NULL for no login.
-    protected $_security_token_labels;  ///< This will contain an array of the security token labels objects for this login.
+    protected $_data_db_object;     ///< This is the instance of the class representing the "data" database. This will always be instantiated.
+    protected $_security_db_object; ///< This is the instance of the class representing the "scurity" database. This may not be instantiated, if there is no login.
+    protected $_login_id;           ///< This is an integer, containing the security DB ID of the logged-in user. It will be NULL for no login.
 
     public $valid;                  ///< This will be TRUE, if the instance is "valid" (has at least an initialized "data" database).
     public $error;                  ///< If there was an error, it will be held here.
@@ -107,7 +106,6 @@ class CO_Access {
 	    $this->_data_db_object = NULL;
 	    $this->_security_db_object = NULL;
 	    $this->error = NULL;
-	    $this->_security_token_labels = NULL;
 	    $this->valid = FALSE;
 	    $this->version = __BADGER_VERSION__;
 	    
@@ -154,8 +152,6 @@ class CO_Access {
                 
                 $this->_login_id = $login_record->id();
                 $login_record->update_db(); // This forces the login to update its last_access field. We use this to track logins.
-                // Fetch any security token labels.
-                $this->_security_token_labels = $this->_security_db_object->get_all_security_token_label_objects();
             } catch (Exception $exception) {
                 $this->error = new LGV_Error(   CO_Lang_Common::$pdo_error_code_failed_to_open_security_db,
                                                 CO_Lang::$pdo_error_name_failed_to_open_security_db,

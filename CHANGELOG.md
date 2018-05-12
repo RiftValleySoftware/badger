@@ -1,6 +1,7 @@
 **1.0.0.2021** *(TBD)*
 
 - Fixed an issue where a warning was emitted when there was no response to a search for IDs.
+- Removed the token label stuff. You know what? It's too complicated for this level, and is better left to the higher-level implementation.
 
 **1.0.0.2020** *(May 12, 2018)*
 
