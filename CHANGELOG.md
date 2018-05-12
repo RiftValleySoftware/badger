@@ -1,4 +1,8 @@
-**1.0.0.2020** *(May 11, 2018)*
+**1.0.0.2020** *(May 12, 2018)*
+
+- Added some tweaks to make sure the lang is determined properly.
+
+**1.0.0.2019** *(May 11, 2018)*
 
 - Added extra vetting for security IDs.
 - Made sure that only login managers can see logins other than themselves, even when they have the token.
