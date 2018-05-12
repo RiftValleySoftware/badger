@@ -1,3 +1,7 @@
+**1.0.0.2021** *(TBD)*
+
+- Fixed an issue where a warning was emitted when there was no response to a search for IDs.
+
 **1.0.0.2020** *(May 12, 2018)*
 
 - Added some tweaks to make sure the lang is determined properly.
