@@ -97,7 +97,6 @@ class CO_Token_Labels extends CO_Security_Node {
         
         if ($this->user_can_edit_ids()) {
             $this->context['manager_id'] = intval($in_manager_id);
-            
             $ret = $this->update_db();
         }
     }
@@ -123,7 +122,7 @@ class CO_Token_Labels extends CO_Security_Node {
             if (isset($this->context['token_strings'])) {
                 if (isset($this->context['token_strings'][$in_security_token_id])) {
                     if (isset($this->context['token_strings'][$in_security_token_id][$lang])) {
-                        $ret = $this->context['token_strings'][$in_security_token_id[$lang]];
+                        $ret = $this->context['token_strings'][$in_security_token_id][$lang]];
                     }
                 }
             }
@@ -162,26 +161,6 @@ class CO_Token_Labels extends CO_Security_Node {
             }
         }
                 
-        return $ret;
-    }
-    
-    /***********************/
-    /**
-    Only managers can edit, and they need to have the write token for this instance.
-    
-    \returns TRUE, if the current logged-in user can edit IDs for this login.
-     */
-    public function user_can_edit_ids() {
-        $ret = parent::user_can_edit_ids;
-        
-        if (!$ret) {
-            $login_object = $this->get_access_object()->get_login_tem();
-            
-            if (isset($login_object) && ($login_object instanceof CO_Login_Manager)) {
-                $ret = $this->user_can_write();
-            }
-        }
-        
         return $ret;
     }
 };
