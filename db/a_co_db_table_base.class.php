@@ -70,6 +70,11 @@ abstract class A_CO_DB_Table_Base {
     protected function _build_parameter_array() {
         $ret = Array();
         
+        if ($this instanceof CO_Security_ID) {
+            $this->write_security_id = -1;          // These always have a -1
+            $this->read_security_id = $this->id();  // These always have their own ID set as the read ID
+        }
+            
         $ret['id'] = $this->id();
         $ret['access_class'] = strval(get_class($this));
         $ret['last_access'] = strval(date('Y-m-d H:i:s'));
@@ -101,6 +106,10 @@ abstract class A_CO_DB_Table_Base {
                 $this->error = $this->get_access_object()->error;
                 if ((1 < intval($ret)) && !$this->error) {
                     $this->_id = intval($ret);
+                    if ($this instanceof CO_Security_ID) {
+                        $this->read_security_id = $this->id();  // These always have their own ID set as the read ID
+                        $this->write_security_id = -1;          // These always have a -1
+                    }
                 }
             }
         }
@@ -181,11 +190,18 @@ abstract class A_CO_DB_Table_Base {
             if (isset($in_db_result['read_security_id'])) {
                 $this->read_security_id = intval($in_db_result['read_security_id']);
             }
-        
-            if (isset($in_db_result['write_security_id'])) {
-                $this->write_security_id = intval($in_db_result['write_security_id']);
+            
+            if ($this instanceof CO_Security_ID) {
+                $this->write_security_id = -1;          // These always have a -1
+                if ($this->id()) {
+                    $this->read_security_id = $this->id();   // These always have their own ID set as the read ID
+                }
             } else {
-                $this->write_security_id = $this->read_security_id ? -1 : intval($this->write_security_id);  // Writing is completely blocked if we have read security, but no write security specified.
+                if (isset($in_db_result['write_security_id'])) {
+                    $this->write_security_id = intval($in_db_result['write_security_id']);
+                } else {
+                    $this->write_security_id = $this->read_security_id ? -1 : intval($this->write_security_id);  // Writing is completely blocked if we have read security, but no write security specified.
+                }
             }
             
             if (isset($in_db_result['object_name'])) {
@@ -253,7 +269,8 @@ abstract class A_CO_DB_Table_Base {
         
         $my_write_item = intval($this->write_security_id);
         
-        if ((0 == $my_write_item) || $this->get_access_object()->god_mode()) {
+        // We can never edit unless we are logged in.
+        if (((isset($ids) && is_array($ids) && count($ids)) && (0 == $my_write_item)) || $this->get_access_object()->god_mode()) {
             $ret = TRUE;
         } else {
             if (isset($ids) && is_array($ids) && count($ids)) {

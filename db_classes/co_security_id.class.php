@@ -24,6 +24,8 @@ require_once(CO_Config::db_class_dir().'/co_security_node.class.php');
 This is the specialized class for the generic security ID.
  */
 class CO_Security_ID extends CO_Security_Node {
+    protected $_special_first_time_security_exemption;
+
     /***********************************************************************************************************************/
     /***********************/
     /**
@@ -35,6 +37,9 @@ class CO_Security_ID extends CO_Security_Node {
         parent::__construct($in_db_object, $in_db_result);
         $this->class_description = 'This is a security class for IDs.';
         $this->instance_description = isset($this->name) && $this->name ? "$this->name ($this->_id)" : "Unnamed ID Node ($this->_id)";
+        $this->_special_first_time_security_exemption = TRUE;
+        $this->read_security_id = $this->id();  // These are always the case, regardless of what anyone else says.
+        $this->write_security_id = -1;
     }
 
     /***********************/
@@ -47,8 +52,24 @@ class CO_Security_ID extends CO_Security_Node {
         $ret = parent::load_from_db($in_db_result);
         
         if ($ret) {
+            $this->read_security_id = $this->id();  // These are always the case, regardless of what anyone else says.
+            $this->write_security_id = -1;
             $this->class_description = 'This is a security class for IDs.';
         }
+        
+        return $ret;
+    }
+
+    /***********************/
+    /**
+    This weird little function allows a creator to once -and only once- add an ID to itself, as long as that ID is for this object.
+    This is a "Heisenberg" query. Once it's called, the security exemption is gone.
+    
+    returns TRUE, if the security exemption was on.
+     */
+    public function security_exemption() {
+        $ret = $this->_special_first_time_security_exemption;
+        $this->_special_first_time_security_exemption = FALSE;
         
         return $ret;
     }
