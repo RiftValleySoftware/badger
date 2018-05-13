@@ -385,8 +385,9 @@ abstract class A_CO_DB_Table_Base {
     public function get_lang() {
         $ret = CO_Config::$lang;
         
-        if (isset($this->context['lang'])) {
-            $ret = $this->context['lang'];
+        // We replace the default only if we have a valid lang value.
+        if (isset($this->context['lang']) && trim($this->context['lang'])) {
+            $ret = strtolower(trim($this->context['lang']));    // Should be unneccessary, but belt and suspenders...
         }
         
         return $ret;
