@@ -362,7 +362,8 @@ abstract class A_CO_DB {
             $ret = Array();
             foreach ($temp as $result) {
                 $result = $this->_instantiate_record($result);
-                if ($result) {
+                // Belt and suspenders. Make sure nothing leaks through.
+                if ($result && ($and_write ? $result->user_can_write() : $result->user_can_read())) {
                     array_push($ret, $result);
                 }
             }
@@ -405,7 +406,8 @@ abstract class A_CO_DB {
             foreach ($temp as $result) {
                 if (isset($result) && is_array($result) && count($result)) {
                     $result = $this->_instantiate_record($result);
-                    if ($result) {
+                    // Belt and suspenders. Make sure nothing leaks through.
+                    if ($result && $result->user_can_read()) {
                         array_push($ret, $result);
                     }
                 }
@@ -451,7 +453,8 @@ abstract class A_CO_DB {
                 $ret = Array();
                 foreach ($temp as $result) {
                     $result = $this->_instantiate_record($result);
-                    if ($result) {
+                    // Belt and suspenders. Make sure nothing leaks through.
+                    if ($result && $result->user_can_write()) {
                         array_push($ret, $result);
                     }
                 }

@@ -73,4 +73,26 @@ class CO_Security_ID extends CO_Security_Node {
         
         return $ret;
     }
+    
+    /***********************/
+    /**
+    This is an overload, because we also want to make sure that only cleared manager objects get to see this (or God, of course).
+    \returns TRUE, if the current logged-in user has read permission on this record.
+     */
+    public function user_can_read() {
+        $ret = parent::user_can_read();
+        
+        if ($ret) {
+            $ret = FALSE;
+            // We make double-damn sure that only cleared managers can see this.
+            $item = $this->get_access_object()->get_login_item();
+            if ($this->get_access_object()->god_mode() || (isset($item) && ($item instanceof CO_Login_Manager))) {
+                $exemption = in_array($this->id(), $item->ids());
+            
+                $ret = ($this->get_access_object()->god_mode() || $exemption);
+            }
+        }
+        
+        return $ret;
+    }
 };

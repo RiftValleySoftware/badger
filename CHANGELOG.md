@@ -1,3 +1,8 @@
+**1.0.0.2022** *(May 14, 2018)*
+
+- Added an extra test to the query, so there are multiple levels of vetting.
+- Added a force-read-check to the security token class.
+
 **1.0.0.2021** *(May 13, 2018)*
 
 - Fixed an issue where a warning was emitted when there was no response to a search for IDs.
