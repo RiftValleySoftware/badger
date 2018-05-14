@@ -187,7 +187,7 @@ abstract class A_CO_DB_Table_Base {
                 $this->last_access = max(86400, $timestamp);
             }
         
-            if (isset($in_db_result['read_security_id'])) {
+            if (isset($in_db_result['read_security_id']) && intval($in_db_result['read_security_id'])) {
                 $this->read_security_id = intval($in_db_result['read_security_id']);
             }
             

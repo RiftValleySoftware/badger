@@ -225,7 +225,7 @@ class CO_Security_Login extends CO_Security_Node {
      */
     public function delete_from_db() {
         if ($this->user_can_write()) {
-            $this->read_security_id = $this->id();
+            $this->read_security_id = 0;
             $this->write_security_id = -1;
             $this->context = NULL;
             $this->name = NULL;
