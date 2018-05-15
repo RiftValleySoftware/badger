@@ -165,9 +165,9 @@ class CO_Security_Login extends CO_Security_Node {
                 if (isset($this->context['hashed_password']) && $this->context['hashed_password']) {
                     // First, see if this is in the hashed password.
                     if ($in_hashed_password) {
-                        $ret = ($in_hashed_password == $this->context['hashed_password']);
+                        $ret = ($in_hashed_password == $this->get_crypted_password());
                     } else { // If not, see if it's the raw password.
-                        $comp = crypt($in_raw_password, $this->context['hashed_password']);
+                        $comp = $this->get_crypted_password($in_raw_password);
                         $ret = ($comp == $this->context['hashed_password']);
                     }
                 }
