@@ -2,6 +2,7 @@
 
 - Added an extra test to the query, so there are multiple levels of vetting.
 - Added a force-read-check to the security token class.
+- Added a better way of dealing with hashing the password.
 
 **1.0.0.2021** *(May 13, 2018)*
 

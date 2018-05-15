@@ -130,6 +130,27 @@ class CO_Security_Login extends CO_Security_Node {
     
     /***********************/
     /**
+    \returns the crypted password, as a string.
+     */
+    public function get_crypted_password(   $in_password_to_crypt = NULL    ///< If this is not-NULL, then, instead of returning the instance's crypted PW, the given password is crypted and returned.
+                                        ) {
+        
+        $ret = $this->context['hashed_password'];
+        
+        if ($in_password_to_crypt) {
+            if (!$ret) {
+                $salt = function_exists('random_int') ? random_int(0, 99) : rand(0, 99);
+                $ret = sprintf("%02d", $salt);
+            }
+            
+            $ret = crypt($in_password_to_crypt, $this->context['hashed_password']);
+        }
+        
+        return $ret;
+    }
+    
+    /***********************/
+    /**
     \returns TRUE, if the presented credentials are good.
      */
     public function is_login_valid( $in_login_id,               ///< The login ID
