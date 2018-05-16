@@ -13,7 +13,7 @@
 */
 defined( 'LGV_ACCESS_CATCHER' ) or die ( 'Cannot Execute Directly' );	// Makes sure that this file is in the correct context.
 
-define('__BADGER_VERSION__', '1.0.0.2022');
+define('__BADGER_VERSION__', '1.0.0.2023');
 
 if ( !defined('LGV_MD_CATCHER') ) {
     define('LGV_MD_CATCHER', 1);
@@ -217,6 +217,10 @@ class CO_Access {
                     $this->error = $this->_security_db_object->error;
                     
                     $ret = Array();
+                } else {
+                    $ret[] = 1;
+                    $ret = array_unique($ret);
+                    sort($ret);
                 }
             }
         }

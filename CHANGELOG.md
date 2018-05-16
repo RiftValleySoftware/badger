@@ -1,4 +1,9 @@
-**1.0.0.2022** *(May 14, 2018)*
+**1.0.0.2023** *(May 16, 2018)*
+
+- Added the "1" token, which means only logged-in users, but ALL logged-in users can see.
+- Tweaked read, so that having write access to a record also confers read access.
+
+**1.0.0.2022** *(May 15, 2018)*
 
 - Added an extra test to the query, so there are multiple levels of vetting.
 - Added a force-read-check to the security token class.

@@ -90,10 +90,11 @@ abstract class A_CO_DB {
         } else {
             $access_ids = $this->access_object->get_security_ids();
             $ret = '((read_security_id=0) OR (read_security_id IS NULL)';
-        
+            
             if (isset($access_ids) && is_array($access_ids) && count($access_ids)) {
                 foreach ($access_ids as $access_id) {
                     $ret .= ' OR (read_security_id='.intval($access_id).')';
+                    $ret .= ' OR (write_security_id='.intval($access_id).')';   // Write security also means that we can read.
                 }
             }
         
