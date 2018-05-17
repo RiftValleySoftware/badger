@@ -218,6 +218,24 @@ class CO_Security_Login extends CO_Security_Node {
     
     /***********************/
     /**
+    This encrypts a cleartext password, and sets it into the record.
+    
+    \returns TRUE, if the set was successful.
+     */
+    public function set_password_from_cleartext(    $in_cleartext_password  ///< The cleartext password. It will not be saved. Instead, the hashed password will be saved.
+                                                ) {
+        $ret = FALSE;
+        
+        if ($this->user_can_write()) {
+            $this->context['hashed_password'] = $this->get_crypted_password($in_cleartext_password);
+            $ret = $this->update_db();
+        }
+        
+        return $ret;
+    }
+    
+    /***********************/
+    /**
     We override this, because the God login can only be modified by itself. No one else.
     
     \returns TRUE, if the current logged-in user has write permission on this record.

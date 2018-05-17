@@ -1,6 +1,7 @@
 **1.0.0.2024** *(May 17, 2018)*
 
 - Sequestered the configuration God Mode password.
+- D'OH! I never created a set_password() method! That's been addressed.
 
 **1.0.0.2023** *(May 16, 2018)*
 
