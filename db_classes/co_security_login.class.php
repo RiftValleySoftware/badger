@@ -164,7 +164,7 @@ class CO_Security_Login extends CO_Security_Node {
         $ret = FALSE;
         if (isset($this->login_id) && $this->login_id && ($this->login_id == $in_login_id)) {
             if ($this->id() == CO_Config::god_mode_id()) { // God mode always reads directly from the config file, and does not encrypt.
-                $ret = ($in_raw_password == CO_Config::$god_mode_password);
+                $ret = ($in_raw_password == CO_Config::god_mode_password());
             } else {
                 if (isset($this->context['hashed_password']) && $this->context['hashed_password']) {
                     // First, see if this is in the hashed password.

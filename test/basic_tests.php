@@ -51,7 +51,7 @@
                 echo('</div>');
 
                 echo('<div id="test-003" class="inner_closed">');
-                    echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-003\')">TEST 3: Try attaching with an invalid login ID ("Fred"), but valid God Mode password ("'.CO_Config::$god_mode_password.'")</a></h2>');
+                    echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-003\')">TEST 3: Try attaching with an invalid login ID ("Fred"), but valid God Mode password ("'.CO_COnfig::god_mode_password().'")</a></h2>');
 
                     echo('<div class="main_div inner_container">');
                         ?>
@@ -60,7 +60,7 @@
                         </div>
                         <?php
                         $start = microtime(TRUE);
-                        try_dbs('Fred', CO_Config::$god_mode_password);
+                        try_dbs('Fred', CO_COnfig::god_mode_password());
                         echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
@@ -75,7 +75,7 @@
                         </div>
                         <?php
                         $start = microtime(TRUE);
-                        try_dbs('Fred', CO_Config::$god_mode_password);
+                        try_dbs('Fred', CO_COnfig::god_mode_password());
                         echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
@@ -111,7 +111,7 @@
                 echo('</div>');
 
                 echo('<div id="test-007" class="inner_closed">');
-                    echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-007\')">TEST 7: Try attaching with a valid God Mode login ID ("admin"), and valid God Mode password ("'.CO_Config::$god_mode_password.'")</a></h2>');
+                    echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-007\')">TEST 7: Try attaching with a valid God Mode login ID ("admin"), and valid God Mode password ("'.CO_COnfig::god_mode_password().'")</a></h2>');
 
                     echo('<div class="main_div inner_container">');
                         ?>
@@ -120,7 +120,7 @@
                         </div>
                         <?php
                         $start = microtime(TRUE);
-                        try_dbs('admin', NULL, CO_Config::$god_mode_password);
+                        try_dbs('admin', NULL, CO_COnfig::god_mode_password());
                         echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
@@ -171,7 +171,7 @@
                         <?php
                         $start = microtime(TRUE);
                         for ($id = 2; $id < 8; $id++) {
-                            fetch_data_ids($id, 'admin', '', CO_Config::$god_mode_password);
+                            fetch_data_ids($id, 'admin', '', CO_COnfig::god_mode_password());
                         }
                         echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
                     echo('</div>');

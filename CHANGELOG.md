@@ -1,3 +1,7 @@
+**1.0.0.2024** *(May 17, 2018)*
+
+- Sequestered the configuration God Mode password.
+
 **1.0.0.2023** *(May 16, 2018)*
 
 - Added the "1" token, which means only logged-in users, but ALL logged-in users can see.
