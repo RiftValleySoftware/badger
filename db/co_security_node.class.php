@@ -113,6 +113,42 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
     
     /***********************/
     /**
+    This function sets up this instance, according to the DB-formatted associative array passed in.
+    
+    This should be subclassed, and the parent should be called before applying specific instance properties.
+    
+    \returns TRUE, if the instance was able to set itself up to the provided array.
+     */
+    public function load_from_db(   $in_db_result   ///< This is an associative array, formatted as a database row response.
+                                ) {
+        $ret = parent::load_from_db($in_db_result);
+        
+        if ($ret && isset($in_db_result['ids']) && $in_db_result['ids']) {
+            if ($this->_db_object) {
+                $this->_ids = Array($this->id());
+                if (isset($in_db_result['ids'])) {
+                    $temp = $in_db_result['ids'];
+                
+                    if (isset ($temp) && $temp) {
+                        $tempAr = explode(',', $temp);
+                        if (is_array($tempAr) && count($tempAr)) {
+                            $tempAr = array_map('intval', $tempAr);
+                            sort($tempAr);
+                            $tempAr = array_unique(array_merge($this->_ids, $tempAr));
+                            if (isset($tempAr) && is_array($tempAr) && count($tempAr)) {
+                                $this->_ids = $tempAr;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        return $ret;
+    }
+        
+    /***********************/
+    /**
     This is a setter for the ID array. It can delete the array by sending in NULL, or an empty array.
     No user can set IDs for which they do not have access.
     Since this is a "whole hog" operation, we need to be able to access every single ID in the current object before we can replace or delete them.

@@ -1,3 +1,7 @@
+**1.0.0.2025** *(May 18, 2018)*
+
+- Fixed an issue where IDs were not being correctly loaded for security DB items.
+
 **1.0.0.2024** *(May 17, 2018)*
 
 - Sequestered the configuration God Mode password.
