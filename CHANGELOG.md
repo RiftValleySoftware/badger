@@ -1,3 +1,8 @@
+**1.0.0.2026** *(May 19, 2018)*
+
+- Added the ability to "crawl the stack" in a PDO instance, so we could add auditing logging in the future.
+- Added a bit to the login class to clear the CHAMELEON user from the login, if we delete the login alone.
+
 **1.0.0.2025** *(May 18, 2018)*
 
 - Fixed an issue where IDs were not being correctly loaded for security DB items.

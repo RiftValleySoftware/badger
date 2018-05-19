@@ -220,6 +220,22 @@ class CO_Security_Login extends CO_Security_Node {
     
     /***********************/
     /**
+    \returns The associated User object, if it exists. NULL, otherwise.
+     */
+    public function get_user_object() {
+        $ret = NULL;
+        $access_instance = $this->get_access_object();
+        
+        // If we have a user, we also clear the user from knowing about us.
+        if ($access_instance && method_exists($access_instance, 'get_user_from_login')) {
+            $ret = $access_instance->get_user_from_login($this->id());
+        }
+        
+        return $ret;
+    }
+    
+    /***********************/
+    /**
     This encrypts a cleartext password, and sets it into the record.
     
     \returns TRUE, if the set was successful.
@@ -273,6 +289,12 @@ class CO_Security_Login extends CO_Security_Node {
      */
     public function delete_from_db() {
         if ($this->user_can_write()) {
+            $user_object = $this->get_user_object();
+            
+            if (isset($user_object) && ($user_object instanceof CO_User_Collection)) {
+                $user_object->set_login(NULL);
+            }
+            
             $this->read_security_id = 0;
             $this->write_security_id = -1;
             $this->context = NULL;

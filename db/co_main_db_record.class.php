@@ -185,12 +185,12 @@ class CO_Main_DB_Record extends A_CO_DB_Table_Base {
         
         $in_tag_index = intval($in_tag_index);
         
-        if (isset($in_tag_value) && (10 > $in_tag_index) && $this->user_can_write()) {
+        if ((10 > $in_tag_index) && $this->user_can_write()) {
             if (!isset($this->_tags) || !$this->_tags) {
                 $this->_tags = Array();
             }
             
-            $this->_tags[$in_tag_index] = strval($in_tag_value);
+            $this->_tags[$in_tag_index] = (NULL != $in_tag_value) ? strval($in_tag_value) : NULL;
             $ret = $this->update_db();
         }
         

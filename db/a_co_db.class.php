@@ -256,6 +256,9 @@ abstract class A_CO_DB {
         $this->error = NULL;
         $this->table_name = NULL;
         $this->_pdo_object = $in_pdo_object;
+        if (isset($this->_pdo_object)) {
+            $this->_pdo_object->owner_instance = $this;
+        }
         $this->_existing_record_objects = Array();
     }
     

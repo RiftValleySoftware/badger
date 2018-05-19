@@ -20,10 +20,15 @@ defined( 'LGV_DB_CATCHER' ) or die ( 'Cannot Execute Directly' );	// Makes sure 
 class CO_PDO {
 	/// \brief Internal PDO object
 	private $_pdo = NULL;
+	/// \brief The type of PDO driver we are configured for.
 	var $driver_type = NULL;
+	/// \brief A simple description of this class.
 	var $class_description = NULL;
+	/// \brief This holds the integer ID of the last AUTO_INCREMENT insert.
 	var $last_insert = NULL;
-
+	/// \brief This is the instance of A_CO_DB that "owns" this instance. We can use this for auditing.
+    var $owner_instance = NULL;
+    
 	/// \brief Default fetch mode for internal PDOStatements
 	private $fetchMode = PDO::FETCH_ASSOC;
 
