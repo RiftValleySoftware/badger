@@ -123,7 +123,7 @@ class CO_Main_Data_DB extends A_CO_DB {
                          BETWEEN p.longpoint - (p.radius / (p.distance_unit * COS(RADIANS(p.latpoint))))
                              AND p.longpoint + (p.radius / (p.distance_unit * COS(RADIANS(p.latpoint))))
                         ) AS d
-                        WHERE (($predicate) AND (distance <= radius)";
+                        WHERE ($predicate AND ((distance <= radius)";
         
         return $ret;
     }
@@ -137,7 +137,6 @@ class CO_Main_Data_DB extends A_CO_DB {
     protected function _parse_tags( $in_value   ///< This should be an array of string. You can provide just one string, but that will always be applied to tag0.
                                     ) {
         $ret = Array('sql' => '', 'params' => Array());
-        
         if (isset($in_value) && is_array($in_value) && count($in_value)) {
             $use_like = FALSE;
             
@@ -145,63 +144,90 @@ class CO_Main_Data_DB extends A_CO_DB {
                 $use_like = TRUE;
                 unset($in_value['use_like']);
             }
-
+            
+            $sql_temp = Array();
+            
             for ($i = 0; $i < count($in_value); $i++) {
+                $sql_temp[$i] = '';
                 $value = $in_value[$i];
                 
-                if ($value) {
-                    if (isset($value) && is_array($value) && count($value)) {
+                if (NULL !== $value) {
+                    if (is_array($value) && count($value)) {
                         $use_like_old = $use_like;
                         
                         if (isset($value['use_like'])) {
                             $use_like = TRUE;
                             unset($value['use_like']);
                         }
+                        
+                        $inner_array = Array();
+                        foreach ($value as $val) {
+                            if (NULL != $val) {
+                                $val = trim(strval($val));
 
-                        $i2 = 0;
-                        foreach ($value as $val) {                
-                            $val = trim(strval($val));
-                            if ($val) {
-                                if ($ret['sql']) {
-                                    $ret['sql'] .= ') OR ';
+                                if ('' == $val) {
+                                    $inner_array[] = '((tag'.intval($i).' IS NULL) OR (tag'.intval($i).'=\'\'))';
+                                } else {
+                                    $like_me = (FALSE !== strpos($val, '%')) && $use_like;
+                                
+                                    $inner_array[] = 'LOWER(tag'.intval($i).')'.($like_me ? ' LIKE ' : '=').'LOWER(?)';
+                                    array_push($ret['params'], $val);
                                 }
-                    
-                                $ret['sql'] .= '(LOWER(tag'.intval($i).')'.($use_like ? ' LIKE ' : '=').'LOWER(?)';
-                                array_push($ret['params'], $val);
                             }
-                            
-                            $i2++;
                         }
+                        
+                        if (1 < count($inner_array)) {
+                            $sql_temp[$i] = '('.implode(') OR (', $inner_array).')';
+                        } elseif (count($inner_array)) {
+                            $sql_temp[$i] = $inner_array[0];
+                        }
+                        
                         $use_like = $use_like_old;
                     } else {
-                        $value = trim(strval($value));
+                        if (NULL != $value) {
+                            $value = trim(strval($value));
                         
-                        if ($value) {
-                            if ($ret['sql']) {
-                                $ret['sql'] .= ') OR ';
+                            if ('' == $value) {
+                                $sql_temp[$i] = '((tag'.intval($i).' IS NULL) OR (tag'.intval($i).'=\'\'))';
+                            } else {
+                                $like_me = (FALSE !== strpos($value, '%')) && $use_like;
+                                
+                                $sql_temp[$i] = 'LOWER(tag'.intval($i).')'.($like_me ? ' LIKE ' : '=').'LOWER(?)';
+                                array_push($ret['params'], strval($value));
                             }
-                    
-                            $ret['sql'] .= '(LOWER(tag'.intval($i).')'.($use_like ? ' LIKE ' : '=').'LOWER(?)';
-                            array_push($ret['params'], strval($value));
                         }
                     }
                 }
             }
             
-            if ($ret['sql']) {
-                $ret['sql'] .= ')';
+            $temp_array = Array();
+            
+            // Can't just do an array_filter, because PHP likes to keep the filtered elements at their original indexes.
+            foreach ($sql_temp as $array_element) {
+                if ('' != $array_element) {
+                    array_push($temp_array, $array_element);
+                }
+            }
+
+            if (1 < count($temp_array)) {
+                $ret['sql'] = '(('.implode(') AND (', $temp_array).'))';
+            } elseif (1 == count($temp_array)) {
+                $ret['sql'] = $temp_array[0];
             }
         } else {
             $in_value = trim(strval($in_value));
-            if ($in_value) {
-                $ret['sql'] = 'LOWER(tag0)=LOWER(?)';
-                $ret['params'][0] = $in_value;
+            if (NULL != $in_value) {
+                if ('' == $in_value) {
+                    $ret['sql'] = '((tag0 IS NULL) OR (tag0=\'\'))';
+                } else {
+                    $like_me = (FALSE !== strpos($in_value, '%')) && $use_like;
+                    
+                    $ret['sql'] = '(LOWER(tag0)'.($like_me ? ' LIKE ' : '=').'LOWER(?))';
+                    array_push($ret['params'], strval($value));
+                }
             }
         }
-        
-        if ($ret['sql']) {
-            $ret['sql'] = '('.$ret['sql'].')';
-        }
+
         return $ret;
     }
     
@@ -219,27 +245,19 @@ class CO_Main_Data_DB extends A_CO_DB {
         if (isset($in_value) && is_array($in_value) && count($in_value)) {
             $in_value = array_unique(array_map('intval', $in_value));    // Make sure we don't have repeats.
             
+            $sql_array = Array();
+
             foreach ($in_value as $value) {                
-                if ($value) {
-                    if ($ret['sql']) {
-                        $ret['sql'] .= ') OR ';
-                    }
-                    
-                    $ret['sql'] .= '('.strval($in_db_key).'=?';
+                if (NULL != $value) {
+                    $sql_array[] = strval($in_db_key).'=?';
                     array_push($ret['params'], $value);
                 }
             }
             
-            if ($ret['sql']) {
-                $ret['sql'] .= ')';
-            }
+            $ret['sql'] = '('.implode(') OR (', $sql_array).')';
         } else {
             $ret['sql'] = ''.strval($in_db_key).'=?';
             array_push($ret['params'], $in_value);
-        }
-        
-        if ($ret['sql']) {
-            $ret['sql'] = '('.$ret['sql'].')';
         }
         
         return $ret;
@@ -265,28 +283,21 @@ class CO_Main_Data_DB extends A_CO_DB {
             }
             
             $in_value = array_unique(array_map(function($in){return strtolower(trim(strval($in)));}, $in_value));    // Make sure we don't have repeats.
+            $sql_array = Array();
+            
             foreach ($in_value as $value) {                
-                if ($value) {
-                    if ($ret['sql']) {
-                        $ret['sql'] .= ') OR ';
-                    }
-                    
-                    $ret['sql'] .= '(LOWER('.strval($in_db_key).')'.($use_like ? ' LIKE ' : '=').'LOWER(?)';
+                if (NULL != $value) {
+                    $sql_array[] = 'LOWER('.strval($in_db_key).')'.($use_like ? ' LIKE ' : '=').'LOWER(?)';
                     array_push($ret['params'], $value);
                 }
             }
             
-            if ($ret['sql']) {
-                $ret['sql'] .= ')';
-            }
+            $ret['sql'] = '(('.implode(') OR (', $sql_array).'))';
         } else {
             $ret['sql'] = 'LOWER('.strval($in_db_key).')=LOWER(?)';
             $ret['params'][0] = $in_value;
         }
-        
-        if ($ret['sql']) {
-            $ret['sql'] = '('.$ret['sql'].')';
-        }
+
         return $ret;
     }
     
@@ -313,6 +324,9 @@ class CO_Main_Data_DB extends A_CO_DB {
         $ret = Array('sql' => '', 'params' => Array());
         
         if (isset($in_search_parameters) && is_array($in_search_parameters) && count ($in_search_parameters)) {
+            $sql_array = Array();
+            $param_array = Array();
+            
             foreach ($in_search_parameters as $key => $value) {
                 $temp = NULL;
                 
@@ -342,17 +356,17 @@ class CO_Main_Data_DB extends A_CO_DB {
                 }
                 
                 if (isset($temp) && is_array($temp) && count($temp)) {
-                    if ($ret['sql']) {
-                        $ret['sql'] .= ') '.($or_search ? 'OR' : 'AND').' ';
-                    }
-                    
-                    $ret['sql'] .= '('.$temp['sql'];
+                    $sql_array[] = $temp['sql'];
                     $ret['params'] = array_merge($ret['params'], $temp['params']);
                 }
             }
             
-            if ($ret['sql']) {
-                $ret['sql'] .= ')';
+            if (1 < count($sql_array)) {
+                $link = $or_search ? ') OR (' : ') AND (';
+            
+                $ret['sql'] = '(('.implode($link, $sql_array).'))';
+            } else {
+                $ret['sql'] = $sql_array[0];
             }
         }
         
@@ -396,6 +410,7 @@ class CO_Main_Data_DB extends A_CO_DB {
         
         $closure = '';
         $location_search = FALSE;
+        $link = '';
         
         // If we are doing a location/radius search, the predicate is a lot more complicated.
         if (isset($in_search_parameters['location']) && isset($in_search_parameters['location']['longitude']) && isset($in_search_parameters['location']['latitude']) && isset($in_search_parameters['location']['radius'])) {
@@ -403,8 +418,9 @@ class CO_Main_Data_DB extends A_CO_DB {
             $predicate_temp = $this->_location_predicate($in_search_parameters['location']['longitude'], $in_search_parameters['location']['latitude'], floatval($in_search_parameters['location']['radius']) * 1.02, $and_writeable, $count_only);
             $sql = $predicate_temp['sql'];
             $ret['params'] = $predicate_temp['params'];
-            $closure = ') ORDER BY distance,id';
+            $closure = $count_only ? ')' : ') ORDER BY distance,id';
             $location_search = TRUE;
+            $link = ' AND ';
         } else {
             $predicate = $this->_create_security_predicate($and_writeable);
         
@@ -413,29 +429,24 @@ class CO_Main_Data_DB extends A_CO_DB {
             }
         
             $sql = $count_only ? 'SELECT COUNT(*) FROM (' : '';
-            $sql .= 'SELECT * FROM '.$this->table_name.' WHERE ('.$predicate;
-            $closure = ') ORDER BY id';
+            $sql .= 'SELECT * FROM '.$this->table_name.' WHERE ('.$predicate.' AND (';
+            $closure = $count_only ? ')' : ') ORDER BY id';
         }
         
         if (isset($in_search_parameters) && is_array($in_search_parameters) && count($in_search_parameters)) {
-            $temp_sql = '';
-            $temp_params = Array();
-        
             $param_ret = $this->_parse_parameters($in_search_parameters, $or_search);
             
-            if ($param_ret['sql'] && count($param_ret['params'])) {
-                if ($temp_sql) {
-                    $temp_sql .= ') '.($or_search ? 'OR' : 'AND').' ';
+            if ($param_ret['sql']) {
+                $sql .= $link.$param_ret['sql'];
+                if (count($param_ret['params'])) {
+                    $ret['params'] = array_merge($ret['params'], $param_ret['params']);
                 }
-                $temp_sql .= $param_ret['sql'];
-                $temp_params = array_merge($temp_params, $param_ret['params']);
             }
-            
-            if ($temp_sql) {
-                $sql .= ' AND ('.$temp_sql.')';
-                $ret['params'] = array_merge($ret['params'], $temp_params);
-            }
+        } else {
+            $sql .= 'true';
         }
+                
+        $closure = ")$closure";
         
         $page_size = intval($page_size);
         // This only applies for MySQL or Postgres.

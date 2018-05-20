@@ -1,3 +1,7 @@
+**1.0.0.2027** *(May 20, 2018)*
+
+- Fixed the generic search, so that it is possible to specify empty tags in the tag search. There were also a few other issues with tha search, which have been addressed.
+
 **1.0.0.2026** *(May 19, 2018)*
 
 - Added the ability to "crawl the stack" in a PDO instance, so we could add auditing logging in the future.
