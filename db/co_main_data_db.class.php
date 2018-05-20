@@ -365,7 +365,7 @@ class CO_Main_Data_DB extends A_CO_DB {
                 $link = $or_search ? ') OR (' : ') AND (';
             
                 $ret['sql'] = '(('.implode($link, $sql_array).'))';
-            } else {
+            } elseif (count($sql_array)) {
                 $ret['sql'] = $sql_array[0];
             }
         }
