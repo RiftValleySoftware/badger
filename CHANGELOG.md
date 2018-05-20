@@ -1,3 +1,7 @@
+**1.0.0.2028** *(TBD)*
+
+- Fixed one of the tests. It was looking in the wrong place for the state.
+
 **1.0.0.2027** *(May 20, 2018)*
 
 - Fixed the generic search, so that it is possible to specify empty tags in the tag search. There were also a few other issues with tha search, which have been addressed.

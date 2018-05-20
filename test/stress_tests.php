@@ -366,7 +366,7 @@
         if ($access_instance->valid) {
             echo("<h2>The access instance is valid!</h2>");
             $st1 = microtime(TRUE);
-            $test_item = $access_instance->generic_search(Array('tags' => Array('', 'HI')));
+            $test_item = $access_instance->generic_search(Array('tags' => Array(NULL, NULL, NULL, NULL, NULL, 'HI')));
             $fetchTime = sprintf('%01.3f', microtime(TRUE) - $st1);
             echo('<div class="inner_div">');
                 if ( isset($test_item) ) {
