@@ -15,7 +15,7 @@ defined( 'LGV_DB_CATCHER' ) or die ( 'Cannot Execute Directly' );	// Makes sure 
 
 /***************************************************************************************************************************/
 /**
-    \brief This class provides a genericized interface to the <a href="http://us.php.net/pdo">PHP PDO</a> toolkit. It is a completely static class.
+    \brief This class provides a genericized interface to the <a href="http://us.php.net/pdo">PHP PDO</a> toolkit.
  */
 class CO_PDO {
 	/// \brief Internal PDO object
