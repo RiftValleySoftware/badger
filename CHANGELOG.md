@@ -1,6 +1,7 @@
-**1.0.0.2028** *(TBD)*
+**1.0.0.2028** *(May 22, 2018)*
 
 - Fixed one of the tests. It was looking in the wrong place for the state.
+- Fixed a bug in the generic search, where tags were not actually being checked for blank.
 
 **1.0.0.2027** *(May 20, 2018)*
 

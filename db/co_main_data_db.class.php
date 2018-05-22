@@ -184,7 +184,7 @@ class CO_Main_Data_DB extends A_CO_DB {
                         
                         $use_like = $use_like_old;
                     } else {
-                        if (NULL != $value) {
+                        if (NULL !== $value) {
                             $value = trim(strval($value));
                         
                             if ('' == $value) {
@@ -216,7 +216,7 @@ class CO_Main_Data_DB extends A_CO_DB {
             }
         } else {
             $in_value = trim(strval($in_value));
-            if (NULL != $in_value) {
+            if (NULL !== $in_value) {
                 if ('' == $in_value) {
                     $ret['sql'] = '((tag0 IS NULL) OR (tag0=\'\'))';
                 } else {
@@ -248,7 +248,7 @@ class CO_Main_Data_DB extends A_CO_DB {
             $sql_array = Array();
 
             foreach ($in_value as $value) {                
-                if (NULL != $value) {
+                if (NULL !== $value) {
                     $sql_array[] = strval($in_db_key).'=?';
                     array_push($ret['params'], $value);
                 }
