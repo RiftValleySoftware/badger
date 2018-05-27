@@ -1,4 +1,4 @@
-**1.0.0.2029** *(TBD)*
+**1.0.0.2029** *(May 26, 2018)*
 
 - Fixed the display string in the location base class, so it won't have an empty Long/Lat if there is no long/lat.
 
