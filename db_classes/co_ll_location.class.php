@@ -169,8 +169,10 @@ class CO_LL_Location extends CO_Main_DB_Record {
             }
         }
         
+        $ll_string = ((NULL != $this->_longitude) && (NULL != $this->_latitude)) ? "($this->_longitude, $this->_latitude)" : '';
+        
         $this->class_description = "Generic longitude/latitude Class.";
-        $this->instance_description = isset($this->name) && $this->name ? "$this->name ($this->_longitude, $this->_latitude)" : "($this->_longitude, $this->_latitude)";
+        $this->instance_description = isset($this->name) && $this->name ? "$this->name $ll_string" : $ll_string;
         
         return $ret;
     }
@@ -186,7 +188,9 @@ class CO_LL_Location extends CO_Main_DB_Record {
     public function update_db() {
         $ret = parent::update_db();
         if ($ret) {
-            $this->instance_description = isset($this->name) && $this->name ? "$this->name ($this->_longitude, $this->_latitude)" : "($this->_longitude, $this->_latitude)";
+            $ll_string = ((NULL != $this->_longitude) && (NULL != $this->_latitude)) ? "($this->_longitude, $this->_latitude)" : '';
+        
+            $this->instance_description = isset($this->name) && $this->name ? "$this->name $ll_string" : $ll_string;
         }
         
         return $ret;

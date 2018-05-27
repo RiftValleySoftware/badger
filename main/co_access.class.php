@@ -1,7 +1,7 @@
 <?php
 /***************************************************************************************************************************/
 /**
-    Badger Hardened Baseline Database Component
+    BADGER Hardened Baseline Database Component
     
     © Copyright 2018, Little Green Viper Software Development LLC.
     
@@ -13,7 +13,7 @@
 */
 defined( 'LGV_ACCESS_CATCHER' ) or die ( 'Cannot Execute Directly' );	// Makes sure that this file is in the correct context.
 
-define('__BADGER_VERSION__', '1.0.0.2028');
+define('__BADGER_VERSION__', '1.0.0.2029');
 
 if ( !defined('LGV_MD_CATCHER') ) {
     define('LGV_MD_CATCHER', 1);
@@ -35,7 +35,7 @@ require_once(CO_Config::badger_lang_class_dir().'/common.inc.php');
 
 /***************************************************************************************************************************/
 /**
-This is the principal interface class for Badger. To use Badger, you instantiate this class with a login (or no login), and
+This is the principal interface class for BADGER. To use BADGER, you instantiate this class with a login (or no login), and
 the instance handles all the database setup and permission-setting in the background.
 
 You then use this class as your database interface. No SQL or DB commands. It's all functions, and it should all go through this
@@ -43,7 +43,7 @@ class or instances of records that it supplies. You do not interface with the da
 
 This class is designed to be specialized and subclassed. In it's "pure" form, it is extremely generic.
 
-Badger consists of two databases: The "data" database, and the "security" database. These do not have any database-level relations.
+BADGER consists of two databases: The "data" database, and the "security" database. These do not have any database-level relations.
 They can both be set up on different servers, and could even be different SQL databases, as the schemas are very simple, and we use
 PDO to access them.
 
@@ -59,7 +59,7 @@ Each record has one code for reading, and one code for writing. If the code is n
 user can't see the data, or modify it. This is enforced at the SQL level. The system will not even read in records that don't match
 the security key.
 
-You set up Badger with a config file, which implements a static class with some basic parameters for use in the system. For security,
+You set up BADGER with a config file, which implements a static class with some basic parameters for use in the system. For security,
 it's a good idea to locate the config file outside the HTTP tree.
 
 You include the config file in whatever context is your main context, and include this file after that.
@@ -75,7 +75,7 @@ class CO_Access {
     public $error;                  ///< If there was an error, it will be held here.
     public $class_description;      ///< This is a brief textual description of the class.
     
-    public $version;                ///< This will contain the Badger Version.
+    public $version;                ///< This will contain the BADGER Version.
     
     /***********************************************************************************************************************/
     /***********************/

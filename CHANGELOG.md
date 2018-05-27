@@ -1,3 +1,7 @@
+**1.0.0.2029** *(TBD)*
+
+- Fixed the display string in the location base class, so it won't have an empty Long/Lat if there is no long/lat.
+
 **1.0.0.2028** *(May 22, 2018)*
 
 - Fixed one of the tests. It was looking in the wrong place for the state.
