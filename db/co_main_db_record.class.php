@@ -88,6 +88,8 @@ class CO_Main_DB_Record extends A_CO_DB_Table_Base {
         $this->_owner_id = intval($in_owner_id);
         $this->_tags = (isset($in_tags_array) && is_array($in_tags_array) && count($in_tags_array)) ? array_map(function($in) { return strval($in); }, $in_tags_array) : Array();
         parent::__construct($in_db_object, $in_db_result);
+        $this->class_description = 'Base Class for Main Database Records.';
+        $this->name = (isset($this->name) && trim($this->name)) ? trim($this->name) : "Base Class Instance ($this->_id)";
     }
 
     /***********************/
