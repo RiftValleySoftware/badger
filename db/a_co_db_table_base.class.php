@@ -238,6 +238,16 @@ abstract class A_CO_DB_Table_Base {
     
     /***********************/
     /**
+    VERY DANGEROUS! This only exists as a utility for the deleter.
+    
+    DON'T CALL THIS!
+     */
+    public function danger_will_robinson_danger_clear_id() {
+        $this->_id = 0;
+    }
+    
+    /***********************/
+    /**
     \returns TRUE, if the current logged-in user has read permission on this record.
      */
     public function user_can_read() {

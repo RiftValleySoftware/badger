@@ -2,6 +2,7 @@
 
 - There were instance when errors were not being returned properly. That has been fixed.
 - Improved the comments and documentation for the main access class.
+- Added a bit of code to clear the ID of deleted items, so subsequent saves will actually create new items.
 
 **1.0.0.2029** *(May 26, 2018)*
 

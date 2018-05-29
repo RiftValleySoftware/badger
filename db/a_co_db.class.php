@@ -615,6 +615,7 @@ abstract class A_CO_DB {
                 if (!$this->error && isset($temp) && is_array($temp) && (0 == count($temp))) {
                     // Make sure that we also remove it from our cache.
                     if (isset($this->_existing_record_objects[$id])) {
+                        $this->_existing_record_objects[$id]->danger_will_robinson_danger_clear_id();
                         unset($this->_existing_record_objects[$id]);
                     }
                         
