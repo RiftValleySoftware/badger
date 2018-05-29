@@ -1,3 +1,8 @@
+**1.0.0.2030** *(TBD)*
+
+- There were instance when errors were not being returned properly. That has been fixed.
+- Improved the comments and documentation for the main access class.
+
 **1.0.0.2029** *(May 26, 2018)*
 
 - Fixed the display string in the location base class, so it won't have an empty Long/Lat if there is no long/lat.

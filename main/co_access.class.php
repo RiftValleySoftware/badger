@@ -13,7 +13,7 @@
 */
 defined( 'LGV_ACCESS_CATCHER' ) or die ( 'Cannot Execute Directly' );	// Makes sure that this file is in the correct context.
 
-define('__BADGER_VERSION__', '1.0.0.2029');
+define('__BADGER_VERSION__', '1.0.0.2030');
 
 if ( !defined('LGV_MD_CATCHER') ) {
     define('LGV_MD_CATCHER', 1);
@@ -71,7 +71,7 @@ class CO_Access {
     protected $_security_db_object; ///< This is the instance of the class representing the "scurity" database. This may not be instantiated, if there is no login.
     protected $_login_id;           ///< This is an integer, containing the security DB ID of the logged-in user. It will be NULL for no login.
 
-    public $valid;                  ///< This will be TRUE, if the instance is "valid" (has at least an initialized "data" database).
+    public $valid;                  ///< This will be true, if the instance is "valid" (has at least an initialized "data" database).
     public $error;                  ///< If there was an error, it will be held here.
     public $class_description;      ///< This is a brief textual description of the class.
     
@@ -88,13 +88,13 @@ class CO_Access {
 	                            ) {
         $this->class_description = 'The main data access class.';
         
-        $this->main_db_available = FALSE;
-        $this->security_db_available = FALSE;
+        $this->main_db_available = false;
+        $this->security_db_available = false;
         $this->_login_id = NULL;
 	    $this->_data_db_object = NULL;
 	    $this->_security_db_object = NULL;
 	    $this->error = NULL;
-	    $this->valid = FALSE;
+	    $this->valid = false;
 	    $this->version = __BADGER_VERSION__;
 	    
 	    if ( !defined('LGV_ERROR_CATCHER') ) {
@@ -167,7 +167,7 @@ class CO_Access {
             return;
         }
         
-        $this->valid = TRUE;
+        $this->valid = true;
     }
     
     /***********************/
@@ -176,9 +176,9 @@ class CO_Access {
     
     This deliberately does not pass security vetting, so we're careful. It's meant to be used by collection classes for garbage collection.
     
-    \returns TRUE, if an item exists for the given ID.
+    \returns true, if an item exists for the given ID.
      */
-    public function item_exists(    $in_id    ///< The ID of the item.
+    public function item_exists(    $in_id    ///< The integer ID of the item.
                                 ) {
         return $this->_data_db_object->item_exists($in_id);
     }
@@ -217,7 +217,7 @@ class CO_Access {
     
     /***********************/
     /**
-    \returns TRUE, if the main "data" database is ready for use.
+    \returns true, if the main "data" database is ready for use.
      */
     public function main_db_available() {
         return NULL != $this->_data_db_object;
@@ -263,7 +263,9 @@ class CO_Access {
             $login_id = intval($in_login_id);
         }
         
-        return $this->get_single_security_record_by_id($login_id);
+        $ret = $this->get_single_security_record_by_id($login_id);
+        
+        return $ret;
     }
     
     /***********************/
@@ -285,7 +287,7 @@ class CO_Access {
     
     /***********************/
     /**
-    \returns TRUE, if the current logged-in user is "God."
+    \returns true, if the current logged-in user is "God."
      */
     public function god_mode() {
         // We look at the hard property (as opposed to using the accessor) just to avoid subclasses messing with things.
@@ -294,17 +296,17 @@ class CO_Access {
 
     /***********************/
     /**
-    \returns TRUE, if the given login exists, FALSE, if not, but NULL, if there is no security DB (we're not logged in). NOTE: This is not subject to security vetting.
+    \returns true, if the given login exists, false, if not, but NULL, if there is no security DB (we're not logged in). NOTE: This is not subject to security vetting.
      */
     public function check_login_exists( $in_login_id    ///< The integer login ID to check
                                         ) {
         $ret = NULL;
         
         if ($this->security_db_available()) {
-            $ret = FALSE;
+            $ret = false;
             
             if ($this->_security_db_object->get_initial_record_by_id(intval($in_login_id))) {
-                $ret = TRUE;
+                $ret = true;
             }
         }
         
@@ -313,17 +315,17 @@ class CO_Access {
 
     /***********************/
     /**
-    \returns TRUE, if the given login exists, FALSE, if not, but NULL, if there is no security DB (we're not logged in). NOTE: This is not subject to security vetting.
+    \returns true, if the given login exists, false, if not, but NULL, if there is no security DB (we're not logged in). NOTE: This is not subject to security vetting.
      */
-    public function check_login_exists_by_login_string( $in_login_id    ///< The string login ID to check
+    public function check_login_exists_by_login_string( $in_login_id_string    ///< The string login ID to check
                                                         ) {
         $ret = NULL;
         
         if ($this->security_db_available()) {
-            $ret = FALSE;
+            $ret = false;
             
-            if ($this->_security_db_object->get_initial_record_by_login_id($in_login_id)) {
-                $ret = TRUE;
+            if ($this->_security_db_object->get_initial_record_by_login_id($in_login_id_string)) {
+                $ret = true;
             }
         }
         
@@ -334,12 +336,12 @@ class CO_Access {
     /**
     \returns the requested login item. This is subject to security vetting, so no item does not mean the item doesn't exist. It just means we're in the dark about that.
      */
-    public function get_login_item_by_login_string( $in_login_id    ///< The string login ID to check
+    public function get_login_item_by_login_string( $in_login_id_string    ///< The string login ID to check
                                                     ) {
         $ret = NULL;
         
         if ($this->security_db_available()) {
-            $ret = $this->_security_db_object->get_single_record_by_login_id($in_login_id);
+            $ret = $this->_security_db_object->get_single_record_by_login_id($in_login_id_string);
         }
         
         return $ret;
@@ -347,16 +349,16 @@ class CO_Access {
 
     /***********************/
     /**
-    \returns TRUE, if the given user exists for a login, FALSE, if not, but NULL, if there is no security DB (we're not logged in). NOTE: This is not subject to security vetting.
+    \returns true, if the given user exists for a login, false, if not, but NULL, if there is no security DB (we're not logged in). NOTE: This is not subject to security vetting.
      */
-    public function check_user_exists(  $in_login_id    ///< The login ID to check
+    public function check_user_exists(  $in_login_id    ///< The integer login ID to check
                                     ) {
         // We first check for a login.
         $ret = $this->check_login_exists($in_login_id);
         
         if (NULL == $ret) {
-            $ret = FALSE;
-        } elseif (TRUE == $ret) {   // If it exists, we check further, for a user with that login.
+            $ret = false;
+        } elseif (true == $ret) {   // If it exists, we check further, for a user with that login.
             $ret = $this->_data_db_object->see_if_user_exists($in_login_id);
         }
         
@@ -487,7 +489,7 @@ class CO_Access {
     
     \returns a single new instance, initialized from the database.
      */
-    public function get_single_data_record_by_id(   $in_id  ///< The ID of the record to fetch.
+    public function get_single_data_record_by_id(   $in_id  ///< The integer ID of the record to fetch.
                                                 ) {
         $ret = NULL;
         
@@ -505,13 +507,14 @@ class CO_Access {
     
     \returns an array of instances.
      */
-    public function get_all_data_readable_records(  $open_only = FALSE,  ///< If TRUE, then we will look for ONLY records with a NULL or 0 read_security_id
-                                                    $in_this_id = NULL  ///< If we are in "god mode," we can look for particular IDs.
+    public function get_all_data_readable_records(  $open_only = false, ///< If true, then we will look for ONLY records with a NULL or 0 read_security_id
+                                                    $in_this_id = NULL  ///< If we are in "god mode," we can look for particular IDs. In that case, this would be the integer ID of the login to check.
                                                 ) {
         $ret = NULL;
         
         if (isset($this->_data_db_object) && $this->_data_db_object) {
             $ret = $this->_data_db_object->get_all_readable_records($open_only, $in_this_id);
+            $this->error = $this->_data_db_object->error;
         }
         
         return $ret;
@@ -523,7 +526,7 @@ class CO_Access {
     
     \returns an array of instances.
      */
-    public function get_all_data_writeable_records( $in_this_id = NULL  ///< If we are in "god mode," we can look for particular IDs.
+    public function get_all_data_writeable_records( $in_this_id = NULL  ///< If we are in "god mode," we can look for particular IDs. In that case, this would be the integer ID of the login to check.
                                                     ) {
         $ret = NULL;
         
@@ -542,7 +545,7 @@ class CO_Access {
     
     /***********************/
     /**
-    \returns TRUE if the security database is available and ready for use.
+    \returns true if the security database is available and ready for use.
      */
     public function security_db_available() {
         return NULL != $this->_security_db_object;
@@ -556,7 +559,7 @@ class CO_Access {
     
     \returns an array of instances, fetched an initialized from the database.
      */
-    public function get_multiple_security_records_by_id(    $in_id_array
+    public function get_multiple_security_records_by_id(    $in_id_array    ///< An array of integer IDs.
                                                         ) {
         $ret = NULL;
         
@@ -579,11 +582,12 @@ class CO_Access {
     
     \returns a single new instance, initialized from the database.
      */
-    public function get_single_security_record_by_id(   $in_id
+    public function get_single_security_record_by_id(   $in_id  ///< The integer ID to check.
                                                     ) {
         $ret = NULL;
         
         $tmp = $this->get_multiple_security_records_by_id(Array($in_id));
+        
         if (isset($tmp) && is_array($tmp) && (1 == count($tmp))) {
             $ret = $tmp[0];
         }
@@ -597,8 +601,8 @@ class CO_Access {
     
     \returns an array of instances.
      */
-    public function get_all_security_readable_records( $in_this_id = NULL  ///< If we are in "god mode," we can look for particular IDs.
-                                                        ) {
+    public function get_all_security_readable_records(  $in_this_id = NULL  ///< If we are in "god mode," we can look for particular IDs. In that case, this would be the integer ID of the login to check.
+                                                    ) {
         $ret = NULL;
         
         if (isset($this->_security_db_object) && $this->_security_db_object) {
@@ -620,7 +624,7 @@ class CO_Access {
     
     \returns an array of instances.
      */
-    public function get_all_security_writeable_records( $in_this_id = NULL  ///< If we are in "god mode," we can look for particular IDs.
+    public function get_all_security_writeable_records( $in_this_id = NULL  ///< If we are in "god mode," we can look for particular IDs. In that case, this would be the integer ID of the login to check.
                                                         ) {
         $ret = NULL;
         
@@ -645,30 +649,36 @@ class CO_Access {
     
     This should generally not be called by user contexts.
     
-    \returns TRUE, or the ID of a new record.
+    \returns true, or the ID of a new record.
      */
     public function write_data_record(  $params_associative_array   ///< This is an associative array that has the values, keyed by the database column IDs.
                                     ) {
+        $ret = false;
+        
         if (isset($this->_data_db_object) && $this->_data_db_object) {
-            return $this->_data_db_object->write_record($params_associative_array);
+            $ret = $this->_data_db_object->write_record($params_associative_array);
+            $this->error = $this->_data_db_object->error;
         }
         
-        return FALSE;
+        return $ret;
     }
     
     /***********************/
     /**
     This is a "security-safe" method for deleting a record by its ID.
     
-    \returns TRUE, if the deletion succeeded.
+    \returns true, if the deletion succeeded.
      */
     public function delete_data_record( $id ///< The integer ID of the record to be deleted.
                                         ) {
+        $ret = false;
+        
         if (isset($this->_data_db_object) && $this->_data_db_object) {
-            return $this->_data_db_object->delete_record($id);
+            $ret = $this->_data_db_object->delete_record($id);
+            $this->error = $this->_data_db_object->error;
         }
         
-        return FALSE;
+        return $ret;
     }
     
     /***********************/
@@ -678,7 +688,7 @@ class CO_Access {
     
     It is "security-safe."
     
-    \returns an array of instances that match the search parameters. If $count_only is TRUE, then it will be a single integer, with the count of responses to the search (if a page, then only the number of items on that page).
+    \returns an array of instances that match the search parameters. If $count_only is true, then it will be a single integer, with the count of responses to the search (if a page, then only the number of items on that page).
      */
     public function generic_search( $in_search_parameters = NULL,   /**< This is an associative array of terms to define the search. The keys should be:
                                                                         - 'id'
@@ -691,25 +701,35 @@ class CO_Access {
                                                                             This should be accompanied by an array of one or more integers, representing specific item IDs for "owner" objects.
                                                                         - 'tags'
                                                                             This should be accompanied by an array (up to 10 elements) of one or more case-insensitive strings, representing specific tag values.
+                                                                            The position in the array denotes which tag to match, so unchecked tags should still be in the array, but empty. You don't match empty tags.
+                                                                            You can specify an array for the values, which allows you to do an OR search for the values.
                                                                         - 'location'
+                                                                            This is only relevant if we are searching for subclasses (or instances) of CO_LL_Location
                                                                             This requires that the parameter be a 3-element associative array of floating-point numbers:
-                                                                                - 'longtude'
+                                                                                - 'longitude'
                                                                                     This is the search center location longitude, in degrees.
                                                                                 - 'latitude'
                                                                                     This is the search center location latitude, in degrees.
                                                                                 - 'radius'
                                                                                     This is the search radius, in Kilometers.
+
+                                                                        You can specify an array for any one of the values, which allows you to do an OR search for those values ($or_search does not apply. It is only for the combination of main values).
+                                                                        If you add an element called 'use_like' ('use_like' => 1) to the end of 'access_class', 'name' or one of the 'tags', then you can use SQL-style "wildcards" (%) in your matches.
+                                                                        If you have 'use_like', and put just a single wildcard in quotes ('%'), then you are saying "not-empty."
+                                                                        NOTE: Although this is an optional parameter, failing to provide anything could return the entire readable database.
                                                                     */
-                                    $or_search = FALSE,             ///< If TRUE, then the search is very wide (OR), as opposed to narrow (AND), by default. If you specify a location, then that will always be AND, but the other fields can be OR.
+                                    $or_search = false,             ///< If true, then the search is very wide (OR), as opposed to narrow (AND), by default. If you specify a location, then that will always be AND, but the other fields can be OR.
                                     $page_size = 0,                 ///< If specified with a 1-based integer, this denotes the size of a "page" of results. NOTE: This is only applicable to MySQL or Postgres, and will be ignored if the DB is not MySQL or Postgres.
                                     $initial_page = 0,              ///< This is ignored unless $page_size is greater than 0. If so, then this 0-based index will specify which page of results to return.
-                                    $and_writeable = FALSE,         ///< If TRUE, then we only want records we can modify.
-                                    $count_only = FALSE,            ///< If TRUE (default is FALSE), then only a single integer will be returned, with the count of items that fit the search.
-                                    $ids_only = FALSE               ///< If TRUE (default is FALSE), then the return array will consist only of integers (the object IDs). If $count_only is TRUE, this is ignored.
+                                    $and_writeable = false,         ///< If true, then we only want records we can modify.
+                                    $count_only = false,            ///< If true (default is false), then only a single integer will be returned, with the count of items that fit the search.
+                                    $ids_only = false               ///< If true (default is false), then the return array will consist only of integers (the object IDs). If $count_only is true, this is ignored.
                                     ) {
-        $ret = NULL;
+        $ret = Array();
+        
         if (isset($this->_data_db_object) && $this->_data_db_object) {
-            return $this->_data_db_object->generic_search($in_search_parameters, $or_search, $page_size, $initial_page, $and_writeable, $count_only, $ids_only);
+            $ret = $this->_data_db_object->generic_search($in_search_parameters, $or_search, $page_size, $initial_page, $and_writeable, $count_only, $ids_only);
+            $this->error = $this->_data_db_object->error;
         }
         
         return $ret;
@@ -721,7 +741,7 @@ class CO_Access {
     
     \returns an array of instances.
      */
-    public function get_all_login_objects ( $and_write = FALSE  ///< If TRUE, then we only want ones we have write access to.
+    public function get_all_login_objects ( $and_write = false  ///< If true, then we only want ones we have write access to.
                                             ) {
         if (!isset($this->_security_db_object) || !$this->_security_db_object) {
             return Array();
@@ -739,7 +759,7 @@ class CO_Access {
     \returns an array of instances.
      */
     public function get_all_login_objects_with_access(  $in_security_token, ///< An integer, with the requested security token.
-                                                        $and_write = FALSE  ///< If TRUE, then we only want ones we have write access to.
+                                                        $and_write = false  ///< If true, then we only want ones we have write access to.
                                                 ) {
         if (!isset($this->_security_db_object) || !$this->_security_db_object) {
             return Array();

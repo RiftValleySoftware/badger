@@ -366,9 +366,12 @@ abstract class A_CO_DB {
             $ret = Array();
             foreach ($temp as $result) {
                 $result = $this->_instantiate_record($result);
-                // Belt and suspenders. Make sure nothing leaks through.
-                if ($result && ($and_write ? $result->user_can_write() : $result->user_can_read())) {
-                    array_push($ret, $result);
+                if (isset($result) && ($result instanceof A_CO_DB_Table_Base)) {
+                    $weregood = $and_write ? $result->user_can_write() : $result->user_can_read();
+                    // Belt and suspenders. Make sure nothing leaks through.
+                    if ($weregood) {
+                        array_push($ret, $result);
+                    }
                 }
             }
             usort($ret, function($a, $b){return ($a->id() > $b->id());});

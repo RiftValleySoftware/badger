@@ -556,14 +556,22 @@ class CO_Main_Data_DB extends A_CO_DB {
                                                                             This should be accompanied by an array of one or more integers, representing specific item IDs for "owner" objects.
                                                                         - 'tags'
                                                                             This should be accompanied by an array (up to 10 elements) of one or more case-insensitive strings, representing specific tag values.
+                                                                            The position in the array denotes which tag to match, so unchecked tags should still be in the array, but empty. You don't match empty tags.
+                                                                            You can specify an array for the values, which allows you to do an OR search for the values.
                                                                         - 'location'
+                                                                            This is only relevant if we are searching for subclasses (or instances) of CO_LL_Location
                                                                             This requires that the parameter be a 3-element associative array of floating-point numbers:
-                                                                                - 'longtude'
+                                                                                - 'longitude'
                                                                                     This is the search center location longitude, in degrees.
                                                                                 - 'latitude'
                                                                                     This is the search center location latitude, in degrees.
                                                                                 - 'radius'
                                                                                     This is the search radius, in Kilometers.
+
+                                                                        You can specify an array for any one of the values, which allows you to do an OR search for those values ($or_search does not apply. It is only for the combination of main values).
+                                                                        If you add an element called 'use_like' ('use_like' => 1) to the end of 'access_class', 'name' or one of the 'tags', then you can use SQL-style "wildcards" (%) in your matches.
+                                                                        If you have 'use_like', and put just a single wildcard in quotes ('%'), then you are saying "not-empty."
+                                                                        NOTE: Although this is an optional parameter, failing to provide anything could return the entire readable database.
                                                                     */
                                     $or_search = FALSE,             ///< If TRUE, then the search is very wide (OR), as opposed to narrow (AND), by default. If you specify a location, then that will always be AND, but the other fields can be OR.
                                     $page_size = 0,                 ///< If specified with a 1-based integer, this denotes the size of a "page" of results. NOTE: This is only applicable to MySQL or Postgres, and will be ignored if the DB is not MySQL or Postgres.
@@ -574,11 +582,12 @@ class CO_Main_Data_DB extends A_CO_DB {
                                     ) {
         $ret = NULL;
         
+        // These are semaphores that we'll consult when the dust settles.
         $location_count = $count_only;
         $location_ids_only = $ids_only;
         $location_search = (isset($in_search_parameters['location']) && isset($in_search_parameters['location']['longitude']) && isset($in_search_parameters['location']['latitude']) && isset($in_search_parameters['location']['radius']));
         
-        if ($location_search) { // We're forced to use the regular search for count-only location, as we need that Vincenty filter.
+        if ($location_search) { // We're forced to use the regular search for count-only and IDs location, as we need that Vincenty filter.
             $count_only = FALSE;
             $ids_only = FALSE;
         }
