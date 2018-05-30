@@ -209,6 +209,10 @@ abstract class A_CO_DB {
                 if (isset($this->_existing_record_objects[$id])) {
                     $ret = $this->_existing_record_objects[$id];
                     if (isset($ret)) {  // We make sure the object jives with what was given us from the DB.
+                        // This forces the collection-based classes to reload their children.
+                        if (method_exists($ret, 'reload_collection')) {
+                            $ret->reload_collection();
+                        }
                         $ret->load_from_db($in_db_result);
                     }
                 } else {
