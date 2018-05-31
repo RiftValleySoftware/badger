@@ -1,9 +1,17 @@
-![Honey Badger Don't Care](icon.png)
+![BADGER](images/icon.png)
+
+BADGER
+======
+Part of the Rift Valley Platform
+--------------------------------
+![Rift Valley Platform](images/RVPLogo.png)
 
 INTRODUCTION
 ============
 
 ***[Hardened Baseline Database Component](https://en.wikipedia.org/wiki/The_Crazy_Nastyass_Honey_Badger#Honey_Badger_Don't_Care)***
+
+![BADGER Diagram](images/BADGERLayers.png)
 
 This is the baseline database system for the secure database toolbox.
 It's a low-level database storage system that implements a generic KVP database and a separate security database.
@@ -17,7 +25,7 @@ BADGER is extremely basic. No relating or data processing is done by BADGER, wit
 LICENSE
 =======
 
-![Little Green Viper Software Development LLC](spec/viper.png)
+![Little Green Viper Software Development LLC](images/viper.png)
 © Copyright 2018, [Little Green Viper Software Development LLC](https://littlegreenviper.com).
 This code is ENTIRELY proprietary and not to be reused, unless under specific, written license from [Little Green Viper Software Development LLC](https://littlegreenviper.com).
 
