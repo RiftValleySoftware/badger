@@ -366,6 +366,10 @@ abstract class A_CO_DB {
         $sql  .= ')';
 
         $temp = $this->execute_query($sql, $params);
+// // Commented out, but useful for debug.
+// echo('SQL:<pre>'.htmlspecialchars(print_r($sql, true)).'</pre>');
+// echo('PARAMS:<pre>'.htmlspecialchars(print_r($params, true)).'</pre>');
+// echo('RESPONSE:<pre>'.htmlspecialchars(print_r($temp, true)).'</pre>');
         if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
             $ret = Array();
             foreach ($temp as $result) {
