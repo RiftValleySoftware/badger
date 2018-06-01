@@ -1450,7 +1450,7 @@
         
         require_once(CO_Config::badger_main_class_dir().'/co_access.class.php');
         
-        $god_access_instance = new CO_Access('admin', '', CO_COnfig::god_mode_password());
+        $god_access_instance = new CO_Access('admin', '', CO_Config::god_mode_password());
         
         if ($god_access_instance->valid) {
             $setup_list = $god_access_instance->generic_search(Array('access_class' => 'CO_LL_Location'), FALSE, 50, 1);

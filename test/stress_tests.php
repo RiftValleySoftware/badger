@@ -94,7 +94,7 @@
                         <?php
                         echo("<h4>Log In With God Mode</h4>");
                         $start = microtime(TRUE);
-                        just_randomize_writes('admin', '', CO_COnfig::god_mode_password());
+                        just_randomize_writes('admin', '', CO_Config::god_mode_password());
                         echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');

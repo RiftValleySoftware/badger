@@ -1,6 +1,6 @@
-**1.0.0.2030** *(TBD)*
+**1.0.0.2030** *(May 31, 2018)*
 
-- There were instance when errors were not being returned properly. That has been fixed.
+- There were instances when errors were not being returned properly. That has been fixed.
 - Improved the comments and documentation for the main access class.
 - Added a bit of code to clear the ID of deleted items, so subsequent saves will actually create new items.
 
