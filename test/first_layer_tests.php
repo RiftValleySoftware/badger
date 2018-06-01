@@ -28,9 +28,9 @@
                         echo('<p class="explain">This test accesses as a public anonymous member, and then tries to modify a record with a \'0\' mod level (can be modified by any logged-in member).</p>');
                         echo('<p class="explain">We expect this to fail.</p>');
                         echo('</div>');
-                        $start = microtime(TRUE);
+                        $start = microtime(true);
                         try_change_record(NULL, NULL, NULL, 2);
-                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
                 echo('<div id="test-014" class="inner_closed">');
@@ -41,9 +41,9 @@
                         echo('<p class="explain">This test accesses as a secondary member, and then tries to modify a record with a \'0\' mod level (can be modified by any logged-in member).</p>');
                         echo('<p class="explain">We expect this to succeed.</p>');
                         echo('</div>');
-                        $start = microtime(TRUE);
+                        $start = microtime(true);
                         try_change_record('secondary', '', 'CoreysGoryStory', 2);
-                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
                 echo('<div id="test-015" class="inner_closed">');
@@ -54,9 +54,9 @@
                         echo('<p class="explain">This test accesses as a secondary member, and then tries to modify a record that is not on the "guest list."</p>');
                         echo('<p class="explain">We expect this to fail completely, as we do not even have read access.</p>');
                         echo('</div>');
-                        $start = microtime(TRUE);
+                        $start = microtime(true);
                         try_change_record('secondary', '', 'CoreysGoryStory', 4);
-                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
                 echo('<div id="test-016" class="inner_closed">');
@@ -67,9 +67,9 @@
                         echo('<p class="explain">This test accesses as a tertiary member, and then tries to modify a record that is readable, but not writeable.</p>');
                         echo('<p class="explain">We expect this to fail, as we do not have write access.</p>');
                         echo('</div>');
-                        $start = microtime(TRUE);
+                        $start = microtime(true);
                         try_change_record('tertiary', 'CodYOzPtwxb4A', '', 8);
-                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
                 echo('<div id="test-017" class="inner_closed">');
@@ -81,9 +81,9 @@
                         echo('<p class="explain">After we create the new record, we use its accessors to set some new values.</p>');
                         echo('<p class="explain">We expect this to succeed.</p>');
                         echo('</div>');
-                        $start = microtime(TRUE);
+                        $start = microtime(true);
                         try_make_new_data_record('tertiary', 'CodYOzPtwxb4A', '', 8);
-                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
                 echo('<div id="test-018" class="inner_closed">');
@@ -94,9 +94,9 @@
                         echo('<p class="explain">This test accesses as a tertiary member, and then deletes the second record (the one that used to be "Las Vegas" before we abused it).</p>');
                         echo('<p class="explain">We expect this to succeed.</p>');
                         echo('</div>');
-                        $start = microtime(TRUE);
+                        $start = microtime(true);
                         try_delete_old_data_record('tertiary', 'CodYOzPtwxb4A', '', 2);
-                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
                 echo('<div id="test-019" class="inner_closed">');
@@ -107,9 +107,9 @@
                         echo('<p class="explain">This test accesses as a tertiary member, and then deletes the eighth record (we have read, but no write).</p>');
                         echo('<p class="explain">We expect this to fail.</p>');
                         echo('</div>');
-                        $start = microtime(TRUE);
+                        $start = microtime(true);
                         try_delete_old_data_record('tertiary', 'CodYOzPtwxb4A', '', 8);
-                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
             echo('</div>');
@@ -127,9 +127,9 @@
                         <p class="explain">We expect this to succeed.</p>
                         </div>
                         <?php
-                        $start = microtime(TRUE);
+                        $start = microtime(true);
                         try_text_payload('tertiary', 'CodYOzPtwxb4A', '');
-                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
                 echo('<div id="test-021" class="inner_closed">');
@@ -142,9 +142,9 @@
                         <p class="explain">We expect this to succeed.</p>
                         </div>
                         <?php
-                        $start = microtime(TRUE);
+                        $start = microtime(true);
                         try_image_payload('tertiary', 'CodYOzPtwxb4A', '');
-                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
             echo('</div>');
@@ -168,10 +168,10 @@
             $honest_abe_said = file_get_contents('config/gettysburg.txt');
             echo("<h4>BEFORE:</h4>");
             echo("<p>$honest_abe_said</p>");
-            $data_record = $access_instance->get_single_data_record_by_id($in_record_id, TRUE);
+            $data_record = $access_instance->get_single_data_record_by_id($in_record_id, true);
             if ($data_record) {
                 $data_record->set_payload($honest_abe_said);
-                $data_record2 = $access_instance->get_single_data_record_by_id($in_record_id, TRUE);
+                $data_record2 = $access_instance->get_single_data_record_by_id($in_record_id, true);
                 if ($data_record2) {
                     $retrieved_payload = $data_record2->get_payload();
                     
@@ -216,10 +216,10 @@
             $icon_base64_data = base64_encode ($icon_data);
             echo('<h4>BEFORE:</h4>');
             echo('<img src="data:image/gif;base64,'.$icon_base64_data.'" alt="Honey Badger Don\'t Care" />');
-            $data_record = $access_instance->get_single_data_record_by_id($in_record_id, TRUE);
+            $data_record = $access_instance->get_single_data_record_by_id($in_record_id, true);
             if ($data_record) {
                 $data_record->set_payload($icon_data);
-                $data_record2 = $access_instance->get_single_data_record_by_id($in_record_id, TRUE);
+                $data_record2 = $access_instance->get_single_data_record_by_id($in_record_id, true);
                 if ($data_record2) {
                     $retrieved_payload = $data_record2->get_payload();
                     

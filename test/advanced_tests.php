@@ -33,9 +33,9 @@
                         <p class="explain">We expect this to succeed, and return 1999 items.</p>
                         </div>
                         <?php
-                        $start = microtime(TRUE);
+                        $start = microtime(true);
                         advanced_test_1();
-                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
                 echo('<div id="test-042" class="inner_closed">');
@@ -48,9 +48,9 @@
                         <p class="explain">We expect this to succeed with 3 records.</p>
                         </div>
                         <?php
-                        $start = microtime(TRUE);
+                        $start = microtime(true);
                         advanced_test_2();
-                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
                 echo('<div id="test-043" class="inner_closed">');
@@ -63,9 +63,9 @@
                         <p class="explain">We expect this to succeed with 44 records.</p>
                         </div>
                         <?php
-                        $start = microtime(TRUE);
+                        $start = microtime(true);
                         advanced_test_3();
-                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
                 echo('<div id="test-044" class="inner_closed">');
@@ -78,9 +78,9 @@
                         <p class="explain">We expect this to succeed with 149 records; which is the set of meetings we will use in the next several tests.</p>
                         </div>
                         <?php
-                        $start = microtime(TRUE);
+                        $start = microtime(true);
                         advanced_test_4();
-                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
                 echo('<div id="test-045" class="inner_closed">');
@@ -93,9 +93,9 @@
                         <p class="explain">We expect this to succeed with 2 records.</p>
                         </div>
                         <?php
-                        $start = microtime(TRUE);
+                        $start = microtime(true);
                         advanced_test_5();
-                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
                 echo('<div id="test-046" class="inner_closed">');
@@ -108,9 +108,9 @@
                         <p class="explain">We expect this to return 0 records, as the meeting "Boys 2 Men" is in Pahrump, NV, which is not in the search set.</p>
                         </div>
                         <?php
-                        $start = microtime(TRUE);
+                        $start = microtime(true);
                         advanced_test_6();
-                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
                 echo('<div id="test-047" class="inner_closed">');
@@ -123,9 +123,9 @@
                         <p class="explain">This time, we will get 10 records.</p>
                         </div>
                         <?php
-                        $start = microtime(TRUE);
+                        $start = microtime(true);
                         advanced_test_7();
-                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
                 echo('<div id="test-048" class="inner_closed">');
@@ -138,9 +138,9 @@
                         <p class="explain">This time, we will get 6 records.</p>
                         </div>
                         <?php
-                        $start = microtime(TRUE);
+                        $start = microtime(true);
                         advanced_test_8();
-                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
                 echo('<div id="test-049" class="inner_closed">');
@@ -153,9 +153,9 @@
                         <p class="explain">This time, we will get 22 records.</p>
                         </div>
                         <?php
-                        $start = microtime(TRUE);
+                        $start = microtime(true);
                         advanced_test_9();
-                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
                 echo('<div id="test-050" class="inner_closed">');
@@ -168,9 +168,9 @@
                         <p class="explain">We will get 1 record.</p>
                         </div>
                         <?php
-                        $start = microtime(TRUE);
+                        $start = microtime(true);
                         advanced_test_10();
-                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
                 echo('<div id="test-051" class="inner_closed">');
@@ -183,9 +183,9 @@
                         <p class="explain">We will get 22 records this time.</p>
                         </div>
                         <?php
-                        $start = microtime(TRUE);
+                        $start = microtime(true);
                         advanced_test_11();
-                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
                 echo('<div id="test-052" class="inner_closed">');
@@ -198,9 +198,9 @@
                         <p class="explain">We will still get just one record.</p>
                         </div>
                         <?php
-                        $start = microtime(TRUE);
+                        $start = microtime(true);
                         advanced_test_12();
-                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
                 echo('<div id="test-053" class="inner_closed">');
@@ -213,9 +213,9 @@
                         <p class="explain">Now we get 82 records.</p>
                         </div>
                         <?php
-                        $start = microtime(TRUE);
+                        $start = microtime(true);
                         advanced_test_13();
-                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
                 echo('<div id="test-054" class="inner_closed">');
@@ -228,9 +228,9 @@
                         <p class="explain">We expect to get 48 records.</p>
                         </div>
                         <?php
-                        $start = microtime(TRUE);
+                        $start = microtime(true);
                         advanced_test_14();
-                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
                 echo('<div id="test-055" class="inner_closed">');
@@ -243,9 +243,9 @@
                         <p class="explain">This time, we get 69 records, as a number of new meetings are added that start with "Just for Today".</p>
                         </div>
                         <?php
-                        $start = microtime(TRUE);
+                        $start = microtime(true);
                         advanced_test_15();
-                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
                 echo('<div id="test-056" class="inner_closed">');
@@ -258,9 +258,9 @@
                         <p class="explain">We expect to get 0 records.</p>
                         </div>
                         <?php
-                        $start = microtime(TRUE);
+                        $start = microtime(true);
                         advanced_test_16();
-                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
                 echo('<div id="test-057" class="inner_closed">');
@@ -273,9 +273,9 @@
                         <p class="explain">We expect to get 103 records.</p>
                         </div>
                         <?php
-                        $start = microtime(TRUE);
+                        $start = microtime(true);
                         advanced_test_17();
-                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
                 echo('<div id="test-058" class="inner_closed">');
@@ -288,9 +288,9 @@
                         <p class="explain">We expect to get 103 records.</p>
                         </div>
                         <?php
-                        $start = microtime(TRUE);
+                        $start = microtime(true);
                         advanced_test_18();
-                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
                 echo('<div id="test-059" class="inner_closed">');
@@ -303,9 +303,9 @@
                         <p class="explain">We expect to get no records.</p>
                         </div>
                         <?php
-                        $start = microtime(TRUE);
+                        $start = microtime(true);
                         advanced_test_19();
-                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
                 echo('<div id="test-060" class="inner_closed">');
@@ -318,9 +318,9 @@
                         <p class="explain">We expect to get no records.</p>
                         </div>
                         <?php
-                        $start = microtime(TRUE);
+                        $start = microtime(true);
                         advanced_test_20();
-                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
                 echo('<div id="test-061" class="inner_closed">');
@@ -333,9 +333,9 @@
                         <p class="explain">We expect to get 2 records.</p>
                         </div>
                         <?php
-                        $start = microtime(TRUE);
+                        $start = microtime(true);
                         advanced_test_22();
-                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
                 echo('<div id="test-062" class="inner_closed">');
@@ -348,9 +348,9 @@
                         <p class="explain">We expect this to start with item 2, and run for 50 records (through item 51).</p>
                         </div>
                         <?php
-                        $start = microtime(TRUE);
+                        $start = microtime(true);
                         advanced_test_23();
-                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
                 echo('<div id="test-063" class="inner_closed">');
@@ -362,9 +362,9 @@
                         <p class="explain">In this test, we do 50 items, but we offset by 3 pages (start with item 152).</p>
                         </div>
                         <?php
-                        $start = microtime(TRUE);
+                        $start = microtime(true);
                         advanced_test_24();
-                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
                 echo('<div id="test-064" class="inner_closed">');
@@ -376,9 +376,9 @@
                         <p class="explain">In this test, we declare the page size to be 1000 items, and start with page 2.</p>
                         </div>
                         <?php
-                        $start = microtime(TRUE);
+                        $start = microtime(true);
                         advanced_test_25();
-                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
                 echo('<div id="test-065" class="inner_closed">');
@@ -390,9 +390,9 @@
                         <p class="explain">In this test, we do a few generic tests, only asking for the count.</p>
                         </div>
                         <?php
-                        $start = microtime(TRUE);
+                        $start = microtime(true);
                         advanced_test_26();
-                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
                 echo('<div id="test-066" class="inner_closed">');
@@ -404,9 +404,9 @@
                         <p class="explain">In this test, we do a few generic tests, only asking for the IDs.</p>
                         </div>
                         <?php
-                        $start = microtime(TRUE);
+                        $start = microtime(true);
                         advanced_test_27();
-                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
                 echo('<div id="test-067" class="inner_closed">');
@@ -418,9 +418,9 @@
                         <p class="explain">Now, we test the "Location Fuzzing" aspect of the database.</p>
                         </div>
                         <?php
-                        $start = microtime(TRUE);
+                        $start = microtime(true);
                         advanced_test_28();
-                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
             echo('</div>');
@@ -441,9 +441,9 @@
         
         if ($access_instance->valid) {
             echo("<h2>The access instance is valid!</h2>");
-            $st1 = microtime(TRUE);
+            $st1 = microtime(true);
             $test_item = $access_instance->generic_search();
-            $fetchTime = sprintf('%01.3f', microtime(TRUE) - $st1);
+            $fetchTime = sprintf('%01.3f', microtime(true) - $st1);
             echo('<div class="inner_div">');
                 if ( isset($test_item) ) {
                     if (is_array($test_item)) {
@@ -476,9 +476,9 @@
         
         if ($access_instance->valid) {
             echo("<h2>The access instance is valid!</h2>");
-            $st1 = microtime(TRUE);
+            $st1 = microtime(true);
             $test_item = $access_instance->generic_search(Array('tags' => Array('', 'HI'), 'name' => 'Just for Today'));
-            $fetchTime = sprintf('%01.3f', microtime(TRUE) - $st1);
+            $fetchTime = sprintf('%01.3f', microtime(true) - $st1);
             echo('<div class="inner_div">');
                 if ( isset($test_item) ) {
                     if (is_array($test_item)) {
@@ -511,9 +511,9 @@
         
         if ($access_instance->valid) {
             echo("<h2>The access instance is valid!</h2>");
-            $st1 = microtime(TRUE);
+            $st1 = microtime(true);
             $test_item = $access_instance->generic_search(Array('tags' => Array('', Array('Nevada', 'NV')), 'location' => Array('longitude' => -115.2435726, 'latitude' => 36.1356661, 'radius' => 400.0)));
-            $fetchTime = sprintf('%01.3f', microtime(TRUE) - $st1);
+            $fetchTime = sprintf('%01.3f', microtime(true) - $st1);
             echo('<div class="inner_div">');
                 if ( isset($test_item) ) {
                     if (is_array($test_item)) {
@@ -545,9 +545,9 @@
         
         if ($access_instance->valid) {
             echo("<h2>The access instance is valid!</h2>");
-            $st1 = microtime(TRUE);
-            $test_item = $access_instance->generic_search(Array('location' => Array('longitude' => -115.2435726, 'latitude' => 36.1356661, 'radius' => 300.0)), TRUE);
-            $fetchTime = sprintf('%01.3f', microtime(TRUE) - $st1);
+            $st1 = microtime(true);
+            $test_item = $access_instance->generic_search(Array('location' => Array('longitude' => -115.2435726, 'latitude' => 36.1356661, 'radius' => 300.0)), true);
+            $fetchTime = sprintf('%01.3f', microtime(true) - $st1);
             echo('<div class="inner_div">');
                 if ( isset($test_item) ) {
                     if (is_array($test_item)) {
@@ -579,9 +579,9 @@
         
         if ($access_instance->valid) {
             echo("<h2>The access instance is valid!</h2>");
-            $st1 = microtime(TRUE);
+            $st1 = microtime(true);
             $test_item = $access_instance->generic_search(Array('tags' => Array('Loma Linda'), 'location' => Array('longitude' => -115.2435726, 'latitude' => 36.1356661, 'radius' => 300.0)));
-            $fetchTime = sprintf('%01.3f', microtime(TRUE) - $st1);
+            $fetchTime = sprintf('%01.3f', microtime(true) - $st1);
             echo('<div class="inner_div">');
                 if ( isset($test_item) ) {
                     if (is_array($test_item)) {
@@ -613,9 +613,9 @@
         
         if ($access_instance->valid) {
             echo("<h2>The access instance is valid!</h2>");
-            $st1 = microtime(TRUE);
+            $st1 = microtime(true);
             $test_item = $access_instance->generic_search(Array('tags' => Array(Array('Summerlin','Loma Linda','Trona')), 'name' => 'Boys 2 Men', 'location' => Array('longitude' => -115.2435726, 'latitude' => 36.1356661, 'radius' => 300.0)));
-            $fetchTime = sprintf('%01.3f', microtime(TRUE) - $st1);
+            $fetchTime = sprintf('%01.3f', microtime(true) - $st1);
             echo('<div class="inner_div">');
                 if ( isset($test_item) ) {
                     if (is_array($test_item)) {
@@ -648,9 +648,9 @@
         
         if ($access_instance->valid) {
             echo("<h2>The access instance is valid!</h2>");
-            $st1 = microtime(TRUE);
-            $test_item = $access_instance->generic_search(Array('tags' => Array(Array('Summerlin','Loma Linda','Trona')), 'name' => 'Boys 2 Men', 'location' => Array('longitude' => -115.2435726, 'latitude' => 36.1356661, 'radius' => 300.0)), TRUE);
-            $fetchTime = sprintf('%01.3f', microtime(TRUE) - $st1);
+            $st1 = microtime(true);
+            $test_item = $access_instance->generic_search(Array('tags' => Array(Array('Summerlin','Loma Linda','Trona')), 'name' => 'Boys 2 Men', 'location' => Array('longitude' => -115.2435726, 'latitude' => 36.1356661, 'radius' => 300.0)), true);
+            $fetchTime = sprintf('%01.3f', microtime(true) - $st1);
             echo('<div class="inner_div">');
                 if ( isset($test_item) ) {
                     if (is_array($test_item)) {
@@ -683,9 +683,9 @@
         
         if ($access_instance->valid) {
             echo("<h2>The access instance is valid!</h2>");
-            $st1 = microtime(TRUE);
+            $st1 = microtime(true);
             $test_item = $access_instance->generic_search(Array('owner' => 9, 'location' => Array('longitude' => -115.2435726, 'latitude' => 36.1356661, 'radius' => 300.0)));
-            $fetchTime = sprintf('%01.3f', microtime(TRUE) - $st1);
+            $fetchTime = sprintf('%01.3f', microtime(true) - $st1);
             echo('<div class="inner_div">');
                 if ( isset($test_item) ) {
                     if (is_array($test_item)) {
@@ -718,9 +718,9 @@
         
         if ($access_instance->valid) {
             echo("<h2>The access instance is valid!</h2>");
-            $st1 = microtime(TRUE);
+            $st1 = microtime(true);
             $test_item = $access_instance->generic_search(Array('owner' => Array(9, 242), 'location' => Array('longitude' => -115.2435726, 'latitude' => 36.1356661, 'radius' => 300.0)));
-            $fetchTime = sprintf('%01.3f', microtime(TRUE) - $st1);
+            $fetchTime = sprintf('%01.3f', microtime(true) - $st1);
             echo('<div class="inner_div">');
                 if ( isset($test_item) ) {
                     if (is_array($test_item)) {
@@ -753,9 +753,9 @@
         
         if ($access_instance->valid) {
             echo("<h2>The access instance is valid!</h2>");
-            $st1 = microtime(TRUE);
+            $st1 = microtime(true);
             $test_item = $access_instance->generic_search(Array('owner' => Array(9, 242), 'name' => 'Trona 12 Traditions', 'location' => Array('longitude' => -115.2435726, 'latitude' => 36.1356661, 'radius' => 300.0)));
-            $fetchTime = sprintf('%01.3f', microtime(TRUE) - $st1);
+            $fetchTime = sprintf('%01.3f', microtime(true) - $st1);
             echo('<div class="inner_div">');
                 if ( isset($test_item) ) {
                     if (is_array($test_item)) {
@@ -788,9 +788,9 @@
         
         if ($access_instance->valid) {
             echo("<h2>The access instance is valid!</h2>");
-            $st1 = microtime(TRUE);
-            $test_item = $access_instance->generic_search(Array('owner' => Array(9, 242), 'name' => 'Trona 12 Traditions', 'location' => Array('longitude' => -115.2435726, 'latitude' => 36.1356661, 'radius' => 300.0)), TRUE);
-            $fetchTime = sprintf('%01.3f', microtime(TRUE) - $st1);
+            $st1 = microtime(true);
+            $test_item = $access_instance->generic_search(Array('owner' => Array(9, 242), 'name' => 'Trona 12 Traditions', 'location' => Array('longitude' => -115.2435726, 'latitude' => 36.1356661, 'radius' => 300.0)), true);
+            $fetchTime = sprintf('%01.3f', microtime(true) - $st1);
             echo('<div class="inner_div">');
                 if ( isset($test_item) ) {
                     if (is_array($test_item)) {
@@ -823,9 +823,9 @@
         
         if ($access_instance->valid) {
             echo("<h2>The access instance is valid!</h2>");
-            $st1 = microtime(TRUE);
+            $st1 = microtime(true);
             $test_item = $access_instance->generic_search(Array('owner' => Array(9, 242), 'name' => 'Trona 12 Traditions'));
-            $fetchTime = sprintf('%01.3f', microtime(TRUE) - $st1);
+            $fetchTime = sprintf('%01.3f', microtime(true) - $st1);
             echo('<div class="inner_div">');
                 if ( isset($test_item) ) {
                     if (is_array($test_item)) {
@@ -858,9 +858,9 @@
         
         if ($access_instance->valid) {
             echo("<h2>The access instance is valid!</h2>");
-            $st1 = microtime(TRUE);
-            $test_item = $access_instance->generic_search(Array('owner' => Array(9, 242), 'name' => 'Trona 12 Traditions'), TRUE);
-            $fetchTime = sprintf('%01.3f', microtime(TRUE) - $st1);
+            $st1 = microtime(true);
+            $test_item = $access_instance->generic_search(Array('owner' => Array(9, 242), 'name' => 'Trona 12 Traditions'), true);
+            $fetchTime = sprintf('%01.3f', microtime(true) - $st1);
             echo('<div class="inner_div">');
                 if ( isset($test_item) ) {
                     if (is_array($test_item)) {
@@ -893,9 +893,9 @@
         
         if ($access_instance->valid) {
             echo("<h2>The access instance is valid!</h2>");
-            $st1 = microtime(TRUE);
+            $st1 = microtime(true);
             $test_item = $access_instance->generic_search(Array('name' => 'Just for Today'));
-            $fetchTime = sprintf('%01.3f', microtime(TRUE) - $st1);
+            $fetchTime = sprintf('%01.3f', microtime(true) - $st1);
             echo('<div class="inner_div">');
                 if ( isset($test_item) ) {
                     if (is_array($test_item)) {
@@ -928,9 +928,9 @@
         
         if ($access_instance->valid) {
             echo("<h2>The access instance is valid!</h2>");
-            $st1 = microtime(TRUE);
-            $test_item = $access_instance->generic_search(Array('name' => Array('Just for Today%', 'use_like' => TRUE)));
-            $fetchTime = sprintf('%01.3f', microtime(TRUE) - $st1);
+            $st1 = microtime(true);
+            $test_item = $access_instance->generic_search(Array('name' => Array('Just for Today%', 'use_like' => true)));
+            $fetchTime = sprintf('%01.3f', microtime(true) - $st1);
             echo('<div class="inner_div">');
                 if ( isset($test_item) ) {
                     if (is_array($test_item)) {
@@ -963,9 +963,9 @@
         
         if ($access_instance->valid) {
             echo("<h2>The access instance is valid!</h2>");
-            $st1 = microtime(TRUE);
+            $st1 = microtime(true);
             $test_item = $access_instance->generic_search(Array('tags' => Array('', 'nev')));
-            $fetchTime = sprintf('%01.3f', microtime(TRUE) - $st1);
+            $fetchTime = sprintf('%01.3f', microtime(true) - $st1);
             echo('<div class="inner_div">');
                 if ( isset($test_item) ) {
                     if (is_array($test_item)) {
@@ -998,9 +998,9 @@
         
         if ($access_instance->valid) {
             echo("<h2>The access instance is valid!</h2>");
-            $st1 = microtime(TRUE);
-            $test_item = $access_instance->generic_search(Array('tags' => Array(NULL, Array('nev%', 'use_like' => TRUE))));
-            $fetchTime = sprintf('%01.3f', microtime(TRUE) - $st1);
+            $st1 = microtime(true);
+            $test_item = $access_instance->generic_search(Array('tags' => Array(NULL, Array('nev%', 'use_like' => true))));
+            $fetchTime = sprintf('%01.3f', microtime(true) - $st1);
             echo('<div class="inner_div">');
                 if ( isset($test_item) ) {
                     if (is_array($test_item)) {
@@ -1033,9 +1033,9 @@
         
         if ($access_instance->valid) {
             echo("<h2>The access instance is valid!</h2>");
-            $st1 = microtime(TRUE);
-            $test_item = $access_instance->generic_search(Array('tags' => Array('', 'nev%', 'use_like' => TRUE)));
-            $fetchTime = sprintf('%01.3f', microtime(TRUE) - $st1);
+            $st1 = microtime(true);
+            $test_item = $access_instance->generic_search(Array('tags' => Array('', 'nev%', 'use_like' => true)));
+            $fetchTime = sprintf('%01.3f', microtime(true) - $st1);
             echo('<div class="inner_div">');
                 if ( isset($test_item) ) {
                     if (is_array($test_item)) {
@@ -1068,9 +1068,9 @@
         
         if ($access_instance->valid) {
             echo("<h2>The access instance is valid!</h2>");
-            $st1 = microtime(TRUE);
-            $test_item = $access_instance->generic_search(Array('name' => 'topic meet%', 'tags' => Array('', Array('nev%', 'use_like' => TRUE))));
-            $fetchTime = sprintf('%01.3f', microtime(TRUE) - $st1);
+            $st1 = microtime(true);
+            $test_item = $access_instance->generic_search(Array('name' => 'topic meet%', 'tags' => Array('', Array('nev%', 'use_like' => true))));
+            $fetchTime = sprintf('%01.3f', microtime(true) - $st1);
             echo('<div class="inner_div">');
                 if ( isset($test_item) ) {
                     if (is_array($test_item)) {
@@ -1103,9 +1103,9 @@
         
         if ($access_instance->valid) {
             echo("<h2>The access instance is valid!</h2>");
-            $st1 = microtime(TRUE);
-            $test_item = $access_instance->generic_search(Array('name' => 'topic meet%', 'tags' => Array('', 'nev%', 'use_like' => TRUE)));
-            $fetchTime = sprintf('%01.3f', microtime(TRUE) - $st1);
+            $st1 = microtime(true);
+            $test_item = $access_instance->generic_search(Array('name' => 'topic meet%', 'tags' => Array('', 'nev%', 'use_like' => true)));
+            $fetchTime = sprintf('%01.3f', microtime(true) - $st1);
             echo('<div class="inner_div">');
                 if ( isset($test_item) ) {
                     if (is_array($test_item)) {
@@ -1138,9 +1138,9 @@
         
         if ($access_instance->valid) {
             echo("<h2>The access instance is valid!</h2>");
-            $st1 = microtime(TRUE);
-            $test_item = $access_instance->generic_search(Array('name' => Array('topic meet%', 'use_like' => TRUE), 'tags' => Array('', 'nev%')));
-            $fetchTime = sprintf('%01.3f', microtime(TRUE) - $st1);
+            $st1 = microtime(true);
+            $test_item = $access_instance->generic_search(Array('name' => Array('topic meet%', 'use_like' => true), 'tags' => Array('', 'nev%')));
+            $fetchTime = sprintf('%01.3f', microtime(true) - $st1);
             echo('<div class="inner_div">');
                 if ( isset($test_item) ) {
                     if (is_array($test_item)) {
@@ -1173,9 +1173,9 @@
         
         if ($access_instance->valid) {
             echo("<h2>The access instance is valid!</h2>");
-            $st1 = microtime(TRUE);
-            $test_item = $access_instance->generic_search(Array('name' => Array('topic meet%', 'use_like' => TRUE), 'tags' => Array('', Array('nev%', 'use_like' => TRUE))));
-            $fetchTime = sprintf('%01.3f', microtime(TRUE) - $st1);
+            $st1 = microtime(true);
+            $test_item = $access_instance->generic_search(Array('name' => Array('topic meet%', 'use_like' => true), 'tags' => Array('', Array('nev%', 'use_like' => true))));
+            $fetchTime = sprintf('%01.3f', microtime(true) - $st1);
             echo('<div class="inner_div">');
                 if ( isset($test_item) ) {
                     if (is_array($test_item)) {
@@ -1208,9 +1208,9 @@
         
         if ($access_instance->valid) {
             echo("<h2>The access instance is valid!</h2>");
-            $st1 = microtime(TRUE);
-            $test_item = $access_instance->generic_search(NULL, FALSE, 50, 0);
-            $fetchTime = sprintf('%01.3f', microtime(TRUE) - $st1);
+            $st1 = microtime(true);
+            $test_item = $access_instance->generic_search(NULL, false, 50, 0);
+            $fetchTime = sprintf('%01.3f', microtime(true) - $st1);
             echo('<div class="inner_div">');
                 if ( isset($test_item) ) {
                     if (is_array($test_item)) {
@@ -1243,9 +1243,9 @@
         
         if ($access_instance->valid) {
             echo("<h2>The access instance is valid!</h2>");
-            $st1 = microtime(TRUE);
-            $test_item = $access_instance->generic_search(NULL, FALSE, 50, 3);
-            $fetchTime = sprintf('%01.3f', microtime(TRUE) - $st1);
+            $st1 = microtime(true);
+            $test_item = $access_instance->generic_search(NULL, false, 50, 3);
+            $fetchTime = sprintf('%01.3f', microtime(true) - $st1);
             echo('<div class="inner_div">');
                 if ( isset($test_item) ) {
                     if (is_array($test_item)) {
@@ -1278,9 +1278,9 @@
         
         if ($access_instance->valid) {
             echo("<h2>The access instance is valid!</h2>");
-            $st1 = microtime(TRUE);
-            $test_item = $access_instance->generic_search(NULL, FALSE, 1000, 1);
-            $fetchTime = sprintf('%01.3f', microtime(TRUE) - $st1);
+            $st1 = microtime(true);
+            $test_item = $access_instance->generic_search(NULL, false, 1000, 1);
+            $fetchTime = sprintf('%01.3f', microtime(true) - $st1);
             echo('<div class="inner_div">');
                 if ( isset($test_item) ) {
                     if (is_array($test_item)) {
@@ -1315,31 +1315,31 @@
             echo("<h2>The access instance is valid!</h2>");
             echo("<p class=\"explain\">First, do the exact same test as the last one we ran (Test 64).</p>");
             echo("<p class=\"explain\">This time, we just count. We expect 999 meetings (the last page of the large page test).</p>");
-            $st1 = microtime(TRUE);
-            $test_item = $access_instance->generic_search(NULL, FALSE, 1000, 1, FALSE, TRUE);
-            $fetchTime = sprintf('%01.3f', microtime(TRUE) - $st1);
+            $st1 = microtime(true);
+            $test_item = $access_instance->generic_search(NULL, false, 1000, 1, false, true);
+            $fetchTime = sprintf('%01.3f', microtime(true) - $st1);
             echo('<div class="inner_div">');
                 echo("<h4>RESULT: $test_item (This took $fetchTime seconds)</h4>");
             echo('</div>');
             echo("<p class=\"explain\">Now, do the exact same test, but this time for the first page (1000):</p>");
-            $st1 = microtime(TRUE);
-            $test_item = $access_instance->generic_search(NULL, FALSE, 1000, 0, FALSE, TRUE);
-            $fetchTime = sprintf('%01.3f', microtime(TRUE) - $st1);
+            $st1 = microtime(true);
+            $test_item = $access_instance->generic_search(NULL, false, 1000, 0, false, true);
+            $fetchTime = sprintf('%01.3f', microtime(true) - $st1);
             echo('<div class="inner_div">');
                 echo("<h4>RESULT: $test_item (This took $fetchTime seconds)</h4>");
             echo('</div>');
             echo("<p class=\"explain\">Next, we look for records with an owner of \"9\". We expect 9 as a result:</p>");
-            $st1 = microtime(TRUE);
-            $test_item = $access_instance->generic_search(Array('owner' => 9), FALSE, 0, 0, FALSE, TRUE);
-            $fetchTime = sprintf('%01.3f', microtime(TRUE) - $st1);
+            $st1 = microtime(true);
+            $test_item = $access_instance->generic_search(Array('owner' => 9), false, 0, 0, false, true);
+            $fetchTime = sprintf('%01.3f', microtime(true) - $st1);
             echo('<div class="inner_div">');
                 echo("<h4>RESULT: $test_item (This took $fetchTime seconds)</h4>");
             echo('</div>');
             echo("<p class=\"explain\">Now we do a location-based search, starting in Las Vegas, and looking for meetings with owners of 9 or 242.</p>");
             echo("<p class=\"explain\">We expect a result of 26:</p>");
-            $st1 = microtime(TRUE);
-            $test_item = $access_instance->generic_search(Array('owner' => Array(9, 242), 'location' => Array('longitude' => -115.2435726, 'latitude' => 36.1356661, 'radius' => 300.0)), TRUE, 0, 0, FALSE, TRUE);
-            $fetchTime = sprintf('%01.3f', microtime(TRUE) - $st1);
+            $st1 = microtime(true);
+            $test_item = $access_instance->generic_search(Array('owner' => Array(9, 242), 'location' => Array('longitude' => -115.2435726, 'latitude' => 36.1356661, 'radius' => 300.0)), true, 0, 0, false, true);
+            $fetchTime = sprintf('%01.3f', microtime(true) - $st1);
             echo('<div class="inner_div">');
                 echo("<h4>RESULT: $test_item (This took $fetchTime seconds)</h4>");
             echo('</div>');
@@ -1363,9 +1363,9 @@
         if ($access_instance->valid) {
             echo("<h2>The access instance is valid!</h2>");
             echo("<p class=\"explain\">Get that second page.</p>");
-            $st1 = microtime(TRUE);
-            $test_item = $access_instance->generic_search(NULL, FALSE, 1000, 1, FALSE, FALSE, TRUE);
-            $fetchTime = sprintf('%01.3f', microtime(TRUE) - $st1);
+            $st1 = microtime(true);
+            $test_item = $access_instance->generic_search(NULL, false, 1000, 1, false, false, true);
+            $fetchTime = sprintf('%01.3f', microtime(true) - $st1);
             if (isset($test_item) && is_array($test_item) && count($test_item)) {
                 echo('<div class="inner_div">');
                     echo("<h4>RESULT (This took $fetchTime seconds):</h4><div style=\"font-family: Courier, Monospace\"><div>");
@@ -1381,9 +1381,9 @@
                 echo('</div></div></div>');
             }
             echo("<p class=\"explain\">Get that first page.</p>");
-            $st1 = microtime(TRUE);
-            $test_item = $access_instance->generic_search(NULL, FALSE, 1000, 0, FALSE, FALSE, TRUE);
-            $fetchTime = sprintf('%01.3f', microtime(TRUE) - $st1);
+            $st1 = microtime(true);
+            $test_item = $access_instance->generic_search(NULL, false, 1000, 0, false, false, true);
+            $fetchTime = sprintf('%01.3f', microtime(true) - $st1);
             if (isset($test_item) && is_array($test_item) && count($test_item)) {
                 echo('<div class="inner_div">');
                     echo("<h4>RESULT (This took $fetchTime seconds):</h4><div style=\"font-family: Courier, Monospace\"><div>");
@@ -1399,9 +1399,9 @@
                 echo('</div></div></div>');
             }
             echo("<p class=\"explain\">Next, we look for records with an owner of \"9\":</p>");
-            $st1 = microtime(TRUE);
-            $test_item = $access_instance->generic_search(Array('owner' => 9), FALSE, 0, 0, FALSE, FALSE, TRUE);
-            $fetchTime = sprintf('%01.3f', microtime(TRUE) - $st1);
+            $st1 = microtime(true);
+            $test_item = $access_instance->generic_search(Array('owner' => 9), false, 0, 0, false, false, true);
+            $fetchTime = sprintf('%01.3f', microtime(true) - $st1);
             if (isset($test_item) && is_array($test_item) && count($test_item)) {
                 echo('<div class="inner_div">');
                     echo("<h4>RESULT (This took $fetchTime seconds):</h4><div style=\"font-family: Courier, Monospace\"><div>");
@@ -1417,9 +1417,9 @@
                 echo('</div></div></div>');
             }
             echo("<p class=\"explain\">Now we do a location-based search, starting in Las Vegas, and looking for meetings with owners of 9 or 242.</p>");
-            $st1 = microtime(TRUE);
-            $test_item = $access_instance->generic_search(Array('owner' => Array(9, 242), 'location' => Array('longitude' => -115.2435726, 'latitude' => 36.1356661, 'radius' => 300.0)), TRUE, 0, 0, FALSE, FALSE, TRUE);
-            $fetchTime = sprintf('%01.3f', microtime(TRUE) - $st1);
+            $st1 = microtime(true);
+            $test_item = $access_instance->generic_search(Array('owner' => Array(9, 242), 'location' => Array('longitude' => -115.2435726, 'latitude' => 36.1356661, 'radius' => 300.0)), true, 0, 0, false, false, true);
+            $fetchTime = sprintf('%01.3f', microtime(true) - $st1);
             if (isset($test_item) && is_array($test_item) && count($test_item)) {
                 echo('<div class="inner_div">');
                     echo("<h4>RESULT (This took $fetchTime seconds):</h4><div style=\"font-family: Courier, Monospace\"><div>");
@@ -1453,7 +1453,7 @@
         $god_access_instance = new CO_Access('admin', '', CO_Config::god_mode_password());
         
         if ($god_access_instance->valid) {
-            $setup_list = $god_access_instance->generic_search(Array('access_class' => 'CO_LL_Location'), FALSE, 50, 1);
+            $setup_list = $god_access_instance->generic_search(Array('access_class' => 'CO_LL_Location'), false, 50, 1);
             if (isset($setup_list) && is_array($setup_list) && count($setup_list)) {
                 array_walk($setup_list, function($item, $index) {
                     if (isset($item) && $item && ($item instanceof CO_LL_Location)) {
@@ -1474,7 +1474,7 @@
             $mensch_access_instance = new CO_Access();
         
             if ($mensch_access_instance->valid) {
-                $check_list = $mensch_access_instance->generic_search(Array('access_class' => 'CO_LL_Location'), FALSE, 50, 1);
+                $check_list = $mensch_access_instance->generic_search(Array('access_class' => 'CO_LL_Location'), false, 50, 1);
                 if (isset($check_list) && is_array($check_list) && count($check_list)) {
                     array_walk($check_list, function($item, $index) {
                         if (isset($item) && $item && ($item instanceof CO_LL_Location)) {
@@ -1490,7 +1490,7 @@
             $mensch_access_instance2 = new CO_Access('tertiary', '', 'CoreysGoryStory');
     
             if ($mensch_access_instance2->valid) {
-                $check_list2 = $mensch_access_instance2->generic_search(Array('access_class' => 'CO_LL_Location'), FALSE, 50, 1);
+                $check_list2 = $mensch_access_instance2->generic_search(Array('access_class' => 'CO_LL_Location'), false, 50, 1);
                 if (isset($check_list2) && is_array($check_list2) && count($check_list2)) {
                     array_walk($check_list2, function($item, $index) {
                         if (isset($item) && $item && ($item instanceof CO_LL_Location)) {
@@ -1502,7 +1502,7 @@
                 }
             }
             
-            $setup_list2 = $god_access_instance->generic_search(Array('access_class' => 'CO_LL_Location'), FALSE, 50, 1);
+            $setup_list2 = $god_access_instance->generic_search(Array('access_class' => 'CO_LL_Location'), false, 50, 1);
             if (isset($setup_list2) && is_array($setup_list2) && count($setup_list2)) {
                 array_walk($setup_list2, function($item, $index) {
                     if (isset($item) && $item && ($item instanceof CO_LL_Location)) {
@@ -1517,7 +1517,7 @@
                 $mensch_access_instance3 = new CO_Access('tertiary', '', 'CoreysGoryStory');
         
                 if ($mensch_access_instance3->valid) {
-                    $check_list3 = $mensch_access_instance3->generic_search(Array('access_class' => 'CO_LL_Location'), FALSE, 50, 1);
+                    $check_list3 = $mensch_access_instance3->generic_search(Array('access_class' => 'CO_LL_Location'), false, 50, 1);
                     if (isset($check_list3) && is_array($check_list3) && count($check_list3)) {
                         array_walk($check_list3, function($item, $index) {
                             if (isset($item) && $item && ($item instanceof CO_LL_Location)) {

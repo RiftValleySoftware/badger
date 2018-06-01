@@ -90,8 +90,8 @@ class CO_Main_Data_DB extends A_CO_DB {
     protected function _location_predicate( $in_longitude,          ///< The search center longitude, in degrees.
                                             $in_latitude,           ///< The search center latitude, in degrees.
                                             $in_radius_in_km,       ///< The search radius, in Kilometers.
-                                            $and_writeable = FALSE, ///< If TRUE, then we only want records we can modify.
-                                            $count_only = FALSE     ///< If TRUE (default is FALSE), then only a single integer will be returned, with the count of items that fit the search.
+                                            $and_writeable = false, ///< If true, then we only want records we can modify.
+                                            $count_only = false     ///< If true (default is false), then only a single integer will be returned, with the count of items that fit the search.
                                             ) {
         $ret = Array('sql' => '', 'params' => Array());
         
@@ -138,10 +138,10 @@ class CO_Main_Data_DB extends A_CO_DB {
                                     ) {
         $ret = Array('sql' => '', 'params' => Array());
         if (isset($in_value) && is_array($in_value) && count($in_value)) {
-            $use_like = FALSE;
+            $use_like = false;
             
             if (isset($in_value['use_like'])) {
-                $use_like = TRUE;
+                $use_like = true;
                 unset($in_value['use_like']);
             }
             
@@ -156,7 +156,7 @@ class CO_Main_Data_DB extends A_CO_DB {
                         $use_like_old = $use_like;
                         
                         if (isset($value['use_like'])) {
-                            $use_like = TRUE;
+                            $use_like = true;
                             unset($value['use_like']);
                         }
                         
@@ -168,7 +168,7 @@ class CO_Main_Data_DB extends A_CO_DB {
                                 if ('' == $val) {
                                     $inner_array[] = '((tag'.intval($i).' IS NULL) OR (tag'.intval($i).'=\'\'))';
                                 } else {
-                                    $like_me = (FALSE !== strpos($val, '%')) && $use_like;
+                                    $like_me = (false !== strpos($val, '%')) && $use_like;
                                 
                                     $inner_array[] = 'LOWER(tag'.intval($i).')'.($like_me ? ' LIKE ' : '=').'LOWER(?)';
                                     array_push($ret['params'], $val);
@@ -190,7 +190,7 @@ class CO_Main_Data_DB extends A_CO_DB {
                             if ('' == $value) {
                                 $sql_temp[$i] = '((tag'.intval($i).' IS NULL) OR (tag'.intval($i).'=\'\'))';
                             } else {
-                                $like_me = (FALSE !== strpos($value, '%')) && $use_like;
+                                $like_me = (false !== strpos($value, '%')) && $use_like;
                                 
                                 $sql_temp[$i] = 'LOWER(tag'.intval($i).')'.($like_me ? ' LIKE ' : '=').'LOWER(?)';
                                 array_push($ret['params'], strval($value));
@@ -220,7 +220,7 @@ class CO_Main_Data_DB extends A_CO_DB {
                 if ('' == $in_value) {
                     $ret['sql'] = '((tag0 IS NULL) OR (tag0=\'\'))';
                 } else {
-                    $like_me = (FALSE !== strpos($in_value, '%')) && $use_like;
+                    $like_me = (false !== strpos($in_value, '%')) && $use_like;
                     
                     $ret['sql'] = '(LOWER(tag0)'.($like_me ? ' LIKE ' : '=').'LOWER(?))';
                     array_push($ret['params'], strval($value));
@@ -275,10 +275,10 @@ class CO_Main_Data_DB extends A_CO_DB {
         $ret = Array('sql' => '', 'params' => Array());
         
         if (isset($in_value) && is_array($in_value) && count($in_value)) {
-            $use_like = FALSE;
+            $use_like = false;
             
             if (isset($in_value['use_like'])) {
-                $use_like = TRUE;
+                $use_like = true;
                 unset($in_value['use_like']);
             }
             
@@ -319,7 +319,7 @@ class CO_Main_Data_DB extends A_CO_DB {
                                                                                 - 'tags'
                                                                                     This should be accompanied by an array (up to 10 elements) of one or more case-insensitive strings, representing specific tag values.
                                                                             */
-                                            $or_search = FALSE              ///< If TRUE, then the search is very wide (OR), as opposed to narrow (AND), by default. If you specify a location, then that will always be AND, but the other fields can be OR.
+                                            $or_search = false              ///< If true, then the search is very wide (OR), as opposed to narrow (AND), by default. If you specify a location, then that will always be AND, but the other fields can be OR.
                                         ) {
         $ret = Array('sql' => '', 'params' => Array());
         
@@ -399,17 +399,17 @@ class CO_Main_Data_DB extends A_CO_DB {
                                                                                         - 'radius'
                                                                                             This is the search radius, in Kilometers.
                                                                             */
-                                            $or_search = FALSE,             ///< If TRUE, then the search is very wide (OR), as opposed to narrow (AND), by default. If you specify a location, then that will always be AND, but the other fields can be OR.
+                                            $or_search = false,             ///< If true, then the search is very wide (OR), as opposed to narrow (AND), by default. If you specify a location, then that will always be AND, but the other fields can be OR.
                                             $page_size = 0,                 ///< If specified with a 1-based integer, this denotes the size of a "page" of results. NOTE: This is only applicable to MySQL or Postgres, and will be ignored if the DB is not MySQL or Postgres.
                                             $initial_page = 0,              ///< This is ignored unless $page_size is greater than 0. If so, then this 0-based index will specify which page of results to return.
-                                            $and_writeable = FALSE,         ///< If TRUE, then we only want records we can modify.
-                                            $count_only = FALSE,            ///< If TRUE (default is FALSE), then only a single integer will be returned, with the count of items that fit the search.
-                                            $ids_only = FALSE               ///< If TRUE (default is FALSE), then the return array will consist only of integers (the object IDs). If $count_only is TRUE, this is ignored.
+                                            $and_writeable = false,         ///< If true, then we only want records we can modify.
+                                            $count_only = false,            ///< If true (default is false), then only a single integer will be returned, with the count of items that fit the search.
+                                            $ids_only = false               ///< If true (default is false), then the return array will consist only of integers (the object IDs). If $count_only is true, this is ignored.
                                         ) {
         $ret = Array('sql' => '', 'params' => Array());
         
         $closure = '';
-        $location_search = FALSE;
+        $location_search = false;
         $link = '';
         
         // If we are doing a location/radius search, the predicate is a lot more complicated.
@@ -419,7 +419,7 @@ class CO_Main_Data_DB extends A_CO_DB {
             $sql = $predicate_temp['sql'];
             $ret['params'] = $predicate_temp['params'];
             $closure = $count_only ? ')' : ') ORDER BY distance,id';
-            $location_search = TRUE;
+            $location_search = true;
             $link = ' AND ';
         } else {
             $predicate = $this->_create_security_predicate($and_writeable);
@@ -494,7 +494,7 @@ class CO_Main_Data_DB extends A_CO_DB {
     
     This deliberately does not pass security vetting, so we're careful. It's meant to be used by collection classes for garbage collection.
     
-    \returns TRUE, if an item exists for the given ID.
+    \returns true, if an item exists for the given ID.
      */
     public function item_exists(    $in_id    ///< The ID of the item.
                                 ) {
@@ -505,7 +505,7 @@ class CO_Main_Data_DB extends A_CO_DB {
 
         $temp = $this->execute_query($sql, Array());
         if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
-            $ret = TRUE;
+            $ret = true;
         }
         
         return $ret;
@@ -517,7 +517,7 @@ class CO_Main_Data_DB extends A_CO_DB {
     
     This deliberately does not pass security vetting, so we're careful.
     
-    \returns TRUE, if a user exists for the given login ID.
+    \returns true, if a user exists for the given login ID.
      */
     public function see_if_user_exists( $in_login_id    ///< The login ID of the user.
                                     ) {
@@ -531,7 +531,7 @@ class CO_Main_Data_DB extends A_CO_DB {
             // We instantiate, as opposed to check the access_class, because we want to give the implementation the option of subclassing.
             $result = $this->_instantiate_record($temp[0]);
             if ($result instanceof CO_User_Collection) {    // This will crash if we aren't looking at it from a CHAMELEON (at least) level. That's good.
-                $ret = TRUE;
+                $ret = true;
             }
         }
         
@@ -573,12 +573,12 @@ class CO_Main_Data_DB extends A_CO_DB {
                                                                         If you have 'use_like', and put just a single wildcard in quotes ('%'), then you are saying "not-empty."
                                                                         NOTE: Although this is an optional parameter, failing to provide anything could return the entire readable database.
                                                                     */
-                                    $or_search = FALSE,             ///< If TRUE, then the search is very wide (OR), as opposed to narrow (AND), by default. If you specify a location, then that will always be AND, but the other fields can be OR.
+                                    $or_search = false,             ///< If true, then the search is very wide (OR), as opposed to narrow (AND), by default. If you specify a location, then that will always be AND, but the other fields can be OR.
                                     $page_size = 0,                 ///< If specified with a 1-based integer, this denotes the size of a "page" of results. NOTE: This is only applicable to MySQL or Postgres, and will be ignored if the DB is not MySQL or Postgres.
                                     $initial_page = 0,              ///< This is ignored unless $page_size is greater than 0. If so, then this 0-based index will specify which page of results to return.
-                                    $and_writeable = FALSE,         ///< If TRUE, then we only want records we can modify.
-                                    $count_only = FALSE,            ///< If TRUE (default is FALSE), then only a single integer will be returned, with the count of items that fit the search.
-                                    $ids_only = FALSE               ///< If TRUE (default is FALSE), then the return array will consist only of integers (the object IDs). If $count_only is TRUE, this is ignored.
+                                    $and_writeable = false,         ///< If true, then we only want records we can modify.
+                                    $count_only = false,            ///< If true (default is false), then only a single integer will be returned, with the count of items that fit the search.
+                                    $ids_only = false               ///< If true (default is false), then the return array will consist only of integers (the object IDs). If $count_only is true, this is ignored.
                                     ) {
         $ret = NULL;
         
@@ -588,8 +588,8 @@ class CO_Main_Data_DB extends A_CO_DB {
         $location_search = (isset($in_search_parameters['location']) && isset($in_search_parameters['location']['longitude']) && isset($in_search_parameters['location']['latitude']) && isset($in_search_parameters['location']['radius']));
         
         if ($location_search) { // We're forced to use the regular search for count-only and IDs location, as we need that Vincenty filter.
-            $count_only = FALSE;
-            $ids_only = FALSE;
+            $count_only = false;
+            $ids_only = false;
         }
         
         $sql_and_params = $this->_build_sql_query($in_search_parameters, $or_search, $page_size, $initial_page, $and_writeable, $count_only, $ids_only);

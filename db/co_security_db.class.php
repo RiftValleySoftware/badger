@@ -135,7 +135,7 @@ class CO_Security_DB extends A_CO_DB {
     \returns a single, newly-instantiated object.
      */
     public function get_single_record_by_login_id(  $in_login_id,       ///< The login ID of the requested login object.
-                                                    $and_write = FALSE  ///< If this is TRUE, then we need the item to be modifiable.
+                                                    $and_write = false  ///< If this is true, then we need the item to be modifiable.
                                                     ) {
         $ret = NULL;
         
@@ -155,7 +155,7 @@ class CO_Security_DB extends A_CO_DB {
     \returns an array of newly-instantiated objects.
      */
     public function get_multiple_records_by_login_id(   $in_login_id_array,
-                                                        $and_write = FALSE
+                                                        $and_write = false
                                                     ) {
         $ret = NULL;
         
@@ -217,7 +217,7 @@ class CO_Security_DB extends A_CO_DB {
     
     \returns an array of instances.
      */
-    public function get_all_login_objects ( $and_write = FALSE  ///< If TRUE, then we only want ones we have write access to.
+    public function get_all_login_objects ( $and_write = false  ///< If true, then we only want ones we have write access to.
                                             ) {
         $ret = Array();
         
@@ -263,7 +263,7 @@ class CO_Security_DB extends A_CO_DB {
     \returns an array of instances.
      */
     public function get_all_login_objects_with_access(  $in_security_token, ///< An integer, with the requested security token.
-                                                        $and_write = FALSE  ///< If TRUE, then we only want ones we have write access to.
+                                                        $and_write = false  ///< If true, then we only want ones we have write access to.
                                                         ) {
         $ret = Array();
         
@@ -297,10 +297,10 @@ class CO_Security_DB extends A_CO_DB {
                         }
                     }
                     
-                    $found = FALSE;
+                    $found = false;
                     foreach ($id_array as $test_id) {
                         if ($test_id == $in_security_token) {
-                            $found = TRUE;
+                            $found = true;
                             break;
                         }
                     }

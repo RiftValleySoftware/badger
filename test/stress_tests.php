@@ -33,9 +33,9 @@
                         <p class="explain">We expect this to return many items.</p>
                         </div>
                         <?php
-                        $start = microtime(TRUE);
+                        $start = microtime(true);
                         try_get_all_readable_items_stress();
-                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
                 echo('<div id="test-023" class="inner_closed">');
@@ -48,9 +48,9 @@
                         <p class="explain">We expect this to return no items.</p>
                         </div>
                         <?php
-                        $start = microtime(TRUE);
+                        $start = microtime(true);
                         try_get_all_writeable_items_stress();
-                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
                 echo('<div id="test-024" class="inner_closed">');
@@ -63,9 +63,9 @@
                         <p class="explain">We expect this to return many items.</p>
                         </div>
                         <?php
-                        $start = microtime(TRUE);
+                        $start = microtime(true);
                         try_get_all_readable_items_stress('secondary', '', 'CoreysGoryStory');
-                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
                 echo('<div id="test-025" class="inner_closed">');
@@ -78,9 +78,9 @@
                         <p class="explain">We expect this to return many items.</p>
                         </div>
                         <?php
-                        $start = microtime(TRUE);
+                        $start = microtime(true);
                         try_get_all_writeable_items_stress('secondary', '', 'CoreysGoryStory');
-                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
                 echo('<div id="test-026" class="inner_closed">');
@@ -93,9 +93,9 @@
                         </div>
                         <?php
                         echo("<h4>Log In With God Mode</h4>");
-                        $start = microtime(TRUE);
+                        $start = microtime(true);
                         just_randomize_writes('admin', '', CO_Config::god_mode_password());
-                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
                 echo('<div id="test-027" class="inner_closed">');
@@ -108,9 +108,9 @@
                         </div>
                         <?php
                         echo("<h4>Log In With Secondary</h4>");
-                        $start = microtime(TRUE);
+                        $start = microtime(true);
                         just_randomize_writes('secondary', '', 'CoreysGoryStory');
-                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
                 echo('<div id="test-028" class="inner_closed">');
@@ -123,9 +123,9 @@
                         </div>
                         <?php
                         echo("<h4>Log In With Tertiary</h4>");
-                        $start = microtime(TRUE);
+                        $start = microtime(true);
                         just_randomize_writes('tertiary', '', 'CoreysGoryStory');
-                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
                 echo('<div id="test-029" class="inner_closed">');
@@ -138,9 +138,9 @@
                         </div>
                         <?php
                         echo("<h4>Log In With BillyBob</h4>");
-                        $start = microtime(TRUE);
+                        $start = microtime(true);
                         just_randomize_writes('billybob', '', 'CoreysGoryStory');
-                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
                 echo('<div id="test-030" class="inner_closed">');
@@ -153,9 +153,9 @@
                         <p class="explain">We expect this to return many items, but fewer than the first time.</p>
                         </div>
                         <?php
-                        $start = microtime(TRUE);
+                        $start = microtime(true);
                         try_get_all_readable_items_stress();
-                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
             echo('</div>');
@@ -172,9 +172,9 @@
                         <p class="explain"></p>
                         </div>
                         <?php
-                        $start = microtime(TRUE);
+                        $start = microtime(true);
                         try_custom_query_1();
-                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
                 echo('<div id="test-032" class="inner_closed">');
@@ -187,9 +187,9 @@
                         <p class="explain">We expect this test to succeed with about 70 elements.</p>
                         </div>
                         <?php
-                        $start = microtime(TRUE);
+                        $start = microtime(true);
                         try_custom_query_2();
-                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
                 echo('<div id="test-033" class="inner_closed">');
@@ -202,9 +202,9 @@
                         <p class="explain">We expect this test to succeed with about 90 elements.</p>
                         </div>
                         <?php
-                        $start = microtime(TRUE);
+                        $start = microtime(true);
                         try_custom_query_2('billybob', '', 'CoreysGoryStory');
-                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
                 echo('<div id="test-034" class="inner_closed">');
@@ -217,9 +217,9 @@
                         <p class="explain">We expect this test to succeed with results from all over. "Back to Basics" is a very common NA meeting name.</p>
                         </div>
                         <?php
-                        $start = microtime(TRUE);
+                        $start = microtime(true);
                         try_custom_query_3('billybob', '', 'CoreysGoryStory');
-                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
                 echo('<div id="test-035" class="inner_closed">');
@@ -232,9 +232,9 @@
                         <p class="explain">We expect this test to succeed.</p>
                         </div>
                         <?php
-                        $start = microtime(TRUE);
+                        $start = microtime(true);
                         try_custom_query_4();
-                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
                 echo('<div id="test-036" class="inner_closed">');
@@ -247,9 +247,9 @@
                         <p class="explain">We expect this test to succeed.</p>
                         </div>
                         <?php
-                        $start = microtime(TRUE);
+                        $start = microtime(true);
                         try_custom_query_4('billybob', '', 'CoreysGoryStory');
-                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
                 echo('<div id="test-037" class="inner_closed">');
@@ -262,9 +262,9 @@
                         <p class="explain">We expect this test to succeed.</p>
                         </div>
                         <?php
-                        $start = microtime(TRUE);
+                        $start = microtime(true);
                         try_custom_query_5('billybob', '', 'CoreysGoryStory');
-                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
                 echo('<div id="test-038" class="inner_closed">');
@@ -277,9 +277,9 @@
                         <p class="explain">We expect this test to succeed.</p>
                         </div>
                         <?php
-                        $start = microtime(TRUE);
+                        $start = microtime(true);
                         try_custom_query_6('billybob', '', 'CoreysGoryStory');
-                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
                 echo('<div id="test-039" class="inner_closed">');
@@ -292,9 +292,9 @@
                         <p class="explain">We expect this test to succeed, but we should never get ID "1".</p>
                         </div>
                         <?php
-                        $start = microtime(TRUE);
+                        $start = microtime(true);
                         try_custom_query_7('billybob', '', 'CoreysGoryStory');
-                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
                 echo('<div id="test-040" class="inner_closed">');
@@ -307,9 +307,9 @@
                         <p class="explain">We expect this test to succeed, but we should never get ID "1".</p>
                         </div>
                         <?php
-                        $start = microtime(TRUE);
+                        $start = microtime(true);
                         try_custom_query_8('billybob', '', 'CoreysGoryStory');
-                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
             echo('</div>');
@@ -330,9 +330,9 @@
         
         if ($access_instance->valid) {
             echo("<h2>The access instance is valid!</h2>");
-            $st1 = microtime(TRUE);
+            $st1 = microtime(true);
             $test_item = $access_instance->generic_search(Array('access_class' => 'CO_LL_Location'));
-            $fetchTime = sprintf('%01.3f', microtime(TRUE) - $st1);
+            $fetchTime = sprintf('%01.3f', microtime(true) - $st1);
             echo('<div class="inner_div">');
                 if ( isset($test_item) ) {
                     if (is_array($test_item)) {
@@ -365,9 +365,9 @@
         
         if ($access_instance->valid) {
             echo("<h2>The access instance is valid!</h2>");
-            $st1 = microtime(TRUE);
+            $st1 = microtime(true);
             $test_item = $access_instance->generic_search(Array('tags' => Array(NULL, NULL, NULL, NULL, NULL, 'HI')));
-            $fetchTime = sprintf('%01.3f', microtime(TRUE) - $st1);
+            $fetchTime = sprintf('%01.3f', microtime(true) - $st1);
             echo('<div class="inner_div">');
                 if ( isset($test_item) ) {
                     if (is_array($test_item)) {
@@ -400,9 +400,9 @@
         
         if ($access_instance->valid) {
             echo("<h2>The access instance is valid!</h2>");
-            $st1 = microtime(TRUE);
+            $st1 = microtime(true);
             $test_item = $access_instance->generic_search(Array('name' => 'Back to Basics'));
-            $fetchTime = sprintf('%01.3f', microtime(TRUE) - $st1);
+            $fetchTime = sprintf('%01.3f', microtime(true) - $st1);
             echo('<div class="inner_div">');
                 if ( isset($test_item) ) {
                     if (is_array($test_item)) {
@@ -435,9 +435,9 @@
         
         if ($access_instance->valid) {
             echo("<h2>The access instance is valid!</h2>");
-            $st1 = microtime(TRUE);
+            $st1 = microtime(true);
             $test_item = $access_instance->generic_search(Array('location' => Array('longitude' => -95.3698, 'latitude' => 29.7604, 'radius' => 100.0)));
-            $fetchTime = sprintf('%01.3f', microtime(TRUE) - $st1);
+            $fetchTime = sprintf('%01.3f', microtime(true) - $st1);
             echo('<div class="inner_div">');
                 if ( isset($test_item) ) {
                     if (is_array($test_item)) {
@@ -470,9 +470,9 @@
         
         if ($access_instance->valid) {
             echo("<h2>The access instance is valid!</h2>");
-            $st1 = microtime(TRUE);
+            $st1 = microtime(true);
             $test_item = $access_instance->generic_search(Array('name' => Array('back to basics', 'just for today', 'free at last')));
-            $fetchTime = sprintf('%01.3f', microtime(TRUE) - $st1);
+            $fetchTime = sprintf('%01.3f', microtime(true) - $st1);
             echo('<div class="inner_div">');
                 if ( isset($test_item) ) {
                     if (is_array($test_item)) {
@@ -505,9 +505,9 @@
         
         if ($access_instance->valid) {
             echo("<h2>The access instance is valid!</h2>");
-            $st1 = microtime(TRUE);
+            $st1 = microtime(true);
             $test_item = $access_instance->generic_search(Array('tags' => Array(NULL, NULL, NULL, NULL, NULL, Array('HI','KS','TN'))));
-            $fetchTime = sprintf('%01.3f', microtime(TRUE) - $st1);
+            $fetchTime = sprintf('%01.3f', microtime(true) - $st1);
             echo('<div class="inner_div">');
                 if ( isset($test_item) ) {
                     if (is_array($test_item)) {
@@ -540,9 +540,9 @@
         
         if ($access_instance->valid) {
             echo("<h2>The access instance is valid!</h2>");
-            $st1 = microtime(TRUE);
+            $st1 = microtime(true);
             $test_item = $access_instance->generic_search(Array('id' => Array(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31)));
-            $fetchTime = sprintf('%01.3f', microtime(TRUE) - $st1);
+            $fetchTime = sprintf('%01.3f', microtime(true) - $st1);
             echo('<div class="inner_div">');
                 if ( isset($test_item) ) {
                     if (is_array($test_item)) {
@@ -575,9 +575,9 @@
         
         if ($access_instance->valid) {
             echo("<h2>The access instance is valid!</h2>");
-            $st1 = microtime(TRUE);
+            $st1 = microtime(true);
             $test_item = $access_instance->generic_search(Array('id' => Array(1,2056,32,4789,599,6542,7,8,9,10000,11432,121,13,4,156,16,17,18,19,20210,21,22,2376,2,254,26,26,26,276,28,229,300000,341)));
-            $fetchTime = sprintf('%01.3f', microtime(TRUE) - $st1);
+            $fetchTime = sprintf('%01.3f', microtime(true) - $st1);
             echo('<div class="inner_div">');
                 if ( isset($test_item) ) {
                     if (is_array($test_item)) {
@@ -610,9 +610,9 @@
         
         if ($access_instance->valid) {
             echo("<h2>The access instance is valid!</h2>");
-            $st1 = microtime(TRUE);
-            $test_item = $access_instance->get_all_data_readable_records(TRUE);
-            $fetchTime = sprintf('%01.3f', microtime(TRUE) - $st1);
+            $st1 = microtime(true);
+            $test_item = $access_instance->get_all_data_readable_records(true);
+            $fetchTime = sprintf('%01.3f', microtime(true) - $st1);
             
             echo('<div class="inner_div">');
                 echo("<h4>Get All Writable Main Database Items</h4>");
@@ -685,10 +685,10 @@
         
         if ($access_instance->valid) {
             echo("<h2>The access instance is valid!</h2>");
-            $st1 = microtime(TRUE);
+            $st1 = microtime(true);
             $test_item = $access_instance->get_all_data_readable_records();
 
-            $fetchTime = sprintf('%01.3f', microtime(TRUE) - $st1);
+            $fetchTime = sprintf('%01.3f', microtime(true) - $st1);
         
             echo('<div class="inner_div">');
                 echo("<h4>Get All Readable Main Database Items</h4>");
@@ -729,9 +729,9 @@
         
         if ($access_instance->valid) {
             echo("<h2>The access instance is valid!</h2>");
-            $st1 = microtime(TRUE);
+            $st1 = microtime(true);
             $test_item = $access_instance->get_all_data_writeable_records();
-            $fetchTime = sprintf('%01.3f', microtime(TRUE) - $st1);
+            $fetchTime = sprintf('%01.3f', microtime(true) - $st1);
         
             echo('<div class="inner_div">');
                 echo("<h4>Get All Writeable Main Database Items</h4>");

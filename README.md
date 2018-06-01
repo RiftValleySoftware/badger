@@ -1,4 +1,6 @@
-![BADGER](images/icon.png)
+[]: # \page BADGER BADGER
+
+![BADGER](images/BADGER.png)
 
 BADGER
 ======

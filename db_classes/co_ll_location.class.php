@@ -149,7 +149,7 @@ class CO_LL_Location extends CO_Main_DB_Record {
     /**
     This function sets up this instance, according to the DB-formatted associative array passed in.
     
-    \returns TRUE, if the instance was able to set itself up to the provided array.
+    \returns true, if the instance was able to set itself up to the provided array.
      */
     public function load_from_db(   $in_db_result   ///< This is an associative array, formatted as a database row response.
                                     ) {
@@ -183,7 +183,7 @@ class CO_LL_Location extends CO_Main_DB_Record {
     
     This checks to make sure the user has write permission before saving.
     
-    \returns TRUE, if a DB update was successful.
+    \returns true, if a DB update was successful.
      */
     public function update_db() {
         $ret = parent::update_db();
@@ -200,11 +200,11 @@ class CO_LL_Location extends CO_Main_DB_Record {
     /**
     Setter for longitude.
     
-    \returns TRUE, if the save was successful.
+    \returns true, if the save was successful.
      */
     public function set_longitude(  $in_new_value
                                     ) {
-        $ret = FALSE;
+        $ret = false;
         
         if (isset($in_new_value) && $this->user_can_write()) {
             $this->_longitude = floatval($in_new_value);
@@ -218,11 +218,11 @@ class CO_LL_Location extends CO_Main_DB_Record {
     /**
     Setter for latitude.
     
-    \returns TRUE, if the save was successful.
+    \returns true, if the save was successful.
      */
     public function set_latitude(   $in_new_value
                                     ) {
-        $ret = FALSE;
+        $ret = false;
         
         if (isset($in_new_value) && $this->user_can_write()) {
             $this->_latitude = floatval($in_new_value);
@@ -244,7 +244,7 @@ class CO_LL_Location extends CO_Main_DB_Record {
 
     /***********************/
     /**
-    \returns TRUE, if the instance has a "fuzz factor."
+    \returns true, if the instance has a "fuzz factor."
      */
     public function is_fuzzy() {
         return 0.0 < $this->fuzz_factor();
@@ -254,11 +254,11 @@ class CO_LL_Location extends CO_Main_DB_Record {
     /**
     Setter for fuzz factor.
     
-    \returns TRUE, if the save was successful.
+    \returns true, if the save was successful.
      */
     public function set_fuzz_factor(   $in_new_value    ///< The new value must be a positive floating-point value over (and including) 0. If zero, the factor is deleted.
                                     ) {
-        $ret = FALSE;
+        $ret = false;
         
         $in_new_value = abs(floatval($in_new_value));
         
@@ -327,11 +327,11 @@ class CO_LL_Location extends CO_Main_DB_Record {
     /**
     Setter for a security ID token that can see past the fuzz factor.
     
-    \returns TRUE, if the save was successful.
+    \returns true, if the save was successful.
      */
     public function set_can_see_through_the_fuzz(   $in_id  ///< The ID to set. If 0 or NULL, the value is removed.
                                                 ) {
-        $ret = FALSE;
+        $ret = false;
         
         if ($this->user_can_write()) {
             $in_id = intval($in_id);
@@ -349,14 +349,14 @@ class CO_LL_Location extends CO_Main_DB_Record {
     
     /***********************/
     /**
-    \returns TRUE, if current user has the ability to see the raw values.
+    \returns true, if current user has the ability to see the raw values.
      */
     public function i_can_see_clearly_now() {
         $ret = !$this->is_fuzzy();  // If we aren't fuzzed, then, no problem. Peep away.
         
         if (!$ret && $this->get_access_object()->security_db_available()) { // Only logged-in users get to see clearly.
             if ($this->get_access_object()->god_mode()) {   // God is omnipresent.
-                $ret = TRUE;
+                $ret = true;
             } else {    // Otherwise, users with write privileges, or that are on the guest list, can see clearly.
                 $ids = $this->get_access_object()->get_security_ids();
         

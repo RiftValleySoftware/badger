@@ -115,12 +115,12 @@
                 $ids = $in_record_object->ids();
                 if ( isset($ids) && is_array($ids) && count($ids)) {
                     echo("<p>IDs: ");
-                        $first = TRUE;
+                        $first = true;
                         foreach ( $ids as $id ) {
                             if (!$first) {
                                 echo(", ");
                             } else {
-                                $first = FALSE;
+                                $first = false;
                             }
                             echo($id);
                         }
@@ -300,7 +300,7 @@
                 <h3 style="margin-top:1em"><a href="./mapDemo.php">RUN THE MAP DEMO TEST</a></h3>
             </div>
             <?php } else {
-                $start_time = microtime(TRUE);
+                $start_time = microtime(true);
             ?>
                 <div id="throbber-container" style="text-align:center"><img src="images/throbber.gif" alt="throbber" style="position:absolute;width:190px;top:50%;left:50%;margin-top:-95px;margin-left:-95px" /></div>
                 <div id="tests-wrapped-up" style="display:none">
@@ -330,7 +330,7 @@
                         ?>
                     </div>
                     <?php
-                        $end_time = microtime(TRUE);
+                        $end_time = microtime(true);
                         $seconds = $end_time - $start_time;
                         $minutes = intval($seconds / 60.0);
                         $seconds -= floatval($minutes * 60);

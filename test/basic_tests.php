@@ -29,9 +29,9 @@
                         <p class="explain">There will be no writable items.</p>
                         </div>
                         <?php
-                        $start = microtime(TRUE);
+                        $start = microtime(true);
                         try_dbs();
-                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
 
@@ -44,9 +44,9 @@
                         <p class="explain">This should flat-out fail.</p>
                         </div>
                         <?php
-                        $start = microtime(TRUE);
+                        $start = microtime(true);
                         try_dbs('secondary', '', 'Ralph');
-                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
 
@@ -59,9 +59,9 @@
                         <p class="explain">This should flat-out fail.</p>
                         </div>
                         <?php
-                        $start = microtime(TRUE);
+                        $start = microtime(true);
                         try_dbs('Fred', CO_Config::god_mode_password());
-                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
 
@@ -74,9 +74,9 @@
                         <p class="explain">This should flat-out fail.</p>
                         </div>
                         <?php
-                        $start = microtime(TRUE);
+                        $start = microtime(true);
                         try_dbs('Fred', CO_Config::god_mode_password());
-                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
 
@@ -89,9 +89,9 @@
                         <p class="explain">This should flat-out fail.</p>
                         </div>
                         <?php
-                        $start = microtime(TRUE);
+                        $start = microtime(true);
                         try_dbs('secondary', 'CoreysGoryStory');
-                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
 
@@ -104,9 +104,9 @@
                         <p class="explain">This should flat-out fail.</p>
                         </div>
                         <?php
-                        $start = microtime(TRUE);
+                        $start = microtime(true);
                         try_dbs('Fred', 'CodYOzPtwxb4A');
-                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
 
@@ -119,9 +119,9 @@
                         <p class="explain">This ID should have read and write access to every single item in both databases.</p>
                         </div>
                         <?php
-                        $start = microtime(TRUE);
+                        $start = microtime(true);
                         try_dbs('admin', NULL, CO_Config::god_mode_password());
-                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
 
@@ -136,9 +136,9 @@
                         <p class="explain">It has no access to item 4 of the main database.</p>
                         </div>
                         <?php
-                        $start = microtime(TRUE);
+                        $start = microtime(true);
                         try_dbs('secondary', '', 'CoreysGoryStory');
-                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
 
@@ -154,9 +154,9 @@
                         <p class="explain">It has no access to items 3, 5, 6 of the main database.</p>
                         </div>
                         <?php
-                        $start = microtime(TRUE);
+                        $start = microtime(true);
                         try_dbs('tertiary', 'CodYOzPtwxb4A');
-                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
                 
@@ -169,11 +169,11 @@
                         <p class="explain">In this exercise, we log in as "God," and see what data items are readable or writeable via certain IDs.</p>
                         </div>
                         <?php
-                        $start = microtime(TRUE);
+                        $start = microtime(true);
                         for ($id = 2; $id < 8; $id++) {
                             fetch_data_ids($id, 'admin', '', CO_Config::god_mode_password());
                         }
-                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
                 
@@ -187,11 +187,11 @@
                         <p class="explain">We expect to get only the items readble by the secondary login. The ID is ignored.</p>
                         </div>
                         <?php
-                        $start = microtime(TRUE);
+                        $start = microtime(true);
                         for ($id = 2; $id < 8; $id++) {
                             fetch_data_ids($id, 'secondary', '', 'CoreysGoryStory');
                         }
-                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
                 
@@ -205,11 +205,11 @@
                         <p class="explain">We expect to get only the items readble by the general public. The ID is ignored.</p>
                         </div>
                         <?php
-                        $start = microtime(TRUE);
+                        $start = microtime(true);
                         for ($id = 2; $id < 8; $id++) {
                             fetch_data_ids($id);
                         }
-                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
             echo('</div>');
@@ -231,9 +231,9 @@
                         <p class="explain">We log in, then change the name "Las Vegas" to "Lost Wages", and the first tag from "US" to "Fantasyland".</p>
                         </div>
                         <?php
-                        $start = microtime(TRUE);
+                        $start = microtime(true);
                         try_write_dbs('tertiary', 'CodYOzPtwxb4A');
-                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
                 $new_record = 0;
@@ -246,9 +246,9 @@
                         <p class="explain">We log in, then create a new Long/Lat record.</p>
                         </div>
                         <?php
-                        $start = microtime(TRUE);
+                        $start = microtime(true);
                         $new_record = try_new_dbs('secondary', 'CodYOzPtwxb4A');
-                        echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
                 if ($new_record) {
@@ -261,9 +261,9 @@
                             <p class="explain">We log in, then delete the record we just created.</p>
                             </div>
                             <?php
-                            $start = microtime(TRUE);
+                            $start = microtime(true);
                             try_delete_dbs('secondary', 'CodYOzPtwxb4A', $new_record);
-                            echo('<h5>The test took '. sprintf('%01.3f', microtime(TRUE) - $start) . ' seconds.</h5>');
+                            echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
                         echo('</div>');
                     echo('</div>');
                 }
@@ -284,7 +284,7 @@
         $access_instance = new CO_Access($in_login, $in_hashed_password, $in_password);
         
         if ($access_instance->valid) {
-            $test_item = $access_instance->get_all_data_readable_records(FALSE, $id);
+            $test_item = $access_instance->get_all_data_readable_records(false, $id);
             echo("<h4>Test ID $id:</h4>");
             echo('<div class="inner_div">');
                 echo('<div class="inner_div">');

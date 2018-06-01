@@ -93,10 +93,10 @@ abstract class A_CO_DB_Table_Base {
     
     This calls the _build_parameter_array() function to create a database-format associative array that is interpreted into SQL by the "owning" database object.
     
-    \returns FALSE if there was an error. Otherwise, it returns the ID of the element just written (or created).
+    \returns false if there was an error. Otherwise, it returns the ID of the element just written (or created).
      */
     protected function _write_to_db() {
-        $ret = FALSE;
+        $ret = false;
         
         if (isset($this->_db_object)) {
             $params = $this->_build_parameter_array();
@@ -124,7 +124,7 @@ abstract class A_CO_DB_Table_Base {
     It should be noted that a successful seppuku means the instance is no longer viable, and the ID is set to 0, which makes it a new record (if saved).
      */
     protected function _seppuku() {
-        $ret = FALSE;
+        $ret = false;
         
         if ($this->id() && isset($this->_db_object)) {
             $ret = $this->_db_object->delete_record($this->id());
@@ -170,15 +170,15 @@ abstract class A_CO_DB_Table_Base {
     
     This should be subclassed, and the parent should be called before applying specific instance properties.
     
-    \returns TRUE, if the instance was able to set itself up to the provided array.
+    \returns true, if the instance was able to set itself up to the provided array.
      */
     public function load_from_db(   $in_db_result   ///< This is an associative array, formatted as a database row response.
                                 ) {
-        $ret = FALSE;
+        $ret = false;
         $this->last_access = max(86400, time());    // Just in case of badly-set clocks in the server.
         
         if (isset($this->_db_object) && isset($in_db_result) && isset($in_db_result['id']) && intval($in_db_result['id'])) {
-            $ret = TRUE;
+            $ret = true;
             $this->_id = intval($in_db_result['id']);
             
             if (isset($in_db_result['last_access'])) {
@@ -248,10 +248,10 @@ abstract class A_CO_DB_Table_Base {
     
     /***********************/
     /**
-    \returns TRUE, if the current logged-in user has read permission on this record.
+    \returns true, if the current logged-in user has read permission on this record.
      */
     public function user_can_read() {
-        $ret = FALSE;
+        $ret = false;
         
         $ids = $this->get_access_object()->get_security_ids();
         
@@ -259,7 +259,7 @@ abstract class A_CO_DB_Table_Base {
         $my_write_item = intval($this->write_security_id);
         
         if ((0 == $my_read_item) || $this->get_access_object()->god_mode()) {
-            $ret = TRUE;
+            $ret = true;
         } else {
             if (isset($ids) && is_array($ids) && count($ids)) {
                 $ret = in_array($my_read_item, $ids) || in_array($my_write_item, $ids);
@@ -274,10 +274,10 @@ abstract class A_CO_DB_Table_Base {
     
     /***********************/
     /**
-    \returns TRUE, if the current logged-in user has write permission on this record.
+    \returns true, if the current logged-in user has write permission on this record.
      */
     public function user_can_write() {
-        $ret = FALSE;
+        $ret = false;
         
         $ids = $this->get_access_object()->get_security_ids();
         
@@ -285,7 +285,7 @@ abstract class A_CO_DB_Table_Base {
         
         // We can never edit unless we are logged in.
         if (((isset($ids) && is_array($ids) && count($ids)) && (0 == $my_write_item)) || $this->get_access_object()->god_mode()) {
-            $ret = TRUE;
+            $ret = true;
         } else {
             if (isset($ids) && is_array($ids) && count($ids)) {
                 $ret = in_array($my_write_item, $ids);
@@ -301,11 +301,11 @@ abstract class A_CO_DB_Table_Base {
     
     This checks to make sure the user has write permission before changing the ID.
     
-    \returns TRUE, if a DB update was successful.
+    \returns true, if a DB update was successful.
      */
     public function set_read_security_id($in_new_id ///< The new value
                                         ) {
-        $ret = FALSE;
+        $ret = false;
         if ($this->user_can_write() && isset($in_new_id)) {
             $this->read_security_id = intval($in_new_id);
             $ret = $this->update_db();
@@ -320,11 +320,11 @@ abstract class A_CO_DB_Table_Base {
     
     This checks to make sure the user has write permission before changing the ID.
     
-    \returns TRUE, if a DB update was successful.
+    \returns true, if a DB update was successful.
      */
     public function set_write_security_id($in_new_id    ///< The new value
                                         ) {
-        $ret = FALSE;
+        $ret = false;
         if ($this->user_can_write() && isset($in_new_id)) {
             $this->write_security_id = intval($in_new_id);
             $ret = $this->update_db();
@@ -337,11 +337,11 @@ abstract class A_CO_DB_Table_Base {
     /**
     Setter Accessor for the Object Name. Also updates the DB.
     
-    \returns TRUE, if a DB update was successful.
+    \returns true, if a DB update was successful.
      */
     public function set_name($in_new_value  ///< The new value
                             ) {
-        $ret = FALSE;
+        $ret = false;
         
         if (isset($in_new_value)) {
             $this->name = strval($in_new_value);
@@ -357,13 +357,13 @@ abstract class A_CO_DB_Table_Base {
     
     This checks to make sure the user has write permission before deleting.
     
-    \returns TRUE, if the deletion was successful.
+    \returns true, if the deletion was successful.
      */
     public function delete_from_db() {
         if ($this->user_can_write()) {
             return $this->_seppuku();
         } else {
-            return FALSE;
+            return false;
         }
     }
     
@@ -373,13 +373,13 @@ abstract class A_CO_DB_Table_Base {
     
     This checks to make sure the user has write permission before saving.
     
-    \returns TRUE, if a DB update was successful.
+    \returns true, if a DB update was successful.
      */
     public function update_db() {
         if (!$this->id() || $this->user_can_write()) {
             return $this->_write_to_db();
         } else {
-            return FALSE;
+            return false;
         }
     }
     
@@ -388,10 +388,10 @@ abstract class A_CO_DB_Table_Base {
     This gets the object data from the database, using the instance's ID, and reloads everything.
     It throws out the current state, and replaces it with the one stored in the database.
     
-    \returns TRUE, if successful
+    \returns true, if successful
      */
     public function reload_from_db() {
-        $ret = FALSE;
+        $ret = false;
         $db_result = $this->_db_object->get_single_raw_row_by_id($this->id());
         $this->error = $this->get_access_object()->error;
         if (!isset($this->error) || !$this->error) {
@@ -426,11 +426,11 @@ abstract class A_CO_DB_Table_Base {
     
     /***********************/
     /**
-    \returns TRUE, if the set was successful.
+    \returns true, if the set was successful.
      */
     public function set_lang(   $in_lang_id = NULL  ///< The lang ID. This is not used for the low-level error handlers (which use the server setting). It is used to determine higher-level strings.
                             ) {
-        $ret = FALSE;
+        $ret = false;
         
         if ($this->user_can_write()) {
             $this->context['lang'] = strtolower(trim(strval($in_lang_id)));

@@ -96,7 +96,7 @@ class CO_Main_DB_Record extends A_CO_DB_Table_Base {
     /**
     This sets up the instance, based on a supplied associative array of database values and keys.
     
-    \returns TRUE, if sucessful.
+    \returns true, if sucessful.
      */
     public function load_from_db(   $in_db_result   ///< This is the associative array of database values.
                                     ) {
@@ -142,11 +142,11 @@ class CO_Main_DB_Record extends A_CO_DB_Table_Base {
     /**
     Simple setter for the owner ID.
     
-    \returns TRUE, if successful.
+    \returns true, if successful.
      */
     public function set_owner_id(   $in_new_id  ///< The new value
                                         ) {
-        $ret = FALSE;
+        $ret = false;
         
         if (isset($in_new_id) && $this->user_can_write()) {
             $this->_owner_id = intval($in_new_id);
@@ -160,11 +160,11 @@ class CO_Main_DB_Record extends A_CO_DB_Table_Base {
     /**
     Simple setter for the tags.
     
-    \returns TRUE, if successful.
+    \returns true, if successful.
      */
     public function set_tags(   $in_tags_array  ///< An array of strings, up to ten elements long, for the tags.
                             ) {
-        $ret = FALSE;
+        $ret = false;
         
         if (isset($in_tags_array) && is_array($in_tags_array) && count($in_tags_array) && (11 > count($in_tags_array)) && $this->user_can_write()) {
             $this->_tags = array_map('strval', $in_tags_array);
@@ -178,12 +178,12 @@ class CO_Main_DB_Record extends A_CO_DB_Table_Base {
     /**
     Setter for one tag, by index.
     
-    \returns TRUE, if successful.
+    \returns true, if successful.
      */
     public function set_tag(    $in_tag_index,  ///< The index (0-based -0 through 9) of the tag to set.
                                 $in_tag_value   ///< A string, with the tag value.
                             ) {
-        $ret = FALSE;
+        $ret = false;
         
         $in_tag_index = intval($in_tag_index);
         
@@ -213,11 +213,11 @@ class CO_Main_DB_Record extends A_CO_DB_Table_Base {
     /**
     Sets the payload.
     
-    \returns TRUE, if successful.
+    \returns true, if successful.
      */
     public function set_payload(    $in_payload ///< The raw payload to be stored.
                                 ) {
-        $ret = FALSE;
+        $ret = false;
         
         if ($this->user_can_write()) {
             $this->_raw_payload = $in_payload;

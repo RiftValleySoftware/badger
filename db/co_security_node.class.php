@@ -117,7 +117,7 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
     
     This should be subclassed, and the parent should be called before applying specific instance properties.
     
-    \returns TRUE, if the instance was able to set itself up to the provided array.
+    \returns true, if the instance was able to set itself up to the provided array.
      */
     public function load_from_db(   $in_db_result   ///< This is an associative array, formatted as a database row response.
                                 ) {
@@ -153,11 +153,11 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
     No user can set IDs for which they do not have access.
     Since this is a "whole hog" operation, we need to be able to access every single ID in the current object before we can replace or delete them.
     
-    \returns TRUE, if successful.
+    \returns true, if successful.
      */
     public function set_ids(    $in_ids_array   ///< This is a preset array of integers, containing security IDs for the row. NULL/Empty to delete all IDs.
                             ) {
-        $ret = FALSE;
+        $ret = false;
         
         if ($this->user_can_edit_ids()) {
             $id_pool = $this->get_access_object()->get_security_ids();
@@ -174,7 +174,7 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
                                                         __FILE__,
                                                         __METHOD__
                                                     );
-                        return FALSE;
+                        return false;
                     }
                 }
                 
@@ -223,11 +223,11 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
     /**
     This is a setter, allowing you to add an ID.
     
-    \returns TRUE, if successful.
+    \returns true, if successful.
      */
     public function add_id( $in_id  ///< A single integer. The new ID to add.
                             ) {
-        $ret = FALSE;
+        $ret = false;
         
         if ($this->user_can_edit_ids()) {
             $id_pool = $this->get_access_object()->get_security_ids();
@@ -271,11 +271,11 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
     This allows you to remove a single ID.
     We can remove one of our IDs from a user that may have other IDs.
     
-    \returns TRUE, if successful.
+    \returns true, if successful.
      */
     public function remove_id(  $in_id  ///< A single integer. The ID to remove.
                             ) {
-        $ret = FALSE;
+        $ret = false;
         
         if ($this->user_can_edit_ids()) {
             $id_pool = $this->get_access_object()->get_security_ids();
@@ -288,7 +288,7 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
                         if ($id != $in_id) {
                             array_push($new_array, $id);
                         } else {
-                            $ret = TRUE;
+                            $ret = true;
                         }
                 
                         if ($ret) {
@@ -343,7 +343,7 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
     /**
     This is designed to be overloaded. By default, only God can change IDs.
     
-    \returns TRUE, if the current logged-in user can edit IDs for this login.
+    \returns true, if the current logged-in user can edit IDs for this login.
      */
     public function user_can_edit_ids() {
         return $this->get_access_object()->god_mode();

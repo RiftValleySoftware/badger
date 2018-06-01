@@ -37,7 +37,7 @@ class CO_Security_ID extends CO_Security_Node {
         parent::__construct($in_db_object, $in_db_result);
         $this->class_description = 'This is a security class for IDs.';
         $this->instance_description = isset($this->name) && $this->name ? "$this->name ($this->_id)" : "Unnamed ID Node ($this->_id)";
-        $this->_special_first_time_security_exemption = TRUE;
+        $this->_special_first_time_security_exemption = true;
         $this->read_security_id = $this->id();  // These are always the case, regardless of what anyone else says.
         $this->write_security_id = -1;
     }
@@ -46,7 +46,7 @@ class CO_Security_ID extends CO_Security_Node {
     /**
     This function sets up this instance, according to the DB-formatted associative array passed in.
     
-    \returns TRUE, if the instance was able to set itself up to the provided array.
+    \returns true, if the instance was able to set itself up to the provided array.
      */
     public function load_from_db($in_db_result) {
         $ret = parent::load_from_db($in_db_result);
@@ -65,11 +65,11 @@ class CO_Security_ID extends CO_Security_Node {
     This weird little function allows a creator to once -and only once- add an ID to itself, as long as that ID is for this object.
     This is a "Heisenberg" query. Once it's called, the security exemption is gone.
     
-    returns TRUE, if the security exemption was on.
+    returns true, if the security exemption was on.
      */
     public function security_exemption() {
         $ret = $this->_special_first_time_security_exemption;
-        $this->_special_first_time_security_exemption = FALSE;
+        $this->_special_first_time_security_exemption = false;
         
         return $ret;
     }
@@ -77,13 +77,13 @@ class CO_Security_ID extends CO_Security_Node {
     /***********************/
     /**
     This is an overload, because we also want to make sure that only cleared manager objects get to see this (or God, of course).
-    \returns TRUE, if the current logged-in user has read permission on this record.
+    \returns true, if the current logged-in user has read permission on this record.
      */
     public function user_can_read() {
         $ret = parent::user_can_read();
         
         if ($ret) {
-            $ret = FALSE;
+            $ret = false;
             // We make double-damn sure that only cleared managers can see this.
             $item = $this->get_access_object()->get_login_item();
             if ($this->get_access_object()->god_mode() || (isset($item) && ($item instanceof CO_Login_Manager))) {

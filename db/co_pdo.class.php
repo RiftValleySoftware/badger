@@ -60,9 +60,9 @@ class CO_PDO {
             $this->_pdo = new PDO($dsn, $user, $password, array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'utf8'"));
             $this->_pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $this->_pdo->setAttribute(PDO::ATTR_CASE, PDO::CASE_LOWER);
-            $this->_pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, TRUE);
+            $this->_pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
             if (strlen($charset) > 0) {
-                self::preparedExec('SET NAMES :charset', array(':charset' => $charset), FALSE);
+                self::preparedExec('SET NAMES :charset', array(':charset' => $charset), false);
             }
         } catch (PDOException $exception) {
 			throw new Exception(__METHOD__ . '() ' . $exception->getMessage());
@@ -91,7 +91,7 @@ class CO_PDO {
 			    if (strpos($sql, 'RETURNING id;')) {
 			        $response = $this->preparedQuery($sql, $params);
                     $this->last_insert = intval($response[0]['id']);
-			        return TRUE;
+			        return true;
 			    }
 			}
 			
@@ -106,12 +106,12 @@ class CO_PDO {
             }
             $this->_pdo->commit();
 		
-            return TRUE;
+            return true;
 		} catch (PDOException $exception) {
 			throw new Exception(__METHOD__ . '() ' . $exception->getMessage());
 		}
 		
-        return FALSE;
+        return false;
 	}
 
     /***********************/
@@ -122,7 +122,7 @@ class CO_PDO {
 		Returns a multidimensional array depending on internal fetch mode setting ($this->fetchMode)
 		See PDO documentation about prepared queries.
 
-		Fetching key pairs- when $fetchKeyPair is set to TRUE, it will force the returned
+		Fetching key pairs- when $fetchKeyPair is set to true, it will force the returned
 		array to be a one-dimensional array indexed on the first column in the query.
 		Note- query may contain only two columns or an exception/error is thrown.
 		See PDO::PDO::FETCH_KEY_PAIR for more details
@@ -133,7 +133,7 @@ class CO_PDO {
 	public function preparedQuery(
 										$sql,					///< same as kind provided to PDO::prepare()
 										$params = array(),		///< same as kind provided to PDO::prepare()
-										$fetchKeyPair = FALSE   ///< See description in method documentation
+										$fetchKeyPair = false   ///< See description in method documentation
 										) {
 		try {
 // echo('SQL:<pre>'.htmlspecialchars(print_r($sql, true)).'</pre>');
@@ -159,6 +159,6 @@ class CO_PDO {
 			throw new Exception(__METHOD__ . '() ' . $exception->getMessage());
 		}
 		
-        return FALSE;
+        return false;
 	}
 };

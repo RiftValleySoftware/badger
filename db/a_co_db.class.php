@@ -50,11 +50,11 @@ abstract class A_CO_DB {
     
     This is a "bottleneck" method. All access to the database needs to go through here.
     
-    \returns any response from the database. TRUE, if it is an "execute only" query that succeeds.
+    \returns any response from the database. true, if it is an "execute only" query that succeeds.
      */
     private function _execute_query(    $in_sql,                ///< This is the SQL portion of the prepared statement.
                                         $in_parameters = NULL,  ///< This is an array of values to be used in the prepared statement.
-                                        $exec_only = FALSE      ///< If TRUE, then this means we do not expect a response. Default is FALSE.
+                                        $exec_only = false      ///< If true, then this means we do not expect a response. Default is false.
                                         ) {
         $ret = NULL;
         $this->error = NULL;
@@ -62,7 +62,7 @@ abstract class A_CO_DB {
             if ($exec_only) {
                 $ret = $this->_pdo_object->preparedExec($in_sql, $in_parameters);
             } else {
-                $ret = $this->_pdo_object->preparedQuery($in_sql, $in_parameters, FALSE);
+                $ret = $this->_pdo_object->preparedQuery($in_sql, $in_parameters, false);
             }
         } catch (Exception $exception) {
             $this->error = new LGV_Error(   CO_Lang_Common::$pdo_error_code_failed_to_open_security_db,
@@ -147,7 +147,7 @@ abstract class A_CO_DB {
     
     \returns a string, containing the SQL predicate
      */
-    protected function _create_security_predicate(  $write = FALSE  ///< This should be TRUE, if we need a write predicate. Default is FALSE.
+    protected function _create_security_predicate(  $write = false  ///< This should be true, if we need a write predicate. Default is false.
                                                     ) {
         
         $ret = $write ? $this->_create_write_security_predicate() : $this->_create_read_security_predicate();
@@ -274,7 +274,7 @@ abstract class A_CO_DB {
      */
     public function execute_query(  $in_sql,                ///< This is the SQL portion of the prepared statement.
                                     $in_parameters = NULL,  ///< This is an array of values to be used in the prepared statement.
-                                    $exec_only = FALSE      ///< If TRUE, then this means we do not expect a response. Default is FALSE.
+                                    $exec_only = false      ///< If true, then this means we do not expect a response. Default is false.
                                     ) {
         return $this->_execute_query($in_sql, $in_parameters, $exec_only);
     }
@@ -288,7 +288,7 @@ abstract class A_CO_DB {
     \returns an associative array, containing the "raw" database record response.
      */
     public function get_single_raw_row_by_id(   $in_id,             ///< This is the ID of the record to fetch.
-                                                $and_write = FALSE  ///< If this is TRUE, then we need modify permission for the record.
+                                                $and_write = false  ///< If this is true, then we need modify permission for the record.
                                             ) {
         $ret = NULL;
         
@@ -317,7 +317,7 @@ abstract class A_CO_DB {
     \returns a single instance of a subclass of A_CO_DB_Table_Base
      */
     public function get_single_record_by_id(    $in_id,             ///< This is the ID of the record to fetch.
-                                                $and_write = FALSE  ///< If this is TRUE, then we need modify permission for the record.
+                                                $and_write = false  ///< If this is true, then we need modify permission for the record.
                                             ) {
         $ret = NULL;
         
@@ -339,7 +339,7 @@ abstract class A_CO_DB {
     \returns an array, containing one or more instances of a subclass of A_CO_DB_Table_Base (Each instance may be a different class)
      */
     public function get_multiple_records_by_id( $in_id_array,       ///< This is an array of integers, each of which is the ID of a record to fetch.
-                                                $and_write = FALSE  ///< If this is TRUE, then we need modify permission for the record.
+                                                $and_write = false  ///< If this is true, then we need modify permission for the record.
                                                 ) {
         $ret = NULL;
         
@@ -396,7 +396,7 @@ abstract class A_CO_DB {
     
     \returns an array, containing one or more instances of a subclass of A_CO_DB_Table_Base (Each instance may be a different class)
      */
-    public function get_all_readable_records(   $open_only = FALSE, ///< If TRUE, then we will look for ONLY records with a NULL or 0 read_security_id, even if we are logged in.
+    public function get_all_readable_records(   $open_only = false, ///< If true, then we will look for ONLY records with a NULL or 0 read_security_id, even if we are logged in.
                                                 $in_this_id = NULL  ///< If we are in "god mode," we can look for particular IDs.
                                             ) {
         $ret = NULL;
@@ -449,7 +449,7 @@ abstract class A_CO_DB {
 
         // Only logged-in users can write.
         if (isset($access_ids) && is_array($access_ids) && count($access_ids)) {
-            $predicate = $this->_create_security_predicate(TRUE);
+            $predicate = $this->_create_security_predicate(true);
         
             // No need for an AND, as the predicate is the only qualifier.
             if (!$predicate) {
@@ -488,16 +488,16 @@ abstract class A_CO_DB {
     
     This is properly "screened" for security.
     
-    \returns TRUE (Successful update), or the integer ID of a new record.
+    \returns true (Successful update), or the integer ID of a new record.
      */
     public function write_record(   $params_associative_array   ///< This is an associative array of parameters, where the key is the database column name.
                                 ) {
-        $ret = FALSE;
+        $ret = false;
         if (isset($params_associative_array) && is_array($params_associative_array) && count($params_associative_array)) {
             $access_ids = $this->access_object->get_security_ids();
             $params_associative_array['last_access'] = date('Y-m-d H:i:s');
             if (isset($access_ids) && is_array($access_ids) && count($access_ids)) {
-                $predicate = $this->_create_security_predicate(TRUE);
+                $predicate = $this->_create_security_predicate(true);
         
                 if ($predicate) {
                     $predicate .= 'AND ';
@@ -520,9 +520,9 @@ abstract class A_CO_DB {
                         $set_sql = ''.implode('=?,', $keys).'=?';
                     
                         $sql .= ' SET '.$set_sql.' WHERE ('.$predicate.'id='.$id.')';
-                        $this->execute_query($sql, $params, TRUE);
+                        $this->execute_query($sql, $params, true);
                         if (!$this->error) {
-                            $ret = TRUE;
+                            $ret = true;
                         }
                     } else {
                         $sql = 'SELECT * FROM '.$this->table_name.' WHERE id='.$id; // Look for a record with the proposed ID (assume we don't have permission).
@@ -566,7 +566,7 @@ abstract class A_CO_DB {
                         $values_sql = '('.implode(',', array_map(function($in){return '?';}, $keys)).') RETURNING id;';
                         
                         $sql .= " $keys_sql VALUES $values_sql";
-                        $this->execute_query($sql, array_values($params_associative_array), TRUE);
+                        $this->execute_query($sql, array_values($params_associative_array), true);
                         
                         if (!$this->error) {
                             // Get the ID of the new row we just created.
@@ -592,14 +592,14 @@ abstract class A_CO_DB {
     
     This is properly "screened" for security.
     
-    \returns TRUE if the deletion was successful.
+    \returns true if the deletion was successful.
      */
     public function delete_record(  $id
                                 ) {
-        $ret = FALSE;
+        $ret = false;
         
         $id = intval($id);
-        $predicate = $this->_create_security_predicate(TRUE);
+        $predicate = $this->_create_security_predicate(true);
         
         if ($predicate) {
             $predicate .= 'AND ';
@@ -611,7 +611,7 @@ abstract class A_CO_DB {
         
         if (!$this->error && isset($temp) && $temp && is_array($temp) && (1 == count($temp))) {
             $sql = 'DELETE FROM '.$this->table_name.' WHERE ('.$predicate.'id='.$id.')';
-            $temp = $this->execute_query($sql, Array(), TRUE);  // We call this as an "execute-only" query.
+            $temp = $this->execute_query($sql, Array(), true);  // We call this as an "execute-only" query.
             if (!$temp || $this->error) {
                 $this->error = new LGV_Error(   CO_Lang_Common::$pdo_error_code_failed_delete_attempt,
                                                 CO_Lang::$pdo_error_name_failed_delete_attempt,
@@ -627,7 +627,7 @@ abstract class A_CO_DB {
                         unset($this->_existing_record_objects[$id]);
                     }
                         
-                    $ret = TRUE;
+                    $ret = true;
                 } else {
                     $this->error = new LGV_Error(   CO_Lang_Common::$pdo_error_code_failed_delete_attempt,
                                                     CO_Lang::$pdo_error_name_failed_delete_attempt,

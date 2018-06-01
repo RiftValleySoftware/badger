@@ -63,7 +63,7 @@ class CO_Security_Login extends CO_Security_Node {
             $ret['object_name'] = NULL;
             $ret['ids'] = NULL;
             $this->context = NULL;
-            $this->_override_access_class = FALSE;
+            $this->_override_access_class = false;
         }
         
         return $ret;
@@ -80,7 +80,7 @@ class CO_Security_Login extends CO_Security_Node {
 	                                $in_ids = NULL          ///< An array of integers, representing the permissions this ID has.
                                 ) {
         $this->login_id = $in_login_id;
-        $this->_override_access_class = FALSE;
+        $this->_override_access_class = false;
         parent::__construct($in_db_object, $in_db_result, $in_ids);
         $this->class_description = 'This is a security class for individual logins.';
         
@@ -105,7 +105,7 @@ class CO_Security_Login extends CO_Security_Node {
     /**
     This function sets up this instance, according to the DB-formatted associative array passed in.
     
-    \returns TRUE, if the instance was able to set itself up to the provided array.
+    \returns true, if the instance was able to set itself up to the provided array.
      */
     public function load_from_db($in_db_result) {
         $ret = parent::load_from_db($in_db_result);
@@ -148,7 +148,7 @@ class CO_Security_Login extends CO_Security_Node {
             
                 $ret = crypt($in_password_to_crypt, $this->context['hashed_password']);
             } else {
-                $ret = FALSE;
+                $ret = false;
             }
         }
         
@@ -157,13 +157,13 @@ class CO_Security_Login extends CO_Security_Node {
     
     /***********************/
     /**
-    \returns TRUE, if the presented credentials are good.
+    \returns true, if the presented credentials are good.
      */
     public function is_login_valid( $in_login_id,               ///< The login ID
                                     $in_hashed_password = NULL, ///< The password, crypt-hashed
                                     $in_raw_password = NULL     ///< The password, cleartext.
                                     ) {
-        $ret = FALSE;
+        $ret = false;
         if (isset($this->login_id) && $this->login_id && ($this->login_id == $in_login_id)) {
             if ($this->id() == CO_Config::god_mode_id()) { // God mode always reads directly from the config file, and does not encrypt.
                 $ret = ($in_raw_password == CO_Config::god_mode_password());
@@ -188,7 +188,7 @@ class CO_Security_Login extends CO_Security_Node {
     
     /***********************/
     /**
-    \returns TRUE, if this object represents the database "God" object.
+    \returns true, if this object represents the database "God" object.
      */
     public function i_am_a_god() {
         return intval(CO_Config::god_mode_id()) == intval($this->id());
@@ -204,11 +204,11 @@ class CO_Security_Login extends CO_Security_Node {
     
     /***********************/
     /**
-    \returns TRUE, if the set was successful.
+    \returns true, if the set was successful.
      */
     public function set_lang(   $in_lang_id = NULL  ///< The lang ID. This is not used for the low-level error handlers (which use the server setting). It is used to determine higher-level strings.
                             ) {
-        $ret = FALSE;
+        $ret = false;
         
         if ($this->user_can_write()) {
             $this->context['lang'] = strtolower(trim(strval($in_lang_id)));
@@ -238,11 +238,11 @@ class CO_Security_Login extends CO_Security_Node {
     /**
     This encrypts a cleartext password, and sets it into the record.
     
-    \returns TRUE, if the set was successful.
+    \returns true, if the set was successful.
      */
     public function set_password_from_cleartext(    $in_cleartext_password  ///< The cleartext password. It will not be saved. Instead, the hashed password will be saved.
                                                 ) {
-        $ret = FALSE;
+        $ret = false;
         
         if ($this->user_can_write()) {
             $this->context['hashed_password'] = $this->get_crypted_password($in_cleartext_password);
@@ -256,21 +256,21 @@ class CO_Security_Login extends CO_Security_Node {
     /**
     We override this, because the God login can only be modified by itself. No one else.
     
-    \returns TRUE, if the current logged-in user has write permission on this record.
+    \returns true, if the current logged-in user has write permission on this record.
      */
     public function user_can_write() {
-        $ret = FALSE;
+        $ret = false;
         
         // Only God can edit God.
         if ($this->i_am_a_god() && !$this->get_access_object()->god_mode()) {
-            return FALSE;
+            return false;
         } else {
             $ids = $this->get_access_object()->get_security_ids();
         
             $my_write_item = intval($this->write_security_id);
         
             if ((0 == $my_write_item) || $this->get_access_object()->god_mode()) {
-                $ret = TRUE;
+                $ret = true;
             } else {
                 if (isset($ids) && is_array($ids) && count($ids)) {
                     $ret = in_array($my_write_item, $ids);
@@ -285,7 +285,7 @@ class CO_Security_Login extends CO_Security_Node {
     /**
     We override this, because logins never die. They just become security placeholders.
     
-    \returns TRUE, if the conversion was successful.
+    \returns true, if the conversion was successful.
      */
     public function delete_from_db() {
         if ($this->user_can_write()) {
@@ -301,11 +301,11 @@ class CO_Security_Login extends CO_Security_Node {
             $this->name = NULL;
             $this->login_id = NULL;
             $this->_ids = Array();
-            $this->_override_access_class = TRUE;
+            $this->_override_access_class = true;
             $ret = $this->_write_to_db();
             return $ret;
         } else {
-            return FALSE;
+            return false;
         }
     }
 };
