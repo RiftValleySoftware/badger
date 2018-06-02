@@ -1,6 +1,7 @@
-**1.0.0.2031** *(TBD)*
+**1.0.0.2031** *(June 2, 2018)*
 
 - There was an issue in the user_can_read() routine, where the write permission was not being taken into account.
+- Improved the README and documetation.
 
 **1.0.0.2030** *(May 31, 2018)*
 

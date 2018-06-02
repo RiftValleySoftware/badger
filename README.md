@@ -132,8 +132,13 @@ PAYLOAD
 
 The "data" database schema also specifies a "TEXT" (Postgres) or "LONGBLOB" (MySQL) column, called "payload". This is used to store larger data with a data item. It is not indexed, and can store binary (and encrypted) data, but the data is stored internally as [Base64](https://en.wikipedia.org/wiki/Base64).
 
+IMPLEMENTATION
+==============
+
+You implement BADGER by setting up a pair of databases, using the CO_Config class, and then instantiate CO_Access. This will be used as the "control panel" of BADGER.
+
 EXTENDING AND SPECIALIZING BADGER
----------------------------------
+=================================
 
 Badger is a baseline system. It provides a generic interface to a simple database, and is not designed to be used "as is." It should be extended via subclasses of the row classes and the access class.
 
