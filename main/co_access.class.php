@@ -181,7 +181,7 @@ class CO_Access {
     public function item_exists(    $in_id,                     ///< The integer ID of the item.
                                     $in_visibility_test = false ///< If true (default is false), then this will return false, even if the item exists, but cannot be seen by this user.
                                 ) {
-        return $this->_data_db_object->item_exists($in_id);
+        return $this->_data_db_object->item_exists($in_id, $in_visibility_test);
     }
     
     /***********************/
