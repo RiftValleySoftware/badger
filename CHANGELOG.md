@@ -1,4 +1,4 @@
-**1.0.0.2032** *(TBD)*
+**1.0.0.2032** *(June 3, 2018)*
 
 - Removed redundant files from spec
 - Added support for Doxygen.
