@@ -28,14 +28,17 @@ class CO_Main_Data_DB extends A_CO_DB {
     /***********************************************************************************************************************/
 	/*******************************************************************/
 	/**
-		\brief Uses the Vincenty calculation to determine the distance (in KM) between the two given lat/long pairs (in Degrees).
+		\brief Uses the Vincenty calculation to determine the distance (in Kilometers) between the two given lat/long pairs (in Degrees).
 		
-		\returns a Float with the distance, in kilometers.
+		The Vincenty calculation is more accurate than the Haversine calculation, as it takes into account the "un-spherical" shape of the Earth, but is more computationally intense.
+		We use this calculation to refine the Haversine "triage" in SQL.
+		
+		\returns a Float with the distance, in Kilometers.
 	*/
-	static function get_accurate_distance (	$lat1,  ///< These four parameters are the given two points long/lat, in degrees.
-                                            $lon1,
-                                            $lat2,
-                                            $lon2
+	static function get_accurate_distance (	$lat1,  ///< This is the first point latitude (degrees).
+                                            $lon1,  ///< This is the first point longitude (degrees).
+                                            $lat2,  ///< This is the second point latitude (degrees).
+                                            $lon2   ///< This is the second point longitude (degrees).
                                         )
 	{
 		$a = 6378137;
@@ -84,6 +87,8 @@ class CO_Main_Data_DB extends A_CO_DB {
     /***********************/
     /**
     This method creates a special SQL header that has an embedded Haversine formula. You use this in place of the security predicate.
+    
+    The Haversine formula is not as accurate as the Vincenty Calculation, but is a lot less computationally intense, so we use this in SQL for a "triage."
     
     \returns an SQL query that will specify a Haversine search. It will include the security predicate.
      */
@@ -408,8 +413,8 @@ class CO_Main_Data_DB extends A_CO_DB {
                                         ) {
         $ret = Array('sql' => '', 'params' => Array());
         
-        $closure = '';
-        $location_search = false;
+        $closure = '';  // This will be the suffix for the SQL.
+        $location_search = false;   // We use this as a semaphore, so we don't shortcut location searches you can't refine to only IDs, because of the syntax of the SQL.
         $link = '';
         
         // If we are doing a location/radius search, the predicate is a lot more complicated.
@@ -433,7 +438,11 @@ class CO_Main_Data_DB extends A_CO_DB {
             $closure = $count_only ? ')' : ') ORDER BY id';
         }
         
+        // At this point, we have the "prefix" for the SQL query. That includes the security predicate, and any Haversine "triage" for location.
+        // We now add the actual parameters that specialize the search.
+        
         if (isset($in_search_parameters) && is_array($in_search_parameters) && count($in_search_parameters)) {
+            // This function will parse the parameters, and return an associative array with the SQL WHERE clause, along with the relevant parameters for the prepared statement.
             $param_ret = $this->_parse_parameters($in_search_parameters, $or_search);
             
             if ($param_ret['sql']) {
@@ -463,7 +472,7 @@ class CO_Main_Data_DB extends A_CO_DB {
             
         if ($count_only) {
             $closure .= ') AS count';
-        } elseif ($ids_only && !$location_search) {
+        } elseif ($ids_only && !$location_search) { // IDs only, we simply ask for only the ID.
             $replacement = 'SELECT (id)';
             $sql = preg_replace('|^SELECT \*|', $replacement, $sql);
         }
@@ -492,16 +501,23 @@ class CO_Main_Data_DB extends A_CO_DB {
     /**
     This is a very "raw" function that simply checks to see if any item exists for a given integer ID.
     
-    This deliberately does not pass security vetting, so we're careful. It's meant to be used by collection classes for garbage collection.
+    This (usually) deliberately does not pass security vetting, so we're careful. It's meant to be used by collection classes for garbage collection.
     
-    \returns true, if an item exists for the given ID.
+    \returns true, if an item exists for the given ID (if $in_visibility_test is set to true, then the item also has to be visible for reading by the user. Otherwise, you get true, whether or not the user can see it).
      */
-    public function item_exists(    $in_id    ///< The ID of the item.
+    public function item_exists(    $in_id,                     ///< The ID of the item.
+                                    $in_visibility_test = false ///< If true (default is false), then this will return false, even if the item exists, but cannot be seen by this user.
                                 ) {
         $ret = NULL;
         
+        $sql = 'SELECT id FROM '.$this->table_name.' WHERE ';
+        
+        if ($in_visibility_test) {  // If we are only testing visibility, then we add a read security predicate.
+            $sql .= $this->_create_read_security_predicate().' AND ';
+        }
+        
         // User collections work by having the login ID in tag 0, so we search for any collection records that have a tag 0 set to our login ID. Chances are good it's a user.
-        $sql = 'SELECT id FROM '.$this->table_name.' WHERE id='.intval($in_id);
+        $sql .= 'id='.intval($in_id);
 
         $temp = $this->execute_query($sql, Array());
         if (isset($temp) && $temp && is_array($temp) && count($temp) ) {

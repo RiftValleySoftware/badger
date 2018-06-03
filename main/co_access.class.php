@@ -13,7 +13,7 @@
 */
 defined( 'LGV_ACCESS_CATCHER' ) or die ( 'Cannot Execute Directly' );	// Makes sure that this file is in the correct context.
 
-define('__BADGER_VERSION__', '1.0.0.2031');
+define('__BADGER_VERSION__', '1.0.0.2032');
 
 if ( !defined('LGV_MD_CATCHER') ) {
     define('LGV_MD_CATCHER', 1);
@@ -178,7 +178,8 @@ class CO_Access {
     
     \returns true, if an item exists for the given ID.
      */
-    public function item_exists(    $in_id    ///< The integer ID of the item.
+    public function item_exists(    $in_id,                     ///< The integer ID of the item.
+                                    $in_visibility_test = false ///< If true (default is false), then this will return false, even if the item exists, but cannot be seen by this user.
                                 ) {
         return $this->_data_db_object->item_exists($in_id);
     }

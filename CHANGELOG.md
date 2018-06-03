@@ -1,3 +1,11 @@
+**1.0.0.2032** *(TBD)*
+
+- Removed redundant files from spec
+- Added support for Doxygen.
+- Added support for a collection "visibility vetting."
+- Moved the config trait into BADGER, where it is more fitting.
+- Improved the documentation of some of the code.
+
 **1.0.0.2031** *(June 2, 2018)*
 
 - There was an issue in the user_can_read() routine, where the write permission was not being taken into account.
