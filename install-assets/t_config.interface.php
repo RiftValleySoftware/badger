@@ -74,7 +74,15 @@ trait tCO_Config {
     /**
     \returns the POSIX path to the ANDISOL main access class directory.
      */
-    static function main_class_dir() {
+    static function andisol_base_dir() {
+        return self::base_dir().'/andisol';
+    }
+        
+    /***********************/
+    /**
+    \returns the POSIX path to the ANDISOL main access class directory.
+     */
+    static function andisol_main_class_dir() {
         return self::base_dir().'/main';
     }
     
@@ -82,7 +90,7 @@ trait tCO_Config {
     /**
     \returns the POSIX path to the ANDISOL testing directory.
      */
-    static function test_class_dir() {
+    static function andisol_test_class_dir() {
         return self::base_dir().'/test';
     }
     
@@ -90,7 +98,7 @@ trait tCO_Config {
     /**
     \returns the POSIX path to the ANDISOL localization directory.
      */
-    static function lang_class_dir() {
+    static function andisol_lang_class_dir() {
         return self::base_dir().'/lang';
     }
     
@@ -98,7 +106,7 @@ trait tCO_Config {
     /**
     \returns the POSIX path to the user-defined extended database row classes (we use the COBRA extensions for ANDISOL).
      */
-    static function db_classes_extension_class_dir() {
+    static function andisol_db_classes_extension_class_dir() {
         return self::cobra_db_classes_extension_class_dir();
     }
     
@@ -111,7 +119,7 @@ trait tCO_Config {
     \returns the POSIX path to the COBRA main access class directory.
      */
     static function cobra_base_dir() {
-        return self::base_dir().'/cobra';
+        return self::andisol_base_dir().'/cobra';
     }
         
     /***********************/

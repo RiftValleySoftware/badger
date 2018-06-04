@@ -1,3 +1,7 @@
+**1.0.0.2033** *(TBD)*
+
+- Tweaked the config trait to have ANDISOL-specific aspects.
+
 **1.0.0.2032** *(June 3, 2018)*
 
 - Removed redundant files from spec
