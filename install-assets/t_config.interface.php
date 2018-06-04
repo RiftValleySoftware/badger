@@ -67,6 +67,42 @@ trait tCO_Config {
     }
     
     /***********************************************************************************************************************/
+    /*                                                   BASALT STUFF                                                      */
+    /***********************************************************************************************************************/
+        
+    /***********************/
+    /**
+    \returns the POSIX path to the ANDISOL main access class directory.
+     */
+    static function basalt_base_dir() {
+        return self::base_dir();
+    }
+        
+    /***********************/
+    /**
+    \returns the POSIX path to the ANDISOL main access class directory.
+     */
+    static function main_class_dir() {
+        return self::basalt_base_dir().'/main';
+    }
+    
+    /***********************/
+    /**
+    \returns the POSIX path to the ANDISOL testing directory.
+     */
+    static function test_class_dir() {
+        return self::basalt_base_dir().'/test';
+    }
+    
+    /***********************/
+    /**
+    \returns the POSIX path to the ANDISOL localization directory.
+     */
+    static function lang_class_dir() {
+        return self::basalt_base_dir().'/lang';
+    }
+    
+    /***********************************************************************************************************************/
     /*                                                   ANDISOL STUFF                                                     */
     /***********************************************************************************************************************/
         
@@ -83,7 +119,7 @@ trait tCO_Config {
     \returns the POSIX path to the ANDISOL main access class directory.
      */
     static function andisol_main_class_dir() {
-        return self::base_dir().'/main';
+        return self::andisol_base_dir().'/main';
     }
     
     /***********************/
@@ -91,7 +127,7 @@ trait tCO_Config {
     \returns the POSIX path to the ANDISOL testing directory.
      */
     static function andisol_test_class_dir() {
-        return self::base_dir().'/test';
+        return self::andisol_base_dir().'/test';
     }
     
     /***********************/
@@ -99,7 +135,7 @@ trait tCO_Config {
     \returns the POSIX path to the ANDISOL localization directory.
      */
     static function andisol_lang_class_dir() {
-        return self::base_dir().'/lang';
+        return self::andisol_base_dir().'/lang';
     }
     
     /***********************/
