@@ -23,11 +23,14 @@ require_once(dirname(__FILE__).'/t_config.interface.php');  ///< You may need to
 class CO_Config {
     use tCO_Config; // These are the built-in config methods.
 
-    static private $_god_mode_id = 2;   ///< God Login Security DB ID. This is private, so it can't be programmatically changed.
+    static private $_god_mode_id = 2;               ///< God Login Security DB ID. This is private, so it can't be programmatically changed.
     static private $_god_mode_password = '<GOD MODE PASSWORD>'; ///< Plaintext password for the God Mode ID login. This overrides anything in the ID row.
     
-    static $lang = 'en';                ///< The default language for the server.
-    static $min_pw_len = 8;             ///< The minimum password length.
+    static $lang = 'en';                            ///< The default language for the server.
+    static $min_pw_len = 8;                         ///< The minimum password length.
+    static $session_timeout_in_seconds = 600;       ///< Session timeout, in seconds (integer value). Default is 10 minutes.
+    static $require_ssl_for_authentication = true;  ///< If false (default is true), then the HTTP authentication can be sent over non-TLS (Should only be false for testing).
+    static $require_ssl_for_all = false;            ///< If true (default is false), then all interactions should be SSL (If true, then $require_ssl_for_authentication is ignored).
     
     /// Each database has a separate setup. They can be different technologies oand/or servers.
     static $data_db_name = '<DATA DB NAME>';
