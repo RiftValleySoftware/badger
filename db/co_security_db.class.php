@@ -105,6 +105,30 @@ class CO_Security_DB extends A_CO_DB {
     
     /***********************/
     /**
+    This is a special "raw" function for getting login credentials from an API key.
+    
+    \returns an associative array, with the login ID and hashed password that correspond to the API key.
+     */
+    public function get_credentials_by_api_key( $in_api_key    ///< The API Key of the element.
+                                                ) {
+        $ret = NULL;
+        
+        $sql = 'SELECT * FROM '.$this->table_name.' WHERE api_key=?';
+        $params = Array(trim($in_api_key));
+        
+        $temp = $this->execute_query($sql, $params);
+        if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
+            $result = $this->_instantiate_record($temp[0]);
+            if ($result) {
+                $ret = Array('login_id' => $result->login_id, 'hashed_password' => $result->get_crypted_password());
+            }
+        }
+        
+        return $ret;
+    }
+    
+    /***********************/
+    /**
     This is a very "raw" function that should ONLY be called from a special check from the access class.
     
     It has no security screening, as this is just for checking.
