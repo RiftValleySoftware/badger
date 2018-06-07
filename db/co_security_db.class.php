@@ -109,17 +109,17 @@ class CO_Security_DB extends A_CO_DB {
     
     \returns an associative array, with the login ID and hashed password that correspond to the API key.
      */
-    public function get_credentials_by_api_key( $in_api_key    ///< The API Key of the element.
+    public function get_credentials_by_api_key( $in_api_key ///< The API Key of the element.
                                                 ) {
         $ret = NULL;
         
-        $sql = 'SELECT * FROM '.$this->table_name.' WHERE api_key=?';
-        $params = Array(trim($in_api_key));
+        $sql = 'SELECT * FROM '.$this->table_name.' WHERE api_key LIKE ?';
+        $params = Array(trim($in_api_key).' - %');
         
         $temp = $this->execute_query($sql, $params);
         if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
             $result = $this->_instantiate_record($temp[0]);
-            if ($result) {
+            if ($result && $result->is_api_key_valid($in_api_key)) {
                 $ret = Array('login_id' => $result->login_id, 'hashed_password' => $result->get_crypted_password());
             }
         }

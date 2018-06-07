@@ -24,8 +24,36 @@ require_once(CO_Config::db_class_dir().'/co_security_node.class.php');
 This is the specializing class for the login ID record type.
  */
 class CO_Security_Login extends CO_Security_Node {
-    private $_override_access_class;    ///< This is a special "one-shot" semaphore telling the save to override the access class.
+    private     $_override_access_class;    ///< This is a special "one-shot" semaphore telling the save to override the access class.
+    protected   $_api_key;                  ///< This is an API key for REST.
+    
     var $login_id;
+    
+    /***********************/
+    /**
+    Generates a cryptographically secure string.
+        
+    \returns a randome string.
+     */
+    protected static function _random_str($length, $keyspace = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!.,;?')
+    {
+        $pieces = [];
+        $max = mb_strlen($keyspace, '8bit') - 1;
+        for ($i = 0; $i < $length; ++$i) {
+            $pieces []= $keyspace[random_int(0, $max)];
+        }
+        return implode('', $pieces);
+    }
+    
+    /***********************/
+    /**
+    This sets up a new API key after the login has been successfully verified.
+     */
+    protected function _set_up_api_key() {
+        $temp_api_key = self::_random_str(64);
+        $temp_api_key .= ' - '.strval(microtime(true));
+        $this->_api_key = strval($temp_api_key);
+    }
     
     /***********************************************************************************************************************/
     /***********************/
@@ -42,6 +70,7 @@ class CO_Security_Login extends CO_Security_Node {
         $default_setup = parent::_default_setup();
         $default_setup['login_id'] = $this->login_id;
         $default_setup['object_name'] = $this->login_id;
+        $default_setup['api_key'] = $this->_api_key;
         
         return $default_setup;
     }
@@ -57,6 +86,7 @@ class CO_Security_Login extends CO_Security_Node {
     protected function _build_parameter_array() {
         $ret = parent::_build_parameter_array();
         
+        $ret['api_key'] = $this->_api_key;
         $ret['login_id'] = $this->login_id;
         if ($this->_override_access_class) {
             $ret['access_class'] = 'CO_Security_ID';
@@ -90,6 +120,10 @@ class CO_Security_Login extends CO_Security_Node {
         
         if (!isset($this->context['lang'])) {
             $this->context['lang'] = CO_Config::$lang;
+        }
+            
+        if (isset($in_db_result['api_key'])) {
+            $this->_api_key = $in_db_result['api_key'];
         }
         
         if (intval($this->id()) == intval(CO_Config::god_mode_id())) {
@@ -125,6 +159,10 @@ class CO_Security_Login extends CO_Security_Node {
                 $this->login_id = $in_db_result['login_id'];
                 $this->instance_description = isset($this->name) && $this->name ? "$this->name (".$this->login_id.")" : "Unnamed Login Node (".$this->login_id.")";
             }
+            
+            if (isset($in_db_result['api_key'])) {
+                $this->_api_key = $in_db_result['api_key'];
+            }
         }
         
         return $ret;
@@ -159,9 +197,10 @@ class CO_Security_Login extends CO_Security_Node {
     /**
     \returns true, if the presented credentials are good.
      */
-    public function is_login_valid( $in_login_id,               ///< The login ID
-                                    $in_hashed_password = NULL, ///< The password, crypt-hashed
-                                    $in_raw_password = NULL     ///< The password, cleartext.
+    public function is_login_valid( $in_login_id,                       ///< The login ID
+                                    $in_hashed_password = NULL,         ///< The password, crypt-hashed
+                                    $in_raw_password = NULL,            ///< The password, cleartext.
+                                    $in_dont_create_new_api_key = false ///< If true, then we don't create a new API key.
                                     ) {
         $ret = false;
         if (isset($this->login_id) && $this->login_id && ($this->login_id == $in_login_id)) {
@@ -181,6 +220,11 @@ class CO_Security_Login extends CO_Security_Node {
                     }
                 }
             }
+        }
+        
+        // Generate an API key. We can't save it yet, as we're probably not actually logged in.
+        if ($ret && !$in_dont_create_new_api_key) {
+            $this->_set_up_api_key();
         }
         
         return $ret;
@@ -247,6 +291,38 @@ class CO_Security_Login extends CO_Security_Node {
         if ($this->user_can_write()) {
             $this->context['hashed_password'] = $this->get_crypted_password($in_cleartext_password);
             $ret = $this->update_db();
+        }
+        
+        return $ret;
+    }
+    
+    /***********************/
+    /**
+     This tests a given API key against the stored value. It also checks time elapsed, to ensure that we are still within the login window.
+     
+     \returns TRUE, if the API key is valid, and we are still within the allotted timespan for the key.
+     */
+    public function is_api_key_valid(   $in_api_key ///< The API key that we're testing.
+                                    ) {
+        $ret = ($this->get_api_key() == $in_api_key);
+        
+        return $ret;
+    }
+    
+    /***********************/
+    /**
+    \returns a string, with the API key, if the key is still valid. NULL, otherwise.
+     */
+    public function get_api_key() {
+        $ret = NULL;
+    
+        if (isset($this->_api_key) && $this->_api_key) {
+            list($api_key, $api_time) = explode(' - ', trim($this->_api_key));
+            
+            // We first check to make sure that we are still within the time window. If not, then all bets are off.
+            if (isset($api_time) && ((microtime(true) - floatval($api_time)) <= floatval(CO_Config::$session_timeout_in_seconds))) {
+                $ret = $api_key;
+            }
         }
         
         return $ret;
