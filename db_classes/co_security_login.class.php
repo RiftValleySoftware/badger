@@ -306,6 +306,13 @@ class CO_Security_Login extends CO_Security_Node {
                                     ) {
         $ret = ($this->get_api_key() == $in_api_key);
         
+        if ($ret && !$this->error) {
+            $this->error = new LGV_Error(   CO_Lang_Common::$login_error_code_api_key_mismatch,
+                                            CO_Lang::$login_error_name_api_key_mismatch,
+                                            CO_Lang::$login_error_desc_api_key_mismatch
+                                        );
+        }
+        
         return $ret;
     }
     
@@ -322,6 +329,11 @@ class CO_Security_Login extends CO_Security_Node {
             // We first check to make sure that we are still within the time window. If not, then all bets are off.
             if (isset($api_time) && ((microtime(true) - floatval($api_time)) <= floatval(CO_Config::$session_timeout_in_seconds))) {
                 $ret = $api_key;
+            } elseif ($api_key) {
+                $this->error = new LGV_Error(   CO_Lang_Common::$login_error_code_api_key_invalid,
+                                                CO_Lang::$login_error_name_api_key_invalid,
+                                                CO_Lang::$login_error_desc_api_key_invalid
+                                            );
             }
         }
         

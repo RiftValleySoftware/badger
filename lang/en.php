@@ -49,5 +49,10 @@ class CO_Lang {
     static  $access_error_desc_class_file_not_found = 'The file for the class being instantiated was not found.';
     static  $access_error_name_class_not_created = 'Class was not created.';
     static  $access_error_desc_class_not_created = 'The attempt to instantiate the class failed.';
+    
+    static  $login_error_name_api_key_invalid = 'API Key Invalid';
+    static  $login_error_desc_api_key_invalid = 'The API key is either invalid, or has expired. You need to log in again, and acquire a new API key.';
+    static  $login_error_name_api_key_mismatch = 'API Key Mismatch';
+    static  $login_error_desc_api_key_mismatch = 'The API key does not match the API key for this instance.';
 }
 ?>

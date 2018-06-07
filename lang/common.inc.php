@@ -41,5 +41,8 @@ class CO_Lang_Common {
     static  $access_error_code_user_not_authorized = 400;
     static  $access_error_code_class_file_not_found = 401;
     static  $access_error_code_class_not_created = 402;
+    
+    static  $login_error_code_api_key_invalid = 403;
+    static  $login_error_code_api_key_mismatch = 404;
 }
 ?>
