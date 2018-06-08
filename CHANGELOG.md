@@ -1,4 +1,4 @@
-**1.0.0.2033** *(TBD)*
+**1.0.0.2033** *(June 8, 2018)*
 
 - Tweaked the config trait to have ANDISOL-specific aspects.
 - Added support for the API keys (for REST access).
