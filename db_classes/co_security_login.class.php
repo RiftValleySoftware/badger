@@ -330,8 +330,11 @@ class CO_Security_Login extends CO_Security_Node {
         if (isset($this->_api_key) && $this->_api_key) {
             list($api_key, $api_time) = explode(' - ', trim($this->_api_key));
             
+            // God Mode gets a different timeout.
+            $timeout = floatval($this->i_am_a_god() ? CO_Config::$god_session_timeout_in_seconds : CO_Config::$session_timeout_in_seconds);
+            
             // We first check to make sure that we are still within the time window. If not, then all bets are off.
-            if (isset($api_time) && ((microtime(true) - floatval($api_time)) <= floatval(CO_Config::$session_timeout_in_seconds))) {
+            if (isset($api_time) && ((microtime(true) - floatval($api_time)) <= $timeout)) {
                 $ret = $api_key;
             } elseif ($api_key) {
                 $this->error = new LGV_Error(   CO_Lang_Common::$login_error_code_api_key_invalid,
