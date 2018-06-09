@@ -4,13 +4,14 @@
 
 BADGER
 ======
+
 Part of the Rift Valley Platform
 --------------------------------
+
 ![Rift Valley Platform](images/RVPLogo.png)
 
 INTRODUCTION
 ============
-![BADGER Diagram](images/BADGERLayers.png)
 
 This is the baseline database system for the secure database toolbox.
 
@@ -18,7 +19,7 @@ It's a low-level database storage system that implements a generic KVP database 
 
 BADGER will work equally well for both [MySQL](https://www.mysql.com) and [PostgreSQL](https://www.postgresql.org) databases.
 
-BADGER has two completely separate databases: One is the main "Data Bucket" database, and the other is a security database. They can be separate hosts and even database types (MySQL or Postgres).
+BADGER has two completely separate databases: One is the main "Data Bucket" database, and the other is a security database. They can be separate hosts and even database types ([MySQL](https://www.mysql.com) or [PostgreSQL](https://www.postgresql.org)).
 
 BADGER has an ultra-simple schema. Each database has only one table.
 
@@ -28,6 +29,8 @@ Each database table row (either database) has a read token and a write token. It
 
 BADGER is extremely basic. No relating or data processing is done by BADGER, with one exception: it does have longitude and latitude (in degrees) built into its table schema, for the simple reason that being able to access these at the SQL level greatly improves performance. We  have a built-in [Haversine](https://en.wikipedia.org/wiki/Haversine_formula) search in SQL to act as a "rapid triage" for locations, which are then filtered using the more accurate (and computationally-intense) [Vincenty's Formulae](https://en.wikipedia.org/wiki/Vincenty%27s_formulae). This means that geographic location/radius searches are extremely accurate, and very fast.
 
+![BADGER Diagram](images/BADGERLayers.png)
+
 DESCRIPTION
 ===========
 
@@ -36,16 +39,16 @@ PDO
 
 At the lowest level, the system uses [PHP PDO](https://php.net/pdo) to access the data base through [PDO Prepared Statements](https://secure.php.net/manual/en/pdo.prepared-statements.php).
 
-This enhances security by ensuring that all database access is "scrubbed" by PDO, so the risk of [SQL injection attacks](https://www.w3schools.com/sql/sql_injection.asp) is greatly reduced.
+This enhances security by ensuring that all database access is "scrubbed" by [PDO](https://php.net/pdo), so the risk of [SQL injection attacks](https://www.w3schools.com/sql/sql_injection.asp) is greatly reduced.
 
-PDO also helps the system to be "database agnostic," as PDO has equal support for both [MySQL](https://www.mysql.com) and [PostgreSQL](https://www.postgresql.org). It is designed to scale for large datasets.
+[PDO](https://php.net/pdo) also helps the system to be "database agnostic," as [PDO](https://php.net/pdo) has equal support for both [MySQL](https://www.mysql.com) and [PostgreSQL](https://www.postgresql.org). It is designed to scale for large datasets.
 
 TWO INDEPENDENT DATABASES
 -------------------------
 
 The fundamental database/storage structure is that there are two separate databases (not just different tables on a single database), with one containing data, and the other containing logins and security tokens.
 
-Each database is managed by its own PDO instance, so they don't need to be on the same server, or even be the same technology.
+Each database is managed by its own [PDO](https://php.net/pdo) instance, so they don't need to be on the same server, or even be the same technology.
 
 MYSQL AND POSTGRESQL
 --------------------
@@ -62,15 +65,17 @@ SECURITY TOKENS
 
 Access to read and write data entities is determined by "security tokens." Security tokens are simple integers, each representing an ID in the security database. Database table rows are assigned a read token and a write token.
 
-Logins in the security database are assigned a series of integer tokens in a CSV list, in addition to their own ID. If the login item has the token for reading or writing assigned to a particular row, then that login has permission to read (and maybe write) that row.
+Logins in the security database are assigned a series of integer tokens in a [CSV](https://en.wikipedia.org/wiki/Comma-separated_values) list, in addition to their own ID. If the login item has the token for reading or writing assigned to a particular row, then that login has permission to read (and maybe write) that row.
 
 Badger is designed to mask rows that don't meet the login security token list at the database query level, so they never even make it into the system.
 
-Tokens are checked after reloading the logged in user, so it is not possible for a logged-in user to escalate their permissions.
+Tokens are checked after reloading the logged in user, making it quite difficult for a logged-in user to escalate their permissions.
 
 The security database has two kinds of rows: logins and security token IDs (Whose entire reason for existence is to hold a security token). Each login is also a security token ID, but has a hashed password and login ID associated.
 
-BADGER has the basic login class (CO_Security_Login), and the token placeholder class (CO_Security_ID). These are both security database classes (not applied to the data database).
+BADGER has the basic login class (`CO_Security_Login`), and the token placeholder class (`CO_Security_ID`). These are both security database classes (not applied to the data database).
+
+\ref CHAMELEON will extend the `CO_Security_Login` class to be the `CO_Login_Manager` class, but that's a topic for a different day...
 
 THERE IS NO GOD BUT GOD
 -----------------------
@@ -109,14 +114,14 @@ It's designed to be replaced. Keeping the storage metaphor to a fairly linear, n
 OBJECT PERSISTENCE
 ------------------
 
-BADGER is actually an "object persistence" engine, as opposed to a traditional database. Each row of either database has an "access_class" column. This is the classname of the instance that has its data stored in that row, and reading in the row will instantiate that class.
+BADGER is actually an "object persistence" engine, as opposed to a traditional database. Each row of either database has an `"access_class"` column. This is the classname of the instance that has its data stored in that row, and reading in the row will instantiate that class.
 
-Each row also has an "access_class_context" column, which contains a serialized associative array, called "context" inside the instance. Whatever is in that array will be stored and restored.
+Each row also has an `"access_class_context"` column, which contains a serialized associative array, called `"context"` inside the instance. Whatever is in that array will be stored and restored.
 
 LONGITUDE AND LATITUDE
 ----------------------
 
-The one built-in specialization is the inclusion of "longitude" and "latitude" (in degrees) columns in the "data" database table. This is because it is possible to do highly efficient, fast [Haversine](https://en.wikipedia.org/wiki/Haversine_formula) lookups in SQL. We have built these into the system.
+The one built-in specialization is the inclusion of `"longitude"` and `"latitude"` (in degrees) columns in the "data" database table. This is because it is possible to do highly efficient, fast [Haversine](https://en.wikipedia.org/wiki/Haversine_formula) lookups in SQL. We have built these into the system.
 
 Once a Haversine search has been made, the resulting data set is then subjected to the more accurate [Vincenty's Formula](https://en.wikipedia.org/wiki/Vincenty%27s_formulae) in order to "fine tune" the result.
 
@@ -125,26 +130,26 @@ The result of this, is that Badger is an ideal vehicle to keep a database of loc
 TAGS
 ----
 
-Each "data" database row has ten "tags." These are 255-character "VARCHAR" fields that can be used for many things. They are indexed for fast search (thus, are limited in length).
+Each "data" database row has ten `"tags"`. These are 255-character `"VARCHAR"` fields that can be used for many things. They are indexed for fast search (thus, are limited in length).
 
 PAYLOAD
 -------
 
-The "data" database schema also specifies a "TEXT" (Postgres) or "LONGBLOB" (MySQL) column, called "payload". This is used to store larger data with a data item. It is not indexed, and can store binary (and encrypted) data, but the data is stored internally as [Base64](https://en.wikipedia.org/wiki/Base64).
+The "data" database schema also specifies a `"TEXT"` ([PostgreSQL](https://www.postgresql.org)) or `"LONGBLOB"` ([MySQL](https://www.mysql.com)) column, called `"payload"`. This is used to store larger data with a data item. It is not indexed, and can store binary (and encrypted) data, but the data is stored internally as [Base64](https://en.wikipedia.org/wiki/Base64).
 
 IMPLEMENTATION
 ==============
 
-You implement BADGER by setting up a pair of databases, using the CO_Config class, and then instantiate CO_Access. This will be used as the "control panel" of BADGER.
+You implement BADGER by setting up a pair of databases, using the `CO_Config` class, and then instantiate `CO_Access`. This will be used as the "control panel" of BADGER.
 
 EXTENDING AND SPECIALIZING BADGER
 =================================
 
-Badger is a baseline system. It provides a generic interface to a simple database, and is not designed to be used "as is." It should be extended via subclasses of the row classes and the access class.
+BADGER is a baseline system. It provides a generic interface to a simple database, and is not designed to be used "as is." It should be extended via subclasses of the row classes and the access class.
 
-In order to extend the row classes, you should create a directory (path and name determined by the config class). Put your classes that extend the class in "db/a_co_db_table_base.class.php" there (actually, you should be extending subclasses of this base class). It does not need to be in the HTTP path.
+In order to extend the row classes, you should create a directory (path and name determined by the `CO_Config` class). Put your classes that extend the class in `"db/a_co_db_table_base.class.php"` there (actually, you should be extending subclasses of this base class). It does not need to be in the HTTP path.
 
-The files containing classes should be named after the class, all lower case, with '.class.php' appended.
+The files containing classes should be named after the class, all lower case, with `'.class.php'` appended.
 
 LICENSE
 =======
