@@ -349,6 +349,21 @@ class CO_Security_Login extends CO_Security_Node {
     
     /***********************/
     /**
+    \returns an integer, with the number of seconds since the API key was created. -1 if there is no API key. This will return a value, even if the API key is present, but expired.
+     */
+    function get_api_key_age_in_seconds() {
+        $ret = -1;
+        
+        if (isset($this->_api_key) && $this->_api_key) {
+            list($api_key, $api_time) = explode(' - ', trim($this->_api_key));
+            $ret = ceil(microtime(true) - floatval($api_time));
+        }
+        
+        return $ret;
+    }
+    
+    /***********************/
+    /**
     Removes the API Key.
     
      \returns true, if the operation was successful (even if there was no previous key).

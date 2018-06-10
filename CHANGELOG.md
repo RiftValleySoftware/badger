@@ -2,6 +2,7 @@
 
 - Improved documentation.
 - Added method to clear the API Key.
+- Added a method to access the API Key age.
 
 **1.0.0.2033** *(June 8, 2018)*
 
