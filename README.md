@@ -7,8 +7,9 @@ BADGER
 
 Part of the Rift Valley Platform
 --------------------------------
-
 ![Rift Valley Platform](images/RVPLogo.png)
+
+![BAOBAB Server](images/BAOBABLogo.png)
 
 INTRODUCTION
 ============
