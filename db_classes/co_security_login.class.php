@@ -304,7 +304,7 @@ class CO_Security_Login extends CO_Security_Node {
     /**
      This tests a given API key against the stored value. It also checks time elapsed, to ensure that we are still within the login window.
      
-     \returns TRUE, if the API key is valid, and we are still within the allotted timespan for the key.
+     \returns true, if the API key is valid, and we are still within the allotted timespan for the key.
      */
     public function is_api_key_valid(   $in_api_key ///< The API key that we're testing.
                                     ) {
@@ -345,6 +345,18 @@ class CO_Security_Login extends CO_Security_Node {
         }
         
         return $ret;
+    }
+    
+    /***********************/
+    /**
+    Removes the API Key.
+    
+     \returns true, if the operation was successful (even if there was no previous key).
+     */
+    public function clear_api_key() {
+        $this->_api_key = NULL;
+        
+        return $this->update_db();
     }
     
     /***********************/
