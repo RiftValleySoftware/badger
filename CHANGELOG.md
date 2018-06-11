@@ -3,6 +3,8 @@
 - Improved documentation.
 - Added method to clear the API Key.
 - Added a method to access the API Key age.
+- Added the new logging function to the sample config file.
+- Updated the sample database SQL to be relevant to the current structure of things.
 
 **1.0.0.2033** *(June 8, 2018)*
 
