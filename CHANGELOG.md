@@ -1,4 +1,4 @@
-**1.0.0.2034** *(TBD)*
+**1.0.0.2034** *(June 11, 2018)*
 
 - Improved documentation.
 - Added method to clear the API Key.
