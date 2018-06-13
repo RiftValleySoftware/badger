@@ -263,10 +263,11 @@ abstract class A_CO_DB_Table_Base {
         } else {
             if (isset($ids) && is_array($ids) && count($ids)) {
                 $ret = in_array($my_read_item, $ids) || in_array($my_write_item, $ids);
-                if (!$ret && $this->get_access_object()->get_login_id()) {
-                    $ret = (1 == $my_read_item);  // Logged-in users can read 1s.
-                }
             }
+        }
+        
+        if (!$ret && $this->get_access_object()->get_login_id()) {
+            $ret = (1 == $my_read_item);  // Logged-in users can read 1s.
         }
         
         return $ret;
