@@ -14,7 +14,7 @@ INTRODUCTION
 
 This is the baseline database system for the secure database toolbox.
 
-It's a low-level database storage system that implements a generic KVP database and a separate security database.
+It's a low-level database storage system that implements a generic database and a separate security database.
 
 BADGER will work equally well for both [MySQL](https://www.mysql.com) and [PostgreSQL](https://www.postgresql.org) databases.
 
