@@ -36,7 +36,7 @@ DESCRIPTION
 PDO
 ---
 
-At the lowest level, the system uses [PHP PDO](https://php.net/pdo) to access the data base through [PDO Prepared Statements](https://secure.php.net/manual/en/pdo.prepared-statements.php).
+At the lowest level, the system uses [PHP PDO](https://php.net/pdo) to access the databases through [PDO Prepared Statements](https://secure.php.net/manual/en/pdo.prepared-statements.php).
 
 This enhances security by ensuring that all database access is "scrubbed" by [PDO](https://php.net/pdo), so the risk of [SQL injection attacks](https://www.w3schools.com/sql/sql_injection.asp) is greatly reduced.
 
@@ -54,7 +54,7 @@ MYSQL AND POSTGRESQL
 
 The Rift Valley Platform has been designed to allow seamless implementation with either [MySQL](https://www.mysql.com) or [PostgreSQL](https://www.postgresql.org). It is as simple as switching the driver type in the config file. There is no penalty for using either one.
 
-The databases can also be mixed. You can have, for example, a [MySQL](https://www.mysql.com) database, hosted in a hardened facility, as your Security database, and a [PostgreSQL](https://www.postgresql.org) database as your main data database.
+The databases can also be mixed. You can have, for example, a [MySQL](https://www.mysql.com) database, hosted in a hardened facility, as your Security database, and a local [PostgreSQL](https://www.postgresql.org) database as your main data database.
 
 SECURITY
 ========
