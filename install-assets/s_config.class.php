@@ -36,7 +36,7 @@ class CO_Config {
                                                                                 There is no function return.
                                                                                 The function will take care of logging the REST connection in whatever fashion the user desires.
                                                                                 This will assume a successful ANDISOL instantiation, and is not designed to replace the traditional server logs.
-                                                                                It should be noted that there may be legal, ethical and resource ramifications for logging.
+                                                                                It should be noted that there may be security, legal, ethical and resource ramifications for logging.
                                                                                 It is up to the implementor to ensure compliance with all constraints.
                                                                         */
 
