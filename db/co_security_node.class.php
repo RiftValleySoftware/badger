@@ -183,11 +183,10 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
                     $temp_ids = array_map('intval', $in_ids_array);
                     $new_ids = Array();
                     foreach($temp_ids as $in_id) {
-                        if ($this->get_access_object()->god_mode() || (in_array($in_id, $id_pool))) {
+                        if (($in_id != $this->id()) && ($this->get_access_object()->god_mode() || in_array($in_id, $id_pool))) {
                             $new_ids[] = $in_id;
                         }
                     }
-                
                     if (count($new_ids)) {
                         $this->_ids = $new_ids;
                     }
@@ -234,7 +233,7 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
             
             if ($this->get_access_object()->god_mode() || (isset($id_pool) && is_array($id_pool) && count($id_pool))) {
                 // We can add an ID to the user, as long as it is one we own. We don't have to have full access to all user IDs.
-                if ($this->get_access_object()->god_mode() || (in_array($in_id, $id_pool))) {
+                if (($this->get_access_object()->god_mode() || (in_array($in_id, $id_pool))) && ($in_id != $this->id())) {
                     if (!isset($this->_ids) || !is_array($this->_ids) || !count($this->_ids)) {
                         $this->_ids = Array(intval($in_id));
                     } else {
