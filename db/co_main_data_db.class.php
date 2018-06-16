@@ -617,10 +617,11 @@ class CO_Main_Data_DB extends A_CO_DB {
         $params = $sql_and_params['params'];
         
         if ($sql) {
-// // Commented out, but useful for debugging.
+            $temp = $this->execute_query($sql, $params);
+// Commented out, but useful for debugging.
 // echo('SQL:<pre>'.htmlspecialchars(print_r($sql, true)).'</pre>');
 // echo('PARAMS:<pre>'.htmlspecialchars(print_r($params, true)).'</pre>');
-            $temp = $this->execute_query($sql, $params);
+// echo('RESULT:<pre>'.htmlspecialchars(print_r($temp, true)).'</pre>');
             if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
                 if ($count_only) {  // Different syntax for MySQL and Postgres
                     if (isset($temp[0]['count(*)'])) {
