@@ -1,3 +1,7 @@
+**1.0.0.2035** *(TBD)*
+
+- Added very low-level logging facility.
+
 **1.0.0.2034** *(June 11, 2018)*
 
 - Improved documentation.

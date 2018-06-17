@@ -41,13 +41,12 @@ class CO_PDO {
 		
 		Will destroy previous connection (if one exists).
 	*/
-	public function __construct(
-								$driver,			///< database server type (ex: 'mysql')
-								$host,				///< database server host
-								$database,			///< database name
-								$user = NULL,		///< user, optional
-								$password = NULL,	///< password, optional
-								$charset = NULL		///< connection charset, optional
+	public function __construct(    $driver,			///< database server type (ex: 'mysql')
+                                    $host,				///< database server host
+                                    $database,			///< database name
+                                    $user = NULL,		///< user, optional
+                                    $password = NULL,	///< password, optional
+                                    $charset = NULL		///< connection charset, optional
 								) {
         
         $this->class_description = 'A class for managing PDO access to the databases.';
@@ -81,8 +80,7 @@ class CO_PDO {
 		\throws Exception	 thrown if internal PDO exception is thrown
 		\returns true if execution is successful.
 	*/
-	public function preparedExec(
-								    $sql,				///< same as kind provided to PDO::prepare()
+	public function preparedExec(   $sql,				///< same as kind provided to PDO::prepare()
 								    $params = array()	///< same as kind provided to PDO::prepare()
 						        )
 	{
@@ -96,8 +94,8 @@ class CO_PDO {
 			}
 			
 			$sql = str_replace(' RETURNING id', '', $sql);
-// echo('SQL:<pre>'.htmlspecialchars(print_r($sql, true)).'</pre>');
-// echo('PARAMS:<pre>'.htmlspecialchars(print_r($params, true)).'</pre>');
+		    // This represents a potential MASSIVE security, performnce and legal issue. This should ONLY be used for debugging!
+			CO_Config::call_low_level_log_handler_function(isset($this->owner_instance) ? $this->owner_instance->access_object->get_login_id() : 0, $sql, $params);
             $stmt = $this->_pdo->prepare($sql);
             $this->_pdo->beginTransaction(); 
             $stmt->execute($params);
@@ -130,14 +128,13 @@ class CO_PDO {
 		\returns associative array of results.
 		\throws Exception	 thrown if internal PDO exception is thrown
 	*/
-	public function preparedQuery(
-										$sql,					///< same as kind provided to PDO::prepare()
-										$params = array(),		///< same as kind provided to PDO::prepare()
-										$fetchKeyPair = false   ///< See description in method documentation
-										) {
+	public function preparedQuery(  $sql,					///< same as kind provided to PDO::prepare()
+									$params = array(),		///< same as kind provided to PDO::prepare()
+									$fetchKeyPair = false   ///< See description in method documentation
+								) {
 		try {
-// echo('SQL:<pre>'.htmlspecialchars(print_r($sql, true)).'</pre>');
-// echo('PARAMS:<pre>'.htmlspecialchars(print_r($params, true)).'</pre>');
+		    // This represents a potential MASSIVE security, performnce and legal issue. This should ONLY be used for debugging!
+			CO_Config::call_low_level_log_handler_function(isset($this->owner_instance) ? $this->owner_instance->access_object->get_login_id() : 0, $sql, $params);
             $stmt = $this->_pdo->prepare($sql);
             $stmt->setFetchMode($this->fetchMode);
             $this->_pdo->beginTransaction(); 
@@ -151,8 +148,6 @@ class CO_PDO {
             } else {
                 $ret = $stmt->fetchAll();
             }
-
-// echo('RESULT:<pre>'.htmlspecialchars(print_r($ret, true)).'</pre>');
             
             return $ret;
 		} catch (PDOException $exception) {

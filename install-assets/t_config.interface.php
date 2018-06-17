@@ -23,6 +23,38 @@ trait tCO_Config {
     /***********************************************************************************************************************/
     /*                                                    COMMON STUFF                                                     */
     /***********************************************************************************************************************/
+    /***********************/
+    /**
+                                              WARNING: DANGER WILL ROBINSON DANGER
+    This is a special "callback caller" for logging Database calls (PDO). The callback must be defined in the CO_Config::$_low_level_log_handler_function static variable,
+    either as a function (global scope), or as an array (with element 0 being the object, itself, and element 1 being the name of the function).
+    For most functions in the global scope, this will simply be the function name.
+    If this will be an object method, then it should be an array, with element 0 as the object, and element 1 a string, containing the function name.
+    The function signature will be:
+        function log_callback(  $in_id,     ///< REQUIRED: The numeric login ID of the currently logged-in user..
+                                $in_sql,    ///< REQUIRED: The SQL being sent to the PDO prepared query.
+                                $in_params  ///< REQUIRED: Any parameters that are being sent in the prepared query.
+                            );
+    There is no function return.
+    The function will take care of logging the SQL query in whatever fashion the user desires.
+    THIS SHOULD BE DEBUG ONLY!!! There are so many security implications in leaving this on, that I can't even begin to count. Also, performance will SUCK.
+    It should be noted that there may be legal, ethical and resource ramifications for logging.
+    It is up to the implementor to ensure compliance with all constraints.
+    */
+    static function call_low_level_log_handler_function(    $in_id,     ///< REQUIRED: The numeric login ID of the currently logged-in user..
+                                                            $in_sql,    ///< REQUIRED: The SQL being sent to the PDO prepared query.
+                                                            $in_params  ///< REQUIRED: Any parameters that are being sent in the prepared query.
+                                                        ) {   
+        $log_handler = self::$_low_level_log_handler_function;
+        if (isset($log_handler) && $log_handler) {
+            if (is_array($log_handler) && (1 < count($log_handler)) && is_object($log_handler[0]) && method_exists($log_handler[0], $log_handler[1])) {
+                $log_handler[0]->$log_handler[1]($in_id, $in_sql, $in_params);
+            } elseif (function_exists($log_handler)) {
+                $log_handler($in_id, $in_sql, $in_params);
+            }
+        }
+    }
+    
 
     /***********************/
     /**
