@@ -95,7 +95,9 @@ class CO_PDO {
 			
 			$sql = str_replace(' RETURNING id', '', $sql);
 		    // This represents a potential MASSIVE security, performnce and legal issue. This should ONLY be used for debugging!
-			CO_Config::call_low_level_log_handler_function(isset($this->owner_instance) ? $this->owner_instance->access_object->get_login_id() : 0, $sql, $params);
+		    if (method_exists('CO_Config', 'call_low_level_log_handler_function')) {
+			    CO_Config::call_low_level_log_handler_function(isset($this->owner_instance) ? $this->owner_instance->access_object->get_login_id() : 0, $sql, $params);
+			}
             $stmt = $this->_pdo->prepare($sql);
             $this->_pdo->beginTransaction(); 
             $stmt->execute($params);
@@ -134,7 +136,9 @@ class CO_PDO {
 								) {
 		try {
 		    // This represents a potential MASSIVE security, performnce and legal issue. This should ONLY be used for debugging!
-			CO_Config::call_low_level_log_handler_function(isset($this->owner_instance) ? $this->owner_instance->access_object->get_login_id() : 0, $sql, $params);
+		    if (method_exists('CO_Config', 'call_low_level_log_handler_function')) {
+			    CO_Config::call_low_level_log_handler_function(isset($this->owner_instance) ? $this->owner_instance->access_object->get_login_id() : 0, $sql, $params);
+			}
             $stmt = $this->_pdo->prepare($sql);
             $stmt->setFetchMode($this->fetchMode);
             $this->_pdo->beginTransaction(); 
