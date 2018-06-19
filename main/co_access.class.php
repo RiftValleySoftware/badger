@@ -271,13 +271,15 @@ class CO_Access {
      */
     public function get_login_item( $in_login_id = NULL ///< The integer login ID to check. If not-NULL, then the ID of a login instance. It must be one that the current user can see.
                                     ) {
-        $login_id = $this->get_login_id();
+        $login_id = 0;
         
         if (isset($in_login_id) && (0 < intval($in_login_id))) {
             $login_id = intval($in_login_id);
+        } else {
+            $login_id = $this->get_login_id();
         }
         
-        $ret = $this->get_single_security_record_by_id($login_id);
+        $ret = (1 < $login_id) ? $this->get_single_security_record_by_id($login_id) : NULL;
         
         return $ret;
     }
@@ -586,7 +588,7 @@ class CO_Access {
                 return NULL;
             }
         }
-        
+
         return $ret;
     }
 
