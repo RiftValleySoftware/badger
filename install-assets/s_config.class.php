@@ -64,6 +64,7 @@ class CO_Config {
     static $god_session_timeout_in_seconds  = 600;                      ///< API key session timeout for the "God Mode" login, in seconds (integer value). Default is 10 minutes.
     static $require_ssl_for_authentication  = true;                     ///< If false (default is true), then the HTTP authentication can be sent over non-TLS (Should only be false for testing).
     static $require_ssl_for_all             = false;                    ///< If true (default is false), then all interactions should be SSL (If true, then $require_ssl_for_authentication is ignored).
+    static $api_key_includes_ip_address     = false;                    ///< If true (default is false), then the API key will include the user's IP address in the generation.
     
     /// Each database has a separate setup. They can be different technologies and/or servers.
     

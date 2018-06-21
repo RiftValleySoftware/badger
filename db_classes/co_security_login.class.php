@@ -51,7 +51,14 @@ class CO_Security_Login extends CO_Security_Node {
      */
     protected function _set_up_api_key() {
         $temp_api_key = self::_random_str(64);
-        $temp_api_key .= ' - '.strval(microtime(true));
+
+        $temp_api_key .= ' - '.strval(microtime(true)); // Add the current generation microtime, for key timeout.
+        
+        // If we are taking the IP address into consideration, then we store that, as well.
+        if (isset(CO_Config::$api_key_includes_ip_address) && CO_Config::$api_key_includes_ip_address) {
+            $temp_api_key .= ' - '.strtolower(strval($_SERVER['REMOTE_ADDR']));
+        }
+        
         $this->_api_key = strval($temp_api_key);
     }
     
@@ -328,15 +335,35 @@ class CO_Security_Login extends CO_Security_Node {
         $ret = NULL;
     
         if (isset($this->_api_key) && $this->_api_key) {
-            list($api_key, $api_time) = explode(' - ', trim($this->_api_key));
-            
+            $api_expl = explode(' - ', trim($this->_api_key));
+            $my_ip = NULL;
+
             // God Mode gets a different timeout.
             $timeout = floatval($this->i_am_a_god() ? CO_Config::$god_session_timeout_in_seconds : CO_Config::$session_timeout_in_seconds);
             
             // We first check to make sure that we are still within the time window. If not, then all bets are off.
-            if (isset($api_time) && ((microtime(true) - floatval($api_time)) <= $timeout)) {
-                $ret = $api_key;
-            } elseif ($api_key) {
+            if (isset($api_expl[1]) && ((microtime(true) - floatval($api_expl[1])) <= $timeout)) {
+                if (isset(CO_Config::$api_key_includes_ip_address) && CO_Config::$api_key_includes_ip_address) {    // See if we are also checking the IP address.
+                    $my_ip = strtolower(strval($_SERVER['REMOTE_ADDR']));
+                    if (isset($api_expl[2])) {
+                        if ($api_expl[2] == $my_ip) {
+                            $ret = $api_expl[0];
+                        } else {
+                            $this->error = new LGV_Error(   CO_Lang_Common::$login_error_code_api_key_invalid,
+                                                            CO_Lang::$login_error_name_api_key_invalid,
+                                                            CO_Lang::$login_error_desc_api_key_invalid
+                                                        );
+                        }
+                    } else {
+                        $this->error = new LGV_Error(   CO_Lang_Common::$login_error_code_api_key_invalid,
+                                                        CO_Lang::$login_error_name_api_key_invalid,
+                                                        CO_Lang::$login_error_desc_api_key_invalid
+                                                    );
+                    }
+                } else {
+                    $ret = $api_expl[0];
+                }
+            } elseif ($api_expl[0]) {
                 $this->error = new LGV_Error(   CO_Lang_Common::$login_error_code_api_key_invalid,
                                                 CO_Lang::$login_error_name_api_key_invalid,
                                                 CO_Lang::$login_error_desc_api_key_invalid
@@ -410,24 +437,32 @@ class CO_Security_Login extends CO_Security_Node {
     \returns true, if the conversion was successful.
      */
     public function delete_from_db() {
-        if ($this->user_can_write()) {
-            $user_object = $this->get_user_object();
+        if ($this->id() != CO_Config::god_mode_id()) {
+            if ($this->user_can_write()) {
+                $user_object = $this->get_user_object();
             
-            if (isset($user_object) && ($user_object instanceof CO_User_Collection)) {
-                $user_object->set_login(NULL);
+                if (isset($user_object) && ($user_object instanceof CO_User_Collection)) {
+                    $user_object->set_login(NULL);
+                }
+            
+                $this->read_security_id = 0;
+                $this->write_security_id = -1;
+                $this->api_key = NULL;
+                $this->context = NULL;
+                $this->name = NULL;
+                $this->login_id = NULL;
+                $this->_ids = Array();
+                $this->_override_access_class = true;
+                $ret = $this->_write_to_db();
+                return $ret;
+            } else {
+                return false;
             }
-            
-            $this->read_security_id = 0;
-            $this->write_security_id = -1;
-            $this->context = NULL;
-            $this->name = NULL;
-            $this->login_id = NULL;
-            $this->_ids = Array();
-            $this->_override_access_class = true;
-            $ret = $this->_write_to_db();
-            return $ret;
         } else {
-            return false;
+            $this->error = new LGV_Error(   CO_Lang_Common::$login_error_code_attempt_to_delete_god,
+                                            CO_Lang::$login_error_name_attempt_to_delete_god,
+                                            CO_Lang::$login_error_desc_attempt_to_delete_god
+                                        );
         }
     }
 };

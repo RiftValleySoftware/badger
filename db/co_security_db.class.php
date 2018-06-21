@@ -119,7 +119,7 @@ class CO_Security_DB extends A_CO_DB {
         $temp = $this->execute_query($sql, $params);
         if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
             $result = $this->_instantiate_record($temp[0]);
-            if ($result && $result->is_api_key_valid($in_api_key)) {
+            if (isset($result) && ($result instanceof CO_Security_Login) && $result && $result->is_api_key_valid($in_api_key)) {
                 $ret = Array('login_id' => $result->login_id, 'hashed_password' => $result->get_crypted_password());
                 if ($result->id() == CO_Config::god_mode_id()) {
                     $ret['hashed_password'] = $in_api_key;

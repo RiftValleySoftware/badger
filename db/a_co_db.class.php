@@ -295,7 +295,7 @@ abstract class A_CO_DB {
         $predicate = $this->_create_security_predicate($and_write);
         
         if ($predicate) {
-            $predicate .= 'AND ';
+            $predicate .= ' AND ';
         }
         
         $sql = 'SELECT * FROM '.$this->table_name.' WHERE '.$predicate.'id='.intval($in_id);
@@ -500,7 +500,7 @@ abstract class A_CO_DB {
                 $predicate = $this->_create_security_predicate(true);
         
                 if ($predicate) {
-                    $predicate .= 'AND ';
+                    $predicate .= ' AND ';
                 }
             
                 $id = isset($params_associative_array['id']) ? intval($params_associative_array['id']) : 0;  // We extract  the ID from the fields, or assume a new record.
@@ -602,7 +602,7 @@ abstract class A_CO_DB {
         $predicate = $this->_create_security_predicate(true);
         
         if ($predicate) {
-            $predicate .= 'AND ';
+            $predicate .= ' AND ';
         }
 
         // First, make sure we have write permission for this record, and that the record exists.

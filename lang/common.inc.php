@@ -44,5 +44,7 @@ class CO_Lang_Common {
     
     static  $login_error_code_api_key_invalid = 403;
     static  $login_error_code_api_key_mismatch = 404;
+    
+    static  $login_error_code_attempt_to_delete_god = 500;
 }
 ?>

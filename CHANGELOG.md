@@ -1,6 +1,8 @@
 **1.0.0.2035** *(TBD)*
 
 - Added very low-level logging facility.
+- Added a "blocker" to prevent the "God" login from being deleted.
+- Added the user's IP address as a component of the saved API key (can be enabled/disabled in the config).
 
 **1.0.0.2034** *(June 11, 2018)*
 

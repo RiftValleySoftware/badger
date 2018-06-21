@@ -54,5 +54,8 @@ class CO_Lang {
     static  $login_error_desc_api_key_invalid = 'The API key is either invalid, or has expired. You need to log in again, and acquire a new API key.';
     static  $login_error_name_api_key_mismatch = 'API Key Mismatch';
     static  $login_error_desc_api_key_mismatch = 'The API key does not match the API key for this instance.';
+    
+    static  $login_error_name_attempt_to_delete_god = 'Attempt To Delete \'God\' Login';
+    static  $login_error_desc_attempt_to_delete_god = 'You cannot delete the \'God\' login!';
 }
 ?>
