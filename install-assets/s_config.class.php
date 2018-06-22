@@ -77,9 +77,9 @@ class CO_Config {
     static $session_timeout_in_seconds      = 3600;                     ///< API key session timeout, in seconds (integer value). Default is 1 hour.
     static $god_session_timeout_in_seconds  = 600;                      ///< API key session timeout for the "God Mode" login, in seconds (integer value). Default is 10 minutes.
     static $require_ssl_for_authentication  = true;                     ///< If false (default is true), then the HTTP authentication can be sent over non-TLS (Should only be false for testing).
-    static $require_ssl_for_all             = false;                    ///< If true (default is false), then all interactions should be SSL (If true, then $require_ssl_for_authentication is ignored).
-    static $api_key_includes_ip_address     = false;                    ///< If true (default is false), then the API key will include the user's IP address in the generation.
-    static $block_logins_for_valid_api_key  = false;                    ///< If this is true, then users cannot log in if there is an active API key in place for that user (forces the user to log out, first).
+    static $require_ssl_for_all             = true;                     ///< If true (default is false), then all interactions should be SSL (If true, then $require_ssl_for_authentication is ignored).
+    static $api_key_includes_ip_address     = true;                     ///< If true (default is false), then the API key will include the user's IP address in the generation.
+    static $block_logins_for_valid_api_key  = true;                     ///< If this is true, then users cannot log in if there is an active API key in place for that user (forces the user to log out, first).
     
     /// Each database has a separate setup. They can be different technologies and/or servers.
     
