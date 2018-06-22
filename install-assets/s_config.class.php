@@ -27,6 +27,20 @@ class CO_Config {
     static private $_god_mode_id            = 2;                        ///< God Login Security DB ID. This is private, so it can't be programmatically changed.
     static private $_god_mode_password      = '<GOD MODE PASSWORD>';    ///< Plaintext password for the God Mode ID login. This overrides anything in the ID row.
     
+    static private $_login_validation_callback = NULL;  /**<    This is a special callback for validating REST logins (BASALT). For most functions in the global scope, this will simply be the function name,
+                                                                or as an array (with element 0 being the object, itself, and element 1 being the name of the function).
+                                                                If this will be an object method, then it should be an array, with element 0 as the object, and element 1 a string, containing the function name.
+                                                                The function signature will be:
+                                                                    function login_validation_callback (    $in_login_id,  ///< REQUIRED: The login ID provided.
+                                                                                                            $in_password,   ///< REQUIRED: The password (in cleartext), provided.
+                                                                                                            $in_server_vars ///< REQUIRED: The $_SERVER array, at the time of the call.
+                                                                                                        );
+                                                                The function will return a boolean, true, if the login is allowed to proceed normally, and false, if the login is to be aborted.
+                                                                If false is returned, the REST login will terminate with a 403 Forbidden response.
+                                                                It should be noted that there may be security, legal, ethical and resource ramifications for logging.
+                                                                It is up to the implementor to ensure compliance with all constraints.
+                                                        */
+    
     /// These are special callbacks for logging. Read carefully. The first logs the bottom of the stack, the second, the top.
     static private $_low_level_log_handler_function = NULL;             /**<    WARNING: DANGER WILL ROBINSON DANGER
                                                                                 This is a special "callback caller" for logging Database calls (PDO). For most functions in the global scope, this will simply be the function name,
