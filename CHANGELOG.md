@@ -4,6 +4,7 @@
 - Added a "blocker" to prevent the "God" login from being deleted.
 - Added the user's IP address as a component of the saved API key (can be enabled/disabled in the config).
 - Added the new login validator to the example config file.
+- Added a facility to prevent logins while another login is still active.
 
 **1.0.0.2034** *(June 11, 2018)*
 

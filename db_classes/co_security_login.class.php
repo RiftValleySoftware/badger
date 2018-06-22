@@ -211,14 +211,21 @@ class CO_Security_Login extends CO_Security_Node {
                                     ) {
         $ret = false;
         if (isset($this->login_id) && $this->login_id && ($this->login_id == $in_login_id)) {
-            if ($this->id() == CO_Config::god_mode_id()) { // God mode either directly reads from the config file, or uses the API key (if the hashed password parameter is filled).
-                if ($in_hashed_password) {
-                    $ret = ($in_hashed_password == $this->get_api_key());
-                } else {
-                    $ret = ($in_raw_password == CO_Config::god_mode_password());
+            if ($this->id() == CO_Config::god_mode_id()) {
+                if ($in_hashed_password == $this->get_api_key()) { // We have a special provision that allows the God hashed password to use the API key.
+                    $ret = true;
+                } else {    // God mode uses the cleartext password in the config file.
+                    if ($in_raw_password && !$in_dont_create_new_api_key && isset(CO_Config::$block_logins_for_valid_api_key) && CO_Config::$block_logins_for_valid_api_key && $this->get_api_key()) {
+                        return false;
+                    } else {
+                        $ret = ($in_raw_password == CO_Config::god_mode_password());
+                    }
                 }
             } else {
-                if (isset($this->context['hashed_password']) && $this->context['hashed_password']) {
+                // The server can be set up to prevent users from logging in while another login is still active.
+                if ($in_raw_password && !$in_dont_create_new_api_key && isset(CO_Config::$block_logins_for_valid_api_key) && CO_Config::$block_logins_for_valid_api_key && $this->get_api_key()) {
+                    return false;
+                } elseif (isset($this->context['hashed_password']) && $this->context['hashed_password']) {
                     // First, see if this is in the hashed password.
                     if ($in_hashed_password) {
                         $ret = ($in_hashed_password == $this->get_crypted_password());
