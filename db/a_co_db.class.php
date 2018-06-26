@@ -521,7 +521,10 @@ abstract class A_CO_DB {
                     
                         $sql .= ' SET '.$set_sql.' WHERE ('.$predicate.'id='.$id.')';
                         $this->execute_query($sql, $params, true);
-                        if (!$this->error) {
+                        if (!$this->error) {    // Make sure that we update the access time on cached objects.
+                            if (isset($this->_existing_record_objects[$id])) {
+                                $this->_existing_record_objects[$id]->last_access = strtotime($params_associative_array['last_access']);
+                            }
                             $ret = true;
                         }
                     } else {
