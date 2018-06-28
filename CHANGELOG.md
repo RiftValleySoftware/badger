@@ -8,6 +8,7 @@
 - Now make sure that cached record "last_access" field is updated when changes are made.
 - Added a "Server Secret" to make the API a bit more secure.
 - Added "locking" to the records, to allow for blocked access while updating.
+- Added a "batch mode," which greatly speeds up PUT operations.
 
 **1.0.0.2034** *(June 11, 2018)*
 

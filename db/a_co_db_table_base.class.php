@@ -31,6 +31,7 @@ which is common to both tabases and tables.
 abstract class A_CO_DB_Table_Base {
     protected   $_db_object;    ///< This is the actual database object that "owns" this instance. It should not be exposed beyond this class or subclasses, thereof.
     protected   $_id;           ///< This is the within-table unique ID of this record.
+    protected   $_batch_mode;   ///< If this is true, then the write_record call will not be made in update_db. It will be done when clear_batch_mode() is called, instead.
     
     var $class_description;     ///< This is a description of the class (not the instance).
     var $instance_description;  ///< This is a description that describes the instance.
@@ -41,7 +42,7 @@ abstract class A_CO_DB_Table_Base {
     var $write_security_id;     ///< This is a single integer, defining the required security token to modify the record. If it is 0, then any logged-in user can modify.
     var $context;               ///< This is a mixed associative array, containing fields for the object.
     var $error;                 ///< If there is an error, it is contained here, in a LGV_Error instance.
-    
+
     /***********************************************************************************************************************/
     /***********************/
     /**
@@ -162,6 +163,32 @@ abstract class A_CO_DB_Table_Base {
         
             $this->load_from_db($in_db_result);
         }
+    }
+    
+    /***********************/
+    /**
+    Calling this sets the object into "batch mode," where we don't call the write function (we're saving it up).
+     */
+	public function set_batch_mode() {
+	    $this->_batch_mode = true;
+    }
+    
+    /***********************/
+    /**
+    Calling this clears batch mode. It also sees if we were in batch mode previously, in which case, we call the write function.
+    
+    returns true, if the write function was called and successful.
+     */
+	public function clear_batch_mode() {
+	    $ret = false;
+	    
+	    $call_update = $this->_batch_mode;
+	    $this->_batch_mode = false;
+	    if ($call_update) {
+	        $ret = $this->update_db();
+	    }
+	    
+	    return $ret;
     }
     
     /***********************/
@@ -396,7 +423,11 @@ abstract class A_CO_DB_Table_Base {
      */
     public function update_db() {
         if (!$this->id() || $this->user_can_write()) {
-            return $this->_write_to_db();
+            if (!$this->_batch_mode) {
+                return $this->_write_to_db();
+            } else {
+                return true;
+            }
         } else {
             return false;
         }
