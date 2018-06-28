@@ -6,6 +6,8 @@
 - Added the new login validator to the example config file.
 - Added a facility to prevent logins while another login is still active.
 - Now make sure that cached record "last_access" field is updated when changes are made.
+- Added a "Server Secret" to make the API a bit more secure.
+- Added "locking" to the records, to allow for blocked access while updating.
 
 **1.0.0.2034** *(June 11, 2018)*
 

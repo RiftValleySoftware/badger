@@ -71,6 +71,8 @@ class CO_Config {
                                                                                 It is up to the implementor to ensure compliance with all constraints.
                                                                         */
 
+    static private $_server_secret = '<ADD YOUR SERVER SECRET HERE>';   ///< This is a random string of characters that must be presented in the authentication header, along with the temporary API key.
+
     /// These are the basic operational settings.
     static $lang                            = 'en';                     ///< The default language for the server.
     static $min_pw_len                      = 8;                        ///< The minimum password length.

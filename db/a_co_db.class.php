@@ -482,6 +482,46 @@ abstract class A_CO_DB {
     
     /***********************/
     /**
+    This "locks" a given record by setting its read_security_id to -2.
+    
+    \returns an integer; the previous contents of the read_security_id column.
+     */
+    public function lock_record(    $in_record_id   ///< This is the unique ID of the record to be "locked."
+                                ) {
+        $ret = 0;
+        
+        $predicate = $this->_create_security_predicate(true);
+
+        if ($predicate) {
+            $predicate .= ' AND ';
+        }
+        
+        $in_record_id = intval($in_record_id);  // Make sure we are an integer.
+        
+        if (0 < $in_record_id) {
+            // First, we look for a record with our ID, and for which we have write permission, and we get the original Read ID.
+            $sql = 'SELECT read_security_id FROM '.$this->table_name.' WHERE '.$predicate.'id='.$in_record_id;
+
+            $temp = $this->execute_query($sql, Array());
+            
+            if (isset($temp) && $temp && is_array($temp) && (1 == count($temp)) ) { // If we  got a record, then we'll be updating it.
+                $ret = intval($temp[0]);    // Get the original value.
+                
+                $sql = 'UPDATE '.$this->table_name.' SET read_security_id=-2 WHERE id='.$in_record_id;
+        
+                $temp = $this->execute_query($sql, Array());
+                
+                if ($this->error) { // If we had an error, we return squat.
+                    $ret = 0;
+                }
+            }
+        }
+        
+        return $ret;
+    }
+    
+    /***********************/
+    /**
     This updates or creates a database record (row), based on an associative array of parameters passed in.
     
     If the 'id' column is 0 or NULL, then this will be a new record.

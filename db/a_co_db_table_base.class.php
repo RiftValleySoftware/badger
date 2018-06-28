@@ -238,7 +238,25 @@ abstract class A_CO_DB_Table_Base {
     
     /***********************/
     /**
-    VERY DANGEROUS! This only exists as a utility for the deleter.
+    Locks the resource by setting the read_security_id column to -2.
+    
+    \returns an integer; the previous contents of the read_security_id column.
+     */
+    public function lock() {
+        return $this->_db_object->lock_record($this->id());
+    }
+    
+    /***********************/
+    /**
+    \returns true, if the record is currently locked.
+     */
+    public function locked() {
+        return $this->read_security_id == -2;
+    }
+    
+    /***********************/
+    /**
+    VERY DANGEROUS! This only exists as a utility for the deleter. It has to be public, because PHP does not allow "friend" classes.
     
     DON'T CALL THIS!
      */

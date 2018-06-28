@@ -58,6 +58,16 @@ trait tCO_Config {
 
     /***********************/
     /**
+    This is a random string, provided by the server, to be presented with the API key. It must match the one for this server in order to approve authentication credentials.
+    
+    \returns the server secret as a string.
+     */
+    static function server_secret() {
+        return isset(self::$_server_secret) ? self::$_server_secret : '';    // This just ensures that the return will be an ephemeral string, so there is no access to the original.
+    }
+
+    /***********************/
+    /**
     We encapsulate this, and not the password, because this is likely to be called from methods, and this prevents it from being changed.
     
     \returns the God Mode user ID.
