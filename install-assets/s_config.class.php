@@ -1,3 +1,4 @@
+<?php
 /***************************************************************************************************************************/
 /**
     BADGER Hardened Baseline Database Component
@@ -72,6 +73,17 @@ class CO_Config {
                                                                         */
 
     static private $_server_secret = '<ADD YOUR SERVER SECRET HERE>';   ///< This is a random string of characters that must be presented in the authentication header, along with the temporary API key.
+    
+    /**
+    This flag, if set to true (default is false), will allow REST users to send in an address as part of a location search.
+    This is ignored, if there is no $google_api_key. It should be noted that each address lookup does count against the API key quota, so that should be considered
+    before enabling this functionality.
+    
+    If enabled, REST users will be able to send in a 'search_address_lookup=' (instead of 'search_longitude=' and 'search_latitude=') query parameter, as well as a 'search_radius=' parameter.
+    */
+    static $allow_address_lookup = false;    
+    static $allow_general_address_lookup = false;               ///< If true (default is false), then just anyone (login not required) can do an address lookup. If false, then only logged-in users can do an address lookup. Ignored if $allow_address_lookup is false.
+    static $default_region_bias = '';                           ///< A default server Region bias.
 
     /// These are the basic operational settings.
     static $lang                            = 'en';                     ///< The default language for the server.
