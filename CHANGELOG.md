@@ -10,6 +10,7 @@
 - Added "locking" to the records, to allow for blocked access while updating.
 - Added a "batch mode," which greatly speeds up PUT operations.
 - Added support for the address lookup in the sample config file.
+- Added access to the "can_see_clearly" ID for "fuzzed" locations.
 
 **1.0.0.2034** *(June 11, 2018)*
 

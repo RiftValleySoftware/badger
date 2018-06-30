@@ -335,13 +335,44 @@ class CO_LL_Location extends CO_Main_DB_Record {
         
         if ($this->user_can_write()) {
             $in_id = intval($in_id);
+            
             if (0 == $in_id) {
                 unset($this->context['can_see_through_the_fuzz']);
             } else {
-                $this->context['can_see_through_the_fuzz'] = $in_id;
+                $ids = $this->get_access_object()->get_security_ids();
+                
+                $in_id = in_array($in_id, $ids) ? $in_id : 0;
+                
+                if ($in_id) {
+                    $this->context['can_see_through_the_fuzz'] = $in_id;
+                } else {
+                    unset($this->context['can_see_through_the_fuzz']);
+                }
             }
             
             $ret = $this->update_db();
+        }
+        
+        return $ret;
+    }
+    
+    /***********************/
+    /**
+    Getter for a security ID token that can see past the fuzz factor.
+    
+    \returns an integer, with the ID (as long as we can read it). 0 if we don't have permission for the ID, or there is none.
+     */
+    public function can_see_through_the_fuzz() {
+        $ret = 0;
+        
+        $ids = $this->get_access_object()->get_security_ids();
+
+        $my_see_item = intval($this->write_security_id);
+        
+        $the_id = intval($this->context['can_see_through_the_fuzz']);
+        
+        if (isset($ids) && is_array($ids) && count($ids)) {
+            $ret = in_array($the_id, $ids) ? $the_id : 0;
         }
         
         return $ret;
