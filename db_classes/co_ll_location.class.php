@@ -369,7 +369,7 @@ class CO_LL_Location extends CO_Main_DB_Record {
 
         $my_see_item = intval($this->write_security_id);
         
-        $the_id = intval($this->context['can_see_through_the_fuzz']);
+        $the_id = isset($this->context['can_see_through_the_fuzz']) ? intval($this->context['can_see_through_the_fuzz']) : 0;
         
         if (isset($ids) && is_array($ids) && count($ids)) {
             $ret = in_array($the_id, $ids) ? $the_id : 0;
