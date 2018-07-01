@@ -90,11 +90,15 @@ class CO_Config {
     static $min_pw_len                      = 8;                        ///< The minimum password length.
     static $session_timeout_in_seconds      = 3600;                     ///< API key session timeout, in seconds (integer value). Default is 1 hour.
     static $god_session_timeout_in_seconds  = 600;                      ///< API key session timeout for the "God Mode" login, in seconds (integer value). Default is 10 minutes.
-    static $require_ssl_for_authentication  = true;                     ///< If false (default is true), then the HTTP authentication can be sent over non-TLS (Should only be false for testing).
-    static $require_ssl_for_all             = true;                     ///< If true (default is false), then all interactions should be SSL (If true, then $require_ssl_for_authentication is ignored).
     static $api_key_includes_ip_address     = true;                     ///< If true (default is false), then the API key will include the user's IP address in the generation.
     static $block_logins_for_valid_api_key  = true;                     ///< If this is true, then users cannot log in if there is an active API key in place for that user (forces the user to log out, first).
-    
+    static $ssl_requirement_level           = CO_CONFIG_HTTPS_ALL;      /** This is the level of SSL/TLS required for transactions with the server. The possible values are:
+                                                                            - CO_CONFIG_HTTPS_OFF (0)               ///< This means that SSL is not required for ANY transacation. It is recommended this level be selected for testing only.
+                                                                            - CO_CONFIG_HTTPS_LOGIN_ONLY (1)        ///< SSL is only required for the initial 'login' call.
+                                                                            - CO_CONFIG_HTTPS_LOGGED_IN_ONLY (2)    ///< SSL is required for the login call, as well as all calls that include an authentication header.
+                                                                            - CO_CONFIG_HTTPS_ALL (3)               ///< SSL is required for all calls (Default).
+                                                                        */
+
     /// Each database has a separate setup. They can be different technologies and/or servers.
     
     /// These are for the main data database.

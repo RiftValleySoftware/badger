@@ -19,6 +19,13 @@ This file contains a trait that encompasses the majority of the required (and un
 
 It includes settings for CHAMELEON, COBRA and ANDISOL, as well as BADGER.
  */
+
+/// The following are values for the SSL/TLS/HTTPS settings.
+define('CO_CONFIG_HTTPS_OFF', 0);               ///< This means that SSL is not required for ANY transacation. It is recommended this level be selected for testing only.
+define('CO_CONFIG_HTTPS_LOGIN_ONLY', 1);        ///< SSL is only required for the initial 'login' call.
+define('CO_CONFIG_HTTPS_LOGGED_IN_ONLY', 2);    ///< SSL is required for the login call, as well as all calls that include an authentication header.
+define('CO_CONFIG_HTTPS_ALL', 3);               ///< SSL is required for all calls.
+
 trait tCO_Config {
     /***********************************************************************************************************************/
     /*                                                    COMMON STUFF                                                     */
