@@ -23,8 +23,10 @@ class CO_Config {
     /*                                                     CHANGE THIS                                                     */
     /***********************************************************************************************************************/
     
-    static $lang = 'en';
-    static $min_pw_len = 8;                                     // The minimum password length.
+    static $lang = 'en';                            ///< The default language for the server.
+    static $min_pw_len = 8;                         ///< The minimum password length.
+    static $session_timeout_in_seconds = 2;         ///< Two-Second API key timeout.
+    static $god_session_timeout_in_seconds  = 1;    ///< API key session timeout for the "God Mode" login, in seconds (integer value). Default is 10 minutes.
 
     static $data_db_name = 'littlegr_badger_data';
     static $data_db_host = 'localhost';
