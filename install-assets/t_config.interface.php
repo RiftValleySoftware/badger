@@ -52,7 +52,7 @@ trait tCO_Config {
                                                             $in_sql,    ///< REQUIRED: The SQL being sent to the PDO prepared query.
                                                             $in_params  ///< REQUIRED: Any parameters that are being sent in the prepared query.
                                                         ) {   
-        $log_handler = self::$_low_level_log_handler_function;
+        $log_handler = isset(self::$_low_level_log_handler_function) ? self::$_low_level_log_handler_function : NULL;
         if (isset($log_handler) && $log_handler) {
             if (is_array($log_handler) && (1 < count($log_handler)) && is_object($log_handler[0]) && method_exists($log_handler[0], $log_handler[1])) {
                 $log_handler[0]->$log_handler[1]($in_id, $in_sql, $in_params);
