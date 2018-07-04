@@ -12,6 +12,7 @@
 - Added support for the address lookup in the sample config file.
 - Added access to the "can_see_clearly" ID for "fuzzed" locations.
 - Changed the way the SSL requirement is done.
+- Changed the payload loader to a chunk-based loader, just to be sure.
 
 **1.0.0.2034** *(June 11, 2018)*
 
