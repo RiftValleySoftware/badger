@@ -167,12 +167,12 @@ class CO_LL_Location extends CO_Main_DB_Record {
                     $this->_latitude = doubleval($in_db_result['latitude']);
                 }
             }
+        
+            $ll_string = ((NULL != $this->_longitude) && (NULL != $this->_latitude)) ? "($this->_longitude, $this->_latitude)" : '';
+        
+            $this->class_description = "Generic longitude/latitude Class.";
+            $this->instance_description = isset($this->name) && $this->name ? "$this->name $ll_string" : $ll_string;
         }
-        
-        $ll_string = ((NULL != $this->_longitude) && (NULL != $this->_latitude)) ? "($this->_longitude, $this->_latitude)" : '';
-        
-        $this->class_description = "Generic longitude/latitude Class.";
-        $this->instance_description = isset($this->name) && $this->name ? "$this->name $ll_string" : $ll_string;
         
         return $ret;
     }

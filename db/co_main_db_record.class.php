@@ -116,7 +116,19 @@ class CO_Main_DB_Record extends A_CO_DB_Table_Base {
                 }
 
                 if (isset($in_db_result['payload']) ) {
-                    $this->_raw_payload = base64_decode($in_db_result['payload']);
+                    $payload = $in_db_result['payload'];
+                    $length = strlen($payload);
+                    $counter = 0;
+                    $new_payload = [];
+                    
+                    // We decode in chunks.
+                    while($counter < $length) {
+                        $this_chunk = substr($payload, $counter, 4096);
+                        $new_payload[] = base64_decode($this_chunk);
+                        $counter += 4096;
+                    }
+
+                    $this->_raw_payload = implode('', $new_payload);
                 }
                 
                 for ($tag_no = 0; $tag_no < 10; $tag_no++) {

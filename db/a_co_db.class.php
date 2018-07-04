@@ -206,6 +206,7 @@ abstract class A_CO_DB {
             }
 
             if (class_exists($classname)) { // We make sure that we send references to the same object, if we instantiate it multiple times.
+
                 if (isset($this->_existing_record_objects[$id])) {
                     $ret = $this->_existing_record_objects[$id];
                     if (isset($ret)) {  // We make sure the object jives with what was given us from the DB.
@@ -378,7 +379,7 @@ abstract class A_CO_DB {
                     $weregood = $and_write ? $result->user_can_write() : $result->user_can_read();
                     // Belt and suspenders. Make sure nothing leaks through.
                     if ($weregood) {
-                        array_push($ret, $result);
+                        $ret[] = $result;
                     }
                 }
             }
