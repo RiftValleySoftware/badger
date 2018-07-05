@@ -49,8 +49,9 @@ class CO_Security_Login extends CO_Security_Node {
     /**
     This sets up a new API key after the login has been successfully verified.
      */
-    protected function _set_up_api_key() {
-        $temp_api_key = self::_random_str(64);
+    protected function _set_up_api_key( $key_length ///< The length (in bytes) of the key.
+                                        ) {
+        $temp_api_key = self::_random_str($key_length);
 
         $temp_api_key .= ' - '.strval(microtime(true)); // Add the current generation microtime, for key timeout.
         
@@ -242,7 +243,8 @@ class CO_Security_Login extends CO_Security_Node {
         
         // Generate an API key. We can't save it yet, as we're probably not actually logged in.
         if ($ret && !$in_dont_create_new_api_key) {
-            $this->_set_up_api_key();
+            // God mode gets a longer key. It's not actually more secure, but we can use that to determine different treatment, later on.
+            $this->_set_up_api_key($this->id() == CO_Config::god_mode_id() ? 80 : 64);
         }
         
         return $ret;

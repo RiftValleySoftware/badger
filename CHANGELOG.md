@@ -13,6 +13,7 @@
 - Added access to the "can_see_clearly" ID for "fuzzed" locations.
 - Changed the way the SSL requirement is done.
 - Changed the payload loader to a chunk-based loader, just to be sure.
+- God Mode gets a longer (80 characters) API Key.
 
 **1.0.0.2034** *(June 11, 2018)*
 
