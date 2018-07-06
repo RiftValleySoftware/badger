@@ -156,7 +156,7 @@ class CO_Main_Data_DB extends A_CO_DB {
                 $sql_temp[$i] = '';
                 $value = $in_value[$i];
                 
-                if (NULL !== $value) {
+                if ((NULL !== $value) && ('%' != $value)) {
                     if (is_array($value) && count($value)) {
                         $use_like_old = $use_like;
                         
@@ -291,7 +291,7 @@ class CO_Main_Data_DB extends A_CO_DB {
             $sql_array = Array();
             
             foreach ($in_value as $value) {                
-                if (NULL != $value) {
+                if ((NULL != $value) && ('%' != $value)) {
                     $sql_array[] = 'LOWER('.strval($in_db_key).')'.($use_like ? ' LIKE ' : '=').'LOWER(?)';
                     array_push($ret['params'], $value);
                 }

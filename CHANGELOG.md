@@ -14,6 +14,8 @@
 - Changed the way the SSL requirement is done.
 - Changed the payload loader to a chunk-based loader, just to be sure.
 - God Mode gets a longer (80 characters) API Key.
+- Making sure that new records get NULL fields set as 'NULL'.
+- Made a fix to the generic search setup, where we really shouldn't have been sending in "open wildcard" values for string searches.
 
 **1.0.0.2034** *(June 11, 2018)*
 

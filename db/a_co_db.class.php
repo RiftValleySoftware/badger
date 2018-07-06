@@ -600,7 +600,7 @@ abstract class A_CO_DB {
                         
                         foreach ($params_associative_array as $key => $value) {
                             if (isset($temp[$key])) {
-                                $temp[$key] = $value;
+                                $temp[$key] = isset($value) ? $value : NULL;
                             }
                         }
                         
