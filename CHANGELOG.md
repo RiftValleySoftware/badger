@@ -1,4 +1,4 @@
-**1.0.0.2035** *(TBD)*
+**1.0.0.2035** *(July 6, 2018)*
 
 - Added very low-level logging facility.
 - Added a "blocker" to prevent the "God" login from being deleted.
