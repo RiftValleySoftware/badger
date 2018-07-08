@@ -1,3 +1,7 @@
+**1.0.0.2036** *(TBD)*
+
+- Added a new way to access security tokens safely.
+
 **1.0.0.2035** *(July 6, 2018)*
 
 - Added very low-level logging facility.

@@ -13,7 +13,7 @@
 */
 defined( 'LGV_ACCESS_CATCHER' ) or die ( 'Cannot Execute Directly' );	// Makes sure that this file is in the correct context.
 
-define('__BADGER_VERSION__', '1.0.0.2035');
+define('__BADGER_VERSION__', '1.0.0.2036');
 
 if ( !defined('LGV_MD_CATCHER') ) {
     define('LGV_MD_CATCHER', 1);
@@ -226,6 +226,43 @@ class CO_Access {
                 }
             }
         }
+        return $ret;
+    }
+    
+    /***********************/
+    /**
+    This is pretty much the same as above, except wit the God Mode, you get all the security tokens instead of -1.
+    
+    \returns an array of integers, with each one representing a security token. The first element will always be the ID of the user.
+     */
+    public function get_available_tokens() {
+        $ret = Array();
+        
+        if ($this->god_mode()) {
+           $logins = $this->_security_db_object->get_all_readable_records();
+           
+            foreach ($logins as $login) {
+                $ret[] = $login->id();
+            }
+        } else {
+            $login_id = $this->get_login_id();
+            if (isset($login_id) && $login_id && $this->_security_db_object) {
+                $ret = $this->_security_db_object->get_security_ids_for_id($this->get_login_id());
+                
+                if ($this->_security_db_object->error) {
+                    $this->error = $this->_security_db_object->error;
+                    
+                    $ret = Array();
+                } else {
+                    $ret[] = 1;
+                }
+            }
+        }
+        
+        sort($ret);
+        array_unshift($ret, $this->get_login_id());
+        $ret = array_values(array_unique($ret));
+        
         return $ret;
     }
     
