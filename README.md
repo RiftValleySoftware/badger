@@ -1,4 +1,4 @@
-[]: # \page BADGER BADGER
+\page BADGER BADGER
 
 ![BADGER](images/BADGER.png)
 
