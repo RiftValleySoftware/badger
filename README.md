@@ -11,8 +11,9 @@ Part of the BAOBAB Server, which is part of the Rift Valley Platform
 
 INTRODUCTION
 ============
-
 This is the baseline database system for the secure database toolbox.
+
+![BADGER Diagram](images/BADGERLayers.png)
 
 It's a low-level database storage system that implements a generic database and a separate security database.
 
@@ -27,8 +28,6 @@ Security is via a simple token arrangement.
 Each database table row (either database) has a read token and a write token. It has only one of each. If the read or write operation is attempted by a user without the token, then the record is automatically excluded from the results at the SQL level. Tokens are IDs for security database nodes. A login node (security database) has its own ID as a token, and can also have a list of IDs that are available to it as well.
 
 BADGER is extremely basic. No relating or data processing is done by BADGER, with one exception: it does have longitude and latitude (in degrees) built into its table schema, for the simple reason that being able to access these at the SQL level greatly improves performance. We  have a built-in [Haversine](https://en.wikipedia.org/wiki/Haversine_formula) search in SQL to act as a "rapid triage" for locations, which are then filtered using the more accurate (and computationally-intense) [Vincenty's Formulae](https://en.wikipedia.org/wiki/Vincenty%27s_formulae). This means that geographic location/radius searches are extremely accurate, and very fast.
-
-![BADGER Diagram](images/BADGERLayers.png)
 
 DESCRIPTION
 ===========
