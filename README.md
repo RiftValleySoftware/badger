@@ -93,13 +93,13 @@ The config file consists of a static class, with "hardcoded" constants. The clas
 KEEPING IT SIMPLE
 -----------------
 
-The database schema is incredibly simple. There are no relations at the database level, although the "owner" field of the "data" database could be used as such.
+The database schema is incredibly simple. There are no relations at the database level.
 
-Every row (in either database) has an "id" column, containing a BIGINT. This ID is completely unique and auto-incremented. In the data database, this can be used in the "owner" column, and in the security database, this column is a security token. Regardless of the instance associated with a security database row, the ID is a valid security token.
+Every row (in either database) has an "id" column, containing a BIGINT. This ID is completely unique (within the database) and auto-incremented. In the data database, this can be used in the "owner" column, and in the security database, this column is a security token. Regardless of the instance associated with a security database row, the ID is a valid security token.
 
 Each database has a row with ID of 1. This is a simple "template" row, used for instantiating new rows. IDs start at 2.
 
-Each database has but one single row, and the data format (the columns) are the same for all rows of that database. Differentiation of instances spawned from the database is done through the "access_class" column, which contains the name of a PHP class that can handle that row. There is also an "access_class_context" column, which contains serialized data, storing a persistent state for the class instance.
+Each database has but one single table, and the data format (the columns) are the same for all rows of that table. Differentiation of instances spawned from the database is done through the "access_class" column, which contains the name of a PHP class that can handle that row. There is also an "access_class_context" column, which contains serialized data, storing a persistent state for the class instance.
 
 Both the "data" database and the "security" database tables have the same basic root structure, and are handled by a common abstract base class.
 
@@ -112,7 +112,7 @@ It's designed to be replaced. Keeping the storage metaphor to a fairly linear, n
 OBJECT PERSISTENCE
 ------------------
 
-BADGER is actually an "object persistence" engine, as opposed to a traditional database. Each row of either database has an `"access_class"` column. This is the classname of the instance that has its data stored in that row, and reading in the row will instantiate that class.
+BADGER is actually an "ORM" engine, as opposed to a traditional database. Each row of either database has an `"access_class"` column. This is the classname of the instance that has its data stored in that row, and reading in the row will instantiate that class.
 
 Each row also has an `"access_class_context"` column, which contains a serialized associative array, called `"context"` inside the instance. Whatever is in that array will be stored and restored.
 
