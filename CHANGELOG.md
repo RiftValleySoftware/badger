@@ -2,6 +2,8 @@
 
 - Added a new way to access security tokens safely.
 - Updated the README.
+- Added a quick "manager check" to login objects.
+- Added a quick "God check" to login objects.
 
 **1.0.0.2035** *(July 6, 2018)*
 

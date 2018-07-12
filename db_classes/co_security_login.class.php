@@ -260,6 +260,22 @@ class CO_Security_Login extends CO_Security_Node {
     
     /***********************/
     /**
+    \returns true, if we are the "God" login.
+     */
+    public function is_god() {
+        return $this->id() == CO_Config::god_mode_id();
+    }
+    
+    /***********************/
+    /**
+    \returns false, as we are not a manager.
+     */
+    public function is_manager() {
+        return $this->is_god();
+    }
+    
+    /***********************/
+    /**
     \returns a string, with the language ID for this login.
      */
     public function get_lang() {
