@@ -77,6 +77,30 @@ class CO_Security_DB extends A_CO_DB {
     
     /***********************/
     /**
+    This returns the entire list of IDs in the Security Database.
+    
+    It should only ever be called by the "God" admin.
+    
+    \returns an array of integers, each, a security ID for the given login, and the first element is always the login ID itself.
+     */
+    public function get_all_tokens() {
+        $ret = NULL;
+        
+        if ($this->access_object->god_mode()) {
+            $sql = 'SELECT id FROM '.$this->table_name.' WHERE true ORDER BY id';
+            $temp = $this->execute_query($sql, Array());
+            if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
+                $ret = [];
+                foreach($temp as $row) {
+                    $ret[] = intval($row['id']);
+                }
+            }
+        }
+        return $ret;
+    }
+    
+    /***********************/
+    /**
     This is a very "raw" function that should ONLY be called from the access instance __construct() method (or a special check from the access class).
     
     It is designed to fetch the current login object from its string login ID, so we can extract the id.

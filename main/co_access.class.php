@@ -805,6 +805,16 @@ class CO_Access {
     
     /***********************/
     /**
+    This is a special "God-only" search for all available tokens. If not in "God" mode, you get NULL.
+    
+    \returns an array of integers.
+     */
+    public function get_all_tokens ( ) {
+        return $this->_security_db_object->get_all_tokens();
+    }
+    
+    /***********************/
+    /**
     You give a security ID, and you will get all login objects that have that token in their list (or are of that ID).
     
     This is restricted to use security vetting, so only logins visible to the current login.
