@@ -4,7 +4,7 @@ CREATE SEQUENCE element_id_seq;
 CREATE TABLE co_security_nodes (
   id BIGINT NOT NULL DEFAULT nextval('element_id_seq'),
   api_key VARCHAR(255) DEFAULT NULL,
-  login_id VARCHAR(255) DEFAULT NULL,
+  login_id VARCHAR(255) UNIQUE DEFAULT NULL,
   access_class VARCHAR(255) NOT NULL,
   last_access TIMESTAMP NOT NULL,
   read_security_id BIGINT DEFAULT NULL,

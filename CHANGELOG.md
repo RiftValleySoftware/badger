@@ -5,6 +5,7 @@
 - Added a quick "manager check" to login objects.
 - Added a quick "God check" to login objects.
 - Added the ability to get every single token, when in "God Mode."
+- Made sure that the login_id field for Postgres Security is "unique."
 
 **1.0.0.2035** *(July 6, 2018)*
 
