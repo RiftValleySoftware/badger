@@ -511,15 +511,15 @@ class CO_Main_Data_DB extends A_CO_DB {
         $ret = NULL;
         
         $sql = 'SELECT id FROM '.$this->table_name.' WHERE ';
-        
+    
         if ($in_visibility_test) {  // If we are only testing visibility, then we add a read security predicate.
             $predicate = $this->_create_read_security_predicate();
-            
+        
             if ($predicate) {
                 $sql = "$sql$predicate AND ";
             }
         }
-        
+    
         // User collections work by having the login ID in tag 0, so we search for any collection records that have a tag 0 set to our login ID. Chances are good it's a user.
         $sql .= 'id='.intval($in_id);
 

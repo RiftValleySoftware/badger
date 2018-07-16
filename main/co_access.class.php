@@ -553,7 +553,85 @@ class CO_Access {
     
         return $ret;
     }
-
+    
+    /***********************/
+    /**
+    This returns the access class for the given ID for the Data Database.
+    
+    This is "security safe," so that means that if the user does not have rights to the row, they will get NULL.
+    
+    \returns a string, containing the access_class data column. NULL, if no response (like the ID does not exist, or the user does not have read rights to it).
+     */
+    public function get_data_access_class_by_id( $in_id  ///< This is the ID of the record to fetch.
+                                                ) {
+        $ret = NULL;
+        if (isset($this->_data_db_object) && $this->_data_db_object) {
+            $ret = $this->_data_db_object->get_access_class_by_id($in_id);
+            $this->error = $this->_data_db_object->error;
+        }
+        
+        return $ret;
+    }
+    
+    /***********************/
+    /**
+    This returns the access class for the given ID for the Security Database.
+    
+    This is "security safe," so that means that if the user does not have rights to the row, they will get NULL.
+    
+    \returns a string, containing the access_class data column. NULL, if no response (like the ID does not exist, or the user does not have read rights to it).
+     */
+    public function get_security_access_class_by_id(    $in_id  ///< This is the ID of the record to fetch.
+                                                    ) {
+        $ret = NULL;
+        if (isset($this->_security_db_object) && $this->_security_db_object) {
+            $ret = $this->_security_db_object->get_access_class_by_id($in_id);
+            $this->error = $this->_security_db_object->error;
+        }
+        
+        return $ret;
+    }
+    
+    /***********************/
+    /**
+    This returns true, if the current user at least has read access to the Data DB record whose ID is provided..
+    
+    This is "security safe," so that means that if the user does not have rights to the row, or the row does not exist, they will get false.
+    
+    \returns a boolean, true, if the user has read access to an existing record in the Data database.
+     */
+    public function can_i_see_this_data_record( $in_id  ///< This is the ID of the record to check.
+                                                ) {
+        $ret = false;
+        
+        if (isset($this->_data_db_object) && $this->_data_db_object) {
+            $ret = $this->_data_db_object->can_i_see_this_record($in_id);
+            $this->error = $this->_data_db_object->error;
+        }
+        
+        return $ret;
+    }
+    
+    /***********************/
+    /**
+    This returns true, if the current user at least has read access to the Security DB record whose ID is provided..
+    
+    This is "security safe," so that means that if the user does not have rights to the row, or the row does not exist, they will get false.
+    
+    \returns a boolean, true, if the user has read access to an existing record in the Security database.
+     */
+    public function can_i_see_this_security_record( $in_id  ///< This is the ID of the record to check.
+                                                ) {
+        $ret = false;
+        
+        if (isset($this->_security_db_object) && $this->_security_db_object) {
+            $ret = $this->_security_db_object->can_i_see_this_record($in_id);
+            $this->error = $this->_security_db_object->error;
+        }
+        
+        return $ret;
+    }
+    
     /***********************/
     /**
     This returns every readable (by this user) item from the "data" database.
@@ -602,6 +680,31 @@ class CO_Access {
      */
     public function security_db_available() {
         return NULL != $this->_security_db_object;
+    }
+    
+    /***********************/
+    /**
+    Tests a token, to see if the current user has it.
+    
+    \returns true, if the current user has the given token.
+     */
+    public function i_have_this_token(  $in_token_to_test   ///< The token we are checking out
+                                    ) {
+        $ret = false;
+        
+        if (isset($in_token_to_test) && ctype_digit(strval($in_token_to_test))) {
+            if (1 == intval($in_token_to_test)) {
+                $ret = $this->security_db_available();
+            } else {
+                $tokens = $this->get_security_ids();
+        
+                if (isset($tokens) && is_array($tokens) && count($tokens)) {
+                    $ret = in_array(intval($in_token_to_test), $tokens);
+                }
+            }
+        }
+        
+        return $ret;
     }
 
     /***********************/

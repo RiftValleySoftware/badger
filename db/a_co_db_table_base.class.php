@@ -186,6 +186,9 @@ abstract class A_CO_DB_Table_Base {
 	    $this->_batch_mode = false;
 	    if ($call_update) {
 	        $ret = $this->update_db();
+	        if (method_exists($this, '_scrub')) {
+	            $this->_scrub();
+	        }
 	    }
 	    
 	    return $ret;

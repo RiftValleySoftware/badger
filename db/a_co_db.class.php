@@ -206,7 +206,6 @@ abstract class A_CO_DB {
             }
 
             if (class_exists($classname)) { // We make sure that we send references to the same object, if we instantiate it multiple times.
-
                 if (isset($this->_existing_record_objects[$id])) {
                     $ret = $this->_existing_record_objects[$id];
                     if (isset($ret)) {  // We make sure the object jives with what was given us from the DB.
@@ -282,6 +281,70 @@ abstract class A_CO_DB {
     
     /***********************/
     /**
+    This returns the access class for the given ID.
+    
+    This is "security safe," so that means that if the user does not have rights to the row, they will get NULL.
+    
+    \returns a string, containing the access_class data column. NULL, if no response (like the ID does not exist, or the user does not have read rights to it).
+     */
+    public function get_access_class_by_id( $in_id  ///< This is the ID of the record to fetch.
+                                            ) {
+        $ret = NULL;
+        
+        $predicate = $this->_create_security_predicate();
+        
+        if ($predicate) {
+            $predicate .= ' AND ';
+        } else {
+            $predicate = 'true AND ';
+        }
+        
+        $sql = 'SELECT access_class FROM '.$this->table_name.' WHERE '.$predicate.'id='.intval($in_id);
+
+        $ret = $this->execute_query($sql, Array());
+        
+        if (isset($ret) && is_array($ret) && count($ret)) {
+            $ret = strval($ret[0]['access_class']);
+        }
+        
+        return $ret;
+    }
+    
+    /***********************/
+    /**
+    This returns true, if the current user at least has read access to the record whose ID is provided..
+    
+    This is "security safe," so that means that if the user does not have rights to the row, or the row does not exist, they will get false.
+    
+    \returns a boolean, true, if the user has read access to an existing record in this database.
+     */
+    public function can_i_see_this_record(  $in_id  ///< This is the ID of the record to check.
+                                            ) {
+        $ret = false;
+        
+        if (intval($in_id)) {
+            $predicate = $this->_create_security_predicate();
+        
+            if ($predicate) {
+                $predicate .= ' AND ';
+            } else {
+                $predicate = 'true AND ';
+            }
+        
+            $sql = 'SELECT id FROM '.$this->table_name.' WHERE '.$predicate.'id='.intval($in_id);
+
+            $ret = $this->execute_query($sql, Array());
+        
+            if (isset($ret) && is_array($ret) && count($ret)) {
+                $ret = intval($ret[0]['id']) == intval($in_id);
+            }
+        }
+        
+        return $ret;
+    }
+    
+    /***********************/
+    /**
     This is a special method that does not apply a security predicate. It is used to force-reload record instances.
     
     This should ONLY be called from the database reloader functions.
@@ -297,6 +360,8 @@ abstract class A_CO_DB {
         
         if ($predicate) {
             $predicate .= ' AND ';
+        } else {
+            $predicate = 'true AND ';
         }
         
         $sql = 'SELECT * FROM '.$this->table_name.' WHERE '.$predicate.'id='.intval($in_id);
