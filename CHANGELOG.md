@@ -9,6 +9,7 @@
 - Added a function to test tokens.
 - Added a method to check the access class of rows quickly.
 - Added methods to validate visibility of rows.
+- Made sure to force the owner_id data member to be integer, as Postgres and MySQL seemed to have different opinions on what it should be.
 
 **1.0.0.2035** *(July 6, 2018)*
 

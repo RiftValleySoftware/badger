@@ -60,7 +60,7 @@ class CO_Main_DB_Record extends A_CO_DB_Table_Base {
     protected function _build_parameter_array() {
         $ret = parent::_build_parameter_array();    // Start with the base class.
         
-        $ret['owner'] = $this->_owner_id;
+        $ret['owner'] = intval($this->_owner_id);
         for ($tag_no = 0; $tag_no < 10; $tag_no++) {
             $key = "tag$tag_no";
             if (isset($this->_tags[$tag_no])) {
@@ -112,7 +112,7 @@ class CO_Main_DB_Record extends A_CO_DB_Table_Base {
                 $this->_raw_payload = NULL;
         
                 if (isset($in_db_result['owner'])) {
-                    $this->_owner_id = $in_db_result['owner'];
+                    $this->_owner_id = intval($in_db_result['owner']);
                 }
 
                 if (isset($in_db_result['payload']) ) {
