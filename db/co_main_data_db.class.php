@@ -172,6 +172,8 @@ class CO_Main_Data_DB extends A_CO_DB {
 
                                 if ('' == $val) {
                                     $inner_array[] = '((tag'.intval($i).' IS NULL) OR (tag'.intval($i).'=\'\'))';
+                                } elseif ('%' == $val) {
+                                    $inner_array[] = '(tag'.intval($i).'<>\'\')';
                                 } else {
                                     $like_me = (false !== strpos($val, '%')) && $use_like;
                                 
@@ -202,6 +204,8 @@ class CO_Main_Data_DB extends A_CO_DB {
                             }
                         }
                     }
+                } elseif ('%' == $value) {
+                    $sql_temp[] = '(tag'.intval($i).'<>\'\')';
                 }
             }
             
@@ -293,6 +297,9 @@ class CO_Main_Data_DB extends A_CO_DB {
             foreach ($in_value as $value) {                
                 if ((NULL != $value) && ('%' != $value)) {
                     $sql_array[] = 'LOWER('.strval($in_db_key).')'.($use_like ? ' LIKE ' : '=').'LOWER(?)';
+                    array_push($ret['params'], $value);
+                } elseif ('%' == $value) {
+                    $sql_array[] = '('.strval($in_db_key).'<>\'\')';
                     array_push($ret['params'], $value);
                 }
             }
