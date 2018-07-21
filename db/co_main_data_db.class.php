@@ -84,7 +84,7 @@ class CO_Main_Data_DB extends A_CO_DB {
 		$deltaSigma = $B*$sinSigma*($cos2SigmaM+$B/4.0*($cosSigma*(-1.0+2.0*$cos2SigmaM*$cos2SigmaM)-$B/6.0*$cos2SigmaM*(-3.0+4.0*$sinSigma*$sinSigma)*(-3.0+4.0*$cos2SigmaM*$cos2SigmaM)));
 		$s = $b*$A*($sigma-$deltaSigma);
   		
-		return ( abs ( round ( $s * 100 ) / 100000.0 ) ); 
+		return ( abs ( round ( $s ) / 1000.0 ) ); 
 	}
 	
     /***********************************************************************************************************************/
@@ -209,7 +209,7 @@ class CO_Main_Data_DB extends A_CO_DB {
                         }
                     }
                 } elseif ('%' == $value) {
-                    $sql_temp[] = '(tag'.intval($i).'<>\'\')';
+                    $sql_temp[$i] = '(tag'.intval($i).'<>\'\')';
                 }
             }
             
@@ -221,7 +221,6 @@ class CO_Main_Data_DB extends A_CO_DB {
                     array_push($temp_array, $array_element);
                 }
             }
-
             if (1 < count($temp_array)) {
                 $ret['sql'] = '(('.implode(') AND (', $temp_array).'))';
             } elseif (1 == count($temp_array)) {
@@ -304,7 +303,6 @@ class CO_Main_Data_DB extends A_CO_DB {
                     array_push($ret['params'], $value);
                 } elseif ('%' == $value) {
                     $sql_array[] = '('.strval($in_db_key).'<>\'\')';
-                    array_push($ret['params'], $value);
                 }
             }
             
