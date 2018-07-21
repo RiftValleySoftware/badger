@@ -41,6 +41,10 @@ class CO_Main_Data_DB extends A_CO_DB {
                                             $lon2   ///< This is the second point longitude (degrees).
                                         )
 	{
+	    if (($lat1 == $lat2) && ($lon1 == $lon2)) { // Just a quick shortcut.
+	        return 0;
+	    }
+	    
 		$a = 6378137;
 		$b = 6356752.3142;
 		$f = 1/298.257223563;  // WGS-84 ellipsiod
@@ -80,7 +84,7 @@ class CO_Main_Data_DB extends A_CO_DB {
 		$deltaSigma = $B*$sinSigma*($cos2SigmaM+$B/4.0*($cosSigma*(-1.0+2.0*$cos2SigmaM*$cos2SigmaM)-$B/6.0*$cos2SigmaM*(-3.0+4.0*$sinSigma*$sinSigma)*(-3.0+4.0*$cos2SigmaM*$cos2SigmaM)));
 		$s = $b*$A*($sigma-$deltaSigma);
   		
-		return ( abs ( round ( $s ) / 1000.0 ) ); 
+		return ( abs ( round ( $s * 100 ) / 100000.0 ) ); 
 	}
 	
     /***********************************************************************************************************************/

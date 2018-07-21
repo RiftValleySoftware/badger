@@ -12,6 +12,8 @@
 - Made sure to force the owner_id data member to be integer, as Postgres and MySQL seemed to have different opinions on what it should be.
 - Changed the "Delete All Children" method to make sure that any children we don't know about are preserved.
 - Fixed an issue with the generic search, where we couldn't ask for "just anything" in a field. Now, use '%' for a non-empty field.
+- Added a quick shortcut to the accurate distance calculator to return 0 if the points are the same.
+- Upped the precision a bit on the accurate distance calculator.
 
 **1.0.0.2035** *(July 6, 2018)*
 
