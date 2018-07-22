@@ -569,6 +569,25 @@ class CO_Main_Data_DB extends A_CO_DB {
     
     /***********************/
     /**
+    \returns true, if the tag1 is unique in the DB (regardless of whether or not we can see it).
+     */
+    public function tag0_is_unique( $in_tag0,                                   ///< The key to test (a string).
+                                    $in_classname = 'CO_KeyValue_CO_Collection' ///< This is the class to search for the key. The default is the base class.
+                                    ) {
+        $ret = true;
+        
+        $sql = 'SELECT id FROM '.$this->table_name.' WHERE (access_class=?) AND (tag0=?)';
+        $params = [$in_classname, $in_tag0];
+        $temp = $this->execute_query($sql, $params);
+        if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
+            $ret = false;
+        }
+                
+        return $ret;
+    }
+    
+    /***********************/
+    /**
     This is a "generic" data database search. It can be called from external user contexts, and allows a fairly generalized search of the "data" database.
     Sorting will be done for the values by the ID of the searched objects. "location" will be by distance from the center.
     
