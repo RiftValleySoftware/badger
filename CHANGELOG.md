@@ -1,4 +1,4 @@
-**1.0.0.2036** *(TBD)*
+**1.0.0.2036** *(July 22, 2018)*
 
 - Added a new way to access security tokens safely.
 - Updated the README.
