@@ -1,3 +1,7 @@
+**1.0.0.2037** *(TBD)*
+
+- Improved the password hashing algorithm.
+
 **1.0.0.2036** *(July 22, 2018)*
 
 - Added a new way to access security tokens safely.

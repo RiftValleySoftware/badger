@@ -187,12 +187,7 @@ class CO_Security_Login extends CO_Security_Node {
         
         if ($in_password_to_crypt) {
             if (strlen($in_password_to_crypt) >= CO_Config::$min_pw_len) {
-                if (!$ret) {
-                    $salt = function_exists('random_int') ? random_int(0, 99) : rand(0, 99);
-                    $ret = sprintf("%02d", $salt);
-                }
-            
-                $ret = crypt($in_password_to_crypt, $this->context['hashed_password']);
+                $ret = password_hash($in_password_to_crypt, PASSWORD_DEFAULT);
             } else {
                 $ret = false;
             }
@@ -229,13 +224,9 @@ class CO_Security_Login extends CO_Security_Node {
                 } elseif (isset($this->context['hashed_password']) && $this->context['hashed_password']) {
                     // First, see if this is in the hashed password.
                     if ($in_hashed_password) {
-                        $ret = ($in_hashed_password == $this->get_crypted_password());
+                        $ret = hash_equals($this->get_crypted_password(), $in_hashed_password);
                     } else { // If not, see if it's the raw password.
-                        $comp = $this->get_crypted_password($in_raw_password);
-                        
-                        if ($comp) {
-                            $ret = ($comp == $this->context['hashed_password']);
-                        }
+                        $ret = password_verify($in_raw_password, $this->get_crypted_password());
                     }
                 }
             }
