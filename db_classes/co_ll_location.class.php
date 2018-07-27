@@ -383,25 +383,15 @@ class CO_LL_Location extends CO_Main_DB_Record {
     \returns true, if current user has the ability to see the raw values.
      */
     public function i_can_see_clearly_now() {
-        $ret = !$this->is_fuzzy();  // If we aren't fuzzed, then, no problem. Peep away.
+        $ret = !$this->is_fuzzy() || $this->user_can_write();  // If we aren't fuzzed, then, no problem. Peep away. Writers can see.
         
         if (!$ret && $this->get_access_object()->security_db_available()) { // Only logged-in users get to see clearly.
-            if ($this->get_access_object()->god_mode()) {   // God is omnipresent.
-                $ret = true;
-            } else {    // Otherwise, users with write privileges, or that are on the guest list, can see clearly.
+            if (!$ret && isset($this->context['can_see_through_the_fuzz'])) {
                 $ids = $this->get_access_object()->get_security_ids();
-        
-                $my_see_item = intval($this->write_security_id);
-        
+            
+                $my_see_item = intval($this->context['can_see_through_the_fuzz']);
                 if (isset($ids) && is_array($ids) && count($ids)) {
                     $ret = in_array($my_see_item, $ids);
-                }
-        
-                if (!$ret && isset($this->context['can_see_through_the_fuzz'])) {
-                    $my_see_item = intval($this->context['can_see_through_the_fuzz']);
-                    if (isset($ids) && is_array($ids) && count($ids)) {
-                        $ret = in_array($my_see_item, $ids);
-                    }
                 }
             }
         }
