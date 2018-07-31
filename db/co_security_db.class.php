@@ -350,11 +350,14 @@ class CO_Security_DB extends A_CO_DB {
                         }
                     }
                     
-                    $found = false;
-                    foreach ($id_array as $test_id) {
-                        if ($test_id == $in_security_token) {
-                            $found = true;
-                            break;
+                    $found = (2 > $in_security_token);
+                    
+                    if (!$found) {
+                        foreach ($id_array as $test_id) {
+                            if ($test_id == $in_security_token) {
+                                $found = true;
+                                break;
+                            }
                         }
                     }
                     

@@ -690,14 +690,16 @@ class CO_Access {
      */
     public function i_have_this_token(  $in_token_to_test   ///< The token we are checking out
                                     ) {
-        $ret = false;
+        $ret = $this->god_mode();   // God sees everything.
         
-        if (isset($in_token_to_test) && ctype_digit(strval($in_token_to_test))) {
-            if (1 == intval($in_token_to_test)) {
+        if (!$ret && isset($in_token_to_test) && ctype_digit(strval($in_token_to_test))) {
+            if (0 == intval($in_token_to_test)) {
+                $ret = true;
+            } elseif (1 == intval($in_token_to_test)) {
                 $ret = $this->security_db_available();
             } else {
                 $tokens = $this->get_security_ids();
-        
+                
                 if (isset($tokens) && is_array($tokens) && count($tokens)) {
                     $ret = in_array(intval($in_token_to_test), $tokens);
                 }

@@ -2,6 +2,8 @@
 
 - Improved the password hashing algorithm.
 - Simplified the test for being able to see "fuzzed" long/lat.
+- Improved the access check to immediately accept 0 or 1 access tokens.
+- Fixed a bug in the token test.
 
 **1.0.0.2036** *(July 22, 2018)*
 
