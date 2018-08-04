@@ -53,6 +53,7 @@ class CO_PDO {
 
 		$this->_pdo = NULL;
 		$this->driver_type = $driver;
+		$this->last_insert = NULL;
 		
         $dsn = $driver . ':host=' . $host . ';dbname=' . $database ;
 		try {
@@ -84,6 +85,7 @@ class CO_PDO {
 								    $params = array()	///< same as kind provided to PDO::prepare()
 						        )
 	{
+		$this->last_insert = NULL;
 		try {
 			if ('pgsql' == $this->driver_type) {
 			    if (strpos($sql, 'RETURNING id;')) {
@@ -98,8 +100,8 @@ class CO_PDO {
 		    if (method_exists('CO_Config', 'call_low_level_log_handler_function')) {
 			    CO_Config::call_low_level_log_handler_function(isset($this->owner_instance) ? $this->owner_instance->access_object->get_login_id() : 0, $sql, $params);
 			}
-            $stmt = $this->_pdo->prepare($sql);
             $this->_pdo->beginTransaction(); 
+            $stmt = $this->_pdo->prepare($sql);
             $stmt->execute($params);
 			if ('pgsql' != $this->driver_type) {
                 $this->last_insert = $this->_pdo->lastInsertId();
@@ -108,6 +110,8 @@ class CO_PDO {
 		
             return true;
 		} catch (PDOException $exception) {
+		    $this->last_insert = NULL;
+            $this->_pdo->rollback();
 			throw new Exception(__METHOD__ . '() ' . $exception->getMessage());
 		}
 		
@@ -134,14 +138,15 @@ class CO_PDO {
 									$params = array(),		///< same as kind provided to PDO::prepare()
 									$fetchKeyPair = false   ///< See description in method documentation
 								) {
+		$this->last_insert = NULL;
 		try {
 		    // This represents a potential MASSIVE security, performnce and legal issue. This should ONLY be used for debugging!
 		    if (method_exists('CO_Config', 'call_low_level_log_handler_function')) {
 			    CO_Config::call_low_level_log_handler_function(isset($this->owner_instance) ? $this->owner_instance->access_object->get_login_id() : 0, $sql, $params);
 			}
+            $this->_pdo->beginTransaction(); 
             $stmt = $this->_pdo->prepare($sql);
             $stmt->setFetchMode($this->fetchMode);
-            $this->_pdo->beginTransaction(); 
             $stmt->execute($params);
             $this->_pdo->commit();
             
@@ -155,6 +160,8 @@ class CO_PDO {
             
             return $ret;
 		} catch (PDOException $exception) {
+		    $this->last_insert = NULL;
+            $this->_pdo->rollback();
 			throw new Exception(__METHOD__ . '() ' . $exception->getMessage());
 		}
 		

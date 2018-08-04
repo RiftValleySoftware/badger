@@ -674,7 +674,10 @@ class CO_Main_Data_DB extends A_CO_DB {
                         $count = 0;
                         
                         foreach ($ret as $item) {
-                            $accurate_distance = self::get_accurate_distance(floatval($in_search_parameters['location']['latitude']), floatval($in_search_parameters['location']['longitude']), floatval($item->latitude()), floatval($item->longitude()));
+                            $latitude = floatval($item->raw_latitude());    // This allows logins with the rights to see accurate locations an accurate response.
+                            $longitude = floatval($item->raw_longitude());
+                            
+                            $accurate_distance = self::get_accurate_distance(floatval($in_search_parameters['location']['latitude']), floatval($in_search_parameters['location']['longitude']), $latitude, $longitude);
                             if ($accurate_distance <= floatval($in_search_parameters['location']['radius'])) {
                                 $item->distance = $accurate_distance;
                                 array_push($ret_temp, $item);
