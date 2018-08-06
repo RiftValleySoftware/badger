@@ -6,6 +6,7 @@
 - Fixed a bug in the token test.
 - Tweaked the PDO handler to properly encapsulate transactions, and rollback, if an error is encountered.
 - Made sure that the accurate (raw) locations for "fuzzed" records were used in radius searches, if the logged-in user has permission to see them.
+- Added the $enable_bulk_upload variable to the sample config.
 
 **1.0.0.2036** *(July 22, 2018)*
 

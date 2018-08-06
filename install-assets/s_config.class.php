@@ -86,6 +86,7 @@ class CO_Config {
     static $default_region_bias = '';                           ///< A default server Region bias.
 
     /// These are the basic operational settings.
+    static $enable_bulk_upload = false;                                 ///< If true (default is false), then the "God" admin is allowed to use the baseline 'bulk-upload' POST command.
     static $lang                            = 'en';                     ///< The default language for the server.
     static $min_pw_len                      = 8;                        ///< The minimum password length.
     static $session_timeout_in_seconds      = 3600;                     ///< API key session timeout, in seconds (integer value). Default is 1 hour.
