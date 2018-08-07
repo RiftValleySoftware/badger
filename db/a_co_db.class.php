@@ -281,6 +281,26 @@ abstract class A_CO_DB {
     
     /***********************/
     /**
+    This is a special "God Mode-Only" method that dumps the entire table. It is used to generate a CSV backup file.
+    
+    The user must be logged in as "God."
+    
+    \returns an array of associative arrays, with the dump. NULL if the user is not authorized.
+     */
+    public function get_db_backup() {
+        $ret = NULL;
+        
+        if ($this->access_object->god_mode()) {
+            $sql = 'SELECT * FROM '.$this->table_name.' WHERE true';
+
+            $ret = $this->execute_query($sql, Array());
+        }
+        
+        return $ret;
+    }
+    
+    /***********************/
+    /**
     This returns the access class for the given ID.
     
     This is "security safe," so that means that if the user does not have rights to the row, they will get NULL.
