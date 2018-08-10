@@ -8,6 +8,7 @@
 - Made sure that the accurate (raw) locations for "fuzzed" records were used in radius searches, if the logged-in user has permission to see them.
 - Added the $enable_bulk_upload variable to the sample config.
 - Added the DB backup fetch routine to the base DB class.
+- Fixed an issue with the "can see through the fuzz" setter, where God Mode wasn't being given the respect it deserved.
 
 **1.0.0.2036** *(July 22, 2018)*
 

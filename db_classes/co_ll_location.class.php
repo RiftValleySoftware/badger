@@ -341,7 +341,7 @@ class CO_LL_Location extends CO_Main_DB_Record {
             } else {
                 $ids = $this->get_access_object()->get_security_ids();
                 
-                $in_id = in_array($in_id, $ids) ? $in_id : 0;
+                $in_id = (in_array($in_id, $ids) || $this->get_access_object()->god_mode()) ? $in_id : 0;
                 
                 if ($in_id) {
                     $this->context['can_see_through_the_fuzz'] = $in_id;
