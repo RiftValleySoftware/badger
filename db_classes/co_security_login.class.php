@@ -35,7 +35,7 @@ class CO_Security_Login extends CO_Security_Node {
         
     \returns a randome string.
      */
-    protected static function _random_str($length, $keyspace = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-*')
+    protected static function _random_str($length, $keyspace = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ')
     {
         $pieces = [];
         $max = mb_strlen($keyspace, '8bit') - 1;
