@@ -35,7 +35,7 @@ class CO_Security_Login extends CO_Security_Node {
         
     \returns a randome string.
      */
-    protected static function _random_str($length, $keyspace = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!.,;?')
+    protected static function _random_str($length, $keyspace = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-*')
     {
         $pieces = [];
         $max = mb_strlen($keyspace, '8bit') - 1;
@@ -207,11 +207,12 @@ class CO_Security_Login extends CO_Security_Node {
                                     ) {
         $ret = false;
         if (isset($this->login_id) && $this->login_id && ($this->login_id == $in_login_id)) {
+            $api_key = $this->get_api_key();
             if ($this->id() == CO_Config::god_mode_id()) {
-                if ($in_hashed_password == $this->get_api_key()) { // We have a special provision that allows the God hashed password to use the API key.
+                if ($in_hashed_password == $api_key) { // We have a special provision that allows the God hashed password to use the API key.
                     $ret = true;
                 } else {    // God mode uses the cleartext password in the config file.
-                    if ($in_raw_password && !$in_dont_create_new_api_key && isset(CO_Config::$block_logins_for_valid_api_key) && CO_Config::$block_logins_for_valid_api_key && $this->get_api_key()) {
+                    if ($in_raw_password && !$in_dont_create_new_api_key && isset(CO_Config::$block_logins_for_valid_api_key) && CO_Config::$block_logins_for_valid_api_key && $api_key) {
                         return false;
                     } else {
                         $ret = ($in_raw_password == CO_Config::god_mode_password());
@@ -219,7 +220,7 @@ class CO_Security_Login extends CO_Security_Node {
                 }
             } else {
                 // The server can be set up to prevent users from logging in while another login is still active.
-                if ($in_raw_password && !$in_dont_create_new_api_key && isset(CO_Config::$block_logins_for_valid_api_key) && CO_Config::$block_logins_for_valid_api_key && $this->get_api_key()) {
+                if ($in_raw_password && !$in_dont_create_new_api_key && isset(CO_Config::$block_logins_for_valid_api_key) && CO_Config::$block_logins_for_valid_api_key && $api_key) {
                     return false;
                 } elseif (isset($this->context['hashed_password']) && $this->context['hashed_password']) {
                     // First, see if this is in the hashed password.

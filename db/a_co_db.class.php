@@ -291,7 +291,7 @@ abstract class A_CO_DB {
         $ret = NULL;
         
         if ($this->access_object->god_mode()) {
-            $sql = 'SELECT * FROM '.$this->table_name.' WHERE id>1';
+            $sql = 'SELECT * FROM '.$this->table_name.' WHERE id>1 ORDER BY id';
 
             $ret = $this->execute_query($sql, Array());
         }
