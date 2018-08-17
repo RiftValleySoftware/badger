@@ -344,7 +344,9 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
     
     /***********************/
     /**
-    This is designed to be overloaded. By default, only God can change IDs.
+    We check to see if we can edit the IDs for this record.
+    We cannot edit our own IDs, and have to own all of the IDs in the object in order to be able to change them.
+    Of course, God can do whatever God wants...
     
     \returns true, if the current logged-in user can edit IDs for this login.
      */

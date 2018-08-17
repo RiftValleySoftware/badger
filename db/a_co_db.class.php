@@ -365,43 +365,6 @@ abstract class A_CO_DB {
     
     /***********************/
     /**
-    This method will check a given security record (indicated by its ID), and make sure that we have COMPLETE access to it.
-    This means that we check ALL the ids, as well as the record's write (not read) token.
-    
-    This is not "security-vetted," in order to make sure that we are looking at the complete record.
-    
-    \returns true, if we completely match. False, otherwise.
-     */
-    public function i_have_all_ids(  $in_id  ///< This is the ID of the record to check.
-                                    ) {
-        $ret = false;
-        
-        if (intval($in_id)) {
-            $sql = 'SELECT write_security_id, ids FROM '.$this->table_name.' WHERE id='.intval($in_id);
-
-            $result = $this->execute_query($sql, Array());
-        
-            if (isset($result) && is_array($result) && (1 == count($result))) {
-                $access_ids = $this->access_object->get_security_ids();
-                $write_security_id = intval($result[0]['write_security_id']);
-                $ids = (isset($result[0]['ids']) && trim($result[0]['ids'])) ? array_map('intval', explode(',', trim($result[0]['ids']))) : [];
-                $ids[] = $write_security_id;
-                sort($ids);
-                sort($access_ids);
-                
-                $diff = array_diff($ids, $access_ids);
-                
-                if (is_array($diff) && !count($diff)) { // We only go true if there are no outliers. We have to have ALL of them.
-                    $ret = true;
-                }
-            }
-        }
-        
-        return $ret;
-    }
-    
-    /***********************/
-    /**
     This is a special method that does not apply a security predicate. It is used to force-reload record instances.
     
     This should ONLY be called from the database reloader functions.
