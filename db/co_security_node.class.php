@@ -206,7 +206,7 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
                                             );
             }
         } else {
-            $this->error = new LGV_Error(   CO_Lang_Common::$db_error_code_user_not_authorized,
+             $this->error = new LGV_Error(   CO_Lang_Common::$db_error_code_user_not_authorized,
                                             CO_Lang::$db_error_name_user_not_authorized,
                                             CO_Lang::$db_error_desc_user_not_authorized,
                                             __LINE__,
@@ -240,16 +240,20 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
                         $this->_ids[] = $in_id;
                         $this->_ids = array_unique($this->_ids);
                     }
-        
+                    
                     $ret = $this->update_db();
                 } else {
-                    $this->error = new LGV_Error(   CO_Lang_Common::$db_error_code_user_not_authorized,
-                                                    CO_Lang::$db_error_name_user_not_authorized,
-                                                    CO_Lang::$db_error_desc_user_not_authorized,
-                                                    __LINE__,
-                                                    __FILE__,
-                                                    __METHOD__
-                                                );
+                    if ($in_id != $this->id()) {
+                        $this->error = new LGV_Error(   CO_Lang_Common::$db_error_code_user_not_authorized,
+                                                        CO_Lang::$db_error_name_user_not_authorized,
+                                                        CO_Lang::$db_error_desc_user_not_authorized,
+                                                        __LINE__,
+                                                        __FILE__,
+                                                        __METHOD__
+                                                    );
+                    } else {    // If we tried to add our own ID, then we don't add it, but it's not an error.
+                        $ret = true;
+                    }
                 }
             }
         } else {
@@ -345,6 +349,8 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
     \returns true, if the current logged-in user can edit IDs for this login.
      */
     public function user_can_edit_ids() {
-        return $this->get_access_object()->god_mode();
+        $ret = ($this->get_access_object()->get_login_id() != $this->_id) && ($this->get_access_object()->god_mode() || $this->_db_object->i_have_all_ids($this->_id));
+        
+        return $ret;
     }
 };

@@ -10,6 +10,7 @@
 - Added the DB backup fetch routine to the base DB class.
 - Fixed an issue with the "can see through the fuzz" setter, where God Mode wasn't being given the respect it deserved.
 - Removed all punctuation from the API key. It probably won't make any difference, but it doesn't hurt.
+- Simplified and solidified the check for ability to edit security tokens.
 
 **1.0.0.2036** *(July 22, 2018)*
 
