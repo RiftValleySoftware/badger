@@ -12,6 +12,7 @@
 - Removed all punctuation from the API key. It probably won't make any difference, but it doesn't hurt.
 - Simplified and solidified the check for ability to edit security tokens.
 - Reduced the size of the API keys by 50% (they made the GET requests too long).
+- Fixed a couple of possible divide-by-0 bugs.
 
 **1.0.0.2036** *(July 22, 2018)*
 

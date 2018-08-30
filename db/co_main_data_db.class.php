@@ -73,6 +73,10 @@ class CO_Main_Data_DB extends A_CO_DB {
 			$sinAlpha = ($cosU1 * $cosU2 * $sinLambda) / $sinSigma;
 			$cosSqAlpha = 1.0 - $sinAlpha*$sinAlpha;
 			
+			if (0 == $cosSqAlpha) {
+    			return 0;
+    		}
+    		
 			$cos2SigmaM = $cosSigma - 2.0*$sinU1*$sinU2/$cosSqAlpha;
 			
 			$divisor = (16.0*$cosSqAlpha*(4.0+$f*(4.0-3.0*$cosSqAlpha)));
