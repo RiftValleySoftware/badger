@@ -64,19 +64,28 @@ class CO_Main_Data_DB extends A_CO_DB {
 			$sinLambda = sin($lambda);
 			$cosLambda = cos($lambda);
 			$sinSigma = sqrt(($cosU2*$sinLambda) * ($cosU2*$sinLambda) + ($cosU1*$sinU2-$sinU1*$cosU2*$cosLambda) * ($cosU1*$sinU2-$sinU1*$cosU2*$cosLambda));
-    		if ($sinSigma==0)
-    			{
-    			return true;  // co-incident points
-    			}
+    		if ($sinSigma==0) {
+    			return 0;  // co-incident points
+    		}
+    		
 			$cosSigma = $sinU1*$sinU2 + ($cosU1*$cosU2*$cosLambda);
 			$sigma = atan2($sinSigma, $cosSigma);
 			$sinAlpha = ($cosU1 * $cosU2 * $sinLambda) / $sinSigma;
 			$cosSqAlpha = 1.0 - $sinAlpha*$sinAlpha;
+			
 			$cos2SigmaM = $cosSigma - 2.0*$sinU1*$sinU2/$cosSqAlpha;
-			$C = $f/(16.0*$cosSqAlpha*(4.0+$f*(4.0-3.0*$cosSqAlpha)));
+			
+			$divisor = (16.0*$cosSqAlpha*(4.0+$f*(4.0-3.0*$cosSqAlpha)));
+			
+			if (0 == $divisor) {
+			    return 0;
+			}
+			
+			$C = $f/$divisor;
+			
 			$lambdaP = $lambda;
 			$lambda = $L + (1.0-$C) * $f * $sinAlpha * ($sigma + $C*$sinSigma*($cos2SigmaM+$C*$cosSigma*(-1.0+2.0*$cos2SigmaM*$cos2SigmaM)));
-			} while (abs($lambda-$lambdaP) > 1e-12 && --$iterLimit>0);
+		} while (abs($lambda-$lambdaP) > 1e-12 && --$iterLimit>0);
 
 		$uSq = $cosSqAlpha * ($a*$a - $b*$b) / ($b*$b);
 		$A = 1.0 + $uSq/16384.0*(4096.0+$uSq*(-768.0+$uSq*(320.0-175.0*$uSq)));
