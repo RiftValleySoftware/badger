@@ -228,12 +228,12 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
                             ) {
         $ret = false;
         
-        if ($this->user_can_edit_ids()) {
+        if ($this->user_can_edit_ids() || ($this->_added_new_id == $in_id)) {
             $id_pool = $this->get_access_object()->get_security_ids();
             
             if ($this->get_access_object()->god_mode() || (isset($id_pool) && is_array($id_pool) && count($id_pool))) {
                 // We can add an ID to the user, as long as it is one we own. We don't have to have full access to all user IDs.
-                if (($this->get_access_object()->god_mode() || (in_array($in_id, $id_pool))) && ($in_id != $this->id())) {
+                if (($this->get_access_object()->god_mode() || (in_array($in_id, $id_pool)) || ($this->_added_new_id == $in_id)) && ($in_id != $this->id())) {
                     if (!isset($this->_ids) || !is_array($this->_ids) || !count($this->_ids)) {
                         $this->_ids = Array(intval($in_id));
                     } else {
