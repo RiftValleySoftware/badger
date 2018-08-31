@@ -14,6 +14,7 @@
 - Reduced the size of the API keys by 50% (they made the GET requests too long).
 - Fixed a couple of possible divide-by-0 bugs.
 - Added an abstraction for the serialization routines.
+- Fixed a bug that prevented new logins from being created.
 
 **1.0.0.2036** *(July 22, 2018)*
 
