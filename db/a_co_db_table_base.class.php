@@ -83,9 +83,31 @@ abstract class A_CO_DB_Table_Base {
         $ret['write_security_id'] = intval($this->write_security_id);
         $name = trim(strval($this->name));
         $ret['object_name'] = $name ? $name : NULL;
-        $ret['access_class_context'] = $this->context ? serialize($this->context) : NULL;   // If we have a context, then we serialize it for the DB.
+        $ret['access_class_context'] = $this->context ? $this->_badger_serialize($this->context) : NULL;   // If we have a context, then we serialize it for the DB.
         
         return $ret;
+    }
+    
+    /***********************/
+    /**
+    This is just a 1-step abstraction for serializing data.
+    
+    \returns the serialized data, as a string.
+    */
+    protected function _badger_serialize(   $in_data    ///< This is the data to be serialized.
+                                        ) {
+        return serialize($in_data);
+    }
+    
+    /***********************/
+    /**
+    This is just a 1-step abstarction for unserializing data.
+    
+    \returns the un-serialized data, in data/object form.
+    */
+    protected function _badger_unserialize( $in_data    ///< This is the data to be un-serialized.
+                                        ) {
+        return unserialize($in_data);
     }
     
     /***********************/
@@ -242,7 +264,7 @@ abstract class A_CO_DB_Table_Base {
                 $serialized_context = trim(strval($in_db_result['access_class_context']));
                 if (isset($serialized_context) && $serialized_context) {
                     $serialized_context = stripslashes($serialized_context);
-                    $temp_context = unserialize($serialized_context);
+                    $temp_context = $this->_badger_unserialize($serialized_context);
     
                     if ($temp_context) {
                         $this->context = $temp_context;
