@@ -1,4 +1,4 @@
-**1.0.0.2037** *(TBD)*
+**1.0.0.3000** *(September 3, 2018)*
 
 - Improved the password hashing algorithm.
 - Simplified the test for being able to see "fuzzed" long/lat.
