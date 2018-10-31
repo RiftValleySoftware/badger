@@ -1,3 +1,7 @@
+**1.0.0.3001** *(October 31, 2018)*
+
+- Switched the license to MIT.
+
 **1.0.0.3000** *(September 3, 2018)*
 
 - Improved the password hashing algorithm.
