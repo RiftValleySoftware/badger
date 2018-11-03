@@ -152,8 +152,8 @@ The files containing classes should be named after the class, all lower case, wi
 LICENSE
 =======
 
-![Little Green Viper Software Development LLC](images/viper.png)
-© Copyright 2018, Little Green Viper Software Development LLC/The Great Rift Valley Software Company
+![The Great Rift Valley Software Company LLC](images/viper.png)
+© Copyright 2018, The Great Rift Valley Software Company
 
 LICENSE:
 
@@ -171,6 +171,6 @@ OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
 IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
 CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-Little Green Viper Software Development: https://littlegreenviper.com
+The Great Rift Valley Software Company: https://riftvalleysoftware.com
 The Great Rift Valley Software Company: https://riftvalleysoftware.com
 

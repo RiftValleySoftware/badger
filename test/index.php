@@ -3,7 +3,7 @@
 /**
     Badger Hardened Baseline Database Component
     
-    © Copyright 2018, Little Green Viper Software Development LLC/The Great Rift Valley Software Company
+    © Copyright 2018, The Great Rift Valley Software Company
     
     LICENSE:
     
@@ -21,7 +21,7 @@
     IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
     CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-    Little Green Viper Software Development: https://littlegreenviper.com
+    The Great Rift Valley Software Company: https://riftvalleysoftware.com
 */
     $config_file_path = dirname(__FILE__).'/config/s_config.class.php';
     
