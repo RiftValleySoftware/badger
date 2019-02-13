@@ -152,7 +152,7 @@ The files containing classes should be named after the class, all lower case, wi
 LICENSE
 =======
 
-![The Great Rift Valley Software Company LLC](images/viper.png)
+![The Great Rift Valley Software Company](images/RiftValleySimpleCorpLogo.png)
 © Copyright 2018, The Great Rift Valley Software Company
 
 LICENSE:
