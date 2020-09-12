@@ -148,7 +148,6 @@ class CO_Security_Login extends CO_Security_Node {
         
         if (intval($this->id()) == intval(CO_Config::god_mode_id())) {
             // God Mode is always forced to use the config password.
-            $this->context['hashed_password'] = bin2hex(openssl_random_pseudo_bytes(4));    // Just create a randomish junk password. It will never be used.
             $this->instance_description = 'GOD MODE: '.(isset($this->name) && $this->name ? "$this->name (".$this->login_id.")" : "Unnamed Login Node (".$this->login_id.")");
         } else {
             $this->instance_description = isset($this->name) && $this->name ? "$this->name (".$this->login_id.")" : "Unnamed Login Node (".$this->login_id.")";
