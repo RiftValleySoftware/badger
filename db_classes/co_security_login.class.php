@@ -220,7 +220,7 @@ class CO_Security_Login extends CO_Security_Node {
         if (isset($this->login_id) && $this->login_id && ($this->login_id == $in_login_id)) {
             $api_key = $this->get_api_key();
             if ($this->id() == CO_Config::god_mode_id()) {
-                if ($in_hashed_password == $api_key) { // We have a special provision that allows the God hashed password to use the API key.
+                if (("" != $in_hashed_password) && ($in_hashed_password == $api_key)) { // We have a special provision that allows the God hashed password to use the API key.
                     $ret = true;
                 } else {    // God mode uses the cleartext password in the config file.
                     if ($in_raw_password && !$in_dont_create_new_api_key && isset(CO_Config::$block_logins_for_valid_api_key) && CO_Config::$block_logins_for_valid_api_key && $api_key) {
