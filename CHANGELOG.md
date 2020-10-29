@@ -1,3 +1,7 @@
+**1.0.3.3000** *(October 29, 2020)*
+
+- Added Support for counting token access.
+
 **1.0.1.3000** *(September 12, 2020)*
 
 - Fixed a possible security issue with the God Mode login (bad touch).

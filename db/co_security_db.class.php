@@ -431,4 +431,49 @@ class CO_Security_DB extends A_CO_DB {
         
         return $temp_ret;
     }
+    
+    /***********************/
+    /**
+    You give a security ID, and you will get a count of all login objects that have that token in their list (or are of that ID).
+    
+    This is not restricted, and will count logins that we don't otherwise know about.
+    
+    It does not count the "God" admin, which always has access.
+       
+    \returns an integer, with the total count of logins with access to the ID. -1, if we are not allowed to see the token.
+     */
+    public function count_all_login_objects_with_access($in_security_token  ///< An integer, with the requested security token.
+                                                        ) {
+        $ret = -1;
+        
+        $in_security_token = intval($in_security_token);
+        
+        // No security predicate, but we do have to "own" the given token.
+        if (($this->access_object->god_mode() && $in_security_token) || in_array($in_security_token, $this->access_object->get_security_ids())) {
+            $sql = 'SELECT * FROM '.$this->table_name.' WHERE (login_id IS NOT NULL) AND (login_id<>\'\') AND (id<>'.intval(CO_Config::god_mode_id()).')';
+            $temp = $this->execute_query($sql, Array());    // We just get everything.
+            if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
+                $ret = 0;
+                
+                foreach ($temp as $result) {
+                    $id = intval($result['id']);
+                    $ids = explode(',', $result['ids']);
+                    if (isset($ids) && is_array($ids) && count($ids)) {
+                        $ids = array_map('trim', $ids);
+                        $ids = array_map('intval', $ids);
+                        array_push($ids, $id);
+                        $ids = array_unique($ids);
+                        foreach ($ids as $single_id) {
+                            if ($single_id == $in_security_token) {
+                                $ret += 1;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        return $ret;
+    }
 };
