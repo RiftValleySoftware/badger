@@ -947,4 +947,21 @@ class CO_Access {
         
         return $this->_security_db_object->get_all_login_objects_with_access($in_security_token, $and_write);
     }
+    
+    /***********************/
+    /**
+    You give a security ID, and you will get all user objects that have a login wih that token in their list (or are of that ID).
+    
+    This is restricted to use security vetting, so only users visible to the current login.
+       
+    \returns an array of instances.
+     */
+    public function get_all_user_objects_with_access(   $in_security_token  ///< An integer, with the requested security token.
+                                                    ) {
+        if (!isset($this->_security_db_object) || !$this->_security_db_object) {
+            return Array();
+        }
+        
+        return $this->_security_db_object->get_all_user_objects_with_access($in_security_token);
+    }
 };

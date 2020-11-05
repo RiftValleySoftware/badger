@@ -476,4 +476,54 @@ class CO_Security_DB extends A_CO_DB {
         
         return $ret;
     }
+    
+    /***********************/
+    /**
+    You give a security ID, and you will get an array, with the user objects, associated with login objects that have that token in their list (or are of that ID).
+    
+    This is security restricted, and will not return users that we don't otherwise know about.
+       
+    \returns an array, with the user objects, associated with login objects that have that token in their list (or are of that ID).
+     */
+    public function get_all_user_objects_with_access($in_security_token  ///< An integer, with the requested security token.
+                                                        ) {
+        $ret = array();
+        
+        $in_security_token = intval($in_security_token);
+        $access_instance = $this->access_object;
+        
+        // No security predicate, but we do have to "own" the given token.
+        if (($access_instance->god_mode() && $in_security_token) || in_array($in_security_token, $access_instance->get_security_ids())) {
+            $sql = 'SELECT * FROM '.$this->table_name.' WHERE (login_id IS NOT NULL) AND (login_id<>\'\') AND (id<>'.intval(CO_Config::god_mode_id()).')';
+            $temp = $this->execute_query($sql, Array());    // We just get everything.
+            if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
+                foreach ($temp as $result) {
+                    $id = intval($result['id']);
+                    $ids = explode(',', $result['ids']);
+                    if (isset($ids) && is_array($ids) && count($ids)) {
+                        $ids = array_map('trim', $ids);
+                        $ids = array_map('intval', $ids);
+                        array_push($ids, $id);
+                        $ids = array_unique($ids);
+                        foreach ($ids as $single_id) {
+                            if ($single_id == $in_security_token) {
+                                array_push($ret, $id);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        $returnVar = array();
+        foreach ($ret as $id) {
+            $temp2 = $access_instance->get_user_from_login($id);
+            if (isset($temp2) && $temp2) {
+                array_push($returnVar, $temp2);
+            }
+        }
+        
+        return $returnVar;
+    }
 };
