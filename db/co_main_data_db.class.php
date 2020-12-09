@@ -567,6 +567,32 @@ class CO_Main_Data_DB extends A_CO_DB {
     
     /***********************/
     /**
+    This is an extremely simple function that gets the ID and name (usually the display name) of user instances visible to the current login.
+    It's goal is to be extremely fast and result in a relatively small response.
+    
+    \returns an associative array (if users are found) of (id => name)
+     */
+    public function get_all_visible_users() {
+        $ret = array();
+        $sql = 'SELECT id,object_name FROM '.$this->table_name.' WHERE ';
+    
+        $predicate = $this->_create_read_security_predicate();
+    
+        if ($predicate) {
+            $sql = "$sql$predicate AND access_class='CO_User_Collection'";
+            $temp = $this->execute_query($sql, Array());
+            if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
+                foreach($temp as $value) {
+                    $ret[$value["id"]] = $value["object_name"];
+                }
+            }
+        }
+        
+        return $ret;
+    }
+    
+    /***********************/
+    /**
     This is a very "raw" function that simply checks to see if a user collection exists for a given login ID.
     
     This deliberately does not pass security vetting, so we're careful.
