@@ -574,20 +574,23 @@ class CO_Main_Data_DB extends A_CO_DB {
      */
     public function get_all_visible_users() {
         $ret = array();
-        $sql = 'SELECT id,object_name FROM '.$this->table_name.' WHERE ';
+        $sql = 'SELECT id,object_name FROM '.$this->table_name.' WHERE';
     
         $predicate = $this->_create_read_security_predicate();
-    
+        
         if ($predicate) {
-            $sql = "$sql$predicate AND access_class='CO_User_Collection'";
-            $temp = $this->execute_query($sql, Array());
-            if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
-                foreach($temp as $value) {
-                    $ret[$value["id"]] = $value["object_name"];
-                }
-            }
+            $sql = "$sql $predicate AND";
         }
         
+        $sql = "$sql access_class='CO_User_Collection'";
+        
+        $temp = $this->execute_query($sql, Array());
+        if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
+            foreach($temp as $value) {
+                $ret[$value["id"]] = $value["object_name"];
+            }
+        }
+
         return $ret;
     }
     

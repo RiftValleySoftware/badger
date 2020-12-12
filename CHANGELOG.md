@@ -1,3 +1,7 @@
+**1.0.6.3000** *(December 12, 2020)*
+
+- Fixed a bug in the new fast user query.
+
 **1.0.5.3000** *(December 9, 2020)*
 
 - Added support for a fast query for visible users.
