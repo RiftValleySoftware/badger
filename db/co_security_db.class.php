@@ -148,6 +148,35 @@ class CO_Security_DB extends A_CO_DB {
     
     /***********************/
     /**
+    This is an extremely simple function that gets the ID, Login ID (string), and name of logins visible to the current login.
+    It's goal is to be extremely fast and result in a relatively small response.
+    
+    \returns a simple associative array, indexed by login ID, with each element being an array, containing the name of the login object in [0], and the login ID, in [1]. It reurns ALL logins visible to the current login.
+     */
+    public function get_all_visible_logins() {
+        $ret = array();
+        $sql = 'SELECT id,object_name,login_id FROM '.$this->table_name.' WHERE';
+    
+        $predicate = $this->_create_read_security_predicate();
+        
+        if ($predicate) {
+            $sql = "$sql $predicate AND";
+        }
+        
+        $sql = "$sql login_id<>''";
+        
+        $temp = $this->execute_query($sql, Array());
+        if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
+            foreach($temp as $value) {
+                $ret[$value["id"]] = [$value["object_name"], $value["login_id"]];
+            }
+        }
+
+        return $ret;
+    }
+    
+    /***********************/
+    /**
     This is a very "raw" function that should ONLY be called from the access instance __construct() method (or a special check from the access class).
     
     It is designed to fetch the current login object from its string login ID, so we can extract the id.

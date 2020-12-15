@@ -1,3 +1,7 @@
+**1.0.7.3000** *(December 15, 2020)*
+
+- Added a fast lookup for visible logins.
+
 **1.0.6.3000** *(December 12, 2020)*
 
 - Fixed a bug in the new fast user query.
