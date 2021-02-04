@@ -164,22 +164,16 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
      */
     public function load_from_db(   $in_db_result   ///< This is an associative array, formatted as a database row response.
                                 ) {
+        $this->_ids = Array($this->id());
+        $this->_personal_ids = Array();
+                
         $ret = parent::load_from_db($in_db_result);
         
         if ($ret && ((isset($in_db_result['ids']) && $in_db_result['ids']) || (isset($in_db_result['personal_ids']) && $in_db_result['personal_ids']))) {
             if ($this->_db_object) {
-                $this->_ids = Array($this->id());
-                if (isset($in_db_result['ids']) || isset($in_db_result['ids'])) {
-                    $temp = isset($in_db_result['ids']) ? $in_db_result['ids'] : [];
-                    if (isset($in_db_result['personal_ids']) && is_array($in_db_result['personal_ids']) && count($in_db_result['personal_ids'])) {
-                        if (isset ($temp) && is_array($temp) && count($temp)) {
-                            array_push($temp, $in_db_result['personal_ids']);
-                        } else {
-                            $temp = $in_db_result['personal_ids'];
-                        }
-                    }
-
-                    if (isset ($temp) && is_array($temp) && count($temp)) {
+                if (isset($in_db_result['ids']) && $in_db_result['ids']) {
+                    $temp = $in_db_result['ids'];
+                    if (isset ($temp) && $temp) {
                         $tempAr = explode(',', $temp);
                         if (is_array($tempAr) && count($tempAr)) {
                             $tempAr = array_map('intval', $tempAr);
@@ -187,6 +181,20 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
                             $tempAr = array_unique(array_merge($this->_ids, $tempAr));
                             if (isset($tempAr) && is_array($tempAr) && count($tempAr)) {
                                 $this->_ids = $tempAr;
+                            }
+                        }
+                    }
+                }
+                  
+                if (isset($in_db_result['personal_ids']) || isset($in_db_result['personal_ids'])) {
+                    $temp = $in_db_result['personal_ids'];
+                    if (isset ($temp) && $temp) {
+                        $tempAr = explode(',', $temp);
+                        if (is_array($tempAr) && count($tempAr)) {
+                            $tempAr = array_unique(array_map('intval', $tempAr));
+                            sort($tempAr);
+                            if (isset($tempAr) && is_array($tempAr) && count($tempAr)) {
+                                $this->_personal_ids = $tempAr;
                             }
                         }
                     }

@@ -54,7 +54,7 @@ INSERT INTO `co_data_nodes` (`id`, `access_class`, `last_access`, `read_security
 (7, 'CO_LL_Location', '1970-01-01 00:00:00', 6, 6, 'Adelaide', NULL, NULL, -34.9285, 138.6007, 'AU', 'SA', 'south australia', 'australia', NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 (8, 'CO_LL_Location', '1970-01-01 00:00:00', 0, 3, 'San Jose, Costa Rica', NULL, NULL, 9.9281, -84.0907, 'CR', 'Costa Rica', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 (9, 'CO_LL_Location', '1970-01-01 00:00:00', 0, 0, 'San Jose, California', NULL, NULL, 37.3382, -121.8863, 'US', 'CA', 'california', 'northern california', NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(10, 'CO_LL_Location', '1970-01-01 00:00:00', 6, 6, 'Gettysburg, Pennsylvania', NULL, NULL, 39.8309, -77.2311, 'US', 'PA', 'pennsylvania', 'Lincoln', NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+(10, 'CO_LL_Location', '1970-01-01 00:00:00', 0, 0, 'Gettysburg, Pennsylvania', NULL, NULL, 39.8309, -77.2311, 'US', 'PA', 'pennsylvania', 'Lincoln', NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
 ALTER TABLE `co_data_nodes`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;

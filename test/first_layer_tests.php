@@ -89,7 +89,7 @@
 
                     echo('<div class="main_div inner_container">');
                         echo('<div class="main_div" style="margin-right:2em">');
-                        echo('<p class="explain">This test accesses as a tertiary member, and then creates a new record. The ID of the record should be ten.</p>');
+                        echo('<p class="explain">This test accesses as a tertiary member, and then creates a new record. The ID of the record should be eleven.</p>');
                         echo('<p class="explain">After we create the new record, we use its accessors to set some new values.</p>');
                         echo('<p class="explain">We expect this to succeed.</p>');
                         echo('</div>');
@@ -186,7 +186,6 @@
                 $data_record2 = $access_instance->get_single_data_record_by_id($in_record_id, true);
                 if ($data_record2) {
                     $retrieved_payload = $data_record2->get_payload();
-                    
                     if ($retrieved_payload == $honest_abe_said) {
                         echo("<h2>The test passes!</h2>");
                         echo("<h5>AFTER:</h5>");
@@ -200,7 +199,7 @@
                     echo('<p style="margin-left:1em;color:red;font-weight:bold">Error: ('.$access_instance->error->error_code.') '.$access_instance->error->error_name.' ('.$access_instance->error->error_description.')</p>');
                 }
             } else {
-                echo("<h2 style=\"color:red;font-weight:bold\">Failed to get the record!</h2>");
+                echo("<h2 style=\"color:red;font-weight:bold\">Failed to get the record (".$in_record_id.")!</h2>");
                 if (isset($access_instance->error)) {
                     echo('<p style="margin-left:1em;color:red;font-weight:bold">Error: ('.$access_instance->error->error_code.') '.$access_instance->error->error_name.' ('.$access_instance->error->error_description.')</p>');
                 }

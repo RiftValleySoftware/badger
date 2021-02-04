@@ -539,7 +539,6 @@ class CO_Access {
         
         if (isset($this->_data_db_object) && $this->_data_db_object) {
             $ret = $this->_data_db_object->get_multiple_records_by_id($in_id_array);
-        
             if ($this->_data_db_object->error) {
                 $this->error = $this->_data_db_object->error;
                 

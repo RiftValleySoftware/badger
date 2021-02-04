@@ -365,7 +365,6 @@ abstract class A_CO_DB_Table_Base {
         $ids = $this->get_access_object()->get_security_ids();
         
         $my_write_item = intval($this->write_security_id);
-        
         // We can never edit unless we are logged in.
         if (((isset($ids) && is_array($ids) && count($ids)) && (0 == $my_write_item)) || $this->get_access_object()->god_mode()) {
             $ret = true;
