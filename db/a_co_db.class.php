@@ -691,7 +691,7 @@ abstract class A_CO_DB {
                         }
                         
                         // If there is no write ID specified, then we simply take the first one off the list.
-                        if (!isset($params_associative_array['write_security_id'])) {
+                        if (!isset($params_associative_array['write_security_id']) && isset($access_ids[1])) {
                             $params_associative_array['write_security_id'] = $access_ids[1];
                         }
                         

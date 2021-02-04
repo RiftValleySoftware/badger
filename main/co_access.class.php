@@ -217,7 +217,8 @@ class CO_Access {
     
     \returns an array of integers, with each one representing a security token. The first element will always be the ID of the user.
      */
-    public function get_security_ids() {
+    public function get_security_ids($no_personal = false   ///< This is optional. If we DO NOT want personal tokens included, this should be set to true. Default is false (include personal tokens).
+                                    ) {
         $ret = Array();
         
         if ($this->god_mode()) {
@@ -225,7 +226,7 @@ class CO_Access {
         } else {
             $login_id = $this->get_login_id();
             if (isset($login_id) && $login_id && $this->_security_db_object) {
-                $ret = $this->_security_db_object->get_security_ids_for_id($this->get_login_id());
+                $ret = $this->_security_db_object->get_security_ids_for_id($this->get_login_id(), $no_personal);
                 
                 if ($this->_security_db_object->error) {
                     $this->error = $this->_security_db_object->error;
@@ -243,11 +244,12 @@ class CO_Access {
     
     /***********************/
     /**
-    This is pretty much the same as above, except wit the God Mode, you get all the security tokens instead of -1.
+    This is pretty much the same as above, except with the God Mode, you get all the security tokens instead of -1.
     
     \returns an array of integers, with each one representing a security token. The first element will always be the ID of the user.
      */
-    public function get_available_tokens() {
+    public function get_available_tokens($no_personal = false   ///< This is optional. If we DO NOT want personal tokens included, this should be set to true. Default is false (include personal tokens).
+                                        ) {
         $ret = Array();
         
         if ($this->god_mode()) {
@@ -259,7 +261,7 @@ class CO_Access {
         } else {
             $login_id = $this->get_login_id();
             if (isset($login_id) && $login_id && $this->_security_db_object) {
-                $ret = $this->_security_db_object->get_security_ids_for_id($this->get_login_id());
+                $ret = $this->_security_db_object->get_security_ids_for_id($this->get_login_id(), $no_personal);
                 
                 if ($this->_security_db_object->error) {
                     $this->error = $this->_security_db_object->error;

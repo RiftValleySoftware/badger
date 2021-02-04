@@ -37,6 +37,7 @@ This is the base class for records in the security database.
  */
 class CO_Security_Node extends A_CO_DB_Table_Base {
     protected $_ids;
+    protected $_personal_ids;
     
     /***********************************************************************************************************************/
     /***********************/
@@ -52,6 +53,7 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
     protected function _default_setup() {
         $default_setup = parent::_default_setup();
         $default_setup['ids'] = (NULL != $this->_ids) ? $this->_ids : '';
+        $default_setup['personal_ids'] = (NULL != $this->_personal_ids) ? $this->_personal_ids : '';
         return $default_setup;
     }
     
@@ -67,18 +69,27 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
         $ret = parent::_build_parameter_array();
         
         $ids_as_string_array = Array();
+        $personal_ids_as_string_array = Array();
         $ids_as_int = array_map('intval', $this->_ids);
+        $personal_ids_as_int = array_map('intval', $this->_personal_ids);
         sort($ids_as_int);
+        sort($personal_ids_as_int);
         
         foreach ($this->_ids as $id) {
-            if ($id != $this->id()) {
+            if ($id != $this->id() && !in_array($id, $personal_ids_as_int)) {
                 array_push($ids_as_string_array, strval($id));
             }
         }
         
+        foreach ($this->_personal_ids as $id) {
+            array_push($personal_ids_as_string_array, strval($id));
+        }
+        
         $id_list_string = trim(implode(',', $ids_as_string_array));
+        $personal_id_list_string = trim(implode(',', $personal_ids_as_string_array));
         
         $ret['ids'] = $id_list_string ? $id_list_string : NULL;
+        $ret['personal_ids'] = $personal_id_list_string ? $personal_id_list_string : NULL;
         $ret['login_id'] = NULL;
         
         return $ret;
@@ -91,29 +102,49 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
      */
 	public function __construct(    $in_db_object = NULL,   ///< This is the database instance that "owns" this record.
 	                                $in_db_result = NULL,   ///< This is a database-format associative array that is used to initialize this instance.
-	                                $in_ids = NULL          ///< This is a preset array of integers, containing security IDs for the row.
+	                                $in_ids = NULL,         ///< This is a preset array of integers, containing security IDs for the row.
+	                                $in_personal_ids = NULL ///< This is a preset array of integers, containing personal security IDs for the row.
                                 ) {
         parent::__construct($in_db_object, $in_db_result);
         $this->class_description = 'The basic class for all security nodes. This should be specialized.';
         
         // If explicit IDs are passed in, then that overrides the DB.
-        if (isset($in_ids) && is_array($in_ids)) {
+        if (isset($in_ids) && is_array($in_ids) && count($in_ids)) {
             $in_db_result['ids'] = implode(',', $in_ids);
+        }
+        
+        if (isset($in_personal_ids) && is_array($in_personal_ids) && count($in_personal_ids)) {
+            $in_db_result['personal_ids'] = implode(',', $in_ids);
         }
         
         if ($this->_db_object) {
             $this->_ids = Array($this->id());
-            if (isset($in_db_result['ids'])) {
+            $this->_personal_ids = Array();
+            
+            if (isset($in_db_result['ids']) && $in_db_result['ids']) {
                 $temp = $in_db_result['ids'];
-                
                 if (isset ($temp) && $temp) {
                     $tempAr = explode(',', $temp);
                     if (is_array($tempAr) && count($tempAr)) {
-                        $tempAr = array_map('intval', $tempAr);
+                        $tempAr = array_unique(array_map('intval', $tempAr));
+                        $tempAr = array_merge($this->_ids, $tempAr);
                         sort($tempAr);
-                        $tempAr = array_unique(array_merge($this->_ids, $tempAr));
                         if (isset($tempAr) && is_array($tempAr) && count($tempAr)) {
                             $this->_ids = $tempAr;
+                        }
+                    }
+                }
+            }
+            
+            if (isset($in_db_result['personal_ids']) && $in_db_result['personal_ids']) {
+                $temp = $in_db_result['personal_ids'];
+                if (isset ($temp) && $temp) {
+                    $tempAr = explode(',', $temp);
+                    if (is_array($tempAr) && count($tempAr)) {
+                        $tempAr = array_unique(array_map('intval', $tempAr));
+                        sort($tempAr);
+                        if (isset($tempAr) && is_array($tempAr) && count($tempAr)) {
+                            $this->_personal_ids = $tempAr;
                         }
                     }
                 }
@@ -135,13 +166,20 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
                                 ) {
         $ret = parent::load_from_db($in_db_result);
         
-        if ($ret && isset($in_db_result['ids']) && $in_db_result['ids']) {
+        if ($ret && ((isset($in_db_result['ids']) && $in_db_result['ids']) || (isset($in_db_result['personal_ids']) && $in_db_result['personal_ids']))) {
             if ($this->_db_object) {
                 $this->_ids = Array($this->id());
-                if (isset($in_db_result['ids'])) {
-                    $temp = $in_db_result['ids'];
-                
-                    if (isset ($temp) && $temp) {
+                if (isset($in_db_result['ids']) || isset($in_db_result['ids'])) {
+                    $temp = isset($in_db_result['ids']) ? $in_db_result['ids'] : [];
+                    if (isset($in_db_result['personal_ids']) && is_array($in_db_result['personal_ids']) && count($in_db_result['personal_ids'])) {
+                        if (isset ($temp) && is_array($temp) && count($temp)) {
+                            array_push($temp, $in_db_result['personal_ids']);
+                        } else {
+                            $temp = $in_db_result['personal_ids'];
+                        }
+                    }
+
+                    if (isset ($temp) && is_array($temp) && count($temp)) {
                         $tempAr = explode(',', $temp);
                         if (is_array($tempAr) && count($tempAr)) {
                             $tempAr = array_map('intval', $tempAr);

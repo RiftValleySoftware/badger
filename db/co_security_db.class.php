@@ -60,20 +60,30 @@ class CO_Security_DB extends A_CO_DB {
     
     \returns an array of integers, each, a security ID for the given login, and the first element is always the login ID itself.
      */
-    public function get_security_ids_for_id(    $in_id  ///< The integer ID of the row.
+    public function get_security_ids_for_id(    $in_id,         ///< The integer ID of the row.
+                                                $no_personal    ///< This is optional. If we DO NOT want personal tokens included, this should be set to true.
                                             ) {
         $ret = NULL;
         
-        $sql = 'SELECT ids FROM '.$this->table_name.' WHERE (login_id IS NOT NULL) AND (id='.intval($in_id).')';
+        $fetch_sql = "ids";
+        if (!$no_personal) {
+            $fetch_sql .= ",personal_ids";
+        }
+        
+        $sql = 'SELECT ".$fetch_sql." FROM '.$this->table_name.' WHERE (login_id IS NOT NULL) AND (id='.intval($in_id).')';
 
         $temp = $this->execute_query($sql, Array());
         if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
-            $ret = explode(',', $temp[0]['ids']);
+            $ret = isset($temp[0]['ids']) ? explode(',', $temp[0]['ids']) : [];
+            if (!$no_personal && isset($temp[0]['personal_ids'])) {
+                $temp = explode(',', $temp[0]['personal_ids']);
+                array_push($ret, $temp);
+                }
             if (isset($ret) && is_array($ret) && count($ret)) {
                 array_unshift($ret, $in_id);
                 $ret = array_unique(array_map('intval', $ret));
                 $ret_temp = Array();
-                foreach ( $ret as $i) {
+                foreach ($ret as $i) {
                     if (0 < $i) {
                         array_push($ret_temp, $i);
                     }
@@ -82,6 +92,40 @@ class CO_Security_DB extends A_CO_DB {
             }
         } else {
             $ret = Array($in_id);
+        }
+        
+        return $ret;
+    }
+    
+    /***********************/
+    /**
+    This returns just the "personal" IDs for the given ID.
+    
+    This should only be called from the ID fetcher in the access class, as it does not do a security predicate.
+    
+    \returns an array of integers, each, a security ID for the given login.
+     */
+    public function get_personal_ids_for_id(    $in_id  ///< The integer ID of the row.
+                                            ) {
+        $ret = NULL;
+        
+        $sql = 'SELECT personal_ids FROM '.$this->table_name.' WHERE (login_id IS NOT NULL) AND (id='.intval($in_id).')';
+
+        $temp = $this->execute_query($sql, Array());
+        if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
+            $ret = explode(',', $temp[0]['personal_ids']);
+            if (isset($ret) && is_array($ret) && count($ret)) {
+                $ret = array_unique(array_map('intval', $ret));
+                $ret_temp = Array();
+                foreach ($ret as $i) {
+                    if (0 < $i) {
+                        array_push($ret_temp, $i);
+                    }
+                }
+                $ret = $ret_temp;
+            }
+        } else {
+            $ret = Array();
         }
         
         return $ret;

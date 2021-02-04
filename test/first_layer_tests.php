@@ -201,7 +201,9 @@
                 }
             } else {
                 echo("<h2 style=\"color:red;font-weight:bold\">Failed to get the record!</h2>");
-                echo('<p style="margin-left:1em;color:red;font-weight:bold">Error: ('.$access_instance->error->error_code.') '.$access_instance->error->error_name.' ('.$access_instance->error->error_description.')</p>');
+                if (isset($access_instance->error)) {
+                    echo('<p style="margin-left:1em;color:red;font-weight:bold">Error: ('.$access_instance->error->error_code.') '.$access_instance->error->error_name.' ('.$access_instance->error->error_description.')</p>');
+                }
             }
         } else {
             echo("<h2 style=\"color:red;font-weight:bold\">The access instance is not valid!</h2>");
