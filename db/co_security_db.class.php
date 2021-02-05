@@ -70,7 +70,7 @@ class CO_Security_DB extends A_CO_DB {
             $fetch_sql .= ",personal_ids";
         }
         
-        $sql = 'SELECT '.$fetch_sql.' FROM '.$this->table_name.' WHERE (login_id IS NOT NULL) AND (id='.intval($in_id).')';
+        $sql = 'SELECT '.$fetch_sql.' FROM '.$this->table_name.' WHERE (access_class LIKE \'%Login%\') AND (login_id IS NOT NULL) AND (id='.intval($in_id).')';
 
         $temp = $this->execute_query($sql, Array());
 // Commented out, but useful for debug.
@@ -112,7 +112,7 @@ class CO_Security_DB extends A_CO_DB {
                                             ) {
         $ret = NULL;
         
-        $sql = 'SELECT personal_ids FROM '.$this->table_name.' WHERE (login_id IS NOT NULL) AND (id='.intval($in_id).')';
+        $sql = 'SELECT personal_ids FROM '.$this->table_name.' WHERE (access_class LIKE \'%Login%\') AND (login_id IS NOT NULL) AND (id='.intval($in_id).')';
 
         $temp = $this->execute_query($sql, Array());
         if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
