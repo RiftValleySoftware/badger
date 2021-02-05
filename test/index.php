@@ -3,7 +3,7 @@
 /**
     Badger Hardened Baseline Database Component
     
-    © Copyright 2018, The Great Rift Valley Software Company
+    © Copyright 2021, The Great Rift Valley Software Company
     
     LICENSE:
     
@@ -49,7 +49,6 @@
         try {
             $pdo_data_db = new CO_PDO(CO_Config::$data_db_type, CO_Config::$data_db_host, CO_Config::$data_db_name, CO_Config::$data_db_login, CO_Config::$data_db_password);
         } catch (Exception $exception) {
-// die('<pre style="text-align:left">'.htmlspecialchars(print_r($exception, true)).'</pre>');
                     $error = new LGV_Error( 1,
                                             'INITIAL DATABASE SETUP FAILURE',
                                             'FAILED TO INITIALIZE A DATABASE!',
@@ -73,7 +72,6 @@
                     $pdo_data_db->preparedExec($data_db_sql);
                     $pdo_security_db->preparedExec($security_db_sql);
                 } catch (Exception $exception) {
-// die('<pre style="text-align:left">'.htmlspecialchars(print_r($exception, true)).'</pre>');
                     $error = new LGV_Error( 1,
                                             'INITIAL DATABASE SETUP FAILURE',
                                             'FAILED TO INITIALIZE A DATABASE!',
@@ -139,6 +137,20 @@
                     echo("</p>");
                 } else {
                     echo("<h4>NO IDS!</h4>");
+                }
+                $ids = $in_record_object->personal_ids();
+                if ( isset($ids) && is_array($ids) && count($ids)) {
+                    echo("<p>Personal IDs: ");
+                        $first = true;
+                        foreach ( $ids as $id ) {
+                            if (!$first) {
+                                echo(", ");
+                            } else {
+                                $first = false;
+                            }
+                            echo($id);
+                        }
+                    echo("</p>");
                 }
             }
         echo('</div>');

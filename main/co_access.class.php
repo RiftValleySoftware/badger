@@ -3,7 +3,7 @@
 /**
     BADGER Hardened Baseline Database Component
     
-    © Copyright 2018, The Great Rift Valley Software Company
+    © Copyright 2021, The Great Rift Valley Software Company
     
     LICENSE:
     
@@ -25,7 +25,7 @@
 */
 defined( 'LGV_ACCESS_CATCHER' ) or die ( 'Cannot Execute Directly' );	// Makes sure that this file is in the correct context.
 
-define('__BADGER_VERSION__', '1.0.7.3000');
+define('__BADGER_VERSION__', '1.1.0.3000');
 
 if ( !defined('LGV_MD_CATCHER') ) {
     define('LGV_MD_CATCHER', 1);

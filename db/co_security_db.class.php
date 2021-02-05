@@ -3,7 +3,7 @@
 /**
     Badger Hardened Baseline Database Component
     
-    © Copyright 2018, The Great Rift Valley Software Company
+    © Copyright 2021, The Great Rift Valley Software Company
     
     LICENSE:
     
@@ -76,12 +76,17 @@ class CO_Security_DB extends A_CO_DB {
 // Commented out, but useful for debug.
 // echo('SQL:<pre>'.htmlspecialchars(print_r($sql, true)).'</pre>');
 // echo('RESPONSE:<pre>'.htmlspecialchars(print_r($temp, true)).'</pre>');
+// echo('<pre>'.($no_personal ? 'NO ' : '').'PERSONAL</pre>');
         if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
             $ret = isset($temp[0]['ids']) ? explode(',', $temp[0]['ids']) : [];
             if (!$no_personal && isset($temp[0]['personal_ids'])) {
-                $temp = explode(',', $temp[0]['personal_ids']);
-                array_push($ret, $temp);
+                $ret_temp = explode(',', $temp[0]['personal_ids']);
+                foreach ($ret_temp as $i) {
+                    if (0 < $i) {
+                        array_push($ret, $i);
+                    }
                 }
+            }
             if (isset($ret) && is_array($ret) && count($ret)) {
                 array_unshift($ret, $in_id);
                 $ret = array_unique(array_map('intval', $ret));
@@ -106,7 +111,7 @@ class CO_Security_DB extends A_CO_DB {
     
     This should only be called from the ID fetcher in the access class, as it does not do a security predicate.
     
-    \returns an array of integers, each, a security ID for the given login.
+    \returns an array of integers, each, a personal security ID for the given login.
      */
     public function get_personal_ids_for_id(    $in_id  ///< The integer ID of the row.
                                             ) {

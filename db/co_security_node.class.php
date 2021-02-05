@@ -3,7 +3,7 @@
 /**
     Badger Hardened Baseline Database Component
     
-    © Copyright 2018, The Great Rift Valley Software Company
+    © Copyright 2021, The Great Rift Valley Software Company
     
     LICENSE:
     
@@ -329,6 +329,40 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
     
     /***********************/
     /**
+    This sets just the "personal" IDs for the given ID.
+    
+    This should only be called by the "God" admin, and will fail, otherwise (returns empty array).
+    
+    This is not an atomic operation. If any of the given IDs are also in the regular ID list, they will be removed from the personal IDs.
+    
+    \returns an array of integers, with the new personal security IDs (usually a copy of the input Array). It will be empty, if the procedure fails.
+     */
+    public function set_personal_ids(   $in_personal_ids    ///< An Array of Integers, with the new personal IDs. This replaces any previous ones.
+                                    ) {
+        $ret = [];
+        
+        if ($this->access_object->god_mode()) {
+            $personal_ids_temp = array_unique($in_personal_ids);
+            $personal_ids = [];
+            // None of the ids can be in the regular IDs, and will be removed from the set, if so.
+            foreach($personal_ids_temp as $id) {
+                if (!in_array($id, $this->_ids)) {
+                    array_push($personal_ids, $id);
+                }
+            }
+            sort($personal_ids);
+            $this->_personal_ids = $personal_ids;
+            
+            if ($this->update_db()) {
+                return $this->_personal_ids;
+            }
+        }
+        
+        return $ret;
+    }
+    
+    /***********************/
+    /**
     This allows you to remove a single ID.
     We can remove one of our IDs from a user that may have other IDs.
     
@@ -392,6 +426,27 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
             $my_ids = $this->get_access_object()->get_security_ids();
             $ret = Array();
             foreach ($this->_ids as $id) {
+                if (in_array($id, $my_ids)) {
+                    array_push($ret, $id);
+                }
+            }
+            return $ret;
+        }
+    }
+    
+    /***********************/
+    /**
+    This does a security vetting. If logged in as God, then all IDs are returned. Otherwise, only IDs that our login can see are returned, whether or not they are in the object.
+    
+    \returns The current personal IDs.
+     */
+    public function personal_ids() {
+        if ($this->get_access_object()->god_mode()) {
+            return $this->_personal_ids;
+        } else {
+            $my_ids = $this->get_access_object()->get_security_ids();
+            $ret = Array();
+            foreach ($this->_personal_ids as $id) {
                 if (in_array($id, $my_ids)) {
                     array_push($ret, $id);
                 }

@@ -160,7 +160,7 @@
                     echo('<div class="main_div inner_container">');
                         ?>
                         <div class="main_div" style="margin-right:2em">
-                        <p class="explain">This ID has access (read and write) only to itself in the security database.</p>
+                        <p class="explain">This ID has access (read and write) only to itself, and Item 5 (Admin Login 4), in the security database.</p>
                         <p class="explain">It has read-write access to items 2, 4, 7, 9 of the main database.</p>
                         <p class="explain">It has read-only access to items 2, 4, 7, 8, 9 of the main database.</p>
                         <p class="explain">It has no access to items 3, 5, 6 of the main database.</p>
