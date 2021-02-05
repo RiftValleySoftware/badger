@@ -353,6 +353,12 @@
                         include('advanced_tests.php');
                         ?>
                     </div>
+                    <div id="personal_id_tests" class="test-wrapper">
+                        <h2>PERSONAL ID TESTS</h2>
+                        <?php
+                        include('personal_id_tests.php');
+                        ?>
+                    </div>
                     <?php
                         $end_time = microtime(true);
                         $seconds = $end_time - $start_time;
