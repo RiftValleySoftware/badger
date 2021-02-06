@@ -44,7 +44,7 @@ if ( !defined('LGV_ACCESS_CATCHER') ) {
                         </div>
                         <?php
                         $start = microtime(true);
-                        try_basic_personal_ids('admin', '', CO_Config::god_mode_password());
+                        try_static_personal_ids('admin', '', CO_Config::god_mode_password());
                         echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
@@ -98,7 +98,7 @@ if ( !defined('LGV_ACCESS_CATCHER') ) {
     ?>
 </div>
 <?php    
-    function try_basic_personal_ids($in_login = NULL, $in_hashed_password = NULL, $in_password = NULL) {
+    function try_static_personal_ids($in_login = NULL, $in_hashed_password = NULL, $in_password = NULL) {
         $access_instance = NULL;
         
         require_once(CO_Config::badger_main_class_dir().'/co_access.class.php');
