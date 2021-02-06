@@ -345,8 +345,9 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
             $personal_ids_temp = array_unique($in_personal_ids);
             $personal_ids = [];
             // None of the ids can be in the regular IDs, and will be removed from the set, if so.
+            // They also cannot be anyone else's personal ID, or anyone's login ID. Personal IDs can ONLY be regular (non-login) security objects.
             foreach($personal_ids_temp as $id) {
-                if (!in_array($id, $this->_ids)) {
+                if (!in_array($id, $this->_ids) && !$this->get_access_object()->is_this_a_login_id($id) && (!$this->get_access_object()->is_this_a_personal_id($id) || in_array($id, $this->_personal_ids))) {
                     array_push($personal_ids, $id);
                 }
             }

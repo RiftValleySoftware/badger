@@ -30,8 +30,8 @@ if ( !defined('LGV_ACCESS_CATCHER') ) {
 ?><div style="display:table;margin-left:auto;margin-right:auto;text-align:left">
     <?php
         prepare_databases('personal_id_test');
-        echo('<div id="basic-login-tests" class="closed">');
-            echo('<h1 class="header"><a href="javascript:toggle_main_state(\'basic-login-tests\')">BASIC TESTS</a></h1>');
+        echo('<div id="basic-personal-id-tests" class="closed">');
+            echo('<h1 class="header"><a href="javascript:toggle_main_state(\'basic-personal-id-tests\')">BASIC TESTS</a></h1>');
             echo('<div class="container">');
         
                 echo('<div id="test-068" class="inner_closed">');
@@ -44,7 +44,7 @@ if ( !defined('LGV_ACCESS_CATCHER') ) {
                         </div>
                         <?php
                         $start = microtime(true);
-                        try_static_personal_ids('admin', '', CO_Config::god_mode_password());
+                        try_basic_static_personal_ids('admin', '', CO_Config::god_mode_password());
                         echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
@@ -59,7 +59,7 @@ if ( !defined('LGV_ACCESS_CATCHER') ) {
                         </div>
                         <?php
                         $start = microtime(true);
-                        try_check_personal_ids_1('admin', '', CO_Config::god_mode_password());
+                        try_basic_check_personal_ids_1('admin', '', CO_Config::god_mode_password());
                         echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
@@ -74,7 +74,7 @@ if ( !defined('LGV_ACCESS_CATCHER') ) {
                         </div>
                         <?php
                         $start = microtime(true);
-                        try_changing_personal_ids('admin', '', CO_Config::god_mode_password());
+                        try_basic_changing_personal_ids('admin', '', CO_Config::god_mode_password());
                         echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
@@ -89,16 +89,21 @@ if ( !defined('LGV_ACCESS_CATCHER') ) {
                         </div>
                         <?php
                         $start = microtime(true);
-                        try_check_personal_ids_2('admin', '', CO_Config::god_mode_password());
+                        try_basic_check_personal_ids_2('admin', '', CO_Config::god_mode_password());
                         echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
             echo('</div>');
         echo('</div>');
+        echo('<div id="advanced-personal-id-tests" class="closed">');
+            echo('<h1 class="header"><a href="javascript:toggle_main_state(\'advanced-personal-id-tests\')">ADVANCED TESTS</a></h1>');
+            echo('<div class="container">');
+            echo('</div>');
+        echo('</div>');
     ?>
 </div>
 <?php    
-    function try_static_personal_ids($in_login = NULL, $in_hashed_password = NULL, $in_password = NULL) {
+    function try_basic_static_personal_ids($in_login = NULL, $in_hashed_password = NULL, $in_password = NULL) {
         $access_instance = NULL;
         
         require_once(CO_Config::badger_main_class_dir().'/co_access.class.php');
@@ -143,7 +148,7 @@ if ( !defined('LGV_ACCESS_CATCHER') ) {
         }
     }
     
-    function try_check_personal_ids_1($in_login = NULL, $in_hashed_password = NULL, $in_password = NULL) {
+    function try_basic_check_personal_ids_1($in_login = NULL, $in_hashed_password = NULL, $in_password = NULL) {
         $access_instance = NULL;
         
         require_once(CO_Config::badger_main_class_dir().'/co_access.class.php');
@@ -237,7 +242,7 @@ if ( !defined('LGV_ACCESS_CATCHER') ) {
         }
     }
     
-    function try_changing_personal_ids($in_login = NULL, $in_hashed_password = NULL, $in_password = NULL) {
+    function try_basic_changing_personal_ids($in_login = NULL, $in_hashed_password = NULL, $in_password = NULL) {
         $access_instance = NULL;
         
         require_once(CO_Config::badger_main_class_dir().'/co_access.class.php');
@@ -294,7 +299,7 @@ if ( !defined('LGV_ACCESS_CATCHER') ) {
         }
     }
     
-    function try_check_personal_ids_2($in_login = NULL, $in_hashed_password = NULL, $in_password = NULL) {
+    function try_basic_check_personal_ids_2($in_login = NULL, $in_hashed_password = NULL, $in_password = NULL) {
         $access_instance = NULL;
         
         require_once(CO_Config::badger_main_class_dir().'/co_access.class.php');

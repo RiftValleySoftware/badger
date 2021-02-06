@@ -310,6 +310,25 @@ class CO_Access {
     
     /***********************/
     /**
+    This checks an ID, to see if it is a login ID.
+    
+    \returns true, if the ID is a login ID.
+     */
+    public function is_this_a_login_id( $in_id  ///< The ID we are checking. Must be greater than 1.
+                                            ) {
+        $ret = $this->_security_db_object->is_this_a_login_id($in_id);
+
+        if ($this->_security_db_object->error) {
+            $this->error = $this->_security_db_object->error;
+        } else {
+            return $ret;
+        }
+
+        return false;
+    }
+    
+    /***********************/
+    /**
     This is pretty much the same as above, except with the God Mode, you get all the security tokens instead of -1.
     
     \returns an array of integers, with each one representing a security token. The first element will always be the ID of the user.

@@ -329,32 +329,30 @@
                 <div id="throbber-container" style="text-align:center"><img src="images/throbber.gif" alt="throbber" style="position:absolute;width:190px;top:50%;left:50%;margin-top:-95px;margin-left:-95px" /></div>
                 <div id="tests-wrapped-up" style="display:none">
                     <img src="../icon.png" style="display:block;margin:auto;width:80px" alt="Honey badger Don't Care" />
-<!--
                     <div id="basic_tests" class="test-wrapper">
                         <h2>BASIC TESTS</h2>
                         <?php
-//                         include('basic_tests.php');
+                        include('basic_tests.php');
                         ?>
                     </div>
                     <div id="first_layer_tests" class="test-wrapper">
                         <h2>FIRST ABSTRACTION LAYER TESTS</h2>
                         <?php
-//                         include('first_layer_tests.php');
+                        include('first_layer_tests.php');
                         ?>
                     </div>
                     <div id="stress_tests" class="test-wrapper">
                         <h2>BIG-ASS STRESS TESTS</h2>
                         <?php
-//                         include('stress_tests.php');
+                        include('stress_tests.php');
                         ?>
                     </div>
                     <div id="advanced_tests" class="test-wrapper">
                         <h2>ADVANCED TESTS</h2>
                         <?php
-//                         include('advanced_tests.php');
+                        include('advanced_tests.php');
                         ?>
                     </div>
--->
                     <div id="personal_id_tests" class="test-wrapper">
                         <h2>PERSONAL ID TESTS</h2>
                         <?php

@@ -187,6 +187,49 @@ class CO_Security_DB extends A_CO_DB {
     
     /***********************/
     /**
+    This returns all of the login IDs in the database.
+    
+    This should only be called from the ID fetcher in the access class, as it does not do a security predicate.
+    
+    \returns an array of integers, each, a login ID.
+     */
+    public function get_all_login_ids() {
+        $ret = NULL;
+        
+        $sql = 'SELECT ids FROM '.$this->table_name.' WHERE (login_id IS NOT NULL)';
+
+        $temp = $this->execute_query($sql, Array());
+        if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
+            $ret = "";
+            foreach ($temp as $i) {
+                if ($i['ids']) {
+                    if ($ret) {
+                        $ret .= ",";
+                    }
+                    $ret .= $i['ids'];
+                }
+            }
+            $ret = explode(",", $ret);
+            if (isset($ret) && is_array($ret) && count($ret)) {
+                $ret = array_unique(array_map('intval', $ret));
+                $ret_temp = Array();
+                foreach ($ret as $i) {
+                    if (0 < $i) {
+                        array_push($ret_temp, $i);
+                    }
+                }
+                sort($ret_temp);
+                $ret = $ret_temp;
+            }
+        } else {
+            $ret = Array();
+        }
+        
+        return $ret;
+    }
+    
+    /***********************/
+    /**
     This checks an ID, to see if it is a personal ID.
     
     \returns true, if the ID is a personal ID.
@@ -197,6 +240,27 @@ class CO_Security_DB extends A_CO_DB {
         
         if (1 < $in_id) {
             $ret = $this->get_all_personal_ids_except_for_id();
+    
+            if (!$this->error) {
+                return in_array($in_id, $ret);
+            }
+        }
+
+        return false;
+    }
+    
+    /***********************/
+    /**
+    This checks an ID, to see if it is a login ID.
+    
+    \returns true, if the ID is a login ID.
+     */
+    public function is_this_a_login_id( $in_id  ///< The ID we are checking. Must be greater than 1.
+                                        ) {
+        $in_id = intval($in_id);
+        
+        if (1 < $in_id) {
+            $ret = $this->get_all_login_ids();
     
             if (!$this->error) {
                 return in_array($in_id, $ret);
