@@ -35,7 +35,7 @@ if ( !defined('LGV_ACCESS_CATCHER') ) {
             echo('<div class="container">');
         
                 echo('<div id="test-068" class="inner_closed">');
-                    echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-068\')">TEST 68: Static Test</a></h2>');
+                    echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-068\')">TEST 68: Direct Static Test</a></h2>');
 
                     echo('<div class="main_div inner_container">');
                         ?>
@@ -50,7 +50,22 @@ if ( !defined('LGV_ACCESS_CATCHER') ) {
                 echo('</div>');
         
                 echo('<div id="test-069" class="inner_closed">');
-                    echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-069\')">TEST 69: Changing IDs Test</a></h2>');
+                    echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-069\')">TEST 69: Test Checking for Personal IDs</a></h2>');
+
+                    echo('<div class="main_div inner_container">');
+                        ?>
+                        <div class="main_div" style="margin-right:2em">
+                            <p class="explain">Log in as the God Admin, and check to see if the IDs are reported properly.</p>
+                        </div>
+                        <?php
+                        $start = microtime(true);
+                        try_check_personal_ids_1('admin', '', CO_Config::god_mode_password());
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
+                    echo('</div>');
+                echo('</div>');
+        
+                echo('<div id="test-070" class="inner_closed">');
+                    echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-070\')">TEST 70: Direct Changing IDs Test</a></h2>');
 
                     echo('<div class="main_div inner_container">');
                         ?>
@@ -60,6 +75,21 @@ if ( !defined('LGV_ACCESS_CATCHER') ) {
                         <?php
                         $start = microtime(true);
                         try_changing_personal_ids('admin', '', CO_Config::god_mode_password());
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
+                    echo('</div>');
+                echo('</div>');
+        
+                echo('<div id="test-071" class="inner_closed">');
+                    echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-071\')">TEST 71: Test Checking for Personal IDs</a></h2>');
+
+                    echo('<div class="main_div inner_container">');
+                        ?>
+                        <div class="main_div" style="margin-right:2em">
+                            <p class="explain">Log in as the God Admin, and check to see if the IDs are reported properly.</p>
+                        </div>
+                        <?php
+                        $start = microtime(true);
+                        try_check_personal_ids_2('admin', '', CO_Config::god_mode_password());
                         echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
@@ -86,8 +116,110 @@ if ( !defined('LGV_ACCESS_CATCHER') ) {
                                     foreach ( $test_items as $item ) {
                                         display_record($item);
                                     }
+                                        
+                                    $all_ids = $access_instance->get_all_personal_ids_except_for_id();
+                                    if (isset($all_ids) && is_array($all_ids) && count($all_ids)) {
+                                        $all_ids_string = implode(", ", $all_ids);
+                                        echo('<div><strong>All Personal IDs:</strong> '.htmlspecialchars($all_ids_string).'</div>');
+                                    } else {
+                                        echo("<h4 style=\"color:red;font-weight:bold\">NO GLOBAL IDS!</h4>");
+                                    }
                                 } else {
                                     echo("<h4>NO ITEMS!</h4>");
+                                }
+                            } else {
+                                echo("<h4 style=\"color:red;font-weight:bold\">NO ARRAY!</h4>");
+                            }
+                        } else {
+                            echo("<h4 style=\"color:red;font-weight:bold\">NOTHING RETURNED!</h4>");
+                        }
+                    echo('</div>');
+                echo('</div>');
+            echo('</div>');
+        } else {
+            echo('<div class="inner_div">');
+                echo('<h4 style="text-align:center;margin-top:0.5em">We do not have a security DB</h4>');
+            echo('</div>');
+        }
+    }
+    
+    function try_check_personal_ids_1($in_login = NULL, $in_hashed_password = NULL, $in_password = NULL) {
+        $access_instance = NULL;
+        
+        require_once(CO_Config::badger_main_class_dir().'/co_access.class.php');
+        
+        $access_instance = new CO_Access($in_login, $in_hashed_password, $in_password);
+        if ($access_instance->security_db_available()) {
+            echo('<div class="inner_div">');
+                $test_items = $access_instance->get_multiple_security_records_by_id([3,4,5]);
+                echo('<div class="inner_div">');
+                    echo("<h4></h4>");
+                    echo('<div class="inner_div">');
+                        if ( isset($test_items) ) {
+                            if (is_array($test_items)) {
+                                $pass = true;
+                                $all_ids = $test_items[0]->ids();
+                                if (!is_array($all_ids) || 4 != count($all_ids)) {
+                                    echo("<h4 style=\"color:red;font-weight:bold\">UNEXPECTED RESULT FOR ITEM 3!</h4>");
+                                    $pass = false;
+                                }
+                                foreach($all_ids as $id) {
+                                    if ($access_instance->is_this_a_personal_id($id)) {
+                                        echo("<h4 style=\"color:red;font-weight:bold\">ITEM 3 REPORTS $id IS NOT A PERSONAL ID!</h4>");
+                                        $pass = false;
+                                    }
+                                }
+                                $all_ids = $test_items[0]->personal_ids();
+                                if (!is_array($all_ids) || 2 != count($all_ids)) {
+                                    echo("<h4 style=\"color:red;font-weight:bold\">UNEXPECTED RESULT FOR ITEM 3!</h4>");
+                                    $pass = false;
+                                }
+                                foreach($all_ids as $id) {
+                                    if (!$access_instance->is_this_a_personal_id($id)) {
+                                        echo("<h4 style=\"color:red;font-weight:bold\">ITEM 3 REPORTS $id IS NOT A PERSONAL ID!</h4>");
+                                        $pass = false;
+                                    }
+                                }
+                                $all_ids = $test_items[1]->ids();
+                                if (!is_array($all_ids) || 2 != count($all_ids)) {
+                                    echo("<h4 style=\"color:red;font-weight:bold\">UNEXPECTED RESULT FOR ITEM 4!</h4>");
+                                    $pass = false;
+                                }
+                                foreach($all_ids as $id) {
+                                    if ($access_instance->is_this_a_personal_id($id)) {
+                                        echo("<h4 style=\"color:red;font-weight:bold\">ITEM 4 REPORTS $id AS A PERSONAL ID!</h4>");
+                                        $pass = false;
+                                    }
+                                }
+                                $all_ids = $test_items[1]->personal_ids();
+                                if (!is_array($all_ids) || 2 != count($all_ids)) {
+                                    echo("<h4 style=\"color:red;font-weight:bold\">UNEXPECTED RESULT FOR ITEM 3!</h4>");
+                                    $pass = false;
+                                }
+                                foreach($all_ids as $id) {
+                                    if (!$access_instance->is_this_a_personal_id($id)) {
+                                        echo("<h4 style=\"color:red;font-weight:bold\">ITEM 4 REPORTS $id IS NOT A PERSONAL ID!</h4>");
+                                        $pass = false;
+                                    }
+                                }
+                                $all_ids = $test_items[2]->ids();
+                                if (!is_array($all_ids) || 4 != count($all_ids)) {
+                                    echo("<h4 style=\"color:red;font-weight:bold\">UNEXPECTED RESULT FOR ITEM 4!</h4>");
+                                    $pass = false;
+                                }
+                                foreach($all_ids as $id) {
+                                    if ($access_instance->is_this_a_personal_id($id)) {
+                                        echo("<h4 style=\"color:red;font-weight:bold\">ITEM 4 REPORTS $id AS A PERSONAL ID!</h4>");
+                                        $pass = false;
+                                    }
+                                }
+                                $all_ids = $test_items[2]->personal_ids();
+                                if (!is_array($all_ids) || 0 < count($all_ids)) {
+                                    echo("<h4 style=\"color:red;font-weight:bold\">UNEXPECTED RESULT FOR ITEM 5!</h4>");
+                                    $pass = false;
+                                }
+                                if ($pass) {
+                                    echo("<h4 style=\"color:green;font-weight:bold\">TEST PASSES</h4>");
                                 }
                             } else {
                                 echo("<h4 style=\"color:red;font-weight:bold\">NO ARRAY!</h4>");
@@ -135,8 +267,110 @@ if ( !defined('LGV_ACCESS_CATCHER') ) {
                                     foreach ( $test_items as $item ) {
                                         display_record($item);
                                     }
+                                        
+                                    $all_ids = $access_instance->get_all_personal_ids_except_for_id();
+                                    if (isset($all_ids) && is_array($all_ids) && count($all_ids)) {
+                                        $all_ids_string = implode(", ", $all_ids);
+                                        echo('<div><strong>All Personal IDs:</strong> '.htmlspecialchars($all_ids_string).'</div>');
+                                    } else {
+                                        echo("<h4 style=\"color:red;font-weight:bold\">NO GLOBAL IDS!</h4>");
+                                    }
                                 } else {
                                     echo("<h4>NO ITEMS!</h4>");
+                                }
+                            } else {
+                                echo("<h4 style=\"color:red;font-weight:bold\">NO ARRAY!</h4>");
+                            }
+                        } else {
+                            echo("<h4 style=\"color:red;font-weight:bold\">NOTHING RETURNED!</h4>");
+                        }
+                    echo('</div>');
+                echo('</div>');
+            echo('</div>');
+        } else {
+            echo('<div class="inner_div">');
+                echo('<h4 style="text-align:center;margin-top:0.5em">We do not have a security DB</h4>');
+            echo('</div>');
+        }
+    }
+    
+    function try_check_personal_ids_2($in_login = NULL, $in_hashed_password = NULL, $in_password = NULL) {
+        $access_instance = NULL;
+        
+        require_once(CO_Config::badger_main_class_dir().'/co_access.class.php');
+        
+        $access_instance = new CO_Access($in_login, $in_hashed_password, $in_password);
+        if ($access_instance->security_db_available()) {
+            echo('<div class="inner_div">');
+                $test_items = $access_instance->get_multiple_security_records_by_id([3,4,5]);
+                echo('<div class="inner_div">');
+                    echo("<h4></h4>");
+                    echo('<div class="inner_div">');
+                        if ( isset($test_items) ) {
+                            if (is_array($test_items)) {
+                                $pass = true;
+                                $all_ids = $test_items[0]->ids();
+                                if (!is_array($all_ids) || 4 != count($all_ids)) {
+                                    echo("<h4 style=\"color:red;font-weight:bold\">UNEXPECTED RESULT FOR ITEM 3!</h4>");
+                                    $pass = false;
+                                }
+                                foreach($all_ids as $id) {
+                                    if ($access_instance->is_this_a_personal_id($id)) {
+                                        echo("<h4 style=\"color:red;font-weight:bold\">ITEM 3 REPORTS $id AS A PERSONAL ID!</h4>");
+                                        $pass = false;
+                                    }
+                                }
+                                $all_ids = $test_items[0]->personal_ids();
+                                if (!is_array($all_ids) || 0 < count($all_ids)) {
+                                    echo("<h4 style=\"color:red;font-weight:bold\">UNEXPECTED RESULT FOR ITEM 3!</h4>");
+                                    $pass = false;
+                                }
+                                $all_ids = $test_items[1]->ids();
+                                if (!is_array($all_ids) || 2 != count($all_ids)) {
+                                    echo("<h4 style=\"color:red;font-weight:bold\">UNEXPECTED RESULT FOR ITEM 4!</h4>");
+                                    $pass = false;
+                                }
+                                foreach($all_ids as $id) {
+                                    if ($access_instance->is_this_a_personal_id($id)) {
+                                        echo("<h4 style=\"color:red;font-weight:bold\">ITEM 4 REPORTS $id AS A PERSONAL ID!</h4>");
+                                        $pass = false;
+                                    }
+                                }
+                                $all_ids = $test_items[1]->personal_ids();
+                                if (!is_array($all_ids) || 2 != count($all_ids)) {
+                                    echo("<h4 style=\"color:red;font-weight:bold\">UNEXPECTED RESULT FOR ITEM 3!</h4>");
+                                    $pass = false;
+                                }
+                                foreach($all_ids as $id) {
+                                    if (!$access_instance->is_this_a_personal_id($id)) {
+                                        echo("<h4 style=\"color:red;font-weight:bold\">ITEM 4 REPORTS $id IS NOT A PERSONAL ID!</h4>");
+                                        $pass = false;
+                                    }
+                                }
+                                $all_ids = $test_items[2]->ids();
+                                if (!is_array($all_ids) || 4 != count($all_ids)) {
+                                    echo("<h4 style=\"color:red;font-weight:bold\">UNEXPECTED RESULT FOR ITEM 4!</h4>");
+                                    $pass = false;
+                                }
+                                foreach($all_ids as $id) {
+                                    if ($access_instance->is_this_a_personal_id($id)) {
+                                        echo("<h4 style=\"color:red;font-weight:bold\">ITEM 4 REPORTS $id AS A PERSONAL ID!</h4>");
+                                        $pass = false;
+                                    }
+                                }
+                                $all_ids = $test_items[2]->personal_ids();
+                                if (!is_array($all_ids) || 2 != count($all_ids)) {
+                                    echo("<h4 style=\"color:red;font-weight:bold\">UNEXPECTED RESULT FOR ITEM 5!</h4>");
+                                    $pass = false;
+                                }
+                                foreach($all_ids as $id) {
+                                    if (!$access_instance->is_this_a_personal_id($id)) {
+                                        echo("<h4 style=\"color:red;font-weight:bold\">ITEM 5 REPORTS $id IS NOT A PERSONAL ID!</h4>");
+                                        $pass = false;
+                                    }
+                                }
+                                if ($pass) {
+                                    echo("<h4 style=\"color:green;font-weight:bold\">TEST PASSES</h4>");
                                 }
                             } else {
                                 echo("<h4 style=\"color:red;font-weight:bold\">NO ARRAY!</h4>");

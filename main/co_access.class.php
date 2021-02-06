@@ -233,13 +233,79 @@ class CO_Access {
                     
                     $ret = Array();
                 } else {
-                    $ret[] = 1;
-                    $ret = array_unique($ret);
-                    sort($ret);
+                    array_unshift($ret, 1); // We always add 1, as that's the "all logged-in users" token.
                 }
             }
         }
         return $ret;
+    }
+    
+    /***********************/
+    /**
+    This fetches the list of the "personal" security tokens the currently logged-in user has available.
+    This will reload any non-God Mode IDs before fetching the IDs, in order to spike privilege escalation.
+    If they have God Mode, then you're pretty much screwed, anyway.
+    
+    \returns an array of integers, with each one representing a personal security token.
+     */
+    public function get_personal_security_ids() {
+        $ret = Array();
+        
+        if ($this->god_mode()) {
+            $ret = Array(-1);
+        } else {
+            $login_id = $this->get_login_id();
+            if (isset($login_id) && $login_id && $this->_security_db_object) {
+                $ret = $this->_security_db_object->get_personal_ids_for_id($this->get_login_id());
+                
+                if ($this->_security_db_object->error) {
+                    $this->error = $this->_security_db_object->error;
+                    $ret = Array();
+                }
+            }
+        }
+        return $ret;
+    }
+    
+    /***********************/
+    /**
+    This returns just the "personal" IDs for ALL logins, EXCEPT for the given ID.
+    
+    This should only be called from the ID fetcher in the access class, as it does not do a security predicate.
+    
+    \returns an array of integers, each, a personal security ID.
+     */
+    public function get_all_personal_ids_except_for_id( $in_id = 0  ///< The integer ID of the row we want exempted. If not specified, then all IDs are returned.
+                                                        ) {
+        $ret = $this->_security_db_object->get_all_personal_ids_except_for_id($in_id);
+    
+        if ($this->_security_db_object->error) {
+            $this->error = $this->_security_db_object->error;
+            $ret = Array();
+        }
+        
+        return $ret;
+        
+        return [];
+    }
+    
+    /***********************/
+    /**
+    This checks an ID, to see if it is a personal ID.
+    
+    \returns true, if the ID is a personal ID.
+     */
+    public function is_this_a_personal_id(  $in_id  ///< The ID we are checking. Must be greater than 1.
+                                            ) {
+        $ret = $this->_security_db_object->is_this_a_personal_id($in_id);
+
+        if ($this->_security_db_object->error) {
+            $this->error = $this->_security_db_object->error;
+        } else {
+            return $ret;
+        }
+
+        return false;
     }
     
     /***********************/

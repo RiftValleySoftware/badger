@@ -96,6 +96,7 @@ class CO_Security_DB extends A_CO_DB {
                         array_push($ret_temp, $i);
                     }
                 }
+                sort($ret_temp);
                 $ret = $ret_temp;
             }
         } else {
@@ -130,6 +131,7 @@ class CO_Security_DB extends A_CO_DB {
                         array_push($ret_temp, $i);
                     }
                 }
+                sort($ret_temp);
                 $ret = $ret_temp;
             }
         } else {
@@ -137,6 +139,71 @@ class CO_Security_DB extends A_CO_DB {
         }
         
         return $ret;
+    }
+    
+    /***********************/
+    /**
+    This returns just the "personal" IDs for ALL logins, EXCEPT for the given ID.
+    
+    This should only be called from the ID fetcher in the access class, as it does not do a security predicate.
+    
+    \returns an array of integers, each, a personal security ID.
+     */
+    public function get_all_personal_ids_except_for_id( $in_id = 0  ///< The integer ID of the row we want exempted. If not specified, then all IDs are returned.
+                                                        ) {
+        $ret = NULL;
+        
+        $sql = 'SELECT personal_ids FROM '.$this->table_name.' WHERE (access_class LIKE \'%Login%\') AND (login_id IS NOT NULL) AND (id<>'.intval($in_id).')';
+
+        $temp = $this->execute_query($sql, Array());
+        if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
+            $ret = "";
+            foreach ($temp as $i) {
+                if ($i['personal_ids']) {
+                    if ($ret) {
+                        $ret .= ",";
+                    }
+                    $ret .= $i['personal_ids'];
+                }
+            }
+            $ret = explode(",", $ret);
+            if (isset($ret) && is_array($ret) && count($ret)) {
+                $ret = array_unique(array_map('intval', $ret));
+                $ret_temp = Array();
+                foreach ($ret as $i) {
+                    if (0 < $i) {
+                        array_push($ret_temp, $i);
+                    }
+                }
+                sort($ret_temp);
+                $ret = $ret_temp;
+            }
+        } else {
+            $ret = Array();
+        }
+        
+        return $ret;
+    }
+    
+    /***********************/
+    /**
+    This checks an ID, to see if it is a personal ID.
+    
+    \returns true, if the ID is a personal ID.
+     */
+    public function is_this_a_personal_id(  $in_id  ///< The ID we are checking. Must be greater than 1.
+                                            ) {
+        $in_id = intval($in_id);
+        
+        if (1 < $in_id) {
+            $ret = $this->get_all_personal_ids_except_for_id();
+    
+            if (!$this->error) {
+                return in_array($in_id, $ret);
+            }
+        }
+
+        return false;
     }
     
     /***********************/
