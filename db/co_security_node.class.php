@@ -337,11 +337,11 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
     
     \returns an array of integers, with the new personal security IDs (usually a copy of the input Array). It will be empty, if the procedure fails.
      */
-    public function set_personal_ids(   $in_personal_ids    ///< An Array of Integers, with the new personal IDs. This replaces any previous ones.
+    public function set_personal_ids(   $in_personal_ids = []    ///< An Array of Integers, with the new personal IDs. This replaces any previous ones. If empty, then the IDs are removed.
                                     ) {
         $ret = [];
         
-        if ($this->access_object->god_mode()) {
+        if ($this->get_access_object()->god_mode()) {
             $personal_ids_temp = array_unique($in_personal_ids);
             $personal_ids = [];
             // None of the ids can be in the regular IDs, and will be removed from the set, if so.

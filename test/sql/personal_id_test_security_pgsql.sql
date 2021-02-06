@@ -18,10 +18,12 @@ CREATE TABLE co_security_nodes (
 INSERT INTO co_security_nodes (api_key, login_id, access_class, last_access, read_security_id, write_security_id, object_name, access_class_context, ids, personal_ids) VALUES
 (NULL, NULL, 'CO_Security_Node', '1970-01-01 00:00:00', -1, -1, NULL, NULL, NULL, NULL),
 (NULL, 'admin', 'CO_Security_Login', '1970-01-01 00:00:00', 2, 2, 'Default Admin', 'a:1:{s:15:\"hashed_password\";s:4:\"JUNK\";}', NULL, NULL),
-(NULL, 'secondary', 'CO_Security_Login', '1970-01-01 00:00:00', 3, 3, 'Secondary Login', 'a:1:{s:15:\"hashed_password\";s:13:\"CodYOzPtwxb4A\";}', '2,5,6', '8,9'),
-(NULL, 'tertiary', 'CO_Security_Login', '1970-01-01 00:00:00', 4, 4, 'Tertiary Login', 'a:1:{s:15:\"hashed_password\";s:13:\"CodYOzPtwxb4A\";}', '6', NULL),
-(NULL, 'four', 'CO_Security_Login', '1970-01-01 00:00:00', 5, 6, 'Admin Login 4', 'a:1:{s:15:\"hashed_password\";s:13:\"CodYOzPtwxb4A\";}', '3,2,7', NULL),
+(NULL, 'secondary', 'CO_Security_Login', '1970-01-01 00:00:00', 3, 3, 'Secondary Login', 'a:1:{s:15:\"hashed_password\";s:13:\"CodYOzPtwxb4A\";}', '2,5,6', NULL),
+(NULL, 'tertiary', 'CO_Security_Login', '1970-01-01 00:00:00', 4, 4, 'Tertiary Login', 'a:1:{s:15:\"hashed_password\";s:13:\"CodYOzPtwxb4A\";}', '6', '8,9'),
+(NULL, 'four', 'CO_Security_Login', '1970-01-01 00:00:00', 5, 6, 'Admin Login 4', 'a:1:{s:15:\"hashed_password\";s:13:\"CodYOzPtwxb4A\";}', '3,2,7', '10,11'),
 (NULL, NULL, 'CO_Security_ID', '1970-01-01 00:00:00', -1, -1, 'Security ID 6', '', NULL, NULL),
 (NULL, NULL, 'CO_Security_ID', '1970-01-01 00:00:00', -1, -1, 'Security ID 7', '', NULL, NULL),
 (NULL, NULL, 'CO_Security_ID', '1970-01-01 00:00:00', -1, -1, 'Security ID 8', '', NULL, NULL),
-(NULL, NULL, 'CO_Security_ID', '1970-01-01 00:00:00', -1, -1, 'Security ID 9', '', NULL, NULL);
+(NULL, NULL, 'CO_Security_ID', '1970-01-01 00:00:00', -1, -1, 'Security ID 9', '', NULL, NULL),
+(NULL, NULL, 'CO_Security_ID', '1970-01-01 00:00:00', -1, -1, 'Security ID 10', '', NULL, NULL),
+(NULL, NULL, 'CO_Security_ID', '1970-01-01 00:00:00', -1, -1, 'Security ID 11', '', NULL, NULL);
