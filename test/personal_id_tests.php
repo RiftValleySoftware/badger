@@ -157,7 +157,7 @@ function print_explain($in_explain_test) {
                             if (is_array($test_items)) {
                                 $pass = true;
                                 $all_ids = $test_items[0]->ids();
-                                if (!is_array($all_ids) || 4 != count($all_ids)) {
+                                if (!is_array($all_ids) || 5 != count($all_ids)) {
                                     echo("<h4 style=\"color:red;font-weight:bold\">UNEXPECTED RESULT FOR ITEM 3!</h4>");
                                     $pass = false;
                                 }
@@ -304,7 +304,7 @@ function print_explain($in_explain_test) {
                             if (is_array($test_items)) {
                                 $pass = true;
                                 $all_ids = $test_items[0]->ids();
-                                if (!is_array($all_ids) || 4 != count($all_ids)) {
+                                if (!is_array($all_ids) || 5 != count($all_ids)) {
                                     echo("<h4 style=\"color:red;font-weight:bold\">UNEXPECTED RESULT FOR ITEM 3!</h4>");
                                     $pass = false;
                                 }

@@ -38,6 +38,7 @@ This is the specializing class for the login ID record type.
 class CO_Security_Login extends CO_Security_Node {
     private     $_override_access_class;    ///< This is a special "one-shot" semaphore telling the save to override the access class.
     protected   $_api_key;                  ///< This is an API key for REST.
+    protected   $_personal_ids;             ///< These are personal IDs (special IDs, unique to the login).
     
     var $login_id;
     
@@ -91,6 +92,7 @@ class CO_Security_Login extends CO_Security_Node {
         $default_setup['login_id'] = $this->login_id;
         $default_setup['object_name'] = $this->login_id;
         $default_setup['api_key'] = $this->_api_key;
+        $default_setup['personal_ids'] = (NULL != $this->_personal_ids) ? $this->_personal_ids : '';
         
         return $default_setup;
     }
@@ -108,6 +110,17 @@ class CO_Security_Login extends CO_Security_Node {
         
         $ret['api_key'] = $this->_api_key;
         $ret['login_id'] = $this->login_id;
+        $personal_ids_as_string_array = Array();
+        $personal_ids_as_int = array_map('intval', $this->_personal_ids);
+        sort($personal_ids_as_int);
+        
+        foreach ($this->_personal_ids as $id) {
+            array_push($personal_ids_as_string_array, strval($id));
+        }
+
+        $personal_id_list_string = trim(implode(',', $personal_ids_as_string_array));
+        $ret['personal_ids'] = $personal_id_list_string ? $personal_id_list_string : NULL;
+
         if ($this->_override_access_class) {
             $ret['access_class'] = 'CO_Security_ID';
             $ret['object_name'] = NULL;
@@ -127,12 +140,17 @@ class CO_Security_Login extends CO_Security_Node {
 	public function __construct(    $in_db_object = NULL,   ///< This is the database instance that "owns" this record.
 	                                $in_db_result = NULL,   ///< This is a database-format associative array that is used to initialize this instance.
 	                                $in_login_id = NULL,    ///< The login ID
-	                                $in_ids = NULL          ///< An array of integers, representing the permissions this ID has.
+	                                $in_ids = NULL,         ///< An array of integers, representing the permissions this ID has.
+	                                $in_personal_ids = NULL ///< This is a preset array of integers, containing personal security IDs for the row.
                                 ) {
         $this->login_id = $in_login_id;
         $this->_override_access_class = false;
         parent::__construct($in_db_object, $in_db_result, $in_ids);
         $this->class_description = 'This is a security class for individual logins.';
+        
+        if (isset($in_personal_ids) && is_array($in_personal_ids) && count($in_personal_ids)) {
+            $in_db_result['personal_ids'] = implode(',', $in_ids);
+        }
         
         if (!isset($this->context)) {
             $this->context = Array();
@@ -152,6 +170,24 @@ class CO_Security_Login extends CO_Security_Node {
         } else {
             $this->instance_description = isset($this->name) && $this->name ? "$this->name (".$this->login_id.")" : "Unnamed Login Node (".$this->login_id.")";
         }
+            
+        // By now, we have enough read, so we know if cogito ergo sum, so we can see if we can look at the IDs.
+        if ($this->get_access_object()->god_mode() || ($this->get_access_object()->get_login_id() == $this->_id)) {
+            $this->_personal_ids = Array();
+            if (isset($in_db_result['personal_ids']) && $in_db_result['personal_ids']) {
+                $temp = $in_db_result['personal_ids'];
+                if (isset ($temp) && $temp) {
+                    $tempAr = explode(',', $temp);
+                    if (is_array($tempAr) && count($tempAr)) {
+                        $tempAr = array_unique(array_map('intval', $tempAr));
+                        sort($tempAr);
+                        if (isset($tempAr) && is_array($tempAr) && count($tempAr)) {
+                            $this->_personal_ids = $tempAr;
+                        }
+                    }
+                }
+            }
+        }
     }
 
     /***********************/
@@ -162,6 +198,7 @@ class CO_Security_Login extends CO_Security_Node {
      */
     public function load_from_db($in_db_result) {
         $ret = parent::load_from_db($in_db_result);
+        $this->_personal_ids = Array();
         
         if ($ret) {
             if (!isset($this->context)) {
@@ -182,9 +219,79 @@ class CO_Security_Login extends CO_Security_Node {
             if (isset($in_db_result['api_key'])) {
                 $this->_api_key = $in_db_result['api_key'];
             }
+                  
+            if (isset($in_db_result['personal_ids']) || isset($in_db_result['personal_ids'])) {
+                $temp = $in_db_result['personal_ids'];
+                if (isset ($temp) && $temp) {
+                    $tempAr = explode(',', $temp);
+                    if (is_array($tempAr) && count($tempAr)) {
+                        $tempAr = array_unique(array_map('intval', $tempAr));
+                        sort($tempAr);
+                        if (isset($tempAr) && is_array($tempAr) && count($tempAr)) {
+                            $this->_personal_ids = $tempAr;
+                        }
+                    }
+                }
+            }
         }
         
         return $ret;
+    }
+    
+    /***********************/
+    /**
+    This sets just the "personal" IDs for the given ID.
+    
+    This should only be called by the "God" admin, and will fail, otherwise (returns empty array).
+    
+    This is not an atomic operation. If any of the given IDs are also in the regular ID list, they will be removed from the personal IDs.
+    
+    \returns an array of integers, with the new personal security IDs (usually a copy of the input Array). It will be empty, if the procedure fails.
+     */
+    public function set_personal_ids(   $in_personal_ids = []    ///< An Array of Integers, with the new personal IDs. This replaces any previous ones. If empty, then the IDs are removed.
+                                    ) {
+        $ret = [];
+        
+        if ($this->get_access_object()->god_mode()) {
+            $personal_ids_temp = array_unique($in_personal_ids);
+            $personal_ids = [];
+            // None of the ids can be in the regular IDs, and will be removed from the set, if so.
+            // They also cannot be anyone else's personal ID, or anyone's login ID. Personal IDs can ONLY be regular (non-login) security objects.
+            foreach($personal_ids_temp as $id) {
+                if (!in_array($id, $this->_ids) && !$this->get_access_object()->is_this_a_login_id($id) && (!$this->get_access_object()->is_this_a_personal_id($id) || in_array($id, $this->_personal_ids))) {
+                    array_push($personal_ids, $id);
+                }
+            }
+            sort($personal_ids);
+            $this->_personal_ids = $personal_ids;
+            
+            if ($this->update_db()) {
+                return $this->_personal_ids;
+            }
+        }
+        
+        return $ret;
+    }
+    
+    /***********************/
+    /**
+    This does a security vetting. If logged in as God, then all IDs are returned. Otherwise, only IDs that our login can see are returned, whether or not they are in the object.
+    
+    \returns The current personal IDs.
+     */
+    public function personal_ids() {
+        if ($this->get_access_object()->god_mode()) {
+            return $this->_personal_ids;
+        } else {
+            $my_ids = $this->get_access_object()->get_security_ids();
+            $ret = Array();
+            foreach ($this->_personal_ids as $id) {
+                if (in_array($id, $my_ids)) {
+                    array_push($ret, $id);
+                }
+            }
+            return $ret;
+        }
     }
     
     /***********************/

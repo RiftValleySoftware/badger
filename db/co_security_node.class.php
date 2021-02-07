@@ -37,7 +37,6 @@ This is the base class for records in the security database.
  */
 class CO_Security_Node extends A_CO_DB_Table_Base {
     protected $_ids;
-    protected $_personal_ids;
     
     /***********************************************************************************************************************/
     /***********************/
@@ -53,7 +52,6 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
     protected function _default_setup() {
         $default_setup = parent::_default_setup();
         $default_setup['ids'] = (NULL != $this->_ids) ? $this->_ids : '';
-        $default_setup['personal_ids'] = (NULL != $this->_personal_ids) ? $this->_personal_ids : '';
         return $default_setup;
     }
     
@@ -69,11 +67,8 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
         $ret = parent::_build_parameter_array();
         
         $ids_as_string_array = Array();
-        $personal_ids_as_string_array = Array();
         $ids_as_int = array_map('intval', $this->_ids);
-        $personal_ids_as_int = array_map('intval', $this->_personal_ids);
         sort($ids_as_int);
-        sort($personal_ids_as_int);
         
         foreach ($this->_ids as $id) {
             if ($id != $this->id() && !in_array($id, $personal_ids_as_int)) {
@@ -81,15 +76,9 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
             }
         }
         
-        foreach ($this->_personal_ids as $id) {
-            array_push($personal_ids_as_string_array, strval($id));
-        }
-        
         $id_list_string = trim(implode(',', $ids_as_string_array));
-        $personal_id_list_string = trim(implode(',', $personal_ids_as_string_array));
         
         $ret['ids'] = $id_list_string ? $id_list_string : NULL;
-        $ret['personal_ids'] = $personal_id_list_string ? $personal_id_list_string : NULL;
         $ret['login_id'] = NULL;
         
         return $ret;
@@ -102,8 +91,7 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
      */
 	public function __construct(    $in_db_object = NULL,   ///< This is the database instance that "owns" this record.
 	                                $in_db_result = NULL,   ///< This is a database-format associative array that is used to initialize this instance.
-	                                $in_ids = NULL,         ///< This is a preset array of integers, containing security IDs for the row.
-	                                $in_personal_ids = NULL ///< This is a preset array of integers, containing personal security IDs for the row.
+	                                $in_ids = NULL          ///< This is a preset array of integers, containing security IDs for the row.
                                 ) {
         parent::__construct($in_db_object, $in_db_result);
         $this->class_description = 'The basic class for all security nodes. This should be specialized.';
@@ -111,10 +99,6 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
         // If explicit IDs are passed in, then that overrides the DB.
         if (isset($in_ids) && is_array($in_ids) && count($in_ids)) {
             $in_db_result['ids'] = implode(',', $in_ids);
-        }
-        
-        if (isset($in_personal_ids) && is_array($in_personal_ids) && count($in_personal_ids)) {
-            $in_db_result['personal_ids'] = implode(',', $in_ids);
         }
         
         if ($this->_db_object) {
@@ -144,24 +128,6 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
                     }
                 }
             }
-            
-            // By now, we have enough read, so we know if cogito ergo sum, so we can see if we can look at the IDs.
-            if ($this->get_access_object()->god_mode() || ($this->get_access_object()->get_login_id() == $this->_id)) {
-                $this->_personal_ids = Array();
-                if (isset($in_db_result['personal_ids']) && $in_db_result['personal_ids']) {
-                    $temp = $in_db_result['personal_ids'];
-                    if (isset ($temp) && $temp) {
-                        $tempAr = explode(',', $temp);
-                        if (is_array($tempAr) && count($tempAr)) {
-                            $tempAr = array_unique(array_map('intval', $tempAr));
-                            sort($tempAr);
-                            if (isset($tempAr) && is_array($tempAr) && count($tempAr)) {
-                                $this->_personal_ids = $tempAr;
-                            }
-                        }
-                    }
-                }
-            }
         }
         
         $this->instance_description = isset($this->name) && $this->name ? "$this->name ($this->_id)" : "Unnamed Security Node ($this->_id)";
@@ -178,7 +144,6 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
     public function load_from_db(   $in_db_result   ///< This is an associative array, formatted as a database row response.
                                 ) {
         $this->_ids = Array($this->id());
-        $this->_personal_ids = Array();
                 
         $ret = parent::load_from_db($in_db_result);
         
@@ -194,20 +159,6 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
                             $tempAr = array_unique(array_merge($this->_ids, $tempAr));
                             if (isset($tempAr) && is_array($tempAr) && count($tempAr)) {
                                 $this->_ids = $tempAr;
-                            }
-                        }
-                    }
-                }
-                  
-                if (isset($in_db_result['personal_ids']) || isset($in_db_result['personal_ids'])) {
-                    $temp = $in_db_result['personal_ids'];
-                    if (isset ($temp) && $temp) {
-                        $tempAr = explode(',', $temp);
-                        if (is_array($tempAr) && count($tempAr)) {
-                            $tempAr = array_unique(array_map('intval', $tempAr));
-                            sort($tempAr);
-                            if (isset($tempAr) && is_array($tempAr) && count($tempAr)) {
-                                $this->_personal_ids = $tempAr;
                             }
                         }
                     }
@@ -342,41 +293,6 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
     
     /***********************/
     /**
-    This sets just the "personal" IDs for the given ID.
-    
-    This should only be called by the "God" admin, and will fail, otherwise (returns empty array).
-    
-    This is not an atomic operation. If any of the given IDs are also in the regular ID list, they will be removed from the personal IDs.
-    
-    \returns an array of integers, with the new personal security IDs (usually a copy of the input Array). It will be empty, if the procedure fails.
-     */
-    public function set_personal_ids(   $in_personal_ids = []    ///< An Array of Integers, with the new personal IDs. This replaces any previous ones. If empty, then the IDs are removed.
-                                    ) {
-        $ret = [];
-        
-        if ($this->get_access_object()->god_mode()) {
-            $personal_ids_temp = array_unique($in_personal_ids);
-            $personal_ids = [];
-            // None of the ids can be in the regular IDs, and will be removed from the set, if so.
-            // They also cannot be anyone else's personal ID, or anyone's login ID. Personal IDs can ONLY be regular (non-login) security objects.
-            foreach($personal_ids_temp as $id) {
-                if (!in_array($id, $this->_ids) && !$this->get_access_object()->is_this_a_login_id($id) && (!$this->get_access_object()->is_this_a_personal_id($id) || in_array($id, $this->_personal_ids))) {
-                    array_push($personal_ids, $id);
-                }
-            }
-            sort($personal_ids);
-            $this->_personal_ids = $personal_ids;
-            
-            if ($this->update_db()) {
-                return $this->_personal_ids;
-            }
-        }
-        
-        return $ret;
-    }
-    
-    /***********************/
-    /**
     This allows you to remove a single ID.
     We can remove one of our IDs from a user that may have other IDs.
     
@@ -440,27 +356,6 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
             $my_ids = $this->get_access_object()->get_security_ids();
             $ret = Array();
             foreach ($this->_ids as $id) {
-                if (in_array($id, $my_ids)) {
-                    array_push($ret, $id);
-                }
-            }
-            return $ret;
-        }
-    }
-    
-    /***********************/
-    /**
-    This does a security vetting. If logged in as God, then all IDs are returned. Otherwise, only IDs that our login can see are returned, whether or not they are in the object.
-    
-    \returns The current personal IDs.
-     */
-    public function personal_ids() {
-        if ($this->get_access_object()->god_mode()) {
-            return $this->_personal_ids;
-        } else {
-            $my_ids = $this->get_access_object()->get_security_ids();
-            $ret = Array();
-            foreach ($this->_personal_ids as $id) {
                 if (in_array($id, $my_ids)) {
                     array_push($ret, $id);
                 }
