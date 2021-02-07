@@ -393,7 +393,7 @@ function print_explain($in_explain_test) {
                     echo('<div class="main_div inner_container">');
                         print_explain('Log in as a non-God Admin, and check to see if the IDs are hidden properly. We should see 8 and 9 for Item 3 (Our login), and no personal IDs for either of the other logins.');
                         $start = microtime(true);
-                        try_advanced_as_user_check('secondary', '', 'CoreysGoryStory');
+                        try_advanced_as_user_check('secondary', '', 'CoreysGoryStory', [3,4,5]);
                         echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
@@ -401,9 +401,19 @@ function print_explain($in_explain_test) {
                 echo('<div id="test-073" class="inner_closed">');
                     echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-073\')">TEST 73: Test By God-Admin Login</a></h2>');
                     echo('<div class="main_div inner_container">');
-                        print_explain('Log in as a non-God Admin, and check to see if the IDs are hidden properly. We should see 8 and 9 for Item 3 (Our login), and 10 and 11 for Item 4.');
+                        print_explain('Log in as God Admin, and check to see if the IDs are displayed properly. We should see 8 and 9 for Item 3 (Our login), and 10 and 11 for Item 4.');
                         $start = microtime(true);
-                        try_advanced_as_user_check('admin', '', CO_Config::god_mode_password());
+                        try_advanced_as_user_check('admin', '', CO_Config::god_mode_password(), [3,4,5]);
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
+                    echo('</div>');
+                echo('</div>');
+                
+                echo('<div id="test-074" class="inner_closed">');
+                    echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-074\')">TEST 74: Check For Filtered Tokens</a></h2>');
+                    echo('<div class="main_div inner_container">');
+                        print_explain('Log in as a non-God Admin, and check to see if the (non-personal) IDs are hidden properly. We should see 3, 2, and 5 for Item 3, and 5, 2, 3, and 7 for Item 5 (Our login).');
+                        $start = microtime(true);
+                        try_advanced_as_user_check('four', '', 'CoreysGoryStory', [3,4,5]);
                         echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
@@ -413,13 +423,13 @@ function print_explain($in_explain_test) {
     
     //##############################################################################################################################################
 
-    function try_advanced_as_user_check($in_login = NULL, $in_hashed_password = NULL, $in_password = NULL) {
+    function try_advanced_as_user_check($in_login = NULL, $in_hashed_password = NULL, $in_password = NULL, $ids) {
         $access_instance = NULL;
         
         $access_instance = new CO_Access($in_login, $in_hashed_password, $in_password);
         if ($access_instance->security_db_available()) {
             echo('<div class="inner_div">');
-                $test_items = $access_instance->get_multiple_security_records_by_id([3,4,5]);
+                $test_items = $access_instance->get_multiple_security_records_by_id($ids);
                 echo('<div class="inner_div">');
                     echo("<h4></h4>");
                     echo('<div class="inner_div">');

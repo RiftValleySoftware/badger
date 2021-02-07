@@ -131,9 +131,9 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
                         // Our original login just gets all the IDs. However, subsequent access requires that only "known" IDs are read.
                         if (isset($tempAr) && is_array($tempAr) && count($tempAr)) {
                             $access_ids = $this->get_access_object()->get_security_ids();
-                            if (isset($access_ids) && is_array($access_ids) && count($access_ids)) {
+                            if ($this->get_access_object()->god_mode() || (isset($access_ids) && is_array($access_ids) && count($access_ids))) {
                                 foreach($tempAr as $id) {
-                                    if (in_array($id, $access_ids) && !in_array($id, $this->_ids)) {
+                                    if (($this->get_access_object()->god_mode() || (in_array($id, $access_ids))) && !in_array($id, $this->_ids)) {
                                         $this->_ids[] = $id;
                                     }
                                 }
