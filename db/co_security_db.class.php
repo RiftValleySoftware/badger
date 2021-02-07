@@ -522,7 +522,7 @@ class CO_Security_DB extends A_CO_DB {
         
         return $temp_ret;
     }
-    
+        
     /***********************/
     /**
     This is a security-vetted search for all login objects (visible to the current user).

@@ -27,8 +27,25 @@ if ( !defined('LGV_ACCESS_CATCHER') ) {
     define('LGV_ACCESS_CATCHER', 1);
 }
 
-?><div style="display:table;margin-left:auto;margin-right:auto;text-align:left">
-    <?php
+require_once(CO_Config::badger_main_class_dir().'/co_access.class.php');
+        
+//##################################################################################################################################################
+//##################################################################################################################################################
+
+echo('<div style="display:table;margin-left:auto;margin-right:auto;text-align:left">');
+//     basic_tests();
+    advanced_tests();
+echo('</div>');
+
+//##################################################################################################################################################
+function print_explain($in_explain_test) {
+    echo('<div class="main_div" style="margin-right:2em"><p class="explain">'.htmlspecialchars($in_explain_test).'</p></div>');
+}
+
+//##################################################################################################################################################
+//##################################################################################################################################################
+
+    function basic_tests() {
         prepare_databases('personal_id_test');
         echo('<div id="basic-personal-id-tests" class="closed">');
             echo('<h1 class="header"><a href="javascript:toggle_main_state(\'basic-personal-id-tests\')">BASIC TESTS</a></h1>');
@@ -38,11 +55,7 @@ if ( !defined('LGV_ACCESS_CATCHER') ) {
                     echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-068\')">TEST 68: Direct Static Test</a></h2>');
 
                     echo('<div class="main_div inner_container">');
-                        ?>
-                        <div class="main_div" style="margin-right:2em">
-                            <p class="explain">Log in as the God Admin, and Load In an item that has personal IDs already in the DB, then ensure they are loaded.</p>
-                        </div>
-                        <?php
+                        print_explain('Log in as the God Admin, and Load In an item that has personal IDs already in the DB, then ensure they are loaded.');
                         $start = microtime(true);
                         try_basic_static_personal_ids('admin', '', CO_Config::god_mode_password());
                         echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
@@ -53,11 +66,7 @@ if ( !defined('LGV_ACCESS_CATCHER') ) {
                     echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-069\')">TEST 69: Test Checking for Personal IDs</a></h2>');
 
                     echo('<div class="main_div inner_container">');
-                        ?>
-                        <div class="main_div" style="margin-right:2em">
-                            <p class="explain">Log in as the God Admin, and check to see if the IDs are reported properly.</p>
-                        </div>
-                        <?php
+                        print_explain('Log in as the God Admin, and check to see if the IDs are reported properly.');
                         $start = microtime(true);
                         try_basic_check_personal_ids_1('admin', '', CO_Config::god_mode_password());
                         echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
@@ -68,11 +77,7 @@ if ( !defined('LGV_ACCESS_CATCHER') ) {
                     echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-070\')">TEST 70: Direct Changing IDs Test</a></h2>');
 
                     echo('<div class="main_div inner_container">');
-                        ?>
-                        <div class="main_div" style="margin-right:2em">
-                            <p class="explain">Log in as the God Admin, remove IDs from one record, change the personal IDs of one record, and add new IDs to another.</p>
-                        </div>
-                        <?php
+                        print_explain('Log in as the God Admin, remove IDs from one record, change the personal IDs of one record, and add new IDs to another.');
                         $start = microtime(true);
                         try_basic_changing_personal_ids('admin', '', CO_Config::god_mode_password());
                         echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
@@ -83,11 +88,7 @@ if ( !defined('LGV_ACCESS_CATCHER') ) {
                     echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-071\')">TEST 71: Test Checking for Personal IDs</a></h2>');
 
                     echo('<div class="main_div inner_container">');
-                        ?>
-                        <div class="main_div" style="margin-right:2em">
-                            <p class="explain">Log in as the God Admin, and check to see if the IDs are reported properly.</p>
-                        </div>
-                        <?php
+                        print_explain('Log in as the God Admin, and check to see if the IDs are reported properly.');
                         $start = microtime(true);
                         try_basic_check_personal_ids_2('admin', '', CO_Config::god_mode_password());
                         echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
@@ -95,18 +96,12 @@ if ( !defined('LGV_ACCESS_CATCHER') ) {
                 echo('</div>');
             echo('</div>');
         echo('</div>');
-        echo('<div id="advanced-personal-id-tests" class="closed">');
-            echo('<h1 class="header"><a href="javascript:toggle_main_state(\'advanced-personal-id-tests\')">ADVANCED TESTS</a></h1>');
-            echo('<div class="container">');
-            echo('</div>');
-        echo('</div>');
-    ?>
-</div>
-<?php    
+    }
+    
+    //##############################################################################################################################################
+
     function try_basic_static_personal_ids($in_login = NULL, $in_hashed_password = NULL, $in_password = NULL) {
         $access_instance = NULL;
-        
-        require_once(CO_Config::badger_main_class_dir().'/co_access.class.php');
         
         $access_instance = new CO_Access($in_login, $in_hashed_password, $in_password);
         if ($access_instance->security_db_available()) {
@@ -142,16 +137,14 @@ if ( !defined('LGV_ACCESS_CATCHER') ) {
                 echo('</div>');
             echo('</div>');
         } else {
-            echo('<div class="inner_div">');
-                echo('<h4 style="text-align:center;margin-top:0.5em">We do not have a security DB</h4>');
-            echo('</div>');
+            echo('<div class="inner_div"><h4 style="text-align:center;margin-top:0.5em">We do not have a security DB</h4></div>');
         }
     }
     
+    //##############################################################################################################################################
+
     function try_basic_check_personal_ids_1($in_login = NULL, $in_hashed_password = NULL, $in_password = NULL) {
         $access_instance = NULL;
-        
-        require_once(CO_Config::badger_main_class_dir().'/co_access.class.php');
         
         $access_instance = new CO_Access($in_login, $in_hashed_password, $in_password);
         if ($access_instance->security_db_available()) {
@@ -236,16 +229,14 @@ if ( !defined('LGV_ACCESS_CATCHER') ) {
                 echo('</div>');
             echo('</div>');
         } else {
-            echo('<div class="inner_div">');
-                echo('<h4 style="text-align:center;margin-top:0.5em">We do not have a security DB</h4>');
-            echo('</div>');
+            echo('<div class="inner_div"><h4 style="text-align:center;margin-top:0.5em">We do not have a security DB</h4></div>');
         }
     }
     
+    //##############################################################################################################################################
+
     function try_basic_changing_personal_ids($in_login = NULL, $in_hashed_password = NULL, $in_password = NULL) {
         $access_instance = NULL;
-        
-        require_once(CO_Config::badger_main_class_dir().'/co_access.class.php');
         
         $access_instance = new CO_Access($in_login, $in_hashed_password, $in_password);
         if ($access_instance->security_db_available()) {
@@ -293,16 +284,14 @@ if ( !defined('LGV_ACCESS_CATCHER') ) {
                 echo('</div>');
             echo('</div>');
         } else {
-            echo('<div class="inner_div">');
-                echo('<h4 style="text-align:center;margin-top:0.5em">We do not have a security DB</h4>');
-            echo('</div>');
+            echo('<div class="inner_div"><h4 style="text-align:center;margin-top:0.5em">We do not have a security DB</h4></div>');
         }
     }
     
+    //##############################################################################################################################################
+
     function try_basic_check_personal_ids_2($in_login = NULL, $in_hashed_password = NULL, $in_password = NULL) {
         $access_instance = NULL;
-        
-        require_once(CO_Config::badger_main_class_dir().'/co_access.class.php');
         
         $access_instance = new CO_Access($in_login, $in_hashed_password, $in_password);
         if ($access_instance->security_db_available()) {
@@ -387,9 +376,69 @@ if ( !defined('LGV_ACCESS_CATCHER') ) {
                 echo('</div>');
             echo('</div>');
         } else {
-            echo('<div class="inner_div">');
-                echo('<h4 style="text-align:center;margin-top:0.5em">We do not have a security DB</h4>');
+            echo('<div class="inner_div"><h4 style="text-align:center;margin-top:0.5em">We do not have a security DB</h4></div>');
+        }
+    }
+    
+//##################################################################################################################################################
+//##################################################################################################################################################
+
+    function advanced_tests() {
+        prepare_databases('personal_id_test');
+        echo('<div id="advanced-personal-id-tests" class="closed">');
+            echo('<h1 class="header"><a href="javascript:toggle_main_state(\'advanced-personal-id-tests\')">ADVANCED TESTS</a></h1>');
+            echo('<div class="container">');
+                echo('<div id="test-072" class="inner_closed">');
+                    echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-072\')">TEST 72: Test By Non-God-Admin Login</a></h2>');
+                    echo('<div class="main_div inner_container">');
+                        print_explain('Log in as a non-God Admin, and check to see if the IDs are hidden properly. We should see 8 and 9 for Item 3 (Our login), and no personal IDs for either of the other logins.');
+                        $start = microtime(true);
+                        try_advanced_as_user_check('secondary', '', 'CoreysGoryStory');
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
+                    echo('</div>');
+                echo('</div>');
+                
+                echo('<div id="test-073" class="inner_closed">');
+                    echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-073\')">TEST 73: Test By God-Admin Login</a></h2>');
+                    echo('<div class="main_div inner_container">');
+                        print_explain('Log in as a non-God Admin, and check to see if the IDs are hidden properly. We should see 8 and 9 for Item 3 (Our login), and 10 and 11 for Item 4.');
+                        $start = microtime(true);
+                        try_advanced_as_user_check('admin', '', CO_Config::god_mode_password());
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
+                    echo('</div>');
+                echo('</div>');
             echo('</div>');
+        echo('</div>');
+    }
+    
+    //##############################################################################################################################################
+
+    function try_advanced_as_user_check($in_login = NULL, $in_hashed_password = NULL, $in_password = NULL) {
+        $access_instance = NULL;
+        
+        $access_instance = new CO_Access($in_login, $in_hashed_password, $in_password);
+        if ($access_instance->security_db_available()) {
+            echo('<div class="inner_div">');
+                $test_items = $access_instance->get_multiple_security_records_by_id([3,4,5]);
+                echo('<div class="inner_div">');
+                    echo("<h4></h4>");
+                    echo('<div class="inner_div">');
+                        if ( isset($test_items) ) {
+                            if (is_array($test_items) && count($test_items)) {
+                                foreach ( $test_items as $item ) {
+                                    display_record($item);
+                                }
+                            } else {
+                                echo("<h4 style=\"color:red;font-weight:bold\">NO ARRAY!</h4>");
+                            }
+                        } else {
+                            echo("<h4 style=\"color:red;font-weight:bold\">NOTHING RETURNED!</h4>");
+                        }
+                    echo('</div>');
+                echo('</div>');
+            echo('</div>');
+        } else {
+            echo('<div class="inner_div"><h4 style="text-align:center;margin-top:0.5em">We do not have a security DB</h4></div>');
         }
     }
 ?>

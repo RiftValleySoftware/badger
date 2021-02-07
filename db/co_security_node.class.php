@@ -119,7 +119,6 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
         
         if ($this->_db_object) {
             $this->_ids = Array($this->id());
-            $this->_personal_ids = Array();
             
             if (isset($in_db_result['ids']) && $in_db_result['ids']) {
                 $temp = $in_db_result['ids'];
@@ -129,22 +128,36 @@ class CO_Security_Node extends A_CO_DB_Table_Base {
                         $tempAr = array_unique(array_map('intval', $tempAr));
                         $tempAr = array_merge($this->_ids, $tempAr);
                         sort($tempAr);
+                        // Our original login just gets all the IDs. However, subsequent access requires that only "known" IDs are read.
                         if (isset($tempAr) && is_array($tempAr) && count($tempAr)) {
-                            $this->_ids = $tempAr;
+                            $access_ids = $this->get_access_object()->get_security_ids();
+                            if (isset($access_ids) && is_array($access_ids) && count($access_ids)) {
+                                foreach($tempAr as $id) {
+                                    if (in_array($id, $access_ids) && !in_array($id, $this->_ids)) {
+                                        $this->_ids[] = $id;
+                                    }
+                                }
+                            } else {
+                                $this->_ids = $tempAr;
+                            }
                         }
                     }
                 }
             }
             
-            if (isset($in_db_result['personal_ids']) && $in_db_result['personal_ids']) {
-                $temp = $in_db_result['personal_ids'];
-                if (isset ($temp) && $temp) {
-                    $tempAr = explode(',', $temp);
-                    if (is_array($tempAr) && count($tempAr)) {
-                        $tempAr = array_unique(array_map('intval', $tempAr));
-                        sort($tempAr);
-                        if (isset($tempAr) && is_array($tempAr) && count($tempAr)) {
-                            $this->_personal_ids = $tempAr;
+            // By now, we have enough read, so we know if cogito ergo sum, so we can see if we can look at the IDs.
+            if ($this->get_access_object()->god_mode() || ($this->get_access_object()->get_login_id() == $this->_id)) {
+                $this->_personal_ids = Array();
+                if (isset($in_db_result['personal_ids']) && $in_db_result['personal_ids']) {
+                    $temp = $in_db_result['personal_ids'];
+                    if (isset ($temp) && $temp) {
+                        $tempAr = explode(',', $temp);
+                        if (is_array($tempAr) && count($tempAr)) {
+                            $tempAr = array_unique(array_map('intval', $tempAr));
+                            sort($tempAr);
+                            if (isset($tempAr) && is_array($tempAr) && count($tempAr)) {
+                                $this->_personal_ids = $tempAr;
+                            }
                         }
                     }
                 }
