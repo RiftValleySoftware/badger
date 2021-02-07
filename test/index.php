@@ -342,7 +342,7 @@
                         echo('<div id="advanced_tests" class="test-wrapper"><h2>ADVANCED TESTS</h2>');
                             include('advanced_tests.php');
                         echo(' </div>');
-                        echo('<div id="personal_id_tests" class="test-wrapper"><h2>PERSONAL ID TESTS</h2>');
+                        echo('<div id="personal_id_tests" class="test-wrapper"><h2>PERSONAL ID AND ADDITIONAL ADVANCED TESTS</h2>');
                             include('personal_id_tests.php');
                         echo('</div>');
                         $end_time = microtime(true);

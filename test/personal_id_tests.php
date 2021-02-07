@@ -33,7 +33,7 @@ require_once(CO_Config::badger_main_class_dir().'/co_access.class.php');
 //##################################################################################################################################################
 
 echo('<div style="display:table;margin-left:auto;margin-right:auto;text-align:left">');
-//     basic_tests();
+    basic_tests();
     advanced_tests();
 echo('</div>');
 
