@@ -252,8 +252,6 @@ class CO_Access {
         $ret = Array();
         
         if ($this->god_mode()) {
-            $ret = Array(-1);
-        } else {
             $login_id = $this->get_login_id();
             if (isset($login_id) && $login_id && $this->_security_db_object) {
                 $ret = $this->_security_db_object->get_personal_ids_for_id($this->get_login_id());
