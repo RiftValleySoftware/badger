@@ -826,6 +826,8 @@ class CO_Security_Login extends CO_Security_Node {
     
     /***********************/
     /**
+     This adds a personal token from the current logged-in ID's pool, to the regular ID pool of another ID.
+
      \returns true, if the operation was successful.
      */
     public function add_personal_token_from_current_login(  $in_id  ///< The ID (personal token) to be added.
@@ -844,14 +846,21 @@ class CO_Security_Login extends CO_Security_Node {
     
     /***********************/
     /**
+     This removes a personal token from the current logged-in ID's pool, from the regular ID pool of another ID.
+    
      \returns true, if the operation was successful.
      */
-    public function remove_personal_token_from_current_login(   $in_id  ///< The ID (personal token) to be added.
+    public function remove_personal_token_from_this_login(  $in_id  ///< The ID (personal token) to be added.
                                                             ) {
-        $in_id = intval($in_id);
-        // If the current login does not own the given ID as a personal token, then we can't proceed.
-        if (in_array($in_id, $this->get_access_object()->get_personal_security_ids())) {
+        $ret = $this->get_access_object()->remove_personal_token_from_this_login($this->_id, $in_id);
+
+        if ($this->get_access_object()->error) {
+            $this->error = $this->get_access_object()->error;
+        } else {
+            $this->reload_from_db();
+            return $ret;
         }
+
         return false;
     }
     

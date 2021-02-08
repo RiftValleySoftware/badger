@@ -425,6 +425,56 @@ function print_explain($in_explain_test) {
                         echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
+                
+                echo('<div id="test-076" class="inner_closed">');
+                    echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-076\')">TEST 76: Try Assigning A Non-Personal Token.</a></h2>');
+                    echo('<div class="main_div inner_container">');
+                        print_explain('Log in as a non-God Admin, and send a non-personal token (3) over to another non-God admin. We should note no change.');
+                        $start = microtime(true);
+                        try_advanced_assign_personal_token('secondary', '', 'CoreysGoryStory', 5, 3);
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
+                    echo('</div>');
+                echo('</div>');
+                
+                echo('<div id="test-077" class="inner_closed">');
+                    echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-077\')">TEST 77: Try Assigning A Personal Token We Don\'t Own.</a></h2>');
+                    echo('<div class="main_div inner_container">');
+                        print_explain('Log in as a non-God Admin, and send a personal token from another ID (10) over to another non-God admin. We should note no change.');
+                        $start = microtime(true);
+                        try_advanced_assign_personal_token('secondary', '', 'CoreysGoryStory', 5, 3);
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
+                    echo('</div>');
+                echo('</div>');
+                
+                echo('<div id="test-078" class="inner_closed">');
+                    echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-078\')">TEST 78: Delete A Personal Token That Was Assigned by One ID to Another</a></h2>');
+                    echo('<div class="main_div inner_container">');
+                        print_explain('Log in as a non-God Admin, and remove a token that we own (9) from the regular ID pool of another ID.');
+                        $start = microtime(true);
+                        try_advanced_delete_personal_token('secondary', '', 'CoreysGoryStory', 5, 9);
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
+                    echo('</div>');
+                echo('</div>');
+                
+                echo('<div id="test-079" class="inner_closed">');
+                    echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-079\')">TEST 79: Try to Delete A Personal Token That We Don\'t Own.</a></h2>');
+                    echo('<div class="main_div inner_container">');
+                        print_explain('Log in as a non-God Admin, and try remove a personal token that we don\'t own (11) from the regular ID pool of another ID.');
+                        $start = microtime(true);
+                        try_advanced_delete_personal_token('secondary', '', 'CoreysGoryStory', 5, 11);
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
+                    echo('</div>');
+                echo('</div>');
+                
+                echo('<div id="test-080" class="inner_closed">');
+                    echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-080\')">TEST 80: Try to Delete A Non-Personal Token.</a></h2>');
+                    echo('<div class="main_div inner_container">');
+                        print_explain('Log in as a non-God Admin, and try remove a non-personal token that we own (3) from the regular ID pool of another ID.');
+                        $start = microtime(true);
+                        try_advanced_delete_personal_token('secondary', '', 'CoreysGoryStory', 5, 3);
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
+                    echo('</div>');
+                echo('</div>');
             echo('</div>');
         echo('</div>');
     }
@@ -479,7 +529,44 @@ function print_explain($in_explain_test) {
                             display_record($source_item);
                             echo("<h5>The record we will change:</h5>");
                             display_record($examination_item);
-                            $test_item->add_personal_token_from_current_login(9);
+                            $success = $test_item->add_personal_token_from_current_login($in_token);
+                            echo('<div style="text-align:center"><img src="images/'.($success ? 'magic.gif' : 'fail.gif').'" style="margin:auto" /></div>');
+                            echo("<h5>The changed record:</h5>");
+                            $examination_item = $access_instance_god->get_single_security_record_by_id($in_id_to_change);
+                            display_record($examination_item);
+                        } else {
+                            echo("<h4 style=\"color:red;font-weight:bold\">NOTHING RETURNED!</h4>");
+                        }
+                    echo('</div>');
+                echo('</div>');
+            echo('</div>');
+        } else {
+            echo('<div class="inner_div"><h4 style="text-align:center;margin-top:0.5em">We do not have a security DB</h4></div>');
+        }
+    }
+    
+    //##############################################################################################################################################
+
+    function try_advanced_delete_personal_token($in_login = NULL, $in_hashed_password = NULL, $in_password = NULL, $in_id_to_change, $in_token) {
+        $access_instance = NULL;
+        
+        $access_instance = new CO_Access($in_login, $in_hashed_password, $in_password);
+        $access_instance_god = new CO_Access('admin', '', CO_Config::god_mode_password());
+        if ($access_instance->security_db_available()) {
+            echo('<div class="inner_div">');
+                $source_item = $access_instance->get_login_item();
+                $test_item = $access_instance->get_single_security_record_by_id($in_id_to_change);
+                $examination_item = $access_instance_god->get_single_security_record_by_id($in_id_to_change);
+                echo('<div class="inner_div">');
+                    echo('<div class="inner_div">');
+                        if (isset($source_item) && isset($test_item)) {
+                            echo("<h4>BEFORE</h4>");
+                            echo("<h5>Our Login Record:</h5>");
+                            display_record($source_item);
+                            echo("<h5>The record we will change:</h5>");
+                            display_record($examination_item);
+                            $success = $test_item->remove_personal_token_from_this_login(9);
+                            echo('<div style="text-align:center"><img src="images/'.($success ? 'magic.gif' : 'fail.gif').'" style="margin:auto" /></div>');
                             echo("<h5>The changed record:</h5>");
                             $examination_item = $access_instance_god->get_single_security_record_by_id($in_id_to_change);
                             display_record($examination_item);

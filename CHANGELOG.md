@@ -1,3 +1,8 @@
+**1.1.0.3000** *(February 8, 2021)*
+
+- Added support for personal tokens.
+- Improved some basic security issues.
+
 **1.0.7.3000** *(December 15, 2020)*
 
 - Added a fast lookup for visible logins.

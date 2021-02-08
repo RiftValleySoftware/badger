@@ -308,19 +308,45 @@ class CO_Access {
     
     /***********************/
     /**
+    This adds a personal token from one ID's pool, to the regular ID pool of another ID.
+    
      \returns true, if the operation was successful.
      */
     public function add_personal_token_from_current_login(  $in_to_id,  ///< The ID of the object we are affecting.
                                                             $in_id      ///< The ID (personal token) to be added.
                                                             ) {
-        $ret = $this->_security_db_object->add_personal_token_from_current_login($in_to_id, $in_id);
+        if (in_array($in_id, $this->get_personal_security_ids())) {
+            $ret = $this->_security_db_object->add_personal_token_from_current_login($in_to_id, $in_id);
 
-        if ($this->_security_db_object->error) {
-            $this->error = $this->_security_db_object->error;
-        } else {
-            return $ret;
+            if ($this->_security_db_object->error) {
+                $this->error = $this->_security_db_object->error;
+            } else {
+                return $ret;
+            }
         }
+        
+        return false;
+    }
+    
+    /***********************/
+    /**
+    This removes a token that is owned by one ID, from another ID.
+    
+     \returns true, if the operation was successful.
+     */
+    public function remove_personal_token_from_this_login(  $in_to_id,  ///< The ID of the object we are affecting.
+                                                            $in_id      ///< The ID (personal token) to be removed.
+                                                            ) {
+        if (in_array($in_id, $this->get_personal_security_ids())) {
+            $ret = $this->_security_db_object->remove_personal_token_from_this_login($in_to_id, $in_id);
 
+            if ($this->_security_db_object->error) {
+                $this->error = $this->_security_db_object->error;
+            } else {
+                return $ret;
+            }
+        }
+        
         return false;
     }
         

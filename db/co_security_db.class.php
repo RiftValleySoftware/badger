@@ -150,6 +150,52 @@ class CO_Security_DB extends A_CO_DB {
     
     /***********************/
     /**
+    This removes a personal token, from one record.
+    This is a somewhat dangerous call, as it does not use a security predicate. That's deliberate, as we need to be able to change the security IDs of an item without necessarily being allowed to affect it.
+     \returns true, if the operation was successful.
+     */
+    public function remove_personal_token_from_this_login(  $in_to_id,  ///< The ID of the object we are affecting.
+                                                            $in_id      ///< The ID (personal token) to be removed.
+                                                            ) {
+        $in_to_id = intval($in_to_id);
+        $in_id = intval($in_id);
+        // If the current login does not own the given ID as a personal token, then we can't proceed.
+        if (CO_Config::$use_personal_tokens) {
+            $sql = 'SELECT ids FROM '.$this->table_name.' WHERE (id=?)';
+            $params = [$in_to_id];
+            $temp = $this->execute_query($sql, $params);
+            if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
+                $ret = explode(',', $temp[0]['ids']);
+                
+                if (isset($ret) && is_array($ret)) {
+                    $return = false;
+                    $ret = array_unique(array_map('intval', $ret));
+                    sort($ret);
+                    
+                    if (($key = array_search($in_id, $ret)) !== false) {
+                        $return = true;
+                        unset($ret[$key]);
+                    }
+                    
+                    $new_ids = implode(',', $ret);
+
+                    $sql = 'UPDATE '.$this->table_name.' SET ids=? WHERE id=?';
+                    $params = [$new_ids, $in_to_id];
+                    $this->execute_query($sql, $params, true);
+                    if ($this->error == NULL) {
+                        return $return;
+                    };
+                }
+            } else {
+                $ret = Array();
+            }
+        }
+        
+        return false;
+    }
+    
+    /***********************/
+    /**
     This returns just the "personal" IDs for the given ID.
     
     This should only be called from the ID fetcher in the access class, as it does not do a security predicate.
