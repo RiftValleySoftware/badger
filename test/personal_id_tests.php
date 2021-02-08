@@ -179,19 +179,19 @@ function print_explain($in_explain_test) {
                                     }
                                 }
                                 $all_ids = $test_items[1]->ids();
-                                if (!is_array($all_ids) || 2 != count($all_ids)) {
+                                if (!is_array($all_ids) || 3 != count($all_ids)) {
                                     echo("<h4 style=\"color:red;font-weight:bold\">UNEXPECTED RESULT FOR ITEM 4!</h4>");
                                     $pass = false;
                                 }
                                 foreach($all_ids as $id) {
-                                    if ($access_instance->is_this_a_personal_id($id)) {
+                                    if ($access_instance->is_this_a_personal_id($id) && ($id != 9)) {
                                         echo("<h4 style=\"color:red;font-weight:bold\">ITEM 4 REPORTS $id AS A PERSONAL ID!</h4>");
                                         $pass = false;
                                     }
                                 }
                                 $all_ids = $test_items[1]->personal_ids();
                                 if (!is_array($all_ids) || 2 != count($all_ids)) {
-                                    echo("<h4 style=\"color:red;font-weight:bold\">UNEXPECTED RESULT FOR ITEM 3!</h4>");
+                                    echo("<h4 style=\"color:red;font-weight:bold\">UNEXPECTED RESULT FOR ITEM 4!</h4>");
                                     $pass = false;
                                 }
                                 foreach($all_ids as $id) {
@@ -201,13 +201,13 @@ function print_explain($in_explain_test) {
                                     }
                                 }
                                 $all_ids = $test_items[2]->ids();
-                                if (!is_array($all_ids) || 4 != count($all_ids)) {
-                                    echo("<h4 style=\"color:red;font-weight:bold\">UNEXPECTED RESULT FOR ITEM 4!</h4>");
+                                if (!is_array($all_ids) || 5 != count($all_ids)) {
+                                    echo("<h4 style=\"color:red;font-weight:bold\">UNEXPECTED RESULT FOR ITEM 5!</h4>");
                                     $pass = false;
                                 }
                                 foreach($all_ids as $id) {
-                                    if ($access_instance->is_this_a_personal_id($id)) {
-                                        echo("<h4 style=\"color:red;font-weight:bold\">ITEM 4 REPORTS $id AS A PERSONAL ID!</h4>");
+                                    if ($access_instance->is_this_a_personal_id($id) && ($id != 11)) {
+                                        echo("<h4 style=\"color:red;font-weight:bold\">ITEM 5 REPORTS $id AS A PERSONAL ID!</h4>");
                                         $pass = false;
                                     }
                                 }
@@ -332,7 +332,7 @@ function print_explain($in_explain_test) {
                                 }
                                 $all_ids = $test_items[1]->personal_ids();
                                 if (!is_array($all_ids) || 2 != count($all_ids)) {
-                                    echo("<h4 style=\"color:red;font-weight:bold\">UNEXPECTED RESULT FOR ITEM 3!</h4>");
+                                    echo("<h4 style=\"color:red;font-weight:bold\">UNEXPECTED RESULT FOR ITEM 4!</h4>");
                                     $pass = false;
                                 }
                                 foreach($all_ids as $id) {
@@ -343,12 +343,12 @@ function print_explain($in_explain_test) {
                                 }
                                 $all_ids = $test_items[2]->ids();
                                 if (!is_array($all_ids) || 4 != count($all_ids)) {
-                                    echo("<h4 style=\"color:red;font-weight:bold\">UNEXPECTED RESULT FOR ITEM 4!</h4>");
+                                    echo("<h4 style=\"color:red;font-weight:bold\">UNEXPECTED RESULT FOR ITEM 5!</h4>");
                                     $pass = false;
                                 }
                                 foreach($all_ids as $id) {
                                     if ($access_instance->is_this_a_personal_id($id)) {
-                                        echo("<h4 style=\"color:red;font-weight:bold\">ITEM 4 REPORTS $id AS A PERSONAL ID!</h4>");
+                                        echo("<h4 style=\"color:red;font-weight:bold\">ITEM 5 REPORTS $id AS A PERSONAL ID!</h4>");
                                         $pass = false;
                                     }
                                 }
@@ -411,7 +411,7 @@ function print_explain($in_explain_test) {
                 echo('<div id="test-074" class="inner_closed">');
                     echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-074\')">TEST 74: Check For Filtered Tokens</a></h2>');
                     echo('<div class="main_div inner_container">');
-                        print_explain('Log in as a non-God Admin, and check to see if the (non-personal) IDs are hidden properly. We should see 3, 2, and 5 for Item 3, and 5, 2, 3, and 7 for Item 5 (Our login).');
+                        print_explain('Log in as a non-God Admin, and check to see if the (non-personal) IDs are hidden properly. We should see 3, 2, and 5 for Item 3, and 5, 2, 3, 7, and 11 for Item 5 (Our login).');
                         $start = microtime(true);
                         try_advanced_as_user_check('four', '', 'CoreysGoryStory', [3,4,5]);
                         echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');

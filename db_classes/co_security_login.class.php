@@ -538,7 +538,14 @@ class CO_Security_Login extends CO_Security_Node {
             // None of the ids can be in the regular IDs, and will be removed from the set, if so.
             // They also cannot be anyone else's personal ID, or anyone's login ID. Personal IDs can ONLY be regular (non-login) security objects.
             foreach($personal_ids_temp as $id) {
-                if (!in_array($id, $this->_ids) && !$this->get_access_object()->is_this_a_login_id($id) && (!$this->get_access_object()->is_this_a_personal_id($id) || in_array($id, $this->_personal_ids))) {
+                // Make sure that we don't have this personal token in our regular ID array.
+                if (($key = array_search($id, $this->_ids)) !== false) {
+                    unset($this->_ids[$key]);
+                }
+if ($this->get_access_object()->is_this_a_login_id($id)) {
+    echo("<h4>$id is a login!</h4>");
+}
+                if (!$this->get_access_object()->is_this_a_login_id($id) && (!$this->get_access_object()->is_this_a_personal_id($id) || in_array($id, $this->_personal_ids))) {
                     array_push($personal_ids, $id);
                 }
             }

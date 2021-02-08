@@ -204,17 +204,17 @@ class CO_Security_DB extends A_CO_DB {
     public function get_all_login_ids() {
         $ret = NULL;
         
-        $sql = 'SELECT ids FROM '.$this->table_name.' WHERE (login_id IS NOT NULL)';
+        $sql = 'SELECT id FROM '.$this->table_name.' WHERE (access_class LIKE \'%Login%\') AND (login_id IS NOT NULL) AND (login_id<>\'\')';
 
         $temp = $this->execute_query($sql, Array());
         if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
             $ret = "";
             foreach ($temp as $i) {
-                if ($i['ids']) {
+                if ($i['id']) {
                     if ($ret) {
                         $ret .= ",";
                     }
-                    $ret .= $i['ids'];
+                    $ret .= $i['id'];
                 }
             }
             $ret = explode(",", $ret);
