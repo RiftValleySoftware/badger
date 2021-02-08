@@ -832,7 +832,24 @@ class CO_Security_Login extends CO_Security_Node {
                                                             ) {
         $in_id = intval($in_id);
         // If the current login does not own the given ID as a personal token, then we can't proceed.
-        if (in_array($in_id, $this->get_access_object()->get_personal_security_ids())) {
+        if (CO_Config::$use_personal_tokens && in_array($in_id, $this->get_access_object()->get_personal_security_ids())) {
+            $sql = 'SELECT ids FROM '.$this->table_name.' WHERE (id=?)';
+
+            $temp = $this->execute_query($sql, Array(intval($this->_id)));
+            if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
+                $ret = explode(',', $temp[0]['ids']);
+                
+                if (isset($ret) && is_array($ret) && count($ret)) {
+                    $ret = array_map('intval', $ret);
+                    $ret[] = $in_id;
+                    $ret = implode(',', array_unique($ret));
+
+                    $sql = 'UPDATE '.$this->table_name.' SET(ids=? WHERE (id=?)';
+                    $temp = $this->execute_query($sql, Array($ret, intval($this->_id)));
+                }
+            } else {
+                $ret = Array();
+            }
         }
         
         return false;
