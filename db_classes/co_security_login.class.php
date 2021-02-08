@@ -542,9 +542,6 @@ class CO_Security_Login extends CO_Security_Node {
                 if (($key = array_search($id, $this->_ids)) !== false) {
                     unset($this->_ids[$key]);
                 }
-if ($this->get_access_object()->is_this_a_login_id($id)) {
-    echo("<h4>$id is a login!</h4>");
-}
                 if (!$this->get_access_object()->is_this_a_login_id($id) && (!$this->get_access_object()->is_this_a_personal_id($id) || in_array($id, $this->_personal_ids))) {
                     array_push($personal_ids, $id);
                 }
