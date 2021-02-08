@@ -77,6 +77,7 @@ class CO_Security_DB extends A_CO_DB {
 // echo('SQL:<pre>'.htmlspecialchars(print_r($sql, true)).'</pre>');
 // echo('RESPONSE:<pre>'.htmlspecialchars(print_r($temp, true)).'</pre>');
 // echo('<pre>'.($no_personal ? 'NO ' : '').'PERSONAL</pre>');
+// echo('ERROR:<pre>'.htmlspecialchars(print_r($this->error, true)).'</pre>');
         if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
             $ret = isset($temp[0]['ids']) ? explode(',', $temp[0]['ids']) : [];
             if (!$no_personal && isset($temp[0]['personal_ids'])) {
@@ -104,6 +105,47 @@ class CO_Security_DB extends A_CO_DB {
         }
         
         return $ret;
+    }
+    
+    /***********************/
+    /**
+    This adds a personal token, from one record, to the IDs of another record.
+    This is a somewhat dangerous call, as it does not use a security predicate. That's deliberate, as we need to be able to change the security IDs of an item without necessarily being allowed to affect it.
+     \returns true, if the operation was successful.
+     */
+    public function add_personal_token_from_current_login(  $in_to_id,  ///< The ID of the object we are affecting.
+                                                            $in_id      ///< The ID (personal token) to be added.
+                                                            ) {
+        $in_to_id = intval($in_to_id);
+        $in_id = intval($in_id);
+        // If the current login does not own the given ID as a personal token, then we can't proceed.
+        if (CO_Config::$use_personal_tokens) {
+            $sql = 'SELECT ids FROM '.$this->table_name.' WHERE (id=?)';
+            $params = [$in_to_id];
+            $temp = $this->execute_query($sql, $params);
+            if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
+                $ret = explode(',', $temp[0]['ids']);
+                
+                if (isset($ret) && is_array($ret)) {
+                    $ret = array_map('intval', $ret);
+                    $ret[] = $in_id;
+                    sort($ret);
+                    $ret = array_unique($ret);
+                    $new_ids = implode(',', array_unique($ret));
+
+                    $sql = 'UPDATE '.$this->table_name.' SET ids=? WHERE id=?';
+                    $params = [$new_ids, $in_to_id];
+                    $this->execute_query($sql, $params, true);
+                    if ($this->error == NULL) {
+                        return true;
+                    };
+                }
+            } else {
+                $ret = Array();
+            }
+        }
+        
+        return false;
     }
     
     /***********************/

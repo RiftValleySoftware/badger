@@ -830,28 +830,15 @@ class CO_Security_Login extends CO_Security_Node {
      */
     public function add_personal_token_from_current_login(  $in_id  ///< The ID (personal token) to be added.
                                                             ) {
-        $in_id = intval($in_id);
-        // If the current login does not own the given ID as a personal token, then we can't proceed.
-        if (CO_Config::$use_personal_tokens && in_array($in_id, $this->get_access_object()->get_personal_security_ids())) {
-            $sql = 'SELECT ids FROM '.$this->table_name.' WHERE (id=?)';
+        $ret = $this->get_access_object()->add_personal_token_from_current_login($this->_id, $in_id);
 
-            $temp = $this->execute_query($sql, Array(intval($this->_id)));
-            if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
-                $ret = explode(',', $temp[0]['ids']);
-                
-                if (isset($ret) && is_array($ret) && count($ret)) {
-                    $ret = array_map('intval', $ret);
-                    $ret[] = $in_id;
-                    $ret = implode(',', array_unique($ret));
-
-                    $sql = 'UPDATE '.$this->table_name.' SET(ids=? WHERE (id=?)';
-                    $temp = $this->execute_query($sql, Array($ret, intval($this->_id)));
-                }
-            } else {
-                $ret = Array();
-            }
+        if ($this->get_access_object()->error) {
+            $this->error = $this->get_access_object()->error;
+        } else {
+            $this->reload_from_db();
+            return $ret;
         }
-        
+
         return false;
     }
     

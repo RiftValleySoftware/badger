@@ -151,7 +151,6 @@ function print_explain($in_explain_test) {
             echo('<div class="inner_div">');
                 $test_items = $access_instance->get_multiple_security_records_by_id([3,4,5]);
                 echo('<div class="inner_div">');
-                    echo("<h4></h4>");
                     echo('<div class="inner_div">');
                         if ( isset($test_items) ) {
                             if (is_array($test_items)) {
@@ -298,7 +297,6 @@ function print_explain($in_explain_test) {
             echo('<div class="inner_div">');
                 $test_items = $access_instance->get_multiple_security_records_by_id([3,4,5]);
                 echo('<div class="inner_div">');
-                    echo("<h4></h4>");
                     echo('<div class="inner_div">');
                         if ( isset($test_items) ) {
                             if (is_array($test_items)) {
@@ -417,6 +415,16 @@ function print_explain($in_explain_test) {
                         echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
+                
+                echo('<div id="test-075" class="inner_closed">');
+                    echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-075\')">TEST 75: Assign A Personal Token From One ID to Another</a></h2>');
+                    echo('<div class="main_div inner_container">');
+                        print_explain('Log in as a non-God Admin, and send one of our personal IDs (9) over to another non-God admin.');
+                        $start = microtime(true);
+                        try_advanced_assign_personal_token('secondary', '', 'CoreysGoryStory', 5, 9);
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
+                    echo('</div>');
+                echo('</div>');
             echo('</div>');
         echo('</div>');
     }
@@ -431,9 +439,8 @@ function print_explain($in_explain_test) {
             echo('<div class="inner_div">');
                 $test_items = $access_instance->get_multiple_security_records_by_id($ids);
                 echo('<div class="inner_div">');
-                    echo("<h4></h4>");
                     echo('<div class="inner_div">');
-                        if ( isset($test_items) ) {
+                        if (isset($test_items)) {
                             if (is_array($test_items) && count($test_items)) {
                                 foreach ( $test_items as $item ) {
                                     display_record($item);
@@ -441,6 +448,41 @@ function print_explain($in_explain_test) {
                             } else {
                                 echo("<h4 style=\"color:red;font-weight:bold\">NO ARRAY!</h4>");
                             }
+                        } else {
+                            echo("<h4 style=\"color:red;font-weight:bold\">NOTHING RETURNED!</h4>");
+                        }
+                    echo('</div>');
+                echo('</div>');
+            echo('</div>');
+        } else {
+            echo('<div class="inner_div"><h4 style="text-align:center;margin-top:0.5em">We do not have a security DB</h4></div>');
+        }
+    }
+    
+    //##############################################################################################################################################
+
+    function try_advanced_assign_personal_token($in_login = NULL, $in_hashed_password = NULL, $in_password = NULL, $in_id_to_change, $in_token) {
+        $access_instance = NULL;
+        
+        $access_instance = new CO_Access($in_login, $in_hashed_password, $in_password);
+        $access_instance_god = new CO_Access('admin', '', CO_Config::god_mode_password());
+        if ($access_instance->security_db_available()) {
+            echo('<div class="inner_div">');
+                $source_item = $access_instance->get_login_item();
+                $test_item = $access_instance->get_single_security_record_by_id($in_id_to_change);
+                $examination_item = $access_instance_god->get_single_security_record_by_id($in_id_to_change);
+                echo('<div class="inner_div">');
+                    echo('<div class="inner_div">');
+                        if (isset($source_item) && isset($test_item)) {
+                            echo("<h4>BEFORE</h4>");
+                            echo("<h5>Our Login Record:</h5>");
+                            display_record($source_item);
+                            echo("<h5>The record we will change:</h5>");
+                            display_record($examination_item);
+                            $test_item->add_personal_token_from_current_login(9);
+                            echo("<h5>The changed record:</h5>");
+                            $examination_item = $access_instance_god->get_single_security_record_by_id($in_id_to_change);
+                            display_record($examination_item);
                         } else {
                             echo("<h4 style=\"color:red;font-weight:bold\">NOTHING RETURNED!</h4>");
                         }

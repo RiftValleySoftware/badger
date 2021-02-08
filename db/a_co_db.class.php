@@ -86,6 +86,10 @@ abstract class A_CO_DB {
             $this->_security_db_object = NULL;
         }
         
+// Commented out, but useful for debug.
+// echo('SQL:<pre>'.htmlspecialchars(print_r($in_sql, true)).'</pre>');
+// echo('Params:<pre>'.htmlspecialchars(print_r($in_parameters, true)).'</pre>');
+// echo('ERROR:<pre>'.htmlspecialchars(print_r($this->error, true)).'</pre>');
         return $ret;
     }
     
@@ -605,9 +609,9 @@ abstract class A_CO_DB {
             if (isset($temp) && $temp && is_array($temp) && (1 == count($temp)) ) { // If we  got a record, then we'll be updating it.
                 $ret = intval($temp[0]);    // Get the original value.
                 
-                $sql = 'UPDATE '.$this->table_name.' SET read_security_id=-2 WHERE id='.$in_record_id;
+                $sql = 'UPDATE '.$this->table_name.' SET read_security_id=-2 WHERE id=?';
         
-                $temp = $this->execute_query($sql, Array());
+                $temp = $this->execute_query($sql, Array($in_record_id));
                 
                 if ($this->error) { // If we had an error, we return squat.
                     $ret = 0;
