@@ -39,7 +39,8 @@ class CO_Config {
     static $min_pw_len = 8;                         ///< The minimum password length.
     static $session_timeout_in_seconds = 2;         ///< Two-Second API key timeout.
     static $god_session_timeout_in_seconds  = 1;    ///< API key session timeout for the "God Mode" login, in seconds (integer value). Default is 10 minutes.
-
+    static $use_personal_tokens = true;             ///< If TRUE, then we can use "personal IDs."
+    
     static $data_db_name = 'littlegr_badger_data';
     static $data_db_host = 'localhost';
     static $data_db_type = _DB_TYPE_;

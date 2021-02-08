@@ -93,7 +93,7 @@ class CO_Security_Login extends CO_Security_Node {
         $default_setup['login_id'] = $this->login_id;
         $default_setup['object_name'] = $this->login_id;
         $default_setup['api_key'] = $this->_api_key;
-        $default_setup['personal_ids'] = (NULL != $this->_personal_ids) ? $this->_personal_ids : '';
+        $default_setup['personal_ids'] = ($use_personal_tokens && (NULL != $this->_personal_ids)) ? $this->_personal_ids : '';
         $default_setup['ids'] = (NULL != $this->_ids) ? $this->_ids : '';
         
         return $default_setup;
@@ -113,15 +113,17 @@ class CO_Security_Login extends CO_Security_Node {
         $ret['api_key'] = $this->_api_key;
         $ret['login_id'] = $this->login_id;
         $personal_ids_as_string_array = Array();
-        $personal_ids_as_int = array_map('intval', $this->_personal_ids);
-        sort($personal_ids_as_int);
+        if ($use_personal_tokens) {
+            $personal_ids_as_int = array_map('intval', $this->_personal_ids);
+            sort($personal_ids_as_int);
         
-        foreach ($this->_personal_ids as $id) {
-            array_push($personal_ids_as_string_array, strval($id));
-        }
+            foreach ($this->_personal_ids as $id) {
+                array_push($personal_ids_as_string_array, strval($id));
+            }
 
-        $personal_id_list_string = trim(implode(',', $personal_ids_as_string_array));
-        $ret['personal_ids'] = $personal_id_list_string ? $personal_id_list_string : NULL;
+            $personal_id_list_string = trim(implode(',', $personal_ids_as_string_array));
+            $ret['personal_ids'] = $personal_id_list_string ? $personal_id_list_string : NULL;
+        }
         
         $ids_as_int = array_map('intval', $this->_ids);
         sort($ids_as_int);
@@ -169,7 +171,7 @@ class CO_Security_Login extends CO_Security_Node {
             $in_db_result['ids'] = implode(',', $in_ids);
         }
         
-        if (isset($in_personal_ids) && is_array($in_personal_ids) && count($in_personal_ids)) {
+        if ($use_personal_tokens && isset($in_personal_ids) && is_array($in_personal_ids) && count($in_personal_ids)) {
             $in_db_result['personal_ids'] = implode(',', $in_ids);
         }
         
@@ -222,7 +224,7 @@ class CO_Security_Login extends CO_Security_Node {
             }
 
             $this->_personal_ids = Array();
-            if (isset($in_db_result['personal_ids']) && $in_db_result['personal_ids']) {
+            if ($use_personal_tokens && isset($in_db_result['personal_ids']) && $in_db_result['personal_ids']) {
                 $temp = $in_db_result['personal_ids'];
                 if (isset ($temp) && $temp) {
                     $tempAr = explode(',', $temp);
@@ -288,7 +290,7 @@ class CO_Security_Login extends CO_Security_Node {
                 }
             }
                   
-            if (isset($in_db_result['personal_ids']) || isset($in_db_result['personal_ids'])) {
+            if ($use_personal_tokens && isset($in_db_result['personal_ids']) || isset($in_db_result['personal_ids'])) {
                 $temp = $in_db_result['personal_ids'];
                 if (isset ($temp) && $temp) {
                     $tempAr = explode(',', $temp);
@@ -530,7 +532,7 @@ class CO_Security_Login extends CO_Security_Node {
                                     ) {
         $ret = [];
         
-        if ($this->get_access_object()->god_mode()) {
+        if ($use_personal_tokens && $this->get_access_object()->god_mode()) {
             $personal_ids_temp = array_unique($in_personal_ids);
             $personal_ids = [];
             // None of the ids can be in the regular IDs, and will be removed from the set, if so.
@@ -558,6 +560,10 @@ class CO_Security_Login extends CO_Security_Node {
     \returns The current personal IDs.
      */
     public function personal_ids() {
+        if (!$use_personal_tokens) {
+            return [];
+        }
+        
         if ($this->get_access_object()->god_mode()) {
             return $this->_personal_ids;
         } else {
