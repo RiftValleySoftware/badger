@@ -317,9 +317,10 @@ class CO_Security_Login extends CO_Security_Node {
     public function set_ids(    $in_ids_array   ///< This is a preset array of integers, containing security IDs for the row. NULL/Empty to delete all IDs.
                             ) {
         $ret = false;
+        $in_ids_array = array_map('intval', $in_ids_array);
         
         if ($this->user_can_edit_ids()) {
-            $id_pool = $this->get_access_object()->get_security_ids();
+            $id_pool = $this->get_access_object()->get_security_ids(true);  // We get just our regular IDs. No personal ones.
             if ($this->get_access_object()->god_mode() || (isset($id_pool) && is_array($id_pool) && count($id_pool))) {
                 // First thing we do, is ensure that EVERY SINGLE ID in the current user are ones we have in our own set.
                 // An empty set is fine.
@@ -386,9 +387,9 @@ class CO_Security_Login extends CO_Security_Node {
     public function add_id( $in_id  ///< A single integer. The new ID to add.
                             ) {
         $ret = false;
-        
+        $in_id = intval($in_id);
         if ($this->user_can_edit_ids() || ($this->_added_new_id == $in_id)) {
-            $id_pool = $this->get_access_object()->get_security_ids();
+            $id_pool = $this->get_access_object()->get_security_ids(true);
             
             if ($this->get_access_object()->god_mode() || (isset($id_pool) && is_array($id_pool) && count($id_pool))) {
                 // We can add an ID to the user, as long as it is one we own. We don't have to have full access to all user IDs.
@@ -399,7 +400,7 @@ class CO_Security_Login extends CO_Security_Node {
                         $this->_ids[] = $in_id;
                         $this->_ids = array_unique($this->_ids);
                     }
-                    
+                    sort($this->_ids);
                     $ret = $this->update_db();
                 } else {
                     if ($in_id != $this->id()) {
@@ -819,6 +820,8 @@ class CO_Security_Login extends CO_Security_Node {
      */
     public function add_personal_token_from_current_login(  $in_id  ///< The ID (personal token) to be added.
                                                             ) {
+        $in_id = intval($in_id);
+        // If the current login does not own the given ID as a personal token, then we can't proceed.
         if (in_array($in_id, $this->get_access_object()->get_personal_security_ids())) {
         }
         
@@ -831,6 +834,8 @@ class CO_Security_Login extends CO_Security_Node {
      */
     public function remove_personal_token_from_current_login(   $in_id  ///< The ID (personal token) to be added.
                                                             ) {
+        $in_id = intval($in_id);
+        // If the current login does not own the given ID as a personal token, then we can't proceed.
         if (in_array($in_id, $this->get_access_object()->get_personal_security_ids())) {
         }
         return false;
