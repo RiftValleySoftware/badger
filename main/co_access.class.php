@@ -251,7 +251,7 @@ class CO_Access {
     public function get_personal_security_ids() {
         $ret = Array();
         
-        if ($this->god_mode()) {
+        if (CO_Config::$use_personal_tokens && $this->god_mode()) {
             $login_id = $this->get_login_id();
             if (isset($login_id) && $login_id && $this->_security_db_object) {
                 $ret = $this->_security_db_object->get_personal_ids_for_id($this->get_login_id());

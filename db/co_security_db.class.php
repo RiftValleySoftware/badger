@@ -66,7 +66,7 @@ class CO_Security_DB extends A_CO_DB {
         $ret = NULL;
         
         $fetch_sql = "ids";
-        if (!$no_personal) {
+        if (CO_Config::$use_personal_tokens && !$no_personal) {
             $fetch_sql .= ",personal_ids";
         }
         
@@ -118,6 +118,10 @@ class CO_Security_DB extends A_CO_DB {
                                             ) {
         $ret = NULL;
         
+        if (!CO_Config::$use_personal_tokens) {
+            return $ret;
+        }
+        
         $sql = 'SELECT personal_ids FROM '.$this->table_name.' WHERE (access_class LIKE \'%Login%\') AND (login_id IS NOT NULL) AND (id='.intval($in_id).')';
 
         $temp = $this->execute_query($sql, Array());
@@ -152,6 +156,10 @@ class CO_Security_DB extends A_CO_DB {
     public function get_all_personal_ids_except_for_id( $in_id = 0  ///< The integer ID of the row we want exempted. If not specified, then all IDs are returned.
                                                         ) {
         $ret = NULL;
+        
+        if (!CO_Config::$use_personal_tokens) {
+            return $ret;
+        }
         
         $sql = 'SELECT personal_ids FROM '.$this->table_name.' WHERE (access_class LIKE \'%Login%\') AND (login_id IS NOT NULL) AND (id<>'.intval($in_id).')';
 
@@ -238,7 +246,7 @@ class CO_Security_DB extends A_CO_DB {
                                             ) {
         $in_id = intval($in_id);
         
-        if (1 < $in_id) {
+        if (CO_Config::$use_personal_tokens && (1 < $in_id)) {
             $ret = $this->get_all_personal_ids_except_for_id();
     
             if (!$this->error) {
