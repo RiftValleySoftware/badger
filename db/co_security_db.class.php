@@ -71,10 +71,11 @@ class CO_Security_DB extends A_CO_DB {
         }
         
         $sql = 'SELECT '.$fetch_sql.' FROM '.$this->table_name.' WHERE (access_class LIKE \'%Login%\') AND (login_id IS NOT NULL) AND (id=?)';
-
-        $temp = $this->execute_query($sql, Array(intval($in_id)));
+        $params = Array(intval($in_id));
+        $temp = $this->execute_query($sql, $params);
 // Commented out, but useful for debug.
 // echo('SQL:<pre>'.htmlspecialchars(print_r($sql, true)).'</pre>');
+// echo('PARAMS:<pre>'.htmlspecialchars(print_r($params, true)).'</pre>');
 // echo('RESPONSE:<pre>'.htmlspecialchars(print_r($temp, true)).'</pre>');
 // echo('<pre>'.($no_personal ? 'NO ' : '').'PERSONAL</pre>');
 // echo('ERROR:<pre>'.htmlspecialchars(print_r($this->error, true)).'</pre>');
@@ -89,7 +90,6 @@ class CO_Security_DB extends A_CO_DB {
                 }
             }
             if (isset($ret) && is_array($ret) && count($ret)) {
-                array_unshift($ret, $in_id);
                 $ret = array_unique(array_map('intval', $ret));
                 $ret_temp = Array();
                 foreach ($ret as $i) {
@@ -100,6 +100,7 @@ class CO_Security_DB extends A_CO_DB {
                 sort($ret_temp);
                 $ret = $ret_temp;
             }
+            array_unshift($ret, $in_id);
         } else {
             $ret = Array($in_id);
         }
