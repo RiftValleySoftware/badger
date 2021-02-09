@@ -620,8 +620,8 @@ function print_explain($in_explain_test) {
         echo('<h4>Add Another ID</h4>');
         echo('<div class="explain">Now, we add 10 to item 3, and run the test again.</div>');
         
+        $access_instance->add_personal_token_from_current_login(3, 10);
         $test_item = $access_instance_god->get_single_security_record_by_id(3);
-        $success = $test_item->add_id(10);
         display_record($test_item);
         echo('<h4>Run The Test:</h4>');
         $test_items = $access_instance->get_logins_that_have_any_of_my_ids();
