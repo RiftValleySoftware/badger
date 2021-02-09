@@ -283,6 +283,53 @@ class CO_Security_DB extends A_CO_DB {
     
     /***********************/
     /**
+    This returns IDs that have our personal IDs.
+    
+    \returns an associative array of arrays of integer, keyed by integer. The key is the ID of the login, and the value is an array of integer, with the IDs that match. NULL, if an error.
+     */
+    public function get_logins_that_have_any_of_my_ids() {
+        $ret = NULL;
+        
+        // Will not work for God Mode, as God doesn't have personal IDs.
+        if (!CO_Config::$use_personal_tokens || $this->access_object->god_mode()) {
+            return $ret;
+        }
+        
+        // We can only check personal IDs relevant to our login. 
+        $in_ids = $this->access_object->get_personal_security_ids();
+        $in_id = $this->access_object->get_login_id();
+        
+        $sql = 'SELECT id,ids FROM '.$this->table_name.' WHERE (access_class LIKE \'%Login%\') AND (login_id IS NOT NULL) AND (id<>?)';
+
+        $temp = $this->execute_query($sql, Array(intval($in_id)));
+        if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
+            $ret = [];
+            foreach ($temp as $i) {
+                $tmp = [];
+                if (isset($i['id']) && $i['id'] && isset($i['ids']) && $i['ids']) {
+                    $key = intval($i['id']);
+                    $ids = array_unique(array_map('intval', explode(',', $i['ids'])));
+                    if (1 < $key && count($ids)) {
+                        sort($ids);
+                        $tmp_ids = [];
+                        foreach($ids as $tmp_id) {
+                            if (in_array($tmp_id, $in_ids)) {
+                                $tmp_ids[] = $tmp_id;
+                            }
+                        }
+                        if (count($tmp_ids)) {
+                            $ret[$key] = $tmp_ids;
+                        }
+                    }
+                }
+            }
+        }
+        
+        return $ret;
+    }
+    
+    /***********************/
+    /**
     This returns all of the login IDs in the database.
     
     This should only be called from the ID fetcher in the access class, as it does not do a security predicate.

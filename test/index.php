@@ -330,18 +330,18 @@
                 <div id="tests-wrapped-up" style="display:none">
                     <img src="../icon.png" style="display:block;margin:auto;width:80px" alt="Honey badger Don't Care" />
                     <?php
-                        echo('<div id="basic_tests" class="test-wrapper"><h2>BASIC TESTS</h2>');
-                            include('basic_tests.php');
-                        echo('</div>');
-                        echo('<div id="first_layer_tests" class="test-wrapper"><h2>FIRST ABSTRACTION LAYER TESTS</h2>');
-                            include('first_layer_tests.php');
-                        echo('</div>');
-                        echo('<div id="stress_tests" class="test-wrapper"><h2>BIG-ASS STRESS TESTS</h2>');
-                            include('stress_tests.php');
-                        echo('</div>');
-                        echo('<div id="advanced_tests" class="test-wrapper"><h2>ADVANCED TESTS</h2>');
-                            include('advanced_tests.php');
-                        echo(' </div>');
+//                         echo('<div id="basic_tests" class="test-wrapper"><h2>BASIC TESTS</h2>');
+//                             include('basic_tests.php');
+//                         echo('</div>');
+//                         echo('<div id="first_layer_tests" class="test-wrapper"><h2>FIRST ABSTRACTION LAYER TESTS</h2>');
+//                             include('first_layer_tests.php');
+//                         echo('</div>');
+//                         echo('<div id="stress_tests" class="test-wrapper"><h2>BIG-ASS STRESS TESTS</h2>');
+//                             include('stress_tests.php');
+//                         echo('</div>');
+//                         echo('<div id="advanced_tests" class="test-wrapper"><h2>ADVANCED TESTS</h2>');
+//                             include('advanced_tests.php');
+//                         echo(' </div>');
                         echo('<div id="personal_id_tests" class="test-wrapper"><h2>PERSONAL ID AND ADDITIONAL ADVANCED TESTS</h2>');
                             include('personal_id_tests.php');
                         echo('</div>');

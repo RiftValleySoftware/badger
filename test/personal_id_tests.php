@@ -475,6 +475,16 @@ function print_explain($in_explain_test) {
                         echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
+                
+                echo('<div id="test-081" class="inner_closed">');
+                    echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-081\')">TEST 81: List IDs that Have Our Personal Tokens.</a></h2>');
+                    echo('<div class="main_div inner_container">');
+                        print_explain('Log in as a non-God Admin, and find out which other IDs have our personal tokens.');
+                        $start = microtime(true);
+                        try_advanced_list_personal_tokens_in_use();
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
+                    echo('</div>');
+                echo('</div>');
             echo('</div>');
         echo('</div>');
     }
@@ -578,6 +588,58 @@ function print_explain($in_explain_test) {
             echo('</div>');
         } else {
             echo('<div class="inner_div"><h4 style="text-align:center;margin-top:0.5em">We do not have a security DB</h4></div>');
+        }
+    }
+    
+    //##############################################################################################################################################
+
+    function try_advanced_list_personal_tokens_in_use() {
+        $access_instance = NULL;
+        $access_instance = new CO_Access('tertiary', '', 'CoreysGoryStory');
+        $access_instance_god = new CO_Access('admin', '', CO_Config::god_mode_password());
+        echo('<h4>This is our login:</h4>');
+        display_record($access_instance->get_login_item());
+        echo('<h4>Run The Test:</h4>');
+        $test_items = $access_instance->get_logins_that_have_any_of_my_ids();
+        if (isset($test_items)) {
+            if (is_array($test_items) && count($test_items)) {
+                $keys = array_keys($test_items);
+                foreach ( $keys as $key ) {
+                    $examination_item = $access_instance_god->get_single_security_record_by_id($key);
+                    $value = implode(',', $test_items[$key]);
+                    echo('<div>Item '.$key.' has '.$value.'</div>');
+                    display_record($examination_item);
+                }
+            } else {
+                echo("<h4 style=\"color:red;font-weight:bold\">NO ARRAY!</h4>");
+            }
+        } else {
+            echo("<h4 style=\"color:red;font-weight:bold\">NOTHING RETURNED!</h4>");
+        }
+    
+        echo('<h4>Add Another ID</h4>');
+        echo('<div class="explain">Now, we add 10 to item 3, and run the test again.</div>');
+        
+        $test_item = $access_instance_god->get_single_security_record_by_id(3);
+        $success = $test_item->add_id(10);
+        display_record($test_item);
+        echo('<h4>Run The Test:</h4>');
+        $test_items = $access_instance->get_logins_that_have_any_of_my_ids();
+        
+        if (isset($test_items)) {
+            if (is_array($test_items) && count($test_items)) {
+                $keys = array_keys($test_items);
+                foreach ( $keys as $key ) {
+                    $examination_item = $access_instance_god->get_single_security_record_by_id($key);
+                    $value = implode(',', $test_items[$key]);
+                    echo('<div>Item '.$key.' has '.$value.'</div>');
+                    display_record($examination_item);
+                }
+            } else {
+                echo("<h4 style=\"color:red;font-weight:bold\">NO ARRAY!</h4>");
+            }
+        } else {
+            echo("<h4 style=\"color:red;font-weight:bold\">NOTHING RETURNED!</h4>");
         }
     }
 ?>
