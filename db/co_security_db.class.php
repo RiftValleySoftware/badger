@@ -515,7 +515,7 @@ class CO_Security_DB extends A_CO_DB {
                                                     ) {
         $ret = NULL;
         
-        $sql = 'SELECT id, api_key, login_id, access_class, last_access, read_security_id, write_security_id, object_name, access_class_context, ids, personal_ids FROM '.$this->table_name.' WHERE login_id=?';
+        $sql = 'SELECT * FROM '.$this->table_name.' WHERE login_id=?';
         $params = Array(trim($in_login_id));
         
         $temp = $this->execute_query($sql, $params);
@@ -539,7 +539,7 @@ class CO_Security_DB extends A_CO_DB {
                                                 ) {
         $ret = NULL;
         
-        $sql = 'SELECT id, api_key, login_id, access_class, last_access, read_security_id, write_security_id, object_name, access_class_context, ids, personal_ids FROM '.$this->table_name.' WHERE api_key LIKE ?';
+        $sql = 'SELECT * FROM '.$this->table_name.' WHERE api_key LIKE ?';
         $params = Array(trim($in_api_key).' - %');
         
         $temp = $this->execute_query($sql, $params);
@@ -570,7 +570,7 @@ class CO_Security_DB extends A_CO_DB {
                                             ) {
         $ret = NULL;
         
-        $sql = 'SELECT id, api_key, login_id, access_class, last_access, read_security_id, write_security_id, object_name, access_class_context, ids, personal_ids FROM '.$this->table_name.' WHERE id=?';
+        $sql = 'SELECT * FROM '.$this->table_name.' WHERE id=?';
         
         $temp = $this->execute_query($sql, Array(intval($in_id)));
         if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
@@ -620,7 +620,7 @@ class CO_Security_DB extends A_CO_DB {
             $predicate .= ' AND ';
         }
         
-        $sql = 'SELECT id, api_key, login_id, access_class, last_access, read_security_id, write_security_id, object_name, access_class_context, ids, personal_ids FROM '.$this->table_name.' WHERE '.$predicate. '(';
+        $sql = 'SELECT * FROM '.$this->table_name.' WHERE '.$predicate. '(';
         
         $params = Array();
         
@@ -684,7 +684,7 @@ class CO_Security_DB extends A_CO_DB {
             $predicate .= ' AND ';
         }
         
-        $sql = 'SELECT id, api_key, login_id, access_class, last_access, read_security_id, write_security_id, object_name, access_class_context, ids, personal_ids FROM '.$this->table_name.' WHERE '.$predicate. '(login_id IS NOT NULL) AND (login_id<>\'\')';
+        $sql = 'SELECT * FROM '.$this->table_name.' WHERE '.$predicate. '(login_id IS NOT NULL) AND (login_id<>\'\')';
         $temp = $this->execute_query($sql, Array());    // We just get everything.
         if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
             foreach ($temp as $result) {
@@ -734,7 +734,7 @@ class CO_Security_DB extends A_CO_DB {
                 $predicate .= ' AND ';
             }
             
-            $sql = 'SELECT id, api_key, login_id, access_class, last_access, read_security_id, write_security_id, object_name, access_class_context, ids, personal_ids FROM '.$this->table_name.' WHERE '.$predicate.'(login_id IS NOT NULL) AND (login_id<>\'\')';
+            $sql = 'SELECT * FROM '.$this->table_name.' WHERE '.$predicate.'(login_id IS NOT NULL) AND (login_id<>\'\')';
             $temp = $this->execute_query($sql, Array());    // We just get everything.
             if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
                 $ret = Array();
@@ -805,7 +805,7 @@ class CO_Security_DB extends A_CO_DB {
         
         // No security predicate, but we do have to "own" the given token.
         if (($this->access_object->god_mode() && $in_security_token) || in_array($in_security_token, $this->access_object->get_security_ids())) {
-            $sql = 'SELECT id, api_key, login_id, access_class, last_access, read_security_id, write_security_id, object_name, access_class_context, ids, personal_ids FROM '.$this->table_name.' WHERE (login_id IS NOT NULL) AND (login_id<>\'\') AND (id<>?)';
+            $sql = 'SELECT * FROM '.$this->table_name.' WHERE (login_id IS NOT NULL) AND (login_id<>\'\') AND (id<>?)';
             $temp = $this->execute_query($sql, Array(intval(CO_Config::god_mode_id())));    // We just get everything.
             if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
                 $ret = 0;
@@ -849,7 +849,7 @@ class CO_Security_DB extends A_CO_DB {
         
         // No security predicate, but we do have to "own" the given token.
         if (($access_instance->god_mode() && $in_security_token) || in_array($in_security_token, $access_instance->get_security_ids())) {
-            $sql = 'SELECT id, api_key, login_id, access_class, last_access, read_security_id, write_security_id, object_name, access_class_context, ids, personal_ids FROM '.$this->table_name.' WHERE (login_id IS NOT NULL) AND (login_id<>\'\') AND (id<>?)';
+            $sql = 'SELECT * FROM '.$this->table_name.' WHERE (login_id IS NOT NULL) AND (login_id<>\'\') AND (id<>?)';
             $temp = $this->execute_query($sql, Array(intval(CO_Config::god_mode_id())));    // We just get everything.
             if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
                 foreach ($temp as $result) {
