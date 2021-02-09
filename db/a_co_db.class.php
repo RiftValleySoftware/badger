@@ -652,9 +652,13 @@ abstract class A_CO_DB {
                     $sql = 'SELECT * FROM '.$this->table_name.' WHERE '.$predicate.'id='.$id;
 
                     $temp = $this->execute_query($sql, Array());
-                
+
                     if (isset($temp) && $temp && is_array($temp) && (1 == count($temp)) ) { // If we  got a record, then we'll be updating it.
                         $sql = 'UPDATE '.$this->table_name.'';
+                        if (!CO_Config::$use_personal_tokens) {
+                            unset($params_associative_array['personal_ids']); // We do not change the personal ID column, if we don't have it enabled.
+                        }
+                        
                         unset($params_associative_array['id']); // We remove the ID parameter. That can't be changed.
                         
                         $params = array_values($params_associative_array);
@@ -687,6 +691,9 @@ abstract class A_CO_DB {
                     
                     if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
                         $sql = 'INSERT INTO '.$this->table_name.'';
+                        if (!CO_Config::$use_personal_tokens) {
+                            unset($params_associative_array['personal_ids']); // We do not change the personal ID column, if we don't have it enabled.
+                        }
                         unset($params_associative_array['id']);
                         
                         // If there is no read ID specified, it becomes public.

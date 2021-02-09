@@ -130,7 +130,7 @@ class CO_Security_Login extends CO_Security_Node {
         
         $ids_as_string_array = Array();
         foreach ($this->_ids as $id) {
-            if ($id != $this->id() && !in_array($id, $personal_ids_as_int)) {
+            if ($id != $this->id() && (isset($personal_ids_as_int) && !in_array($id, $personal_ids_as_int))) {
                 array_push($ids_as_string_array, strval($id));
             }
         }
