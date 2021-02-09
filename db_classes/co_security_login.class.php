@@ -195,9 +195,11 @@ class CO_Security_Login extends CO_Security_Node {
         } else {
             $this->instance_description = isset($this->name) && $this->name ? "$this->name (".$this->login_id.")" : "Unnamed Login Node (".$this->login_id.")";
         }
-            
+        
+        $access_object = $this->get_access_object();
+        
         // By now, we have enough read, so we know if cogito ergo sum, so we can see if we can look at the IDs.
-        if ($this->get_access_object()->god_mode() || ($this->get_access_object()->get_login_id() == $this->_id)) {
+        if (isset($access_object) && ($access_object->god_mode() || ($access_object->get_login_id() == $this->_id))) {
             $this->_ids = Array($this->id());
             
             if (isset($in_db_result['ids']) && $in_db_result['ids']) {
@@ -210,10 +212,10 @@ class CO_Security_Login extends CO_Security_Node {
                         sort($tempAr);
                         // Our original login just gets all the IDs. However, subsequent access requires that only "known" IDs are read.
                         if (isset($tempAr) && is_array($tempAr) && count($tempAr)) {
-                            $access_ids = $this->get_access_object()->get_security_ids();
-                            if ($this->get_access_object()->god_mode() || (isset($access_ids) && is_array($access_ids) && count($access_ids))) {
+                            $access_ids = $access_object->get_security_ids();
+                            if ($access_object->god_mode() || (isset($access_ids) && is_array($access_ids) && count($access_ids))) {
                                 foreach($tempAr as $id) {
-                                    if (($this->get_access_object()->god_mode() || (in_array($id, $access_ids))) && !in_array($id, $this->_ids)) {
+                                    if (($access_object->god_mode() || (in_array($id, $access_ids))) && !in_array($id, $this->_ids)) {
                                         $this->_ids[] = $id;
                                     }
                                 }

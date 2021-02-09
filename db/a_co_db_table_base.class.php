@@ -492,7 +492,13 @@ abstract class A_CO_DB_Table_Base {
     \returns the access object for this instance.
      */
     public function get_access_object() {
-        return $this->_db_object->access_object;
+        $db_object = $this->_db_object;
+        
+        if (isset($db_object)) {
+            return $db_object->access_object;
+        }
+        
+        return NULL;
     }
     
     /***********************/
