@@ -89,6 +89,7 @@ abstract class A_CO_DB {
 // Commented out, but useful for debug.
 // echo('SQL:<pre>'.htmlspecialchars(print_r($in_sql, true)).'</pre>');
 // echo('Params:<pre>'.htmlspecialchars(print_r($in_parameters, true)).'</pre>');
+// echo('RESULT:<pre>'.htmlspecialchars(print_r($ret, true)).'</pre>');
 // echo('ERROR:<pre>'.htmlspecialchars(print_r($this->error, true)).'</pre>');
         return $ret;
     }

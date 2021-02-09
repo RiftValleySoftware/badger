@@ -68,6 +68,8 @@ class CO_Security_DB extends A_CO_DB {
         $fetch_sql = "ids";
         if (CO_Config::$use_personal_tokens && !$no_personal) {
             $fetch_sql .= ",personal_ids";
+        } else {
+            $no_personal = false;
         }
         
         $sql = 'SELECT '.$fetch_sql.' FROM '.$this->table_name.' WHERE (access_class LIKE \'%Login%\') AND (login_id IS NOT NULL) AND (id=?)';
