@@ -283,8 +283,6 @@ class CO_Access {
         }
         
         return $ret;
-        
-        return [];
     }
     
     /***********************/
