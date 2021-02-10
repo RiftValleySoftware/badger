@@ -254,7 +254,7 @@ class CO_Access {
         if (CO_Config::$use_personal_tokens) {
             $login_id = $this->get_login_id();
             if (isset($login_id) && $login_id && $this->_security_db_object) {
-                $ret = $this->_security_db_object->get_personal_ids_for_id($this->get_login_id());
+                $ret = $this->_security_db_object->get_personal_ids_for_id($login_id);
                 
                 if ($this->_security_db_object->error) {
                     $this->error = $this->_security_db_object->error;
