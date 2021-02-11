@@ -66,7 +66,7 @@ class CO_Security_DB extends A_CO_DB {
         $ret = NULL;
         
         $fetch_sql = "ids";
-        if (CO_Config::$use_personal_tokens && !$no_personal) {
+        if (CO_Config::use_personal_tokens() && !$no_personal) {
             $fetch_sql .= ",personal_ids";
         } else {
             $no_personal = false;
@@ -122,7 +122,7 @@ class CO_Security_DB extends A_CO_DB {
         $in_to_id = intval($in_to_id);
         $in_id = intval($in_id);
         // If the current login does not own the given ID as a personal token, then we can't proceed.
-        if (CO_Config::$use_personal_tokens) {
+        if (CO_Config::use_personal_tokens()) {
             $sql = 'SELECT ids FROM '.$this->table_name.' WHERE (id=?)';
             $params = [$in_to_id];
             $temp = $this->execute_query($sql, $params);
@@ -163,7 +163,7 @@ class CO_Security_DB extends A_CO_DB {
         $in_to_id = intval($in_to_id);
         $in_id = intval($in_id);
         // If the current login does not own the given ID as a personal token, then we can't proceed.
-        if (CO_Config::$use_personal_tokens) {
+        if (CO_Config::use_personal_tokens()) {
             $sql = 'SELECT ids FROM '.$this->table_name.' WHERE (id=?)';
             $params = [$in_to_id];
             $temp = $this->execute_query($sql, $params);
@@ -209,7 +209,7 @@ class CO_Security_DB extends A_CO_DB {
                                             ) {
         $ret = NULL;
         
-        if (!CO_Config::$use_personal_tokens) {
+        if (!CO_Config::use_personal_tokens()) {
             return $ret;
         }
         
@@ -248,7 +248,7 @@ class CO_Security_DB extends A_CO_DB {
                                                         ) {
         $ret = NULL;
         
-        if (!CO_Config::$use_personal_tokens) {
+        if (!CO_Config::use_personal_tokens()) {
             return $ret;
         }
         
@@ -294,7 +294,7 @@ class CO_Security_DB extends A_CO_DB {
         $ret = NULL;
         
         // Will not work for God Mode, as God doesn't have personal IDs.
-        if (!CO_Config::$use_personal_tokens || $this->access_object->god_mode()) {
+        if (!CO_Config::use_personal_tokens() || $this->access_object->god_mode()) {
             return $ret;
         }
         
@@ -384,7 +384,7 @@ class CO_Security_DB extends A_CO_DB {
                                             ) {
         $in_id = intval($in_id);
         
-        if (CO_Config::$use_personal_tokens && (1 < $in_id)) {
+        if (CO_Config::use_personal_tokens() && (1 < $in_id)) {
             $ret = $this->get_all_personal_ids_except_for_id();
     
             if (!$this->error) {

@@ -108,6 +108,18 @@ trait tCO_Config {
         
         return $ret;
     }
+
+    /***********************/
+    /**
+    We encapsulate this, because this is likely to be called from methods, and this prevents it from being changed.
+    
+    \returns the flag for using personal tokens.
+     */
+    static function use_personal_tokens() {
+        $ret = self::$_use_personal_tokens ? true : false;  // We ensure that it will be a BOOL.
+        
+        return $ret;
+    }
     
     /***********************/
     /**

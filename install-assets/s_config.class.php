@@ -39,6 +39,7 @@ class CO_Config {
     /// These affect the overall "God Mode" login.
     static private $_god_mode_id            = 2;                        ///< God Login Security DB ID. This is private, so it can't be programmatically changed.
     static private $_god_mode_password      = '<GOD MODE PASSWORD>';    ///< Plaintext password for the God Mode ID login. This overrides anything in the ID row.
+    static private $_use_personal_tokens    = true;                     ///< If TRUE, then we can use "personal IDs."
     
     static private $_login_validation_callback = NULL;  /**<    This is a special callback for validating REST logins (BASALT). For most functions in the global scope, this will simply be the function name,
                                                                 or as an array (with element 0 being the object, itself, and element 1 being the name of the function).

@@ -656,7 +656,7 @@ abstract class A_CO_DB {
 
                     if (isset($temp) && $temp && is_array($temp) && (1 == count($temp)) ) { // If we  got a record, then we'll be updating it.
                         $sql = 'UPDATE '.$this->table_name.'';
-                        if (!CO_Config::$use_personal_tokens) {
+                        if (!CO_Config::use_personal_tokens()) {
                             unset($params_associative_array['personal_ids']); // We do not change the personal ID column, if we don't have it enabled.
                         }
                         
@@ -692,7 +692,7 @@ abstract class A_CO_DB {
                     
                     if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
                         $sql = 'INSERT INTO '.$this->table_name.'';
-                        if (!CO_Config::$use_personal_tokens) {
+                        if (!CO_Config::use_personal_tokens()) {
                             unset($params_associative_array['personal_ids']); // We do not change the personal ID column, if we don't have it enabled.
                         }
                         unset($params_associative_array['id']);

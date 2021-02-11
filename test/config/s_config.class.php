@@ -39,7 +39,6 @@ class CO_Config {
     static $min_pw_len = 8;                         ///< The minimum password length.
     static $session_timeout_in_seconds = 2;         ///< Two-Second API key timeout.
     static $god_session_timeout_in_seconds  = 1;    ///< API key session timeout for the "God Mode" login, in seconds (integer value). Default is 10 minutes.
-    static $use_personal_tokens = true;             ///< If TRUE, then we can use "personal IDs."
     
     static $data_db_name = 'littlegr_badger_data';
     static $data_db_host = 'localhost';
@@ -55,6 +54,7 @@ class CO_Config {
     
     static private $_god_mode_id = 2;                           // Default is 2 (First security item created).
     static private $_god_mode_password = 'BWU-HA-HAAAA-HA!'; ///< Plaintext password for the God Mode ID login. This overrides anything in the ID row.
+    static private $_use_personal_tokens = true;             ///< If TRUE, then we can use "personal IDs."
 
     /***********************/
     /**
@@ -64,6 +64,18 @@ class CO_Config {
      */
     static function god_mode_password() {
         $ret = strval(self::$_god_mode_password);  // This just ensures that the return will be an ephemeral string, so there is no access to the original.
+        
+        return $ret;
+    }
+    
+    /***********************/
+    /**
+    We encapsulate this, because this is likely to be called from methods, and this prevents it from being changed.
+    
+    \returns the flag for using personal tokens.
+     */
+    static function use_personal_tokens() {
+        $ret = self::$_use_personal_tokens ? true : false;  // We ensure that it will be a BOOL.
         
         return $ret;
     }
