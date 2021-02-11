@@ -227,7 +227,8 @@ class CO_Security_Login extends CO_Security_Node {
                 }
             }
 
-            $this->_personal_ids = Array();
+            $this->_personal_ids = NULL;
+            
             if (CO_Config::use_personal_tokens() && isset($in_db_result['personal_ids']) && $in_db_result['personal_ids']) {
                 $temp = $in_db_result['personal_ids'];
                 if (isset ($temp) && $temp) {
@@ -252,7 +253,7 @@ class CO_Security_Login extends CO_Security_Node {
      */
     public function load_from_db($in_db_result) {
         $ret = parent::load_from_db($in_db_result);
-        $this->_personal_ids = Array();
+        $this->_personal_ids = NULL;
         $this->_ids = Array($this->id());
                 
         if ($ret) {
