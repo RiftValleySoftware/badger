@@ -110,6 +110,10 @@ class CO_Security_Login extends CO_Security_Node {
     protected function _build_parameter_array() {
         $ret = parent::_build_parameter_array();
         
+        if (NULL == $this->_personal_ids) {
+            $this->_personal_ids = [];
+        }
+        
         $ret['api_key'] = $this->_api_key;
         $ret['login_id'] = $this->login_id;
         $personal_ids_as_string_array = Array();
@@ -538,8 +542,9 @@ class CO_Security_Login extends CO_Security_Node {
         $personal_ids_temp = array_unique(array_map('intval', $in_personal_ids));
             
         $this->_personal_ids = [];
-
-        if (CO_Config::use_personal_tokens() && $this->get_access_object()->god_mode()) {
+        $access_object = $this->get_access_object();
+        
+        if (CO_Config::use_personal_tokens() && isset($access_object) && $access_object->god_mode()) {
             if (0 < count($personal_ids_temp)) {
                 $personal_ids = [];
                 $my_ids = $this->_ids;
