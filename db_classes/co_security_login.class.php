@@ -535,27 +535,31 @@ class CO_Security_Login extends CO_Security_Node {
      */
     public function set_personal_ids(   $in_personal_ids = []    ///< An Array of Integers, with the new personal IDs. This replaces any previous ones. If empty, then the IDs are removed.
                                     ) {
-        $personal_ids = [];
-        
-        if (CO_Config::use_personal_tokens() && $this->get_access_object()->god_mode()) {
-            $personal_ids_temp = array_unique($in_personal_ids);
-            // None of the ids can be in the regular IDs, and will be removed from the set, if so.
-            // They also cannot be anyone else's personal ID, or anyone's login ID. Personal IDs can ONLY be regular (non-login) security objects.
-            foreach($personal_ids_temp as $id) {
-                // Make sure that we don't have this personal token in our regular ID array.
-                if (($key = array_search($id, $this->_ids)) !== false) {
-                    unset($this->_ids[$key]);
-                }
-                if (!$this->get_access_object()->is_this_a_login_id($id) && (!$this->get_access_object()->is_this_a_personal_id($id) || in_array($id, $this->_personal_ids))) {
-                    array_push($personal_ids, $id);
-                }
-            }
+        $personal_ids_temp = array_unique(array_map('intval', $in_personal_ids));
             
-            sort($personal_ids);
+        $this->_personal_ids = [];
+
+        if (CO_Config::use_personal_tokens() && $this->get_access_object()->god_mode()) {
+            if (0 < count($personal_ids_temp)) {
+                $personal_ids = [];
+                $my_ids = $this->_ids;
+                // None of the ids can be in the regular IDs, and will be removed from the set, if so.
+                // They also cannot be anyone else's personal ID, or anyone's login ID. Personal IDs can ONLY be regular (non-login) security objects.
+                foreach($personal_ids_temp as $id) {
+                    // Make sure that we don't have this personal token in our regular ID array.
+                    if (($key = array_search($id, $my_ids)) !== false) {
+                        unset($my_ids[$key]);
+                    }
+                    if (!$this->get_access_object()->is_this_a_login_id($id) && (!$this->get_access_object()->is_this_a_personal_id($id) || in_array($id, $this->_personal_ids))) {
+                        array_push($personal_ids, $id);
+                    }
+                }
+                $this->_ids = $my_ids;
+                sort($personal_ids);
+                $this->_personal_ids = $personal_ids;
+            }
         }
-        
-        $this->_personal_ids = $personal_ids;
-        
+            
         $this->update_db();
         
         return $this->_personal_ids;
