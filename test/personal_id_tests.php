@@ -211,7 +211,7 @@ function print_explain($in_explain_test) {
                                     }
                                 }
                                 $all_ids = $test_items[2]->personal_ids();
-                                if (!is_array($all_ids) || 0 < count($all_ids)) {
+                                if (NULL != $all_ids) {
                                     echo("<h4 style=\"color:red;font-weight:bold\">UNEXPECTED RESULT FOR ITEM 5!</h4>");
                                     $pass = false;
                                 }
@@ -313,7 +313,7 @@ function print_explain($in_explain_test) {
                                     }
                                 }
                                 $all_ids = $test_items[0]->personal_ids();
-                                if (!is_array($all_ids) || 0 < count($all_ids)) {
+                                if (NULL != $all_ids) {
                                     echo("<h4 style=\"color:red;font-weight:bold\">UNEXPECTED RESULT FOR ITEM 3!</h4>");
                                     $pass = false;
                                 }

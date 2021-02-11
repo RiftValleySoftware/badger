@@ -535,11 +535,10 @@ class CO_Security_Login extends CO_Security_Node {
      */
     public function set_personal_ids(   $in_personal_ids = []    ///< An Array of Integers, with the new personal IDs. This replaces any previous ones. If empty, then the IDs are removed.
                                     ) {
-        $ret = [];
+        $personal_ids = [];
         
         if (CO_Config::use_personal_tokens() && $this->get_access_object()->god_mode()) {
             $personal_ids_temp = array_unique($in_personal_ids);
-            $personal_ids = [];
             // None of the ids can be in the regular IDs, and will be removed from the set, if so.
             // They also cannot be anyone else's personal ID, or anyone's login ID. Personal IDs can ONLY be regular (non-login) security objects.
             foreach($personal_ids_temp as $id) {
@@ -551,15 +550,15 @@ class CO_Security_Login extends CO_Security_Node {
                     array_push($personal_ids, $id);
                 }
             }
-            sort($personal_ids);
-            $this->_personal_ids = $personal_ids;
             
-            if ($this->update_db()) {
-                return $this->_personal_ids;
-            }
+            sort($personal_ids);
         }
         
-        return $ret;
+        $this->_personal_ids = $personal_ids;
+        
+        $this->update_db();
+        
+        return $this->_personal_ids;
     }
     
     /***********************/
