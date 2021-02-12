@@ -544,6 +544,7 @@ class CO_Security_Login extends CO_Security_Node {
         $this->_personal_ids = [];
         $access_object = $this->get_access_object();
         
+echo("SET CALLED FOR \"$this->_id\":<pre>".htmlspecialchars(print_r($personal_ids_temp, true)).'</pre>');
         if (CO_Config::use_personal_tokens() && isset($access_object) && $access_object->god_mode()) {
             if (0 < count($personal_ids_temp)) {
                 $personal_ids = [];
@@ -585,10 +586,12 @@ class CO_Security_Login extends CO_Security_Node {
             return $this->_personal_ids;
         } else {
             $my_ids = $this->get_access_object()->get_security_ids();
-            $ret = Array();
-            foreach ($this->_personal_ids as $id) {
-                if (in_array($id, $my_ids)) {
-                    array_push($ret, $id);
+            $ret = [];
+            if (isset($this->_personal_ids) && is_array($this->_personal_ids) && count($this->_personal_ids)) {
+                foreach ($this->_personal_ids as $id) {
+                    if (in_array($id, $my_ids)) {
+                        array_push($ret, $id);
+                    }
                 }
             }
             return $ret;
