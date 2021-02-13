@@ -24,8 +24,6 @@
     The Great Rift Valley Software Company: https://riftvalleysoftware.com
 */
     $config_file_path = dirname(__FILE__).'/config/s_config.class.php';
-    $data_sql_file_path = dirname(__FILE__).'/sql/badger_test_data.sql';
-    $security_sql_file_path = dirname(__FILE__).'/sql/badger_test_security.sql';
     
     date_default_timezone_set ( 'UTC' );
     set_time_limit ( 120 );
@@ -73,8 +71,8 @@
             $pdo_security_db = new CO_PDO(CO_Config::$sec_db_type, CO_Config::$sec_db_host, CO_Config::$sec_db_name, CO_Config::$sec_db_login, CO_Config::$sec_db_password);
             
             if ($pdo_security_db) {
-                $data_db_sql = file_get_contents(CO_Config::badger_test_class_dir().'/sql/'.$in_file_prefix.'_data.sql');
-                $security_db_sql = file_get_contents(CO_Config::badger_test_class_dir().'/sql/'.$in_file_prefix.'_security.sql');
+                $data_db_sql = file_get_contents(CO_Config::badger_test_class_dir().'/sql/'.$in_file_prefix.'_data'.'_'.CO_Config::$data_db_type.'.sql');
+                $security_db_sql = file_get_contents(CO_Config::badger_test_class_dir().'/sql/'.$in_file_prefix.'_security'.'_'.CO_Config::$data_db_type.'.sql');
                 
                 $error = NULL;
         
@@ -114,7 +112,7 @@
         echo(']');
         exit();
     } elseif (isset($_GET['loadDB'])) {
-        prepare_databases('stress_test');    
+        prepare_databases('stress_tests');    
         exit();
     } else {
 ?><!DOCTYPE html>
