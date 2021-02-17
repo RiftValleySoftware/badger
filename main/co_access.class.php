@@ -287,6 +287,24 @@ class CO_Access {
     
     /***********************/
     /**
+    This returns IDs that have personal IDs.
+    This only works for the God admin.
+    
+    \returns an associative array of arrays of integer, keyed by integer. The key is the ID of the login, and the value is an array of integer, with the Personal IDs that match. NULL, if an error.
+     */
+    public function get_logins_with_personal_ids() {
+        $ret = $this->_security_db_object->get_logins_with_personal_ids();
+    
+        if ($this->_security_db_object->error) {
+            $this->error = $this->_security_db_object->error;
+            $ret = Array();
+        }
+        
+        return $ret;
+    }
+        
+    /***********************/
+    /**
     This checks an ID, to see if it is a personal ID.
     
     \returns true, if the ID is a personal ID.

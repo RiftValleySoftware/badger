@@ -1,4 +1,4 @@
-**1.1.0.3000** *(February 13, 2021)*
+**1.1.0.3000** *(February 17, 2021)*
 
 - Added support for personal tokens.
 - Improved some basic security issues.

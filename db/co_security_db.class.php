@@ -333,6 +333,38 @@ class CO_Security_DB extends A_CO_DB {
     
     /***********************/
     /**
+    This returns IDs that have personal IDs.
+    This only works for the God admin.
+    
+    \returns an associative array of arrays of integer, keyed by integer. The key is the ID of the login, and the value is an array of integer, with the Personal IDs that match. NULL, if an error.
+     */
+    public function get_logins_with_personal_ids() {
+        $ret = NULL;
+        
+        // Will only work for God Mode.
+        if (!CO_Config::use_personal_tokens() || !$this->access_object->god_mode()) {
+            return $ret;
+        }
+        
+        $sql = 'SELECT id,personal_ids FROM '.$this->table_name.' WHERE (access_class LIKE \'%Login%\') AND (login_id IS NOT NULL) AND (personal_ids IS NOT NULL) AND (personal_ids<>\'\')';
+
+        $temp = $this->execute_query($sql, Array());
+        if (isset($temp) && $temp && is_array($temp) && count($temp) ) {
+            $ret = [];
+            foreach ($temp as $i) {
+                $tmp = [];
+                if (isset($i['id']) && $i['id'] && isset($i['personal_ids']) && $i['personal_ids']) {
+                    $key = intval($i['id']);
+                    $ids = array_unique(array_map('intval', explode(',', $i['personal_ids'])));
+                    $ret[$key] = $ids;
+                }
+            }
+        }
+        return $ret;
+    }
+    
+    /***********************/
+    /**
     This returns all of the login IDs in the database.
     
     This should only be called from the ID fetcher in the access class, as it does not do a security predicate.
