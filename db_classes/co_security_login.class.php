@@ -329,7 +329,6 @@ class CO_Security_Login extends CO_Security_Node {
                             ) {
         $ret = false;
         $in_ids_array = array_map('intval', $in_ids_array);
-        
         if ($this->user_can_edit_ids()) {
             $id_pool = $this->get_access_object()->get_security_ids(true);  // We get just our regular IDs. No personal ones.
             if ($this->get_access_object()->god_mode() || (isset($id_pool) && is_array($id_pool) && count($id_pool))) {
@@ -358,9 +357,8 @@ class CO_Security_Login extends CO_Security_Node {
                             $new_ids[] = $in_id;
                         }
                     }
-                    if (count($new_ids)) {
-                        $this->_ids = $new_ids;
-                    }
+                
+                    $this->_ids = $new_ids;
                 // Otherwise, we are clearing the array.
                 } else {
                     $this->_ids = Array();
@@ -540,7 +538,6 @@ class CO_Security_Login extends CO_Security_Node {
     public function set_personal_ids(   $in_personal_ids = []    ///< An Array of Integers, with the new personal IDs. This replaces any previous ones. If empty, then the IDs are removed.
                                     ) {
         $personal_ids_temp = array_unique(array_map('intval', $in_personal_ids));
-            
         $this->_personal_ids = [];
         $access_object = $this->get_access_object();
         
