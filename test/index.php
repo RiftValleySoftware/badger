@@ -121,6 +121,17 @@
                 }
             }
             
+            if ( $in_record_object instanceof CO_LL_Location) {
+                if ( $in_record_object->is_fuzzy() ) {
+                    $fuzz_factor = $in_record_object->fuzz_factor();
+                    echo("<p>Fuzz Factor: $fuzz_factor Km</p>");
+                    $can_see = $in_record_object->can_see_through_the_fuzz();
+                    if ( $can_see ) {
+                        echo("<p>$can_see can see through the fuzz.</p>");
+                    }
+                }
+            }
+            
             if ( $in_record_object instanceof CO_Security_Login) {
                 $ids = $in_record_object->ids();
                 if ( isset($ids) && is_array($ids) && count($ids)) {

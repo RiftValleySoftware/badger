@@ -475,13 +475,23 @@ function print_explain($in_explain_test) {
                         echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
-                
+
                 echo('<div id="test-081" class="inner_closed">');
                     echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-081\')">TEST 81: List IDs that Have Our Personal Tokens.</a></h2>');
                     echo('<div class="main_div inner_container">');
                         print_explain('Log in as a non-God Admin, and find out which other IDs have our personal tokens.');
                         $start = microtime(true);
                         try_advanced_list_personal_tokens_in_use();
+                        echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
+                    echo('</div>');
+                echo('</div>');
+                
+                echo('<div id="test-082" class="inner_closed">');
+                    echo('<h2 class="inner_header"><a href="javascript:toggle_inner_state(\'test-082\')">TEST 82: Make sure that personal tokens can excempt a user from "fuzzing."</a></h2>');
+                    echo('<div class="main_div inner_container">');
+                        print_explain('"Fuzz" a user\'s location, then assign a personal token to another user and make sure that user sees where we really are.');
+                        $start = microtime(true);
+                        try_advanced_location_fuzzing_exception();
                         echo('<h5>The test took '. sprintf('%01.3f', microtime(true) - $start) . ' seconds.</h5>');
                     echo('</div>');
                 echo('</div>');
@@ -641,5 +651,51 @@ function print_explain($in_explain_test) {
         } else {
             echo("<h4 style=\"color:red;font-weight:bold\">NOTHING RETURNED!</h4>");
         }
+    }
+    
+    //##############################################################################################################################################
+
+    function try_advanced_location_fuzzing_exception() {
+        $access_instance = new CO_Access('secondary', '', 'CoreysGoryStory');
+        
+        echo('<h4>This is our login:</h4>');
+        display_record($access_instance->get_login_item());
+        
+        echo('<h4>Run The Test:</h4>');
+        $my_location = $access_instance->get_single_data_record_by_id(3);
+        echo('<h5>Before we get fuzzy:</h5>');
+        display_record($my_location);
+        $actual_long = $my_location->raw_longitude();
+        $actual_lat = $my_location->raw_latitude();
+        echo("<h5>This is our actual longitude and latitude: ($actual_long, $actual_lat).</h5>");
+        echo('<h5>Set our fuzz factor to 10Km:</h5>');
+        $my_location->set_fuzz_factor(10);
+        display_record($my_location);
+        
+        echo('<h5>Now, add personal token 8 to be the ID that can "see through the fuzz":</h5>');
+        $my_location->set_can_see_through_the_fuzz(8);
+        display_record($my_location);
+        
+        echo('<h4>Now, let\'s look at the location from yet another user:</h4>');
+        echo('<h5>This is the login that will eventually be allowed to see our location:</h5>');
+        $access_instance_friend = new CO_Access('tertiary', '', 'CoreysGoryStory');
+        display_record($access_instance_friend->get_login_item());
+        $fuzzed_location2 = $access_instance_friend->get_single_data_record_by_id(3);
+        
+        $fuzzed_long2 = $fuzzed_location2->raw_longitude();
+        $fuzzed_lat2 = $fuzzed_location2->raw_latitude();
+        
+        echo("<h5>This is the \"fuzzed\" longitude and latitude: ($fuzzed_long2, $fuzzed_lat2).</h5>");
+        
+        echo('<h5>Now, add personal token 8 to the ID:</h5>');
+        $success = $access_instance->add_personal_token_from_current_login($access_instance_friend->get_login_item()->id(), 8);
+        display_record($access_instance_friend->get_login_item());
+
+        $fuzzed_location3 = $access_instance_friend->get_single_data_record_by_id(3);
+        
+        $fuzzed_long3 = $fuzzed_location3->raw_longitude();
+        $fuzzed_lat3 = $fuzzed_location3->raw_latitude();
+        
+        echo("<h5>This is the \"not fuzzed\" longitude and latitude: ($fuzzed_long3, $fuzzed_lat3).</h5>");
     }
 ?>
