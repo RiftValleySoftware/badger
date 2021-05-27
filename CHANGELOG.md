@@ -1,3 +1,7 @@
+**1.1.2.3000** *(May 27, 2021)*
+
+- Added support for a "perpetual timeout."
+
 **1.1.0.3000** *(March 1, 2021)*
 
 - Added support for personal tokens.

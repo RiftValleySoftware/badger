@@ -764,6 +764,27 @@ class CO_Security_Login extends CO_Security_Node {
     
     /***********************/
     /**
+    \returns a floating-point number, with the remaining login time, in seconds. -1 means no timeout. 0 means time's up.
+     */
+    public function get_remaining_time() {
+        $ret = 0;
+        
+        // Unless we are legally logged in, we will always get 0.
+        if ( $this->get_api_key() ) {
+            $timeout = floatval($this->i_am_a_god() ? CO_Config::$god_session_timeout_in_seconds : CO_Config::$session_timeout_in_seconds);
+        
+            if ( 0 > $timeout ) {
+                $ret = $timeout - $this->get_api_key_age_in_seconds();
+            } else {
+                $ret = -1;
+            }
+        }
+        
+        return $ret;
+    }
+        
+    /***********************/
+    /**
     \returns a string, with the API key, if the key is still valid. NULL, otherwise.
      */
     public function get_api_key() {
@@ -777,7 +798,8 @@ class CO_Security_Login extends CO_Security_Node {
             $timeout = floatval($this->i_am_a_god() ? CO_Config::$god_session_timeout_in_seconds : CO_Config::$session_timeout_in_seconds);
             
             // We first check to make sure that we are still within the time window. If not, then all bets are off.
-            if (isset($api_expl[1]) && ((microtime(true) - floatval($api_expl[1])) <= $timeout)) {
+            // <0 as a $timeout value means no timeout.
+            if (isset($api_expl[1]) && ((0 > $timeout) || ((microtime(true) - floatval($api_expl[1])) <= $timeout))) {
                 if (isset(CO_Config::$api_key_includes_ip_address) && CO_Config::$api_key_includes_ip_address) {    // See if we are also checking the IP address.
                     $my_ip = strtolower(strval($_SERVER['REMOTE_ADDR']));
                     if (isset($api_expl[2])) {
