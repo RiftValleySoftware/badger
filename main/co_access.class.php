@@ -535,6 +535,15 @@ class CO_Access {
 
     /***********************/
     /**
+    \returns a floating-point number, with the remaining login time, in seconds. -1 means no timeout. 0 means time's up.
+     */
+    public function get_remaining_time($in_login_id = NULL ///< The integer login ID to check. If not-NULL, then the ID of a login instance. It must be one that the current user can see.
+                                    ) {
+        return $this->get_login_item($in_login_id)->get_remaining_time();
+    }
+    
+    /***********************/
+    /**
     \returns true, if the given login exists, false, if not, but NULL, if there is no security DB (we're not logged in). NOTE: This is not subject to security vetting.
      */
     public function check_login_exists_by_login_string( $in_login_id_string    ///< The string login ID to check
