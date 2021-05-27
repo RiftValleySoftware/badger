@@ -774,7 +774,10 @@ class CO_Security_Login extends CO_Security_Node {
             $timeout = floatval($this->i_am_a_god() ? CO_Config::$god_session_timeout_in_seconds : CO_Config::$session_timeout_in_seconds);
         
             if ( 0 < $timeout ) {
-                $ret = $timeout - $this->get_api_key_age_in_seconds();
+                if (isset($this->_api_key) && $this->_api_key) {
+                    list($api_key, $api_time) = explode(' - ', trim($this->_api_key));
+                    $ret = $timeout - ceil((microtime(true) - floatval($api_time)) * 10000) / 10000;
+                }
             } else {
                 $ret = -1;
             }
